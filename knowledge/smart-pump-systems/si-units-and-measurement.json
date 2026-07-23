@@ -1,0 +1,117 @@
+{
+  "metadata": {
+    "id": "KF-SMART-PUMP-SI-MEASUREMENT-001",
+    "slug": "si-units-and-measurement",
+    "title": "SI Units And Measurement",
+    "topic": "Measurement language for smart pump systems",
+    "version": "0.1.0",
+    "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+  },
+  "learningPurpose": "Give students a focused source-gated reference for pump-system quantities, SI units and measurement-context checks.",
+  "definitions": [
+    {
+      "term": "Measurement channel",
+      "meaning": "A named reading or signal that carries one stated measured quantity with a value, unit and context.",
+      "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+    },
+    {
+      "term": "Measurement context",
+      "meaning": "The location, instrument, operating condition and timestamp needed before a reading can be interpreted.",
+      "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+    }
+  ],
+  "governingPrinciples": [
+    "A measurement is not diagnosis until quantity, value, unit and context are known.",
+    "Industrial Learn calculation functions require explicit SI units internally.",
+    "No pump curves, equipment ratings or diagnostic thresholds are available from the current placeholder source."
+  ],
+  "equations": [],
+  "symbolDefinitions": [
+    { "symbol": "p", "name": "pressure", "unit": "Pa" },
+    { "symbol": "Q", "name": "volumetric flow rate", "unit": "m^3/s" },
+    { "symbol": "T", "name": "temperature", "unit": "K" },
+    { "symbol": "P", "name": "power", "unit": "W" }
+  ],
+  "siUnits": [
+    { "quantity": "pressure", "unit": "pascal", "symbol": "Pa" },
+    {
+      "quantity": "volumetric flow rate",
+      "unit": "cubic metre per second",
+      "symbol": "m^3/s"
+    },
+    { "quantity": "temperature", "unit": "kelvin", "symbol": "K" },
+    { "quantity": "power", "unit": "watt", "symbol": "W" },
+    { "quantity": "time", "unit": "second", "symbol": "s" }
+  ],
+  "assumptions": [
+    "The file covers measurement language only.",
+    "Any conversion from a non-SI unit must be explicit and source-reviewed.",
+    "Diagnostic rules require additional approved evidence."
+  ],
+  "limitations": [
+    "Does not teach pump selection, cavitation, pump curves, predictive maintenance or AI diagnosis.",
+    "Does not cite manufacturer documentation or standards because no source document is present."
+  ],
+  "workedExample": {
+    "id": "WE-SMART-PUMP-SI-MEASUREMENT-001",
+    "title": "Check a measurement row",
+    "purpose": "Verify whether a reading is ready for calculation.",
+    "given": [
+      "Quantity is pressure.",
+      "Value is recorded.",
+      "Unit and context must be explicit."
+    ],
+    "steps": [
+      "Identify the measured quantity.",
+      "Check the unit.",
+      "Record missing context before calculation."
+    ],
+    "answer": "The reading is usable only when quantity, value, unit and context are explicit.",
+    "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
+    "reviewStatus": "Source required"
+  },
+  "components": [
+    "pressure channel",
+    "flow channel",
+    "temperature channel",
+    "power channel",
+    "status channel"
+  ],
+  "normalOperation": [
+    "Measurement channels are interpreted only after unit and context are confirmed."
+  ],
+  "commonMisconceptions": [
+    "Assuming a number without a unit is safe to calculate with.",
+    "Treating kW as interchangeable with kWh.",
+    "Treating L/s and L/min as equivalent without explicit conversion."
+  ],
+  "faultConditions": [
+    {
+      "id": "FAULT-SMART-PUMP-SI-MEASUREMENT-001",
+      "title": "Ambiguous measurement unit",
+      "symptoms": ["A reading is present but its unit is missing or incompatible."],
+      "likelyCauses": [
+        "Incomplete data capture",
+        "Unreviewed conversion",
+        "Instrument display mismatch"
+      ],
+      "safeResponse": "Do not use the reading for diagnosis until the unit and conversion evidence are confirmed.",
+      "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
+      "reviewStatus": "Source required"
+    }
+  ],
+  "safety": [
+    {
+      "id": "SAFE-SMART-PUMP-SI-MEASUREMENT-001",
+      "hazard": "Unverified pump-system measurements",
+      "warning": "A training measurement exercise does not authorise operation, adjustment or troubleshooting of real pump equipment.",
+      "studentBoundary": "Students must use approved simulated data unless an authorised instructor provides controlled access.",
+      "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
+      "reviewStatus": "Source required"
+    }
+  ],
+  "relatedSimulations": ["SIM-SMART-PUMP-UNITS-001"],
+  "sourceCitations": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
+  "sourceReferences": [],
+  "reviewStatus": "Source required"
+}

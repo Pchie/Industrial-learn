@@ -1,0 +1,145 @@
+{
+  "id": "ASM-FLUID-PRESSURE-001",
+  "lessonId": "LES-FLUID-PRESSURE-001",
+  "title": "Basic Fluid Pressure Competency Check",
+  "learningOutcomeIds": ["LO-FP-001", "LO-FP-002", "LO-FP-003"],
+  "questions": [
+    {
+      "id": "Q-FP-MCQ-001",
+      "type": "multiple-choice",
+      "prompt": "Which statement best describes pressure in this lesson?",
+      "learningOutcomeIds": ["LO-FP-001"],
+      "competencyLevel": "Understood",
+      "points": 1,
+      "choices": [
+        { "id": "A", "text": "Force distributed over an area." },
+        { "id": "B", "text": "Area distributed over temperature." },
+        { "id": "C", "text": "Flow rate multiplied by voltage." }
+      ],
+      "correctChoiceId": "A",
+      "explanation": "Pressure is treated as normal force distributed across a stated area.",
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+    },
+    {
+      "id": "Q-FP-NUM-001",
+      "type": "numeric-engineering-calculation",
+      "prompt": "Calculate pressure when force is 200 N and area is 0.50 m^2.",
+      "learningOutcomeIds": ["LO-FP-002", "LO-FP-003"],
+      "competencyLevel": "Calculated",
+      "points": 2,
+      "expectedAnswer": { "value": 400, "unit": "Pa" },
+      "tolerance": { "absolute": 0.5 },
+      "equationId": "EQ-FLUID-PRESSURE-001",
+      "explanation": "Using p = F / A gives 200 N divided by 0.50 m^2, which is 400 Pa.",
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+    },
+    {
+      "id": "Q-FP-COMP-001",
+      "type": "component-identification",
+      "prompt": "Identify the quantities required to calculate pressure from force and area.",
+      "learningOutcomeIds": ["LO-FP-002"],
+      "competencyLevel": "Introduced",
+      "points": 1,
+      "components": [
+        { "id": "force", "text": "Force" },
+        { "id": "area", "text": "Area" },
+        { "id": "voltage", "text": "Voltage" }
+      ],
+      "correctComponentIds": ["force", "area"],
+      "explanation": "The pressure calculation uses force and area.",
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+    },
+    {
+      "id": "Q-FP-DIAGRAM-001",
+      "type": "diagram-question",
+      "prompt": "Select the labels that belong on the force-over-area diagram.",
+      "learningOutcomeIds": ["LO-FP-001", "LO-FP-002"],
+      "competencyLevel": "Understood",
+      "points": 1,
+      "diagramId": "BLK-FP-DIAGRAM-001",
+      "altText": "A downward force arrow acts on a rectangular area.",
+      "correctLabelIds": ["F", "A"],
+      "explanation": "The diagram shows force F acting over area A.",
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+    },
+    {
+      "id": "Q-FP-SEQ-001",
+      "type": "sequence-question",
+      "prompt": "Put the pressure calculation workflow in order.",
+      "learningOutcomeIds": ["LO-FP-003"],
+      "competencyLevel": "Calculated",
+      "points": 1,
+      "steps": [
+        { "id": "check-units", "text": "Check that force and area are in SI units." },
+        { "id": "substitute", "text": "Substitute force and area into the equation." },
+        {
+          "id": "interpret",
+          "text": "Interpret the answer within the stated assumptions."
+        }
+      ],
+      "correctStepOrder": ["check-units", "substitute", "interpret"],
+      "explanation": "The workflow is unit check, substitution, then interpretation.",
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+    },
+    {
+      "id": "Q-FP-SIM-001",
+      "type": "simulation-task",
+      "prompt": "In assessment mode, use the hydraulic cylinder simulation result for 1,000,000 Pa and 0.01 m^2.",
+      "learningOutcomeIds": ["LO-FP-003"],
+      "competencyLevel": "Operated",
+      "points": 2,
+      "simulationId": "SIM-HYD-CYL-FORCE-001",
+      "assessmentModeHiddenHints": [
+        "Cylinder force is pressure multiplied by piston area.",
+        "The expected result is 10000 N."
+      ],
+      "expectedMeasurements": {
+        "cylinderForce": { "value": 10000, "unit": "N" }
+      },
+      "tolerance": { "absolute": 1 },
+      "explanation": "The assessment-mode simulation task checks the measured force result without exposing hints before submission.",
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+    },
+    {
+      "id": "Q-FP-FAULT-001",
+      "type": "fault-diagnosis",
+      "prompt": "A force result is lower than expected while pressure appears available. Select the most likely pilot fault.",
+      "learningOutcomeIds": ["LO-FP-003"],
+      "competencyLevel": "Diagnosed",
+      "points": 2,
+      "faultOptions": [
+        { "id": "seal-leak", "text": "Seal leak" },
+        { "id": "open-circuit", "text": "Open electrical circuit" },
+        { "id": "high-temperature", "text": "High temperature" }
+      ],
+      "correctFaultId": "seal-leak",
+      "diagnosticEvidenceIds": ["force-below-pressure-area-prediction"],
+      "explanation": "The pilot seal-leak fault reduces output force below the pressure-area prediction.",
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+    },
+    {
+      "id": "Q-FP-DESIGN-001",
+      "type": "design-challenge",
+      "prompt": "State a safe training boundary for using the pressure lesson with real pressurised equipment.",
+      "learningOutcomeIds": ["LO-FP-003"],
+      "competencyLevel": "Designed",
+      "points": 2,
+      "rubric": [
+        {
+          "id": "safety-boundary",
+          "description": "States that students must not inspect, open, adjust, or operate pressurised equipment from this lesson alone.",
+          "points": 1
+        },
+        {
+          "id": "review-boundary",
+          "description": "States that source and engineering review are required before student-use approval.",
+          "points": 1
+        }
+      ],
+      "explanation": "A safe design response keeps the lesson inside supervised educational boundaries and review requirements.",
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+    }
+  ],
+  "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
+  "reviewStatus": "Source required"
+}

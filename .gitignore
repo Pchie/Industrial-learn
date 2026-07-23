@@ -1,0 +1,33 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Framework and build outputs
+.next/
+**/.next/
+dist/
+build/
+coverage/
+
+# Test and browser reports
+playwright-report/
+test-results/
+
+# Local editor and operating-system files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Temporary files and local databases
+*.tmp
+*.temp
+*.log
+*.sqlite
+*.sqlite3
+*.db

@@ -1,0 +1,321 @@
+{
+  "id": "LES-SMART-PUMP-UNITS-001",
+  "slug": "pump-system-units-and-measurements",
+  "title": "Pump System Units And Measurements",
+  "description": "A draft first lesson for the Smart Pump Systems masterclass focused on explicit SI-unit measurement language.",
+  "publicationStatus": "draft",
+  "reviewStatus": "Source required",
+  "version": "0.1.0",
+  "estimatedCompletionTime": "30 minutes",
+  "difficulty": "Introductory",
+  "prerequisites": ["Basic algebra", "Introductory engineering measurement vocabulary"],
+  "knowledgeFileIds": ["KF-SMART-PUMP-UNITS-001"],
+  "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
+  "learningOutcomes": [
+    "Identify common pump-system measurement quantities.",
+    "Match pressure, flow, temperature, power, and time to their expected SI units.",
+    "Explain why ambiguous units must be resolved before calculation or diagnosis."
+  ],
+  "requiredSections": [
+    "lessonHeader",
+    "estimatedCompletionTime",
+    "difficulty",
+    "prerequisites",
+    "learningOutcomes",
+    "whyTopicMatters",
+    "keyTerminology",
+    "visualExplanation",
+    "theory",
+    "equations",
+    "workedExamples",
+    "interactiveActivity",
+    "faultFindingExercise",
+    "safetyConsiderations",
+    "knowledgeCheck",
+    "summary",
+    "sources",
+    "nextRecommendedLesson"
+  ],
+  "sections": {
+    "lessonHeader": {
+      "title": "Lesson header",
+      "blocks": [
+        {
+          "id": "BLK-SPU-HEADER-001",
+          "type": "paragraph",
+          "text": "This first Smart Pump Systems lesson establishes the measurement language used before pressure, flow, pump curves, monitoring data, or fault diagnosis are introduced.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "estimatedCompletionTime": {
+      "title": "Estimated completion time",
+      "blocks": [
+        {
+          "id": "BLK-SPU-TIME-001",
+          "type": "paragraph",
+          "text": "Estimated completion time: 30 minutes.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "difficulty": {
+      "title": "Difficulty",
+      "blocks": [
+        {
+          "id": "BLK-SPU-DIFFICULTY-001",
+          "type": "paragraph",
+          "text": "Difficulty: introductory masterclass foundation.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "prerequisites": {
+      "title": "Prerequisites",
+      "blocks": [
+        {
+          "id": "BLK-SPU-PREREQ-001",
+          "type": "paragraph",
+          "text": "Students should be able to read a numeric measurement and recognise that engineering quantities require stated units.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "learningOutcomes": {
+      "title": "Learning outcomes",
+      "blocks": [
+        {
+          "id": "BLK-SPU-OUTCOME-001",
+          "type": "paragraph",
+          "text": "By the end of the lesson, students should identify pump-system measurement quantities, match them to expected SI units, and explain why ambiguous units must be resolved before calculation or diagnosis.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "whyTopicMatters": {
+      "title": "Why the topic matters",
+      "blocks": [
+        {
+          "id": "BLK-SPU-MATTERS-001",
+          "type": "engineeringInterpretation",
+          "text": "Smart pump monitoring depends on measurement channels that state quantity, value, unit, and context; without those four pieces, later calculations and diagnosis can be misleading.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "keyTerminology": {
+      "title": "Key terminology",
+      "blocks": [
+        {
+          "id": "BLK-SPU-TERM-001",
+          "type": "definition",
+          "term": "Measurement channel",
+          "definition": "A named signal or reading used to represent one measured quantity in the pump-system learning context.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        },
+        {
+          "id": "BLK-SPU-TERM-002",
+          "type": "definition",
+          "term": "SI unit",
+          "definition": "The unit expected internally by Industrial Learn calculation and simulation functions for the relevant quantity.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "visualExplanation": {
+      "title": "Visual explanation",
+      "blocks": [
+        {
+          "id": "BLK-SPU-DIAGRAM-001",
+          "type": "diagram",
+          "title": "Pump measurement row",
+          "altText": "A pump measurement row shows quantity, value, unit, and context as separate required fields.",
+          "description": "A usable pump-system reading needs a quantity label, numeric value, unit, and context before it is used for calculation or diagnosis.",
+          "caption": "Measurement readiness diagram for Smart Pump Systems.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "theory": {
+      "title": "Theory",
+      "blocks": [
+        {
+          "id": "BLK-SPU-THEORY-001",
+          "type": "paragraph",
+          "text": "The first review step for any pump-system measurement is to identify the measured quantity, the numeric value, the unit, and the measurement context.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        },
+        {
+          "id": "BLK-SPU-ASSUMPTION-001",
+          "type": "assumption",
+          "text": "This lesson checks measurement readiness only and does not perform pump sizing, pump selection, or fault diagnosis.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "equations": {
+      "title": "Equations",
+      "blocks": [
+        {
+          "id": "BLK-SPU-UNIT-001",
+          "type": "unitNote",
+          "quantity": "pump-system measurements",
+          "siUnit": "Pa, m^3/s, K, W, s",
+          "note": "This lesson introduces expected SI units but does not add a new engineering equation.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        },
+        {
+          "id": "BLK-SPU-SYMBOLS-001",
+          "type": "symbolTable",
+          "symbols": [
+            { "symbol": "p", "name": "pressure", "unit": "Pa" },
+            { "symbol": "Q", "name": "volumetric flow rate", "unit": "m^3/s" },
+            { "symbol": "T", "name": "temperature", "unit": "K" },
+            { "symbol": "P", "name": "power", "unit": "W" }
+          ],
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "workedExamples": {
+      "title": "Worked examples",
+      "blocks": [
+        {
+          "id": "WE-SMART-PUMP-UNITS-001",
+          "type": "workedCalculation",
+          "title": "Check a pump measurement row",
+          "given": [
+            "Quantity: pressure",
+            "Value: 250000",
+            "Unit: Pa",
+            "Context: discharge pressure reading in a training dataset"
+          ],
+          "steps": [
+            {
+              "label": "Identify the quantity",
+              "expression": "quantity = pressure",
+              "explanation": "Pressure is the measured quantity, so the expected internal unit is pascal."
+            },
+            {
+              "label": "Check the unit",
+              "expression": "unit = Pa",
+              "explanation": "The stated unit matches the expected SI unit for pressure."
+            },
+            {
+              "label": "Check context",
+              "expression": "context = training dataset",
+              "explanation": "The reading has enough context for a later reviewed lesson to decide how it may be used."
+            }
+          ],
+          "result": "Measurement row is ready for later reviewed interpretation.",
+          "interpretation": "The row is not a diagnosis by itself; it is only a complete measurement record.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "interactiveActivity": {
+      "title": "Interactive activity or simulation",
+      "blocks": [
+        {
+          "id": "BLK-SPU-ACTIVITY-001",
+          "type": "paragraph",
+          "text": "Planned simulation: students will classify pump-system measurement rows as ready, incomplete, or unsafe for diagnosis. The simulation is not implemented in this lesson task.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "faultFindingExercise": {
+      "title": "Fault-finding exercise",
+      "blocks": [
+        {
+          "id": "FAULT-SMART-PUMP-UNITS-001",
+          "type": "faultCase",
+          "title": "Ambiguous measurement unit",
+          "symptoms": [
+            "A pump-system reading is recorded without a unit or with a non-SI unit."
+          ],
+          "likelyCauses": [
+            "Incomplete data entry",
+            "Unreviewed conversion",
+            "Instrument display mismatch"
+          ],
+          "safeResponse": "Do not use the reading for diagnosis until the unit and conversion evidence are confirmed.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "safetyConsiderations": {
+      "title": "Safety considerations",
+      "blocks": [
+        {
+          "id": "SAFE-SMART-PUMP-UNITS-001",
+          "type": "warning",
+          "severity": "warning",
+          "title": "Real pump-system measurements",
+          "text": "This training lesson does not authorise students to inspect, operate, adjust, or troubleshoot real pump equipment.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "knowledgeCheck": {
+      "title": "Knowledge check",
+      "blocks": [
+        {
+          "id": "QUIZ-SMART-PUMP-UNITS-001",
+          "type": "question",
+          "prompt": "Which information must be present before a pump-system reading is ready for later calculation or diagnosis?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Quantity, value, unit, and context",
+              "isCorrect": true
+            },
+            { "id": "B", "text": "Only a number and a chart colour", "isCorrect": false },
+            { "id": "C", "text": "Only a sensor name", "isCorrect": false }
+          ],
+          "answerExplanation": "A usable measurement row needs the measured quantity, numeric value, unit, and context.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "summary": {
+      "title": "Summary",
+      "blocks": [
+        {
+          "id": "BLK-SPU-SUMMARY-001",
+          "type": "paragraph",
+          "text": "Smart pump learning starts with explicit measurement records. A reading is not ready for calculation or diagnosis until quantity, value, unit, and context are known.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    },
+    "sources": {
+      "title": "Sources",
+      "blocks": [
+        {
+          "id": "BLK-SPU-SOURCE-001",
+          "type": "sourceCitation",
+          "sourceId": "SRC-SMART-PUMP-PLACEHOLDER-001",
+          "note": "Placeholder source record for Smart Pump Systems planning and the first draft lesson. This content must not be approved until evidence and review records exist."
+        }
+      ]
+    },
+    "nextRecommendedLesson": {
+      "title": "Next recommended lesson",
+      "blocks": [
+        {
+          "id": "BLK-SPU-NEXT-001",
+          "type": "paragraph",
+          "text": "Next planned lesson: fluid properties for pump systems. It is not implemented yet.",
+          "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+        }
+      ]
+    }
+  },
+  "equationIds": [],
+  "workedExampleIds": ["WE-SMART-PUMP-UNITS-001"],
+  "faultScenarioIds": ["FAULT-SMART-PUMP-UNITS-001"],
+  "safetyWarningIds": ["SAFE-SMART-PUMP-UNITS-001"],
+  "quizIds": [],
+  "projectIds": []
+}

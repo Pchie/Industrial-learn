@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://industriallearn.local/schemas/knowledge-file.schema.json",
+  "title": "Industrial Learn Knowledge File",
+  "type": "object",
+  "required": [
+    "metadata",
+    "learningPurpose",
+    "definitions",
+    "governingPrinciples",
+    "equations",
+    "symbolDefinitions",
+    "siUnits",
+    "assumptions",
+    "limitations",
+    "workedExample",
+    "components",
+    "normalOperation",
+    "faultConditions",
+    "safety",
+    "relatedSimulations",
+    "sourceCitations",
+    "reviewStatus"
+  ],
+  "properties": {
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "learningPurpose": { "type": "string" },
+    "definitions": { "type": "array", "items": { "$ref": "#/$defs/definition" } },
+    "governingPrinciples": { "type": "array", "items": { "type": "string" } },
+    "equations": { "type": "array", "items": { "$ref": "equation.schema.json" } },
+    "symbolDefinitions": { "type": "array", "items": { "$ref": "#/$defs/symbol" } },
+    "siUnits": { "type": "array", "items": { "$ref": "#/$defs/unit" } },
+    "assumptions": { "type": "array", "items": { "type": "string" } },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "workedExample": { "$ref": "worked-example.schema.json" },
+    "components": { "type": "array", "items": { "type": "string" } },
+    "normalOperation": { "type": "array", "items": { "type": "string" } },
+    "faultConditions": {
+      "type": "array",
+      "items": { "$ref": "fault-scenario.schema.json" }
+    },
+    "safety": { "type": "array", "items": { "$ref": "safety-warning.schema.json" } },
+    "relatedSimulations": { "type": "array", "items": { "type": "string" } },
+    "sourceCitations": { "type": "array", "items": { "type": "string" } },
+    "reviewStatus": { "$ref": "#/$defs/reviewStatus" }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "required": ["id", "slug", "title", "topic", "version", "sourceIds"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^KF-[A-Z0-9-]+$" },
+        "slug": { "type": "string" },
+        "title": { "type": "string" },
+        "topic": { "type": "string" },
+        "version": { "type": "string" },
+        "sourceIds": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "definition": {
+      "type": "object",
+      "required": ["term", "meaning", "sourceIds"],
+      "properties": {
+        "term": { "type": "string" },
+        "meaning": { "type": "string" },
+        "sourceIds": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "symbol": {
+      "type": "object",
+      "required": ["symbol", "name", "unit"],
+      "properties": {
+        "symbol": { "type": "string" },
+        "name": { "type": "string" },
+        "unit": { "type": "string" }
+      }
+    },
+    "unit": {
+      "type": "object",
+      "required": ["quantity", "unit", "symbol"],
+      "properties": {
+        "quantity": { "type": "string" },
+        "unit": { "type": "string" },
+        "symbol": { "type": "string" }
+      }
+    },
+    "reviewStatus": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Source required",
+        "Source checked",
+        "Equation checked",
+        "Simulation checked",
+        "Engineering review required",
+        "Approved for student use"
+      ]
+    }
+  }
+}

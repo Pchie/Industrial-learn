@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "0.1.0",
+  "description": "Career-oriented pathways that connect Core Engineering foundations to Future Engineering learning paths.",
+  "pathways": [
+    {
+      "id": "career-pathway-smart-building-systems",
+      "slug": "smart-building-systems",
+      "title": "Smart Building Systems",
+      "description": "A pathway from thermal and electrical foundations to AI-supported HVAC and connected monitoring.",
+      "targetLearners": [
+        "senior undergraduate engineering students",
+        "junior building services engineers",
+        "students interested in energy optimisation"
+      ],
+      "coreModuleIds": [
+        "mod-core-thermodynamics-001",
+        "mod-core-electrical-circuits-001",
+        "mod-core-programming-001"
+      ],
+      "futureModuleIds": [
+        "mod-future-ai-hvac-optimisation-001",
+        "mod-future-industrial-iot-001"
+      ],
+      "projectIds": [
+        "prj-core-thermal-efficiency-review-001",
+        "prj-future-hvac-optimisation-brief-001",
+        "prj-future-iot-monitoring-plan-001"
+      ],
+      "practiceOutcomes": [
+        "Explain HVAC optimisation boundaries and assumptions.",
+        "Connect measured system data to engineering decisions.",
+        "Identify why AI-supported recommendations require review."
+      ],
+      "technicalReviewStatus": "Source required",
+      "publicationStatus": "draft",
+      "version": "0.1.0"
+    },
+    {
+      "id": "career-pathway-industrial-monitoring",
+      "slug": "industrial-monitoring",
+      "title": "Industrial Monitoring",
+      "description": "A pathway from circuits, programming, and fluids to smart pump monitoring and fault diagnosis.",
+      "targetLearners": [
+        "applied engineering students",
+        "junior maintenance engineers",
+        "students interested in industrial IoT"
+      ],
+      "coreModuleIds": [
+        "mod-core-electrical-circuits-001",
+        "mod-core-programming-001",
+        "mod-core-fluid-mechanics-001"
+      ],
+      "futureModuleIds": [
+        "mod-future-industrial-iot-001",
+        "mod-future-smart-pump-monitoring-001"
+      ],
+      "projectIds": [
+        "prj-core-pump-system-observation-001",
+        "prj-future-iot-monitoring-plan-001",
+        "prj-future-pump-monitoring-diagnostic-001"
+      ],
+      "practiceOutcomes": [
+        "Connect flow symptoms to monitoring signals.",
+        "Identify normal, boundary, and fault states in monitored systems.",
+        "Describe limitations of sensor-based diagnosis."
+      ],
+      "technicalReviewStatus": "Source required",
+      "publicationStatus": "draft",
+      "version": "0.1.0"
+    },
+    {
+      "id": "career-pathway-robotics-and-automation",
+      "slug": "robotics-and-automation",
+      "title": "Robotics And Automation",
+      "description": "A pathway from circuits, control, and programming to robotics foundations.",
+      "targetLearners": [
+        "senior undergraduate engineering students",
+        "junior automation engineers",
+        "students interested in robotics"
+      ],
+      "coreModuleIds": [
+        "mod-core-electrical-circuits-001",
+        "mod-core-control-systems-001",
+        "mod-core-programming-001"
+      ],
+      "futureModuleIds": ["mod-future-robotics-foundations-001"],
+      "projectIds": [
+        "prj-core-feedback-control-observation-001",
+        "prj-future-robot-cell-risk-review-001"
+      ],
+      "practiceOutcomes": [
+        "Map feedback concepts to robotic behaviour.",
+        "Identify sensing, actuation, and safety boundaries.",
+        "Explain assumptions and limitations in robot simulations."
+      ],
+      "technicalReviewStatus": "Source required",
+      "publicationStatus": "draft",
+      "version": "0.1.0"
+    },
+    {
+      "id": "career-pathway-ai-assisted-design",
+      "slug": "ai-assisted-design",
+      "title": "AI-Assisted Mechanical Design",
+      "description": "A pathway from mechanics and programming to machine learning awareness and generative mechanical design.",
+      "targetLearners": [
+        "mechanical engineering students",
+        "junior design engineers",
+        "students interested in AI-supported design workflows"
+      ],
+      "coreModuleIds": ["mod-core-strength-materials-001", "mod-core-programming-001"],
+      "futureModuleIds": [
+        "mod-future-machine-learning-001",
+        "mod-future-generative-mechanical-design-001"
+      ],
+      "projectIds": [
+        "prj-core-simple-bracket-review-001",
+        "prj-future-ml-dataset-review-001",
+        "prj-future-design-option-review-001"
+      ],
+      "practiceOutcomes": [
+        "Connect material and loading foundations to generated design options.",
+        "Identify verification needs for AI-supported design.",
+        "Explain why generated options are not automatically approved engineering designs."
+      ],
+      "technicalReviewStatus": "Source required",
+      "publicationStatus": "draft",
+      "version": "0.1.0"
+    }
+  ]
+}

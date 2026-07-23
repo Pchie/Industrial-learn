@@ -1,0 +1,37 @@
+{
+  "id": "SRC-HYDRAULIC-CYLINDER-PLACEHOLDER-001",
+  "title": "Hydraulic cylinder force reference required",
+  "fullTitle": "Source needed for hydraulic cylinder force from pressure and piston area",
+  "author": "Not yet available",
+  "organisation": "Not yet available",
+  "edition": "Not yet available",
+  "version": "source-needed-record-v1",
+  "publicationDate": "Not yet available",
+  "accessDate": "2026-07-22",
+  "documentType": "technical reference placeholder",
+  "discipline": "Hydraulics",
+  "topics": [
+    "hydraulic cylinder force",
+    "pressure-area-force relationship",
+    "hydraulic safety boundaries"
+  ],
+  "filePath": null,
+  "copyrightStatus": "Source required",
+  "reliabilityLevel": 5,
+  "citation": "Source required before student-use approval. This placeholder must be replaced with an approved hydraulics source record.",
+  "approvalStatus": "Source required",
+  "reviewStatus": "Source required",
+  "evidenceStatus": "missing",
+  "reviewer": null,
+  "reviewDate": null,
+  "relevantChapters": [],
+  "relevantSections": [],
+  "relevantPages": [],
+  "limitations": [
+    "No actual hydraulics source document is present in sources/.",
+    "No manufacturer cylinder rating, seal behaviour, safety instruction, or pressure limit may be inferred from this placeholder."
+  ],
+  "notes": "Use this ID only to keep traceability explicit while the real source remains missing.",
+  "createdAt": "2026-07-22",
+  "updatedAt": "2026-07-22"
+}

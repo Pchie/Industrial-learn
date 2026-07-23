@@ -1,0 +1,102 @@
+{
+  "metadata": {
+    "id": "KF-THERMO-SYSTEMS-SURROUNDINGS-001",
+    "slug": "systems-surroundings-boundaries",
+    "title": "Systems, Surroundings And Boundaries",
+    "topic": "Thermodynamic system definitions for the first foundation lesson",
+    "version": "0.1.0",
+    "sourceIds": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"]
+  },
+  "learningPurpose": "Prepare the first thermodynamics foundation lesson with source-gated definitions before any property data or process equations are introduced.",
+  "definitions": [
+    {
+      "term": "System",
+      "meaning": "The selected matter, region or device considered for a thermodynamics analysis.",
+      "sourceIds": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"]
+    },
+    {
+      "term": "Surroundings",
+      "meaning": "Everything outside the selected system boundary for the stated analysis.",
+      "sourceIds": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"]
+    },
+    {
+      "term": "Boundary",
+      "meaning": "The real or imagined surface that separates the system from its surroundings.",
+      "sourceIds": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"]
+    }
+  ],
+  "governingPrinciples": [
+    "Thermodynamic analysis starts by declaring the system and boundary.",
+    "Boundary choice affects what may cross the boundary and what interactions must be tracked.",
+    "Definitions require an approved thermodynamics source before student-use approval."
+  ],
+  "equations": [],
+  "symbolDefinitions": [],
+  "siUnits": [
+    { "quantity": "temperature", "unit": "kelvin", "symbol": "K" },
+    { "quantity": "pressure", "unit": "pascal", "symbol": "Pa" },
+    { "quantity": "energy", "unit": "joule", "symbol": "J" }
+  ],
+  "assumptions": [
+    "This file introduces vocabulary only.",
+    "No steam, refrigerant, material or property data is provided.",
+    "No thermodynamic process equation is approved by this file."
+  ],
+  "limitations": [
+    "Does not define property data, state equations, heat-transfer coefficients, cycles or equipment ratings.",
+    "No chapter, section or page reference is available until a real source is onboarded."
+  ],
+  "workedExample": {
+    "id": "WE-THERMO-SYSTEMS-SURROUNDINGS-001",
+    "title": "Choose a system boundary",
+    "purpose": "Practise declaring what is inside and outside the analysis boundary.",
+    "given": [
+      "A sealed rigid container is used as a classroom example.",
+      "The learner must identify the selected system boundary."
+    ],
+    "steps": [
+      "Name the selected system.",
+      "State what is outside it.",
+      "Describe the boundary without assigning property data."
+    ],
+    "answer": "The answer is complete only when the system, surroundings and boundary are all stated.",
+    "sourceIds": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"],
+    "reviewStatus": "Source required"
+  },
+  "components": ["system", "surroundings", "boundary", "interaction"],
+  "normalOperation": [
+    "Learners define the boundary before interpreting heat, work or mass transfer."
+  ],
+  "commonMisconceptions": [
+    "Starting calculations before the system is defined.",
+    "Assuming the same boundary works for every question.",
+    "Introducing property data without a verified source."
+  ],
+  "faultConditions": [
+    {
+      "id": "FAULT-THERMO-BOUNDARY-001",
+      "title": "Unstated boundary",
+      "symptoms": [
+        "The learner cannot decide whether mass or energy crosses the boundary."
+      ],
+      "likelyCauses": ["The system boundary was not declared before analysis."],
+      "safeResponse": "Return to the definition step and state the selected system and boundary.",
+      "sourceIds": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"],
+      "reviewStatus": "Source required"
+    }
+  ],
+  "safety": [
+    {
+      "id": "SAFE-THERMO-SYSTEMS-001",
+      "hazard": "Misuse of classroom thermodynamics examples",
+      "warning": "Introductory thermodynamics definitions do not authorise equipment operation, pressure testing or thermal-system design.",
+      "studentBoundary": "Students must use reviewed learning examples and must not infer real equipment limits.",
+      "sourceIds": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"],
+      "reviewStatus": "Source required"
+    }
+  ],
+  "relatedSimulations": [],
+  "sourceCitations": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"],
+  "sourceReferences": [],
+  "reviewStatus": "Source required"
+}

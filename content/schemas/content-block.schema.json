@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://industriallearn.local/schemas/content-block.schema.json",
+  "title": "Industrial Learn Lesson Content Block",
+  "oneOf": [
+    { "$ref": "#/$defs/paragraph" },
+    { "$ref": "#/$defs/definition" },
+    { "$ref": "#/$defs/diagram" },
+    { "$ref": "#/$defs/equation" },
+    { "$ref": "#/$defs/symbolTable" },
+    { "$ref": "#/$defs/unitNote" },
+    { "$ref": "#/$defs/assumption" },
+    { "$ref": "#/$defs/workedCalculation" },
+    { "$ref": "#/$defs/engineeringInterpretation" },
+    { "$ref": "#/$defs/warning" },
+    { "$ref": "#/$defs/faultCase" },
+    { "$ref": "#/$defs/question" },
+    { "$ref": "#/$defs/sourceCitation" }
+  ],
+  "$defs": {
+    "base": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "sourceIds": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "symbol": {
+      "type": "object",
+      "required": ["symbol", "name", "unit"],
+      "properties": {
+        "symbol": { "type": "string" },
+        "name": { "type": "string" },
+        "unit": { "type": "string" }
+      }
+    },
+    "paragraph": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "required": ["text"],
+          "properties": {
+            "type": { "const": "paragraph" },
+            "text": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "definition": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "required": ["term", "definition"],
+          "properties": {
+            "type": { "const": "definition" },
+            "term": { "type": "string" },
+            "definition": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "diagram": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "required": ["title", "altText", "description"],
+          "properties": {
+            "type": { "const": "diagram" },
+            "title": { "type": "string" },
+            "altText": { "type": "string" },
+            "description": { "type": "string" },
+            "caption": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "equation": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "required": ["name", "expression", "symbols"],
+          "properties": {
+            "type": { "const": "equation" },
+            "name": { "type": "string" },
+            "expression": { "type": "string" },
+            "symbols": { "type": "array", "items": { "$ref": "#/$defs/symbol" } }
+          }
+        }
+      ]
+    },
+    "symbolTable": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "required": ["symbols"],
+          "properties": {
+            "type": { "const": "symbolTable" },
+            "symbols": { "type": "array", "items": { "$ref": "#/$defs/symbol" } }
+          }
+        }
+      ]
+    },
+    "unitNote": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "required": ["quantity", "siUnit", "note"],
+          "properties": {
+            "type": { "const": "unitNote" },
+            "quantity": { "type": "string" },
+            "siUnit": { "type": "string" },
+            "note": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "assumption": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "required": ["text"],
+          "properties": {
+            "type": { "const": "assumption" },
+            "text": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "workedCalculation": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "required": ["title", "given", "steps", "result", "interpretation"],
+          "properties": {
+            "type": { "const": "workedCalculation" },
+            "title": { "type": "string" },
+            "given": { "type": "array", "items": { "type": "string" } },
+            "steps": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["label", "explanation"],
+                "properties": {
+                  "label": { "type": "string" },
+                  "expression": { "type": "string" },
+                  "explanation": { "type": "string" }
+                }
+              }
+            },
+            "result": { "type": "string" },
+            "interpretation": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "engineeringInterpretation": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "required": ["text"],
+          "properties": {
+            "type": { "const": "engineeringInterpretation" },
+            "text": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "warning": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "required": ["title", "text", "severity"],
+          "properties": {
+            "type": { "const": "warning" },
+            "title": { "type": "string" },
+            "text": { "type": "string" },
+            "severity": { "enum": ["info", "warning", "fault"] }
+          }
+        }
+      ]
+    },
+    "faultCase": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "required": ["title", "symptoms", "likelyCauses", "safeResponse"],
+          "properties": {
+            "type": { "const": "faultCase" },
+            "title": { "type": "string" },
+            "symptoms": { "type": "array", "items": { "type": "string" } },
+            "likelyCauses": { "type": "array", "items": { "type": "string" } },
+            "safeResponse": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "question": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "required": ["prompt", "options", "answerExplanation"],
+          "properties": {
+            "type": { "const": "question" },
+            "prompt": { "type": "string" },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "text", "isCorrect"],
+                "properties": {
+                  "id": { "type": "string" },
+                  "text": { "type": "string" },
+                  "isCorrect": { "type": "boolean" }
+                }
+              }
+            },
+            "answerExplanation": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "sourceCitation": {
+      "type": "object",
+      "required": ["id", "type", "sourceId", "note"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "const": "sourceCitation" },
+        "sourceId": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

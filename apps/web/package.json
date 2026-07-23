@@ -1,0 +1,17 @@
+{
+  "name": "@industrial-learn/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@industrial-learn/database": "0.1.0",
+    "@industrial-learn/design-system": "0.1.0",
+    "@industrial-learn/env": "0.1.0",
+    "@industrial-learn/shared": "0.1.0"
+  }
+}

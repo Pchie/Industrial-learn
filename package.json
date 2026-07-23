@@ -1,0 +1,51 @@
+{
+  "name": "industrial-learn",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Industrial Learn application foundation.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @industrial-learn/web",
+    "build": "npm run build --workspace @industrial-learn/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "scan:secrets": "node scripts/secret-scan.mjs",
+    "validate:content": "vitest run packages/content-system/src/content-system.test.ts",
+    "validate:migrations": "vitest run packages/database/src/schema.test.ts",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
+    "test:a11y": "playwright test tests/e2e/accessibility.spec.ts",
+    "test:smoke": "playwright test tests/e2e/staging-smoke.spec.ts",
+    "test:e2e": "npm run build && playwright test",
+    "ci": "npm run scan:secrets && npm run format:check && npm run typecheck && npm run lint && npm run validate:content && npm run validate:migrations && npm run test:unit && npm run build"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "latest",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
+    "@eslint/js": "latest",
+    "@playwright/test": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "eslint": "latest",
+    "prettier": "latest",
+    "typescript": "latest",
+    "typescript-eslint": "latest",
+    "vitest": "latest"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  }
+}

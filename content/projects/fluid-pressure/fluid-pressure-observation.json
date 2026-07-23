@@ -1,0 +1,12 @@
+{
+  "id": "PRJ-FLUID-PRESSURE-OBSERVATION-001",
+  "title": "Pressure Unit Observation",
+  "brief": "Identify where pressure, force, and area units appear in a classroom training example.",
+  "deliverables": [
+    "List the quantities used.",
+    "State the SI unit for each quantity.",
+    "Describe one limitation of the training example."
+  ],
+  "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
+  "reviewStatus": "Source required"
+}

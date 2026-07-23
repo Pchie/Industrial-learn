@@ -1,0 +1,33 @@
+{
+  "id": "SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001",
+  "title": "Thermodynamics foundations reference required",
+  "fullTitle": "Source needed for systems, surroundings and boundaries in introductory thermodynamics",
+  "author": "Not yet available",
+  "organisation": "Not yet available",
+  "edition": "Not yet available",
+  "version": "source-needed-record-v1",
+  "publicationDate": "Not yet available",
+  "accessDate": "2026-07-22",
+  "documentType": "technical reference placeholder",
+  "discipline": "Thermodynamics",
+  "topics": ["system", "surroundings", "boundary", "open system", "closed system"],
+  "filePath": null,
+  "copyrightStatus": "Source required",
+  "reliabilityLevel": 5,
+  "citation": "Source required before student-use approval. This placeholder must be replaced with an approved thermodynamics source record.",
+  "approvalStatus": "Source required",
+  "reviewStatus": "Source required",
+  "evidenceStatus": "missing",
+  "reviewer": null,
+  "reviewDate": null,
+  "relevantChapters": [],
+  "relevantSections": [],
+  "relevantPages": [],
+  "limitations": [
+    "No actual thermodynamics source document is present in sources/.",
+    "No property data, steam tables, refrigerant data, or material data may be inferred from this placeholder."
+  ],
+  "notes": "Use this ID only to keep traceability explicit while the real source remains missing.",
+  "createdAt": "2026-07-22",
+  "updatedAt": "2026-07-22"
+}

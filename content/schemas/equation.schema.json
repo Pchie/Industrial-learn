@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://industriallearn.local/schemas/equation.schema.json",
+  "title": "Industrial Learn Equation",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "expression",
+    "symbols",
+    "siUnits",
+    "sourceIds",
+    "reviewStatus"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^EQ-[A-Z0-9-]+$" },
+    "name": { "type": "string" },
+    "expression": { "type": "string" },
+    "symbols": { "type": "array", "items": { "type": "string" } },
+    "siUnits": { "type": "object" },
+    "sourceIds": { "type": "array", "items": { "type": "string" } },
+    "reviewStatus": { "$ref": "#/$defs/reviewStatus" }
+  },
+  "$defs": {
+    "reviewStatus": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Source required",
+        "Source checked",
+        "Equation checked",
+        "Simulation checked",
+        "Engineering review required",
+        "Approved for student use"
+      ]
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://industriallearn.local/schemas/worked-example.schema.json",
+  "title": "Industrial Learn Worked Example",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "purpose",
+    "given",
+    "steps",
+    "answer",
+    "sourceIds",
+    "reviewStatus"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^WE-[A-Z0-9-]+$" },
+    "title": { "type": "string" },
+    "purpose": { "type": "string" },
+    "given": { "type": "array", "items": { "type": "string" } },
+    "steps": { "type": "array", "items": { "type": "string" } },
+    "answer": { "type": "string" },
+    "sourceIds": { "type": "array", "items": { "type": "string" } },
+    "reviewStatus": { "$ref": "lesson.schema.json#/$defs/reviewStatus" }
+  }
+}

@@ -1,0 +1,72 @@
+name: Industrial Learn CI
+
+on:
+  pull_request:
+    branches:
+      - development
+      - production
+  push:
+    branches:
+      - development
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies from lock file
+        run: npm ci
+
+      - name: Secret scan
+        run: npm run scan:secrets
+
+      - name: Formatting
+        run: npm run format:check
+
+      - name: Type checking
+        run: npm run typecheck
+
+      - name: Linting
+        run: npm run lint
+
+      - name: Content and source-reference validation
+        run: npm run validate:content
+
+      - name: Database migration validation
+        run: npm run validate:migrations
+
+      - name: Unit and integration tests
+        run: npm run test:unit
+
+      - name: Production build
+        run: npm run build
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Accessibility tests
+        run: npm run test:a11y
+
+      - name: Staging smoke tests
+        run: npm run test:smoke
+
+      - name: Critical dependency vulnerability gate
+        run: npm audit --audit-level=critical
+
+      - name: Dependency vulnerability report
+        run: npm audit --audit-level=moderate
+        continue-on-error: true

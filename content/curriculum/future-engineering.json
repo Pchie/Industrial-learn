@@ -1,0 +1,615 @@
+{
+  "schemaVersion": "0.1.0",
+  "school": {
+    "id": "school-future-engineering",
+    "slug": "future-engineering",
+    "title": "FUTURE ENGINEERING",
+    "description": "Emerging technologies, intelligent industrial systems, digital engineering, automation, sustainability, and future professional practice.",
+    "disciplines": [
+      {
+        "id": "discipline-future-intelligent-systems",
+        "slug": "intelligent-industrial-systems",
+        "title": "Intelligent Industrial Systems",
+        "description": "AI-supported optimisation, industrial IoT, monitoring, automation, and connected systems.",
+        "programmes": [
+          {
+            "id": "programme-future-smart-industry",
+            "slug": "smart-industry-foundations",
+            "title": "Smart Industry Foundations",
+            "description": "A pathway connecting core engineering fundamentals to intelligent industrial technologies.",
+            "academicYears": [
+              {
+                "id": "future-smart-year-3",
+                "yearNumber": 3,
+                "title": "Academic Year 3",
+                "semesters": [
+                  {
+                    "id": "future-smart-y3-s1",
+                    "semesterNumber": 1,
+                    "title": "Semester 1",
+                    "modules": [
+                      {
+                        "id": "mod-future-industrial-iot-001",
+                        "slug": "industrial-iot-foundations",
+                        "title": "Industrial IoT Foundations",
+                        "description": "Introduces connected sensing, data collection, and monitoring concepts for industrial systems.",
+                        "difficulty": "intermediate",
+                        "academicLevel": "third-year undergraduate",
+                        "estimatedDuration": "8 hours",
+                        "prerequisites": [
+                          "mod-core-electrical-circuits-001",
+                          "mod-core-programming-001"
+                        ],
+                        "learningOutcomes": [
+                          "Explain how circuit measurements and data handling support industrial IoT.",
+                          "Identify common sensing, connectivity, and monitoring concerns.",
+                          "Describe limitations and review needs for connected industrial data."
+                        ],
+                        "knowledgeFileIds": ["kf-future-industrial-iot-basics"],
+                        "sourceIds": ["src-required-industrial-iot-foundations"],
+                        "simulationIds": ["sim-future-sensor-network-001"],
+                        "assessmentIds": ["asm-future-industrial-iot-quiz-001"],
+                        "projectIds": ["prj-future-iot-monitoring-plan-001"],
+                        "technicalReviewStatus": "Source required",
+                        "publicationStatus": "draft",
+                        "version": "0.1.0",
+                        "units": [
+                          {
+                            "id": "unit-future-iot-sensing-001",
+                            "slug": "connected-sensing",
+                            "title": "Connected Sensing",
+                            "description": "Connects circuit measurements and programming foundations to sensor data collection.",
+                            "lessons": [
+                              {
+                                "id": "les-future-connected-sensing-001",
+                                "slug": "from-circuit-measurement-to-sensor-data",
+                                "title": "From Circuit Measurement To Sensor Data",
+                                "description": "Explains the learning bridge from basic electrical measurement to connected industrial sensing.",
+                                "difficulty": "intermediate",
+                                "academicLevel": "third-year undergraduate",
+                                "estimatedDuration": "45 minutes",
+                                "prerequisites": [
+                                  "les-core-circuit-quantities-001",
+                                  "les-core-functions-flow-001"
+                                ],
+                                "learningOutcomes": [
+                                  "Connect simple circuit measurements to sensor data concepts.",
+                                  "Identify where data quality and assumptions affect monitoring."
+                                ],
+                                "knowledgeFileIds": ["kf-future-industrial-iot-basics"],
+                                "sourceIds": ["src-required-industrial-iot-foundations"],
+                                "simulationIds": ["sim-future-sensor-network-001"],
+                                "assessmentIds": [
+                                  "asm-future-connected-sensing-check-001"
+                                ],
+                                "projectIds": ["prj-future-iot-monitoring-plan-001"],
+                                "technicalReviewStatus": "Source required",
+                                "publicationStatus": "draft",
+                                "version": "0.1.0"
+                              }
+                            ],
+                            "simulations": [
+                              {
+                                "id": "sim-future-sensor-network-001",
+                                "slug": "sensor-network-monitoring-simulation",
+                                "title": "Sensor Network Monitoring Simulation",
+                                "stateCoverageRequired": [
+                                  "normal-state",
+                                  "boundary-state",
+                                  "fault-state"
+                                ]
+                              }
+                            ],
+                            "assessments": [
+                              {
+                                "id": "asm-future-connected-sensing-check-001",
+                                "slug": "connected-sensing-check",
+                                "title": "Connected Sensing Check"
+                              }
+                            ],
+                            "projects": [
+                              {
+                                "id": "prj-future-iot-monitoring-plan-001",
+                                "slug": "industrial-iot-monitoring-plan",
+                                "title": "Industrial IoT Monitoring Plan"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "id": "mod-future-ai-hvac-optimisation-001",
+                        "slug": "ai-hvac-optimisation",
+                        "title": "AI HVAC Optimisation",
+                        "description": "Introduces how thermal system foundations support AI-assisted HVAC monitoring and optimisation.",
+                        "difficulty": "advanced",
+                        "academicLevel": "third-year undergraduate",
+                        "estimatedDuration": "8 hours",
+                        "prerequisites": [
+                          "mod-core-thermodynamics-001",
+                          "mod-core-programming-001"
+                        ],
+                        "learningOutcomes": [
+                          "Connect thermal system boundaries to HVAC optimisation goals.",
+                          "Identify data, assumptions, and limitations in AI-assisted optimisation.",
+                          "Explain why engineering review is required before operational recommendations."
+                        ],
+                        "knowledgeFileIds": ["kf-future-ai-hvac-basics"],
+                        "sourceIds": ["src-required-ai-hvac-optimisation"],
+                        "simulationIds": ["sim-future-hvac-optimisation-001"],
+                        "assessmentIds": ["asm-future-ai-hvac-quiz-001"],
+                        "projectIds": ["prj-future-hvac-optimisation-brief-001"],
+                        "technicalReviewStatus": "Source required",
+                        "publicationStatus": "draft",
+                        "version": "0.1.0",
+                        "units": [
+                          {
+                            "id": "unit-future-hvac-data-001",
+                            "slug": "hvac-data-and-system-boundaries",
+                            "title": "HVAC Data And System Boundaries",
+                            "description": "Connects thermal systems to data-driven HVAC optimisation activities.",
+                            "lessons": [
+                              {
+                                "id": "les-future-hvac-boundaries-001",
+                                "slug": "thermal-boundaries-in-ai-hvac",
+                                "title": "Thermal Boundaries In AI HVAC",
+                                "description": "Frames why system boundaries and assumptions matter before AI optimisation.",
+                                "difficulty": "advanced",
+                                "academicLevel": "third-year undergraduate",
+                                "estimatedDuration": "50 minutes",
+                                "prerequisites": [
+                                  "les-core-energy-boundaries-001",
+                                  "les-core-functions-flow-001"
+                                ],
+                                "learningOutcomes": [
+                                  "Map thermal system boundaries to HVAC monitoring data.",
+                                  "Identify assumptions that constrain AI optimisation claims."
+                                ],
+                                "knowledgeFileIds": ["kf-future-ai-hvac-basics"],
+                                "sourceIds": ["src-required-ai-hvac-optimisation"],
+                                "simulationIds": ["sim-future-hvac-optimisation-001"],
+                                "assessmentIds": ["asm-future-hvac-boundaries-check-001"],
+                                "projectIds": ["prj-future-hvac-optimisation-brief-001"],
+                                "technicalReviewStatus": "Source required",
+                                "publicationStatus": "draft",
+                                "version": "0.1.0"
+                              }
+                            ],
+                            "simulations": [
+                              {
+                                "id": "sim-future-hvac-optimisation-001",
+                                "slug": "hvac-optimisation-scenario",
+                                "title": "HVAC Optimisation Scenario",
+                                "stateCoverageRequired": [
+                                  "normal-state",
+                                  "boundary-state",
+                                  "fault-state"
+                                ]
+                              }
+                            ],
+                            "assessments": [
+                              {
+                                "id": "asm-future-hvac-boundaries-check-001",
+                                "slug": "hvac-boundaries-check",
+                                "title": "HVAC Boundaries Check"
+                              }
+                            ],
+                            "projects": [
+                              {
+                                "id": "prj-future-hvac-optimisation-brief-001",
+                                "slug": "hvac-optimisation-brief",
+                                "title": "HVAC Optimisation Brief"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "future-smart-y3-s2",
+                    "semesterNumber": 2,
+                    "title": "Semester 2",
+                    "modules": [
+                      {
+                        "id": "mod-future-smart-pump-monitoring-001",
+                        "slug": "smart-pump-monitoring",
+                        "title": "Smart Pump Monitoring",
+                        "description": "Introduces sensor-supported monitoring and diagnosis for pump systems.",
+                        "difficulty": "advanced",
+                        "academicLevel": "third-year undergraduate",
+                        "estimatedDuration": "8 hours",
+                        "prerequisites": [
+                          "mod-core-fluid-mechanics-001",
+                          "mod-future-industrial-iot-001"
+                        ],
+                        "learningOutcomes": [
+                          "Connect fluid-system behaviour to monitoring signals.",
+                          "Identify normal, boundary, and fault states in smart pump monitoring.",
+                          "Describe limitations of monitoring data in engineering diagnosis."
+                        ],
+                        "knowledgeFileIds": ["kf-future-smart-pump-monitoring"],
+                        "sourceIds": ["src-required-smart-pump-monitoring"],
+                        "simulationIds": ["sim-future-smart-pump-001"],
+                        "assessmentIds": ["asm-future-smart-pump-quiz-001"],
+                        "projectIds": ["prj-future-pump-monitoring-diagnostic-001"],
+                        "technicalReviewStatus": "Source required",
+                        "publicationStatus": "draft",
+                        "version": "0.1.0",
+                        "units": [
+                          {
+                            "id": "unit-future-pump-monitoring-001",
+                            "slug": "pump-monitoring-signals",
+                            "title": "Pump Monitoring Signals",
+                            "description": "Connects pump-system foundations to monitoring signals and diagnostic interpretation.",
+                            "lessons": [
+                              {
+                                "id": "les-future-pump-monitoring-001",
+                                "slug": "from-flow-symptoms-to-monitoring-signals",
+                                "title": "From Flow Symptoms To Monitoring Signals",
+                                "description": "Frames how observed flow behaviour becomes monitored signal evidence.",
+                                "difficulty": "advanced",
+                                "academicLevel": "third-year undergraduate",
+                                "estimatedDuration": "50 minutes",
+                                "prerequisites": [
+                                  "les-core-pump-flow-001",
+                                  "les-future-connected-sensing-001"
+                                ],
+                                "learningOutcomes": [
+                                  "Connect pump-flow symptoms to monitoring signals.",
+                                  "Identify why diagnosis must account for assumptions and sensor limitations."
+                                ],
+                                "knowledgeFileIds": ["kf-future-smart-pump-monitoring"],
+                                "sourceIds": ["src-required-smart-pump-monitoring"],
+                                "simulationIds": ["sim-future-smart-pump-001"],
+                                "assessmentIds": ["asm-future-pump-monitoring-check-001"],
+                                "projectIds": [
+                                  "prj-future-pump-monitoring-diagnostic-001"
+                                ],
+                                "technicalReviewStatus": "Source required",
+                                "publicationStatus": "draft",
+                                "version": "0.1.0"
+                              }
+                            ],
+                            "simulations": [
+                              {
+                                "id": "sim-future-smart-pump-001",
+                                "slug": "smart-pump-monitoring-simulation",
+                                "title": "Smart Pump Monitoring Simulation",
+                                "stateCoverageRequired": [
+                                  "normal-state",
+                                  "boundary-state",
+                                  "fault-state"
+                                ]
+                              }
+                            ],
+                            "assessments": [
+                              {
+                                "id": "asm-future-pump-monitoring-check-001",
+                                "slug": "pump-monitoring-check",
+                                "title": "Pump Monitoring Check"
+                              }
+                            ],
+                            "projects": [
+                              {
+                                "id": "prj-future-pump-monitoring-diagnostic-001",
+                                "slug": "pump-monitoring-diagnostic",
+                                "title": "Pump Monitoring Diagnostic"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "discipline-future-ai-robotics-design",
+        "slug": "ai-robotics-and-design",
+        "title": "AI Robotics And Design",
+        "description": "Machine learning, robotics, automation, and generative design connected to core engineering foundations.",
+        "programmes": [
+          {
+            "id": "programme-future-ai-robotics-design",
+            "slug": "ai-robotics-design-foundations",
+            "title": "AI Robotics And Design Foundations",
+            "description": "A pathway from programming, control, and mechanics foundations to intelligent robotics and design workflows.",
+            "academicYears": [
+              {
+                "id": "future-ai-design-year-3",
+                "yearNumber": 3,
+                "title": "Academic Year 3",
+                "semesters": [
+                  {
+                    "id": "future-ai-design-y3-s1",
+                    "semesterNumber": 1,
+                    "title": "Semester 1",
+                    "modules": [
+                      {
+                        "id": "mod-future-machine-learning-001",
+                        "slug": "machine-learning-for-engineers-foundations",
+                        "title": "Machine Learning For Engineers Foundations",
+                        "description": "Introduces machine learning as a data-driven engineering support tool with limits and review needs.",
+                        "difficulty": "intermediate",
+                        "academicLevel": "third-year undergraduate",
+                        "estimatedDuration": "9 hours",
+                        "prerequisites": ["mod-core-programming-001"],
+                        "learningOutcomes": [
+                          "Explain the role of data, features, training, and validation at a conceptual level.",
+                          "Identify when machine learning output requires engineering review.",
+                          "Connect programming foundations to repeatable model workflows."
+                        ],
+                        "knowledgeFileIds": ["kf-future-ml-engineers-basics"],
+                        "sourceIds": ["src-required-machine-learning-foundations"],
+                        "simulationIds": ["sim-future-ml-classifier-001"],
+                        "assessmentIds": ["asm-future-ml-foundations-quiz-001"],
+                        "projectIds": ["prj-future-ml-dataset-review-001"],
+                        "technicalReviewStatus": "Source required",
+                        "publicationStatus": "draft",
+                        "version": "0.1.0",
+                        "units": [
+                          {
+                            "id": "unit-future-ml-workflow-001",
+                            "slug": "machine-learning-workflow",
+                            "title": "Machine Learning Workflow",
+                            "description": "Introduces data, features, training, validation, and engineering judgement.",
+                            "lessons": [
+                              {
+                                "id": "les-future-ml-workflow-001",
+                                "slug": "from-functions-to-model-workflows",
+                                "title": "From Functions To Model Workflows",
+                                "description": "Connects programming foundations to repeatable machine learning workflows.",
+                                "difficulty": "intermediate",
+                                "academicLevel": "third-year undergraduate",
+                                "estimatedDuration": "50 minutes",
+                                "prerequisites": ["les-core-functions-flow-001"],
+                                "learningOutcomes": [
+                                  "Describe the stages of a basic machine learning workflow.",
+                                  "Explain why model outputs require validation and engineering judgement."
+                                ],
+                                "knowledgeFileIds": ["kf-future-ml-engineers-basics"],
+                                "sourceIds": [
+                                  "src-required-machine-learning-foundations"
+                                ],
+                                "simulationIds": ["sim-future-ml-classifier-001"],
+                                "assessmentIds": ["asm-future-ml-workflow-check-001"],
+                                "projectIds": ["prj-future-ml-dataset-review-001"],
+                                "technicalReviewStatus": "Source required",
+                                "publicationStatus": "draft",
+                                "version": "0.1.0"
+                              }
+                            ],
+                            "simulations": [
+                              {
+                                "id": "sim-future-ml-classifier-001",
+                                "slug": "ml-classifier-behaviour-simulation",
+                                "title": "Machine Learning Classifier Behaviour Simulation",
+                                "stateCoverageRequired": [
+                                  "normal-state",
+                                  "boundary-state",
+                                  "fault-state"
+                                ]
+                              }
+                            ],
+                            "assessments": [
+                              {
+                                "id": "asm-future-ml-workflow-check-001",
+                                "slug": "ml-workflow-check",
+                                "title": "Machine Learning Workflow Check"
+                              }
+                            ],
+                            "projects": [
+                              {
+                                "id": "prj-future-ml-dataset-review-001",
+                                "slug": "ml-dataset-review",
+                                "title": "Machine Learning Dataset Review"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "id": "mod-future-robotics-foundations-001",
+                        "slug": "robotics-foundations",
+                        "title": "Robotics Foundations",
+                        "description": "Introduces robotic systems through control foundations, sensing, actuation, and safety-aware behaviour.",
+                        "difficulty": "advanced",
+                        "academicLevel": "third-year undergraduate",
+                        "estimatedDuration": "10 hours",
+                        "prerequisites": [
+                          "mod-core-control-systems-001",
+                          "mod-core-programming-001"
+                        ],
+                        "learningOutcomes": [
+                          "Connect feedback control concepts to robotic behaviour.",
+                          "Identify sensing, actuation, control, and safety boundaries.",
+                          "Interpret simple robot-state changes with assumptions and limitations."
+                        ],
+                        "knowledgeFileIds": ["kf-future-robotics-basics"],
+                        "sourceIds": ["src-required-robotics-foundations"],
+                        "simulationIds": ["sim-future-robot-arm-control-001"],
+                        "assessmentIds": ["asm-future-robotics-quiz-001"],
+                        "projectIds": ["prj-future-robot-cell-risk-review-001"],
+                        "technicalReviewStatus": "Source required",
+                        "publicationStatus": "draft",
+                        "version": "0.1.0",
+                        "units": [
+                          {
+                            "id": "unit-future-robot-control-001",
+                            "slug": "robot-control-loop",
+                            "title": "Robot Control Loop",
+                            "description": "Connects feedback-loop foundations to robotic control behaviour.",
+                            "lessons": [
+                              {
+                                "id": "les-future-robot-control-001",
+                                "slug": "feedback-control-in-robotics",
+                                "title": "Feedback Control In Robotics",
+                                "description": "Frames robotic behaviour through setpoints, feedback, disturbances, and safety limits.",
+                                "difficulty": "advanced",
+                                "academicLevel": "third-year undergraduate",
+                                "estimatedDuration": "55 minutes",
+                                "prerequisites": [
+                                  "les-core-feedback-loop-001",
+                                  "les-core-functions-flow-001"
+                                ],
+                                "learningOutcomes": [
+                                  "Map feedback-loop concepts to robotic control behaviour.",
+                                  "Identify safety and limitation statements needed for robot simulations."
+                                ],
+                                "knowledgeFileIds": ["kf-future-robotics-basics"],
+                                "sourceIds": ["src-required-robotics-foundations"],
+                                "simulationIds": ["sim-future-robot-arm-control-001"],
+                                "assessmentIds": ["asm-future-robot-control-check-001"],
+                                "projectIds": ["prj-future-robot-cell-risk-review-001"],
+                                "technicalReviewStatus": "Source required",
+                                "publicationStatus": "draft",
+                                "version": "0.1.0"
+                              }
+                            ],
+                            "simulations": [
+                              {
+                                "id": "sim-future-robot-arm-control-001",
+                                "slug": "robot-arm-control-simulation",
+                                "title": "Robot Arm Control Simulation",
+                                "stateCoverageRequired": [
+                                  "normal-state",
+                                  "boundary-state",
+                                  "fault-state"
+                                ]
+                              }
+                            ],
+                            "assessments": [
+                              {
+                                "id": "asm-future-robot-control-check-001",
+                                "slug": "robot-control-check",
+                                "title": "Robot Control Check"
+                              }
+                            ],
+                            "projects": [
+                              {
+                                "id": "prj-future-robot-cell-risk-review-001",
+                                "slug": "robot-cell-risk-review",
+                                "title": "Robot Cell Risk Review"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "future-ai-design-y3-s2",
+                    "semesterNumber": 2,
+                    "title": "Semester 2",
+                    "modules": [
+                      {
+                        "id": "mod-future-generative-mechanical-design-001",
+                        "slug": "generative-mechanical-design",
+                        "title": "Generative Mechanical Design",
+                        "description": "Introduces AI-supported mechanical design exploration grounded in mechanics and material assumptions.",
+                        "difficulty": "advanced",
+                        "academicLevel": "third-year undergraduate",
+                        "estimatedDuration": "8 hours",
+                        "prerequisites": [
+                          "mod-core-strength-materials-001",
+                          "mod-core-programming-001"
+                        ],
+                        "learningOutcomes": [
+                          "Connect strength-of-materials concepts to generated mechanical design options.",
+                          "Identify assumptions, constraints, and review needs in AI-supported design.",
+                          "Explain why generated designs require engineering verification."
+                        ],
+                        "knowledgeFileIds": ["kf-future-generative-mechanical-design"],
+                        "sourceIds": ["src-required-generative-mechanical-design"],
+                        "simulationIds": ["sim-future-design-constraint-explorer-001"],
+                        "assessmentIds": ["asm-future-generative-design-quiz-001"],
+                        "projectIds": ["prj-future-design-option-review-001"],
+                        "technicalReviewStatus": "Source required",
+                        "publicationStatus": "draft",
+                        "version": "0.1.0",
+                        "units": [
+                          {
+                            "id": "unit-future-design-constraints-001",
+                            "slug": "design-constraints-and-verification",
+                            "title": "Design Constraints And Verification",
+                            "description": "Connects strength-of-materials foundations to generated design constraints and verification.",
+                            "lessons": [
+                              {
+                                "id": "les-future-design-verification-001",
+                                "slug": "checking-generated-design-options",
+                                "title": "Checking Generated Design Options",
+                                "description": "Frames generated mechanical design as a proposal that requires engineering checks.",
+                                "difficulty": "advanced",
+                                "academicLevel": "third-year undergraduate",
+                                "estimatedDuration": "50 minutes",
+                                "prerequisites": [
+                                  "les-core-stress-strain-001",
+                                  "les-core-functions-flow-001"
+                                ],
+                                "learningOutcomes": [
+                                  "Identify constraints that shape generated design options.",
+                                  "Explain why generated options require verification before use."
+                                ],
+                                "knowledgeFileIds": [
+                                  "kf-future-generative-mechanical-design"
+                                ],
+                                "sourceIds": [
+                                  "src-required-generative-mechanical-design"
+                                ],
+                                "simulationIds": [
+                                  "sim-future-design-constraint-explorer-001"
+                                ],
+                                "assessmentIds": [
+                                  "asm-future-design-verification-check-001"
+                                ],
+                                "projectIds": ["prj-future-design-option-review-001"],
+                                "technicalReviewStatus": "Source required",
+                                "publicationStatus": "draft",
+                                "version": "0.1.0"
+                              }
+                            ],
+                            "simulations": [
+                              {
+                                "id": "sim-future-design-constraint-explorer-001",
+                                "slug": "design-constraint-explorer",
+                                "title": "Design Constraint Explorer",
+                                "stateCoverageRequired": [
+                                  "normal-state",
+                                  "boundary-state",
+                                  "fault-state"
+                                ]
+                              }
+                            ],
+                            "assessments": [
+                              {
+                                "id": "asm-future-design-verification-check-001",
+                                "slug": "design-verification-check",
+                                "title": "Design Verification Check"
+                              }
+                            ],
+                            "projects": [
+                              {
+                                "id": "prj-future-design-option-review-001",
+                                "slug": "generated-design-option-review",
+                                "title": "Generated Design Option Review"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

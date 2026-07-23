@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://industriallearn.local/schemas/safety-warning.schema.json",
+  "title": "Industrial Learn Safety Warning",
+  "type": "object",
+  "required": ["id", "hazard", "warning", "studentBoundary", "sourceIds", "reviewStatus"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^SAFE-[A-Z0-9-]+$" },
+    "hazard": { "type": "string" },
+    "warning": { "type": "string" },
+    "studentBoundary": { "type": "string" },
+    "sourceIds": { "type": "array", "items": { "type": "string" } },
+    "reviewStatus": { "$ref": "lesson.schema.json#/$defs/reviewStatus" }
+  }
+}

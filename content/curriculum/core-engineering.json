@@ -1,0 +1,625 @@
+{
+  "schemaVersion": "0.1.0",
+  "school": {
+    "id": "school-core-engineering",
+    "slug": "core-engineering",
+    "title": "CORE ENGINEERING",
+    "description": "Foundational engineering theory, calculations, simulations, diagnosis, assessments, and projects.",
+    "disciplines": [
+      {
+        "id": "discipline-core-mechanical",
+        "slug": "mechanical-engineering",
+        "title": "Mechanical Engineering",
+        "description": "Mechanics, materials, thermofluids, machines, and mechanical design foundations.",
+        "programmes": [
+          {
+            "id": "programme-core-mechanical-foundations",
+            "slug": "mechanical-foundations",
+            "title": "Mechanical Engineering Foundations",
+            "description": "A foundation pathway for mechanics, thermodynamics, fluids, and materials.",
+            "academicYears": [
+              {
+                "id": "core-mech-year-1",
+                "yearNumber": 1,
+                "title": "Academic Year 1",
+                "semesters": [
+                  {
+                    "id": "core-mech-y1-s1",
+                    "semesterNumber": 1,
+                    "title": "Semester 1",
+                    "modules": [
+                      {
+                        "id": "mod-core-strength-materials-001",
+                        "slug": "strength-of-materials-foundations",
+                        "title": "Strength of Materials Foundations",
+                        "description": "Introduces stress, strain, material response, and safe interpretation of mechanical loading.",
+                        "difficulty": "introductory",
+                        "academicLevel": "first-year undergraduate",
+                        "estimatedDuration": "8 hours",
+                        "prerequisites": [],
+                        "learningOutcomes": [
+                          "Identify common loading conditions and material response concepts.",
+                          "Explain stress and strain using consistent units.",
+                          "Interpret simple mechanical loading scenarios and limitations."
+                        ],
+                        "knowledgeFileIds": ["kf-core-strength-materials-basics"],
+                        "sourceIds": ["src-required-strength-materials-foundations"],
+                        "simulationIds": ["sim-core-stress-strain-001"],
+                        "assessmentIds": ["asm-core-strength-materials-quiz-001"],
+                        "projectIds": ["prj-core-simple-bracket-review-001"],
+                        "technicalReviewStatus": "Source required",
+                        "publicationStatus": "draft",
+                        "version": "0.1.0",
+                        "units": [
+                          {
+                            "id": "unit-core-stress-strain-001",
+                            "slug": "stress-strain-basics",
+                            "title": "Stress And Strain Basics",
+                            "description": "Introduces stress, strain, proportional response, and material behaviour vocabulary.",
+                            "lessons": [
+                              {
+                                "id": "les-core-stress-strain-001",
+                                "slug": "what-stress-and-strain-mean",
+                                "title": "What Stress And Strain Mean",
+                                "description": "Defines stress and strain conceptually and prepares students for structured calculations.",
+                                "difficulty": "introductory",
+                                "academicLevel": "first-year undergraduate",
+                                "estimatedDuration": "35 minutes",
+                                "prerequisites": [],
+                                "learningOutcomes": [
+                                  "Distinguish force, area, stress, extension, and strain.",
+                                  "Recognise why units and assumptions matter in material calculations."
+                                ],
+                                "knowledgeFileIds": ["kf-core-strength-materials-basics"],
+                                "sourceIds": [
+                                  "src-required-strength-materials-foundations"
+                                ],
+                                "simulationIds": ["sim-core-stress-strain-001"],
+                                "assessmentIds": ["asm-core-stress-strain-check-001"],
+                                "projectIds": [],
+                                "technicalReviewStatus": "Source required",
+                                "publicationStatus": "draft",
+                                "version": "0.1.0"
+                              }
+                            ],
+                            "simulations": [
+                              {
+                                "id": "sim-core-stress-strain-001",
+                                "slug": "stress-strain-visualiser",
+                                "title": "Stress Strain Visualiser",
+                                "stateCoverageRequired": [
+                                  "normal-state",
+                                  "boundary-state",
+                                  "fault-state"
+                                ]
+                              }
+                            ],
+                            "assessments": [
+                              {
+                                "id": "asm-core-stress-strain-check-001",
+                                "slug": "stress-strain-concept-check",
+                                "title": "Stress And Strain Concept Check"
+                              }
+                            ],
+                            "projects": [
+                              {
+                                "id": "prj-core-simple-bracket-review-001",
+                                "slug": "simple-bracket-load-review",
+                                "title": "Simple Bracket Load Review"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "core-mech-y1-s2",
+                    "semesterNumber": 2,
+                    "title": "Semester 2",
+                    "modules": [
+                      {
+                        "id": "mod-core-fluid-mechanics-001",
+                        "slug": "fluid-mechanics-foundations",
+                        "title": "Fluid Mechanics Foundations",
+                        "description": "Introduces pressure, flow, losses, and system thinking for fluid systems.",
+                        "difficulty": "developing",
+                        "academicLevel": "first-year undergraduate",
+                        "estimatedDuration": "9 hours",
+                        "prerequisites": [],
+                        "learningOutcomes": [
+                          "Explain pressure and flow in simple fluid systems.",
+                          "Identify normal and abnormal operating conditions in basic pump systems.",
+                          "Use source-backed assumptions when interpreting fluid behaviour."
+                        ],
+                        "knowledgeFileIds": ["kf-core-fluid-mechanics-basics"],
+                        "sourceIds": ["src-required-fluid-mechanics-foundations"],
+                        "simulationIds": ["sim-core-pump-flow-001"],
+                        "assessmentIds": ["asm-core-fluid-mechanics-quiz-001"],
+                        "projectIds": ["prj-core-pump-system-observation-001"],
+                        "technicalReviewStatus": "Source required",
+                        "publicationStatus": "draft",
+                        "version": "0.1.0",
+                        "units": [
+                          {
+                            "id": "unit-core-pump-flow-001",
+                            "slug": "pump-flow-and-pressure",
+                            "title": "Pump Flow And Pressure",
+                            "description": "Introduces pump system variables and observed operating conditions.",
+                            "lessons": [
+                              {
+                                "id": "les-core-pump-flow-001",
+                                "slug": "reading-a-simple-pump-system",
+                                "title": "Reading A Simple Pump System",
+                                "description": "Frames pressure, flow, and restrictions in a basic pump system.",
+                                "difficulty": "developing",
+                                "academicLevel": "first-year undergraduate",
+                                "estimatedDuration": "45 minutes",
+                                "prerequisites": [],
+                                "learningOutcomes": [
+                                  "Identify pressure and flow variables in a simple pump system.",
+                                  "Recognise symptoms of abnormal flow conditions."
+                                ],
+                                "knowledgeFileIds": ["kf-core-fluid-mechanics-basics"],
+                                "sourceIds": ["src-required-fluid-mechanics-foundations"],
+                                "simulationIds": ["sim-core-pump-flow-001"],
+                                "assessmentIds": ["asm-core-pump-flow-check-001"],
+                                "projectIds": ["prj-core-pump-system-observation-001"],
+                                "technicalReviewStatus": "Source required",
+                                "publicationStatus": "draft",
+                                "version": "0.1.0"
+                              }
+                            ],
+                            "simulations": [
+                              {
+                                "id": "sim-core-pump-flow-001",
+                                "slug": "pump-flow-diagnostic-simulation",
+                                "title": "Pump Flow Diagnostic Simulation",
+                                "stateCoverageRequired": [
+                                  "normal-state",
+                                  "boundary-state",
+                                  "fault-state"
+                                ]
+                              }
+                            ],
+                            "assessments": [
+                              {
+                                "id": "asm-core-pump-flow-check-001",
+                                "slug": "pump-flow-diagnosis-check",
+                                "title": "Pump Flow Diagnosis Check"
+                              }
+                            ],
+                            "projects": [
+                              {
+                                "id": "prj-core-pump-system-observation-001",
+                                "slug": "pump-system-observation-report",
+                                "title": "Pump System Observation Report"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "core-mech-year-2",
+                "yearNumber": 2,
+                "title": "Academic Year 2",
+                "semesters": [
+                  {
+                    "id": "core-mech-y2-s1",
+                    "semesterNumber": 1,
+                    "title": "Semester 1",
+                    "modules": [
+                      {
+                        "id": "mod-core-thermodynamics-001",
+                        "slug": "thermodynamics-foundations",
+                        "title": "Thermodynamics Foundations",
+                        "description": "Introduces energy, heat, work, system boundaries, and thermal system reasoning.",
+                        "difficulty": "intermediate",
+                        "academicLevel": "second-year undergraduate",
+                        "estimatedDuration": "10 hours",
+                        "prerequisites": [],
+                        "learningOutcomes": [
+                          "Describe energy transfer across simple system boundaries.",
+                          "Explain thermal efficiency and operating limitations at a conceptual level.",
+                          "Prepare for HVAC and energy optimisation topics."
+                        ],
+                        "knowledgeFileIds": ["kf-core-thermodynamics-basics"],
+                        "sourceIds": ["src-required-thermodynamics-foundations"],
+                        "simulationIds": ["sim-core-thermal-system-001"],
+                        "assessmentIds": ["asm-core-thermodynamics-quiz-001"],
+                        "projectIds": ["prj-core-thermal-efficiency-review-001"],
+                        "technicalReviewStatus": "Source required",
+                        "publicationStatus": "draft",
+                        "version": "0.1.0",
+                        "units": [
+                          {
+                            "id": "unit-core-energy-systems-001",
+                            "slug": "energy-and-system-boundaries",
+                            "title": "Energy And System Boundaries",
+                            "description": "Introduces thermal systems through boundaries, inputs, outputs, and assumptions.",
+                            "lessons": [
+                              {
+                                "id": "les-core-energy-boundaries-001",
+                                "slug": "defining-a-thermal-system",
+                                "title": "Defining A Thermal System",
+                                "description": "Shows how system boundaries shape thermal reasoning and later optimisation activities.",
+                                "difficulty": "intermediate",
+                                "academicLevel": "second-year undergraduate",
+                                "estimatedDuration": "50 minutes",
+                                "prerequisites": [],
+                                "learningOutcomes": [
+                                  "Identify system boundaries for a simple thermal system.",
+                                  "List assumptions needed before interpreting energy behaviour."
+                                ],
+                                "knowledgeFileIds": ["kf-core-thermodynamics-basics"],
+                                "sourceIds": ["src-required-thermodynamics-foundations"],
+                                "simulationIds": ["sim-core-thermal-system-001"],
+                                "assessmentIds": ["asm-core-energy-boundaries-check-001"],
+                                "projectIds": [],
+                                "technicalReviewStatus": "Source required",
+                                "publicationStatus": "draft",
+                                "version": "0.1.0"
+                              }
+                            ],
+                            "simulations": [
+                              {
+                                "id": "sim-core-thermal-system-001",
+                                "slug": "thermal-system-boundary-simulation",
+                                "title": "Thermal System Boundary Simulation",
+                                "stateCoverageRequired": [
+                                  "normal-state",
+                                  "boundary-state",
+                                  "fault-state"
+                                ]
+                              }
+                            ],
+                            "assessments": [
+                              {
+                                "id": "asm-core-energy-boundaries-check-001",
+                                "slug": "energy-boundaries-check",
+                                "title": "Energy Boundaries Check"
+                              }
+                            ],
+                            "projects": [
+                              {
+                                "id": "prj-core-thermal-efficiency-review-001",
+                                "slug": "thermal-efficiency-review",
+                                "title": "Thermal Efficiency Review"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "discipline-core-electrical",
+        "slug": "electrical-engineering",
+        "title": "Electrical Engineering",
+        "description": "Circuits, machines, power, instrumentation, and electrical systems foundations.",
+        "programmes": [
+          {
+            "id": "programme-core-electrical-foundations",
+            "slug": "electrical-foundations",
+            "title": "Electrical Engineering Foundations",
+            "description": "A foundation pathway for circuits, measurements, and control preparation.",
+            "academicYears": [
+              {
+                "id": "core-elec-year-1",
+                "yearNumber": 1,
+                "title": "Academic Year 1",
+                "semesters": [
+                  {
+                    "id": "core-elec-y1-s1",
+                    "semesterNumber": 1,
+                    "title": "Semester 1",
+                    "modules": [
+                      {
+                        "id": "mod-core-electrical-circuits-001",
+                        "slug": "electrical-circuits-foundations",
+                        "title": "Electrical Circuits Foundations",
+                        "description": "Introduces basic circuit quantities, measurements, and simple circuit reasoning.",
+                        "difficulty": "introductory",
+                        "academicLevel": "first-year undergraduate",
+                        "estimatedDuration": "9 hours",
+                        "prerequisites": [],
+                        "learningOutcomes": [
+                          "Identify basic electrical quantities and measurement points.",
+                          "Interpret simple circuit behaviour using source-backed assumptions.",
+                          "Prepare for industrial IoT and instrumentation topics."
+                        ],
+                        "knowledgeFileIds": ["kf-core-electrical-circuits-basics"],
+                        "sourceIds": ["src-required-electrical-circuits-foundations"],
+                        "simulationIds": ["sim-core-dc-circuit-001"],
+                        "assessmentIds": ["asm-core-electrical-circuits-quiz-001"],
+                        "projectIds": ["prj-core-sensor-circuit-observation-001"],
+                        "technicalReviewStatus": "Source required",
+                        "publicationStatus": "draft",
+                        "version": "0.1.0",
+                        "units": [
+                          {
+                            "id": "unit-core-circuit-quantities-001",
+                            "slug": "circuit-quantities",
+                            "title": "Circuit Quantities",
+                            "description": "Introduces voltage, current, resistance, measurement, and circuit interpretation.",
+                            "lessons": [
+                              {
+                                "id": "les-core-circuit-quantities-001",
+                                "slug": "voltage-current-and-resistance",
+                                "title": "Voltage Current And Resistance",
+                                "description": "Frames the basic quantities used in circuit calculations and diagnostics.",
+                                "difficulty": "introductory",
+                                "academicLevel": "first-year undergraduate",
+                                "estimatedDuration": "40 minutes",
+                                "prerequisites": [],
+                                "learningOutcomes": [
+                                  "Distinguish voltage, current, and resistance.",
+                                  "Identify safe measurement reasoning in simple educational circuits."
+                                ],
+                                "knowledgeFileIds": [
+                                  "kf-core-electrical-circuits-basics"
+                                ],
+                                "sourceIds": [
+                                  "src-required-electrical-circuits-foundations"
+                                ],
+                                "simulationIds": ["sim-core-dc-circuit-001"],
+                                "assessmentIds": [
+                                  "asm-core-circuit-quantities-check-001"
+                                ],
+                                "projectIds": [],
+                                "technicalReviewStatus": "Source required",
+                                "publicationStatus": "draft",
+                                "version": "0.1.0"
+                              }
+                            ],
+                            "simulations": [
+                              {
+                                "id": "sim-core-dc-circuit-001",
+                                "slug": "dc-circuit-visualiser",
+                                "title": "DC Circuit Visualiser",
+                                "stateCoverageRequired": [
+                                  "normal-state",
+                                  "boundary-state",
+                                  "fault-state"
+                                ]
+                              }
+                            ],
+                            "assessments": [
+                              {
+                                "id": "asm-core-circuit-quantities-check-001",
+                                "slug": "circuit-quantities-check",
+                                "title": "Circuit Quantities Check"
+                              }
+                            ],
+                            "projects": [
+                              {
+                                "id": "prj-core-sensor-circuit-observation-001",
+                                "slug": "sensor-circuit-observation",
+                                "title": "Sensor Circuit Observation"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "core-elec-y1-s2",
+                    "semesterNumber": 2,
+                    "title": "Semester 2",
+                    "modules": [
+                      {
+                        "id": "mod-core-control-systems-001",
+                        "slug": "control-systems-foundations",
+                        "title": "Control Systems Foundations",
+                        "description": "Introduces feedback, setpoints, process variables, response, and basic control reasoning.",
+                        "difficulty": "developing",
+                        "academicLevel": "first-year undergraduate",
+                        "estimatedDuration": "10 hours",
+                        "prerequisites": ["mod-core-electrical-circuits-001"],
+                        "learningOutcomes": [
+                          "Explain feedback control at a conceptual level.",
+                          "Identify setpoint, process variable, disturbance, and response.",
+                          "Prepare for robotics and industrial automation topics."
+                        ],
+                        "knowledgeFileIds": ["kf-core-control-systems-basics"],
+                        "sourceIds": ["src-required-control-systems-foundations"],
+                        "simulationIds": ["sim-core-feedback-loop-001"],
+                        "assessmentIds": ["asm-core-control-systems-quiz-001"],
+                        "projectIds": ["prj-core-feedback-control-observation-001"],
+                        "technicalReviewStatus": "Source required",
+                        "publicationStatus": "draft",
+                        "version": "0.1.0",
+                        "units": [
+                          {
+                            "id": "unit-core-feedback-001",
+                            "slug": "feedback-loop-basics",
+                            "title": "Feedback Loop Basics",
+                            "description": "Introduces control-loop vocabulary and simple response interpretation.",
+                            "lessons": [
+                              {
+                                "id": "les-core-feedback-loop-001",
+                                "slug": "setpoints-process-variables-and-disturbances",
+                                "title": "Setpoints Process Variables And Disturbances",
+                                "description": "Defines the basic control variables used in automation and robotics.",
+                                "difficulty": "developing",
+                                "academicLevel": "first-year undergraduate",
+                                "estimatedDuration": "45 minutes",
+                                "prerequisites": ["les-core-circuit-quantities-001"],
+                                "learningOutcomes": [
+                                  "Identify setpoint, process variable, manipulated variable, and disturbance.",
+                                  "Describe why feedback is useful in controlled systems."
+                                ],
+                                "knowledgeFileIds": ["kf-core-control-systems-basics"],
+                                "sourceIds": ["src-required-control-systems-foundations"],
+                                "simulationIds": ["sim-core-feedback-loop-001"],
+                                "assessmentIds": ["asm-core-feedback-loop-check-001"],
+                                "projectIds": [],
+                                "technicalReviewStatus": "Source required",
+                                "publicationStatus": "draft",
+                                "version": "0.1.0"
+                              }
+                            ],
+                            "simulations": [
+                              {
+                                "id": "sim-core-feedback-loop-001",
+                                "slug": "feedback-loop-response-simulation",
+                                "title": "Feedback Loop Response Simulation",
+                                "stateCoverageRequired": [
+                                  "normal-state",
+                                  "boundary-state",
+                                  "fault-state"
+                                ]
+                              }
+                            ],
+                            "assessments": [
+                              {
+                                "id": "asm-core-feedback-loop-check-001",
+                                "slug": "feedback-loop-check",
+                                "title": "Feedback Loop Check"
+                              }
+                            ],
+                            "projects": [
+                              {
+                                "id": "prj-core-feedback-control-observation-001",
+                                "slug": "feedback-control-observation",
+                                "title": "Feedback Control Observation"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "discipline-core-computing",
+        "slug": "computing-for-engineers",
+        "title": "Computing For Engineers",
+        "description": "Programming, data handling, modelling, and computational reasoning for engineers.",
+        "programmes": [
+          {
+            "id": "programme-core-computing-foundations",
+            "slug": "computing-foundations",
+            "title": "Computing Foundations For Engineers",
+            "description": "A foundation pathway for programming, data, and machine learning readiness.",
+            "academicYears": [
+              {
+                "id": "core-comp-year-1",
+                "yearNumber": 1,
+                "title": "Academic Year 1",
+                "semesters": [
+                  {
+                    "id": "core-comp-y1-s1",
+                    "semesterNumber": 1,
+                    "title": "Semester 1",
+                    "modules": [
+                      {
+                        "id": "mod-core-programming-001",
+                        "slug": "programming-for-engineers-foundations",
+                        "title": "Programming For Engineers Foundations",
+                        "description": "Introduces structured problem solving, variables, control flow, functions, and data handling for engineering contexts.",
+                        "difficulty": "introductory",
+                        "academicLevel": "first-year undergraduate",
+                        "estimatedDuration": "10 hours",
+                        "prerequisites": [],
+                        "learningOutcomes": [
+                          "Describe basic program structure and control flow.",
+                          "Use functions as reusable problem-solving units.",
+                          "Prepare for data-driven and machine learning topics."
+                        ],
+                        "knowledgeFileIds": ["kf-core-programming-basics"],
+                        "sourceIds": ["src-required-programming-foundations"],
+                        "simulationIds": ["sim-core-program-flow-001"],
+                        "assessmentIds": ["asm-core-programming-quiz-001"],
+                        "projectIds": ["prj-core-engineering-calculator-plan-001"],
+                        "technicalReviewStatus": "Source required",
+                        "publicationStatus": "draft",
+                        "version": "0.1.0",
+                        "units": [
+                          {
+                            "id": "unit-core-functions-001",
+                            "slug": "functions-and-flow",
+                            "title": "Functions And Flow",
+                            "description": "Introduces functions and control flow as building blocks for engineering tools.",
+                            "lessons": [
+                              {
+                                "id": "les-core-functions-flow-001",
+                                "slug": "functions-as-engineering-tools",
+                                "title": "Functions As Engineering Tools",
+                                "description": "Shows why reusable functions matter for calculations, simulations, and tests.",
+                                "difficulty": "introductory",
+                                "academicLevel": "first-year undergraduate",
+                                "estimatedDuration": "45 minutes",
+                                "prerequisites": [],
+                                "learningOutcomes": [
+                                  "Explain how functions support reliable engineering calculations.",
+                                  "Identify inputs, outputs, and assumptions in a simple function."
+                                ],
+                                "knowledgeFileIds": ["kf-core-programming-basics"],
+                                "sourceIds": ["src-required-programming-foundations"],
+                                "simulationIds": ["sim-core-program-flow-001"],
+                                "assessmentIds": ["asm-core-functions-flow-check-001"],
+                                "projectIds": [
+                                  "prj-core-engineering-calculator-plan-001"
+                                ],
+                                "technicalReviewStatus": "Source required",
+                                "publicationStatus": "draft",
+                                "version": "0.1.0"
+                              }
+                            ],
+                            "simulations": [
+                              {
+                                "id": "sim-core-program-flow-001",
+                                "slug": "program-flow-tracer",
+                                "title": "Program Flow Tracer",
+                                "stateCoverageRequired": [
+                                  "normal-state",
+                                  "boundary-state",
+                                  "fault-state"
+                                ]
+                              }
+                            ],
+                            "assessments": [
+                              {
+                                "id": "asm-core-functions-flow-check-001",
+                                "slug": "functions-flow-check",
+                                "title": "Functions And Flow Check"
+                              }
+                            ],
+                            "projects": [
+                              {
+                                "id": "prj-core-engineering-calculator-plan-001",
+                                "slug": "engineering-calculator-plan",
+                                "title": "Engineering Calculator Plan"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

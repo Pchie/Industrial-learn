@@ -1,0 +1,287 @@
+{
+  "schemaVersion": "0.1.0",
+  "id": "masterclass-smart-pump-systems-001",
+  "slug": "smart-pump-systems",
+  "title": "Smart Pump Systems",
+  "status": "draft",
+  "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
+  "curriculumMap": [
+    {
+      "order": 1,
+      "school": "Core Engineering",
+      "unit": "Units",
+      "lessonId": "LES-SMART-PUMP-UNITS-001",
+      "implementationStatus": "implemented"
+    },
+    {
+      "order": 2,
+      "school": "Core Engineering",
+      "unit": "Fluid properties",
+      "lessonId": "LES-SMART-PUMP-FLUID-PROPERTIES-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 3,
+      "school": "Core Engineering",
+      "unit": "Pressure",
+      "lessonId": "LES-SMART-PUMP-PRESSURE-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 4,
+      "school": "Core Engineering",
+      "unit": "Flow",
+      "lessonId": "LES-SMART-PUMP-FLOW-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 5,
+      "school": "Core Engineering",
+      "unit": "Continuity",
+      "lessonId": "LES-SMART-PUMP-CONTINUITY-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 6,
+      "school": "Core Engineering",
+      "unit": "Bernoulli",
+      "lessonId": "LES-SMART-PUMP-BERNOULLI-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 7,
+      "school": "Core Engineering",
+      "unit": "Pipe losses",
+      "lessonId": "LES-SMART-PUMP-PIPE-LOSSES-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 8,
+      "school": "Core Engineering",
+      "unit": "Pump fundamentals",
+      "lessonId": "LES-SMART-PUMP-FUNDAMENTALS-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 9,
+      "school": "Core Engineering",
+      "unit": "Pump curves",
+      "lessonId": "LES-SMART-PUMP-CURVES-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 10,
+      "school": "Core Engineering",
+      "unit": "Pump selection",
+      "lessonId": "LES-SMART-PUMP-SELECTION-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 11,
+      "school": "Core Engineering",
+      "unit": "Cavitation",
+      "lessonId": "LES-SMART-PUMP-CAVITATION-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 12,
+      "school": "Core Engineering",
+      "unit": "Troubleshooting",
+      "lessonId": "LES-SMART-PUMP-TROUBLESHOOTING-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 13,
+      "school": "Future Engineering",
+      "unit": "Instrumentation",
+      "lessonId": "LES-SMART-PUMP-INSTRUMENTATION-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 14,
+      "school": "Future Engineering",
+      "unit": "IoT monitoring",
+      "lessonId": "LES-SMART-PUMP-IOT-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 15,
+      "school": "Future Engineering",
+      "unit": "Time-series data",
+      "lessonId": "LES-SMART-PUMP-TIME-SERIES-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 16,
+      "school": "Future Engineering",
+      "unit": "Condition monitoring",
+      "lessonId": "LES-SMART-PUMP-CONDITION-MONITORING-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 17,
+      "school": "Future Engineering",
+      "unit": "Predictive maintenance",
+      "lessonId": "LES-SMART-PUMP-PREDICTIVE-MAINTENANCE-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 18,
+      "school": "Future Engineering",
+      "unit": "Digital twins",
+      "lessonId": "LES-SMART-PUMP-DIGITAL-TWIN-001",
+      "implementationStatus": "planned"
+    },
+    {
+      "order": 19,
+      "school": "Future Engineering",
+      "unit": "AI-assisted diagnosis",
+      "lessonId": "LES-SMART-PUMP-AI-DIAGNOSIS-001",
+      "implementationStatus": "planned"
+    }
+  ],
+  "prerequisiteGraph": [
+    { "from": "LES-SMART-PUMP-UNITS-001", "to": "LES-SMART-PUMP-FLUID-PROPERTIES-001" },
+    {
+      "from": "LES-SMART-PUMP-FLUID-PROPERTIES-001",
+      "to": "LES-SMART-PUMP-PRESSURE-001"
+    },
+    { "from": "LES-SMART-PUMP-PRESSURE-001", "to": "LES-SMART-PUMP-FLOW-001" },
+    { "from": "LES-SMART-PUMP-FLOW-001", "to": "LES-SMART-PUMP-CONTINUITY-001" },
+    { "from": "LES-SMART-PUMP-CONTINUITY-001", "to": "LES-SMART-PUMP-BERNOULLI-001" },
+    { "from": "LES-SMART-PUMP-BERNOULLI-001", "to": "LES-SMART-PUMP-PIPE-LOSSES-001" },
+    { "from": "LES-SMART-PUMP-PIPE-LOSSES-001", "to": "LES-SMART-PUMP-FUNDAMENTALS-001" },
+    { "from": "LES-SMART-PUMP-FUNDAMENTALS-001", "to": "LES-SMART-PUMP-CURVES-001" },
+    { "from": "LES-SMART-PUMP-CURVES-001", "to": "LES-SMART-PUMP-SELECTION-001" },
+    { "from": "LES-SMART-PUMP-SELECTION-001", "to": "LES-SMART-PUMP-CAVITATION-001" },
+    {
+      "from": "LES-SMART-PUMP-CAVITATION-001",
+      "to": "LES-SMART-PUMP-TROUBLESHOOTING-001"
+    },
+    {
+      "from": "LES-SMART-PUMP-TROUBLESHOOTING-001",
+      "to": "LES-SMART-PUMP-INSTRUMENTATION-001"
+    },
+    { "from": "LES-SMART-PUMP-INSTRUMENTATION-001", "to": "LES-SMART-PUMP-IOT-001" },
+    { "from": "LES-SMART-PUMP-IOT-001", "to": "LES-SMART-PUMP-TIME-SERIES-001" },
+    {
+      "from": "LES-SMART-PUMP-TIME-SERIES-001",
+      "to": "LES-SMART-PUMP-CONDITION-MONITORING-001"
+    },
+    {
+      "from": "LES-SMART-PUMP-CONDITION-MONITORING-001",
+      "to": "LES-SMART-PUMP-PREDICTIVE-MAINTENANCE-001"
+    },
+    {
+      "from": "LES-SMART-PUMP-PREDICTIVE-MAINTENANCE-001",
+      "to": "LES-SMART-PUMP-DIGITAL-TWIN-001"
+    },
+    { "from": "LES-SMART-PUMP-DIGITAL-TWIN-001", "to": "LES-SMART-PUMP-AI-DIAGNOSIS-001" }
+  ],
+  "learningOutcomes": [
+    "Use consistent SI units for pump-system measurements.",
+    "Interpret pressure, flow, and fluid-property measurements within stated assumptions.",
+    "Explain continuity, Bernoulli, and pipe-loss assumptions before applying results.",
+    "Interpret pump curves and system curves without inventing manufacturer data.",
+    "Identify cavitation and basic pump fault symptoms within safe training boundaries.",
+    "Select instrumentation for pressure, flow, temperature, vibration, and status signals using approved source evidence.",
+    "Read time-series pump data for trends, alarms, and missing-data limitations.",
+    "Distinguish condition monitoring evidence from predictive-maintenance claims.",
+    "Explain the purpose and limits of a pump-system digital twin.",
+    "Use AI-assisted diagnosis only as reviewed decision support."
+  ],
+  "knowledgeFileRequirements": [
+    "KF-SMART-PUMP-UNITS-001",
+    "KF-SMART-PUMP-FLUID-PROPERTIES-001",
+    "KF-SMART-PUMP-PRESSURE-001",
+    "KF-SMART-PUMP-FLOW-001",
+    "KF-SMART-PUMP-CONTINUITY-001",
+    "KF-SMART-PUMP-BERNOULLI-001",
+    "KF-SMART-PUMP-PIPE-LOSSES-001",
+    "KF-SMART-PUMP-FUNDAMENTALS-001",
+    "KF-SMART-PUMP-CURVES-001",
+    "KF-SMART-PUMP-SELECTION-001",
+    "KF-SMART-PUMP-CAVITATION-001",
+    "KF-SMART-PUMP-TROUBLESHOOTING-001",
+    "KF-SMART-PUMP-INSTRUMENTATION-001",
+    "KF-SMART-PUMP-IOT-001",
+    "KF-SMART-PUMP-TIME-SERIES-001",
+    "KF-SMART-PUMP-CONDITION-001",
+    "KF-SMART-PUMP-PREDICTIVE-001",
+    "KF-SMART-PUMP-DIGITAL-TWIN-001",
+    "KF-SMART-PUMP-AI-DIAGNOSIS-001"
+  ],
+  "sourceRequirements": [
+    "SI unit and measurement conventions",
+    "Fluid properties and pump hydraulics",
+    "Pressure, flow, continuity, Bernoulli and pipe-loss references",
+    "Pump curves, pump selection and cavitation references",
+    "Industrial instrumentation and IoT monitoring references",
+    "Condition monitoring, predictive maintenance, digital twin and AI diagnosis governance references"
+  ],
+  "equationRegister": [
+    { "equationId": "EQ-SI-CONVERSION-EXPLICIT-001", "status": "implemented" },
+    { "equationId": "EQ-FLUID-PRESSURE-001", "status": "implemented" },
+    { "equationId": "EQ-FLUID-VOLUMETRIC-FLOW-001", "status": "implemented" },
+    { "equationId": "EQ-FLUID-CONTINUITY-INCOMPRESSIBLE-001", "status": "implemented" },
+    { "equationId": "EQ-FLUID-VELOCITY-FLOW-AREA-001", "status": "implemented" },
+    { "equationId": "EQ-FLUID-HYDRAULIC-POWER-001", "status": "implemented" },
+    { "equationId": "EQ-SMART-PUMP-BERNOULLI-001", "status": "planned" },
+    { "equationId": "EQ-SMART-PUMP-PIPE-LOSS-001", "status": "planned" },
+    { "equationId": "EQ-SMART-PUMP-NPSH-001", "status": "planned" },
+    { "equationId": "EQ-SMART-PUMP-EFFICIENCY-001", "status": "planned" }
+  ],
+  "simulationPlan": [
+    "SIM-SMART-PUMP-UNITS-001",
+    "SIM-SMART-PUMP-PRESSURE-FLOW-001",
+    "SIM-SMART-PUMP-CURVE-001",
+    "SIM-SMART-PUMP-CAVITATION-001",
+    "SIM-SMART-PUMP-IOT-MONITOR-001",
+    "SIM-SMART-PUMP-DIGITAL-TWIN-001",
+    "SIM-SMART-PUMP-AI-DIAGNOSIS-001"
+  ],
+  "assessmentPlan": [
+    "multiple-choice",
+    "numeric-engineering-calculation",
+    "component-identification",
+    "diagram-question",
+    "sequence-question",
+    "simulation-task",
+    "fault-diagnosis",
+    "design-challenge"
+  ],
+  "faultDiagnosisPlan": [
+    "incorrect unit interpretation",
+    "blocked or restricted line",
+    "low suction pressure",
+    "cavitation-risk symptoms",
+    "sensor offset or stuck signal",
+    "missing time-series data",
+    "AI-assisted diagnosis overreach"
+  ],
+  "finalProjectBrief": {
+    "id": "PRJ-SMART-PUMP-MONITORING-BRIEF-001",
+    "title": "Smart Pump Monitoring And Diagnosis Brief",
+    "status": "planned"
+  },
+  "engineeringReviewChecklist": [
+    "source IDs on technical statements",
+    "equation functions and tests before calculation use",
+    "normal, boundary and fault simulation tests",
+    "safety warnings for pressurised systems",
+    "no invented standards, ratings, manufacturer data or AI conclusions"
+  ],
+  "implementationOrder": [
+    "Implement Smart Pump System Units And Measurements.",
+    "Add approved SI and pump measurement sources.",
+    "Add fluid properties.",
+    "Add pressure and flow.",
+    "Add continuity.",
+    "Add Bernoulli and pipe-loss equations only after source review.",
+    "Add pump fundamentals, curves, selection and cavitation.",
+    "Add instrumentation and IoT monitoring.",
+    "Add time-series, condition monitoring and predictive maintenance.",
+    "Add digital twin and AI-assisted diagnosis.",
+    "Add final project and engineering review workflow."
+  ]
+}

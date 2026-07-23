@@ -1,0 +1,100 @@
+{
+  "metadata": {
+    "id": "KF-FLUID-PRESSURE-001",
+    "slug": "basic-fluid-pressure",
+    "title": "Basic Fluid Pressure",
+    "topic": "Fluid pressure in static fluids",
+    "version": "0.1.0",
+    "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+  },
+  "learningPurpose": "Prepare students to recognise pressure as force distributed over area and to use consistent SI units in introductory fluid-pressure reasoning.",
+  "definitions": [
+    {
+      "term": "Pressure",
+      "meaning": "Force distributed over an area in a fluid or on a surface.",
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+    }
+  ],
+  "governingPrinciples": [
+    "Pressure calculations require consistent force and area units.",
+    "This file covers introductory static-pressure reasoning only."
+  ],
+  "equations": [
+    {
+      "id": "EQ-FLUID-PRESSURE-001",
+      "name": "Pressure from force and area",
+      "expression": "p = F / A",
+      "symbols": ["p", "F", "A"],
+      "siUnits": {
+        "p": "Pa",
+        "F": "N",
+        "A": "m^2"
+      },
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
+      "reviewStatus": "Source required"
+    }
+  ],
+  "symbolDefinitions": [
+    { "symbol": "p", "name": "pressure", "unit": "Pa" },
+    { "symbol": "F", "name": "force", "unit": "N" },
+    { "symbol": "A", "name": "area", "unit": "m^2" }
+  ],
+  "siUnits": [
+    { "quantity": "pressure", "unit": "pascal", "symbol": "Pa" },
+    { "quantity": "force", "unit": "newton", "symbol": "N" },
+    { "quantity": "area", "unit": "square metre", "symbol": "m^2" }
+  ],
+  "assumptions": [
+    "The force is applied normally over the stated area.",
+    "The example is educational and not a pressure-vessel design case."
+  ],
+  "limitations": [
+    "Does not cover dynamic pressure, compressibility, pipe losses, pressure-vessel design, or equipment ratings.",
+    "Requires an approved source before publication."
+  ],
+  "workedExample": {
+    "id": "WE-FLUID-PRESSURE-001",
+    "title": "Pressure from a known force and area",
+    "purpose": "Show the required SI-unit relationship without creating a full lesson.",
+    "given": ["Force is stated in newtons.", "Area is stated in square metres."],
+    "steps": [
+      "Check that force and area are in SI units.",
+      "Divide force by area to obtain pressure in pascals."
+    ],
+    "answer": "The result is expressed in pascals.",
+    "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
+    "reviewStatus": "Source required"
+  },
+  "components": ["fluid", "surface area", "normal force", "pressure reading"],
+  "normalOperation": [
+    "Pressure readings are interpreted only within the stated educational assumptions."
+  ],
+  "faultConditions": [
+    {
+      "id": "FAULT-FLUID-PRESSURE-001",
+      "title": "Unexpected pressure reading",
+      "symptoms": ["The reading is outside the expected training range."],
+      "likelyCauses": [
+        "Incorrect area input",
+        "Incorrect unit conversion",
+        "Sensor or gauge issue in a real system"
+      ],
+      "safeResponse": "Treat real-system abnormal pressure as a safety concern and follow supervised laboratory or site procedures.",
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
+      "reviewStatus": "Source required"
+    }
+  ],
+  "safety": [
+    {
+      "id": "SAFE-FLUID-PRESSURE-001",
+      "hazard": "Stored pressure",
+      "warning": "Real pressurised systems can be hazardous and must not be treated as simple classroom examples.",
+      "studentBoundary": "Students must not use this lesson as permission to inspect, open, adjust, or operate pressurised equipment.",
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
+      "reviewStatus": "Source required"
+    }
+  ],
+  "relatedSimulations": ["SIM-FLUID-PRESSURE-TRAINING-001"],
+  "sourceCitations": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
+  "reviewStatus": "Source required"
+}

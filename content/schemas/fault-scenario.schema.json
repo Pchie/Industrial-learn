@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://industriallearn.local/schemas/fault-scenario.schema.json",
+  "title": "Industrial Learn Fault Scenario",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "symptoms",
+    "likelyCauses",
+    "safeResponse",
+    "sourceIds",
+    "reviewStatus"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^FAULT-[A-Z0-9-]+$" },
+    "title": { "type": "string" },
+    "symptoms": { "type": "array", "items": { "type": "string" } },
+    "likelyCauses": { "type": "array", "items": { "type": "string" } },
+    "safeResponse": { "type": "string" },
+    "sourceIds": { "type": "array", "items": { "type": "string" } },
+    "reviewStatus": { "$ref": "lesson.schema.json#/$defs/reviewStatus" }
+  }
+}

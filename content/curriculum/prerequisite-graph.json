@@ -1,0 +1,156 @@
+{
+  "schemaVersion": "0.1.0",
+  "description": "Prerequisite graph connecting Core Engineering foundations to Future Engineering modules and lessons.",
+  "nodes": [
+    {
+      "id": "mod-core-thermodynamics-001",
+      "type": "module",
+      "schoolId": "school-core-engineering",
+      "title": "Thermodynamics Foundations"
+    },
+    {
+      "id": "mod-future-ai-hvac-optimisation-001",
+      "type": "module",
+      "schoolId": "school-future-engineering",
+      "title": "AI HVAC Optimisation"
+    },
+    {
+      "id": "mod-core-electrical-circuits-001",
+      "type": "module",
+      "schoolId": "school-core-engineering",
+      "title": "Electrical Circuits Foundations"
+    },
+    {
+      "id": "mod-future-industrial-iot-001",
+      "type": "module",
+      "schoolId": "school-future-engineering",
+      "title": "Industrial IoT Foundations"
+    },
+    {
+      "id": "mod-core-programming-001",
+      "type": "module",
+      "schoolId": "school-core-engineering",
+      "title": "Programming For Engineers Foundations"
+    },
+    {
+      "id": "mod-future-machine-learning-001",
+      "type": "module",
+      "schoolId": "school-future-engineering",
+      "title": "Machine Learning For Engineers Foundations"
+    },
+    {
+      "id": "mod-core-control-systems-001",
+      "type": "module",
+      "schoolId": "school-core-engineering",
+      "title": "Control Systems Foundations"
+    },
+    {
+      "id": "mod-future-robotics-foundations-001",
+      "type": "module",
+      "schoolId": "school-future-engineering",
+      "title": "Robotics Foundations"
+    },
+    {
+      "id": "mod-core-fluid-mechanics-001",
+      "type": "module",
+      "schoolId": "school-core-engineering",
+      "title": "Fluid Mechanics Foundations"
+    },
+    {
+      "id": "mod-future-smart-pump-monitoring-001",
+      "type": "module",
+      "schoolId": "school-future-engineering",
+      "title": "Smart Pump Monitoring"
+    },
+    {
+      "id": "mod-core-strength-materials-001",
+      "type": "module",
+      "schoolId": "school-core-engineering",
+      "title": "Strength of Materials Foundations"
+    },
+    {
+      "id": "mod-future-generative-mechanical-design-001",
+      "type": "module",
+      "schoolId": "school-future-engineering",
+      "title": "Generative Mechanical Design"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-thermo-to-ai-hvac",
+      "from": "mod-core-thermodynamics-001",
+      "to": "mod-future-ai-hvac-optimisation-001",
+      "relationship": "required-prerequisite",
+      "rationale": "Thermal system reasoning is required before AI-supported HVAC optimisation can be interpreted responsibly."
+    },
+    {
+      "id": "edge-circuits-to-industrial-iot",
+      "from": "mod-core-electrical-circuits-001",
+      "to": "mod-future-industrial-iot-001",
+      "relationship": "required-prerequisite",
+      "rationale": "Circuit measurement foundations are required before connected sensing and industrial IoT monitoring."
+    },
+    {
+      "id": "edge-programming-to-industrial-iot",
+      "from": "mod-core-programming-001",
+      "to": "mod-future-industrial-iot-001",
+      "relationship": "supporting-prerequisite",
+      "rationale": "Programming foundations support data collection, transformation, and monitoring workflows."
+    },
+    {
+      "id": "edge-programming-to-machine-learning",
+      "from": "mod-core-programming-001",
+      "to": "mod-future-machine-learning-001",
+      "relationship": "required-prerequisite",
+      "rationale": "Programming foundations are required before machine learning workflows can be practised effectively."
+    },
+    {
+      "id": "edge-control-to-robotics",
+      "from": "mod-core-control-systems-001",
+      "to": "mod-future-robotics-foundations-001",
+      "relationship": "required-prerequisite",
+      "rationale": "Feedback control foundations are required before robotic control behaviour can be interpreted."
+    },
+    {
+      "id": "edge-programming-to-robotics",
+      "from": "mod-core-programming-001",
+      "to": "mod-future-robotics-foundations-001",
+      "relationship": "supporting-prerequisite",
+      "rationale": "Programming foundations support robot-state logic, simulation control, and automation workflows."
+    },
+    {
+      "id": "edge-fluid-to-smart-pump",
+      "from": "mod-core-fluid-mechanics-001",
+      "to": "mod-future-smart-pump-monitoring-001",
+      "relationship": "required-prerequisite",
+      "rationale": "Fluid mechanics foundations are required before smart pump monitoring signals can be interpreted."
+    },
+    {
+      "id": "edge-iot-to-smart-pump",
+      "from": "mod-future-industrial-iot-001",
+      "to": "mod-future-smart-pump-monitoring-001",
+      "relationship": "supporting-prerequisite",
+      "rationale": "Industrial IoT foundations support monitoring architecture and sensor-data interpretation."
+    },
+    {
+      "id": "edge-strength-to-generative-design",
+      "from": "mod-core-strength-materials-001",
+      "to": "mod-future-generative-mechanical-design-001",
+      "relationship": "required-prerequisite",
+      "rationale": "Strength of materials foundations are required before generated mechanical design options can be checked responsibly."
+    },
+    {
+      "id": "edge-programming-to-generative-design",
+      "from": "mod-core-programming-001",
+      "to": "mod-future-generative-mechanical-design-001",
+      "relationship": "supporting-prerequisite",
+      "rationale": "Programming foundations support tool workflows, constraints, and repeatable design exploration."
+    }
+  ],
+  "rules": {
+    "blockIfRequiredPrerequisiteIncomplete": false,
+    "warnIfRequiredPrerequisiteIncomplete": true,
+    "recommendCoreFoundationReview": true,
+    "allowLecturerOverride": true
+  }
+}

@@ -1,0 +1,306 @@
+{
+  "audit": {
+    "title": "Industrial Learn Prompt 01-18 Verification",
+    "date": "2026-07-21",
+    "workspace": "/Users/zungu/Documents/Master Industrial Learning",
+    "scope": "Read-only verification of Prompts 1 through 18",
+    "allowed_files_created": [
+      "docs/audits/prompt-01-18-verification.md",
+      "docs/audits/prompt-01-18-evidence.json",
+      "docs/audits/current-project-tree.txt",
+      "docs/audits/test-results.md"
+    ],
+    "overall_verdict": "NO-GO",
+    "overall_completion_estimate_percent": 68
+  },
+  "git": {
+    "branch": "master",
+    "has_commits": false,
+    "status_summary": "All project files are untracked; ignored generated folders include apps/web/.next, node_modules, playwright-report, and test-results.",
+    "production_branch_risk": "Current branch is master and has no commits. Rule 20 says never commit directly to the production branch; no commit was made during this audit."
+  },
+  "commands": [
+    {
+      "command": "npm run typecheck",
+      "status": "PASS",
+      "summary": "All workspaces completed tsc --noEmit."
+    },
+    {
+      "command": "npm run lint",
+      "status": "PASS",
+      "summary": "eslint . completed successfully."
+    },
+    {
+      "command": "npm run test:unit",
+      "status": "PASS",
+      "summary": "Vitest reported 10 test files passed and 89 tests passed."
+    },
+    {
+      "command": "npm run build",
+      "status": "PASS",
+      "summary": "Next.js production build completed and generated 37 app pages."
+    },
+    {
+      "command": "npm run test:e2e",
+      "status": "PASS",
+      "summary": "Playwright reported 10 Chromium tests passed after rebuilding the app."
+    },
+    {
+      "command": "npm run format:check",
+      "status": "FAIL",
+      "summary": "Prettier reported code style issues in 71 files."
+    }
+  ],
+  "prompt_verdicts": [
+    {
+      "prompt": 1,
+      "name": "AGENTS.md operating rules",
+      "verdict": "PASS",
+      "evidence": ["AGENTS.md"]
+    },
+    {
+      "prompt": 2,
+      "name": "Product definition",
+      "verdict": "PASS",
+      "evidence": [
+        "docs/product/product-requirements.md",
+        "docs/product/user-personas.md",
+        "docs/product/user-journeys.md",
+        "docs/product/mvp-scope.md",
+        "docs/product/out-of-scope.md"
+      ]
+    },
+    {
+      "prompt": 3,
+      "name": "System architecture",
+      "verdict": "PASS",
+      "evidence": [
+        "docs/architecture/system-architecture.md",
+        "docs/architecture/data-flow.md",
+        "docs/architecture/security-boundaries.md",
+        "docs/architecture/deployment-architecture.md",
+        "docs/architecture/technology-decisions.md",
+        "docs/architecture/scaling-strategy.md",
+        "docs/architecture/adr/"
+      ]
+    },
+    {
+      "prompt": 4,
+      "name": "Curriculum data model",
+      "verdict": "PASS",
+      "evidence": [
+        "docs/curriculum/curriculum-architecture.md",
+        "content/curriculum/core-engineering.json",
+        "content/curriculum/future-engineering.json",
+        "content/curriculum/prerequisite-graph.json",
+        "content/curriculum/career-pathways.json"
+      ]
+    },
+    {
+      "prompt": 5,
+      "name": "Repository foundation",
+      "verdict": "PARTIAL",
+      "evidence": [
+        "package.json",
+        ".env.example",
+        "packages/env/src/index.ts",
+        "apps/web/src/app/page.tsx",
+        "apps/web/src/app/error.tsx",
+        "apps/web/src/app/not-found.tsx"
+      ],
+      "reason": "Foundation builds and tests pass, but formatting check fails and repository has no committed baseline."
+    },
+    {
+      "prompt": 6,
+      "name": "Design system",
+      "verdict": "PARTIAL",
+      "evidence": [
+        "packages/design-system/src/tokens.ts",
+        "packages/design-system/src/components.tsx",
+        "apps/web/src/app/internal/design-system/page.tsx",
+        "packages/design-system/src/components.test.tsx"
+      ],
+      "reason": "Components and tests exist, but no automated accessibility scanner was found and some widgets are semantic demos rather than complete interactive components."
+    },
+    {
+      "prompt": 7,
+      "name": "PostgreSQL database design",
+      "verdict": "PASS",
+      "evidence": [
+        "docs/architecture/database-design.md",
+        "database/migrations/0001_initial_schema.sql",
+        "database/policies/0001_row_level_security.sql",
+        "database/seed/0001_roles_permissions.sql",
+        "packages/database/src/schema.test.ts"
+      ]
+    },
+    {
+      "prompt": 8,
+      "name": "Content and knowledge system",
+      "verdict": "PARTIAL",
+      "evidence": [
+        "content/schemas/",
+        "packages/content-system/src/index.ts",
+        "sources/fluid-pressure/source-record.json",
+        "knowledge/fluid-pressure/basic-fluid-pressure.json",
+        "content/lessons/fluid-pressure/basic-fluid-pressure.json"
+      ],
+      "reason": "Schema and validation exist, but source records are placeholders with missing evidence and Source required status."
+    },
+    {
+      "prompt": 9,
+      "name": "Curriculum frontend",
+      "verdict": "PARTIAL",
+      "evidence": [
+        "apps/web/src/app/learn/page.tsx",
+        "apps/web/src/app/learn/core-engineering/page.tsx",
+        "apps/web/src/app/learn/future-engineering/page.tsx",
+        "apps/web/src/app/programmes/[programmeSlug]/page.tsx",
+        "apps/web/src/app/modules/[moduleSlug]/page.tsx",
+        "apps/web/src/app/pathways/[pathwaySlug]/page.tsx",
+        "tests/e2e/curriculum.spec.ts"
+      ],
+      "reason": "Routes and seed data exist, but signed-in progress display is not connected to real authentication."
+    },
+    {
+      "prompt": 10,
+      "name": "Universal lesson renderer",
+      "verdict": "PARTIAL",
+      "evidence": [
+        "apps/web/src/features/lesson-engine/",
+        "apps/web/src/app/lessons/[lessonSlug]/page.tsx",
+        "content/lessons/fluid-pressure/basic-fluid-pressure.json",
+        "tests/e2e/lesson-engine.spec.ts"
+      ],
+      "reason": "Structured renderer exists, but authenticated progress saving is not implemented."
+    },
+    {
+      "prompt": 11,
+      "name": "Engineering calculation library",
+      "verdict": "PARTIAL",
+      "evidence": [
+        "packages/engineering-core/src/index.ts",
+        "packages/engineering-core/src/index.test.ts"
+      ],
+      "reason": "Pure calculations and tests exist, but calculation results do not include source IDs or approved equation records."
+    },
+    {
+      "prompt": 12,
+      "name": "Simulation framework",
+      "verdict": "PARTIAL",
+      "evidence": [
+        "packages/simulation-engine/src/index.ts",
+        "packages/simulation-engine/src/index.test.ts"
+      ],
+      "reason": "Pure simulation engine and hydraulic pilot exist, but there is no actual reusable visual UI layer and review status remains Source required."
+    },
+    {
+      "prompt": 13,
+      "name": "Assessment system",
+      "verdict": "PARTIAL",
+      "evidence": [
+        "packages/assessment-core/src/index.ts",
+        "packages/assessment-core/src/index.test.ts",
+        "content/assessments/fluid-pressure/basic-fluid-pressure-assessment.json"
+      ],
+      "reason": "Scoring and sanitisation exist, but attempts are in-memory and not persisted through authenticated database access."
+    },
+    {
+      "prompt": 14,
+      "name": "Student dashboard",
+      "verdict": "FAIL",
+      "evidence": [
+        "apps/web/src/app/dashboard/page.tsx",
+        "apps/web/src/features/student-dashboard/data.ts",
+        "tests/e2e/student-dashboard.spec.ts"
+      ],
+      "reason": "Dashboard uses hard-coded records selected by studentId query parameter, not real authenticated student data."
+    },
+    {
+      "prompt": 15,
+      "name": "Content governance workflow",
+      "verdict": "PARTIAL",
+      "evidence": [
+        "packages/content-review-workflow/src/index.ts",
+        "packages/content-review-workflow/src/index.test.ts"
+      ],
+      "reason": "Domain workflow and tests exist, but there is no persistent workflow integration or UI."
+    },
+    {
+      "prompt": 16,
+      "name": "Smart Pump Systems pathway",
+      "verdict": "PASS",
+      "evidence": [
+        "docs/curriculum/smart-pump-systems-masterclass.md",
+        "content/curriculum/smart-pump-systems-masterclass.json",
+        "content/lessons/smart-pump-systems/pump-system-units-and-measurements.json",
+        "knowledge/smart-pump-systems/pump-system-units-and-measurements.json",
+        "sources/smart-pump-systems/source-record.json"
+      ]
+    },
+    {
+      "prompt": 17,
+      "name": "Thermodynamics pathway",
+      "verdict": "BLOCKED",
+      "evidence": ["docs/curriculum/thermodynamics-masterclass.md"],
+      "reason": "Plan exists and explicitly states first lesson implementation requires plan approval. No first lesson was implemented."
+    },
+    {
+      "prompt": 18,
+      "name": "AI Mentor architecture",
+      "verdict": "PASS",
+      "evidence": ["docs/architecture/ai-engineering-mentor.md"]
+    }
+  ],
+  "critical_findings": [
+    {
+      "id": "SEC-001",
+      "severity": "critical",
+      "summary": "Student dashboard is not backed by real authentication.",
+      "evidence": [
+        "apps/web/src/app/dashboard/page.tsx:17",
+        "apps/web/src/app/dashboard/page.tsx:19",
+        "apps/web/src/features/student-dashboard/data.ts:84",
+        "apps/web/src/features/student-dashboard/data.ts:175"
+      ]
+    },
+    {
+      "id": "REL-001",
+      "severity": "high",
+      "summary": "Repository has no committed baseline and is on master.",
+      "evidence": [
+        "git branch --show-current",
+        "git log --oneline -n 5",
+        "git status --short --ignored"
+      ]
+    },
+    {
+      "id": "CI-001",
+      "severity": "high",
+      "summary": "CI-ready formatting check fails.",
+      "evidence": ["npm run format:check"]
+    },
+    {
+      "id": "CONTENT-001",
+      "severity": "high",
+      "summary": "Published/approved technical evidence is not yet present; sample content uses placeholder sources with missing evidence.",
+      "evidence": [
+        "sources/fluid-pressure/source-record.json",
+        "sources/smart-pump-systems/source-record.json",
+        "content/lessons/fluid-pressure/basic-fluid-pressure.json",
+        "content/lessons/smart-pump-systems/pump-system-units-and-measurements.json"
+      ]
+    }
+  ],
+  "release_gate": {
+    "student_release": "NO-GO",
+    "internal_architecture_iteration": "CONDITIONAL GO",
+    "required_before_release": [
+      "Implement real authentication and session-bound access before private dashboard/progress features.",
+      "Connect progress, assessment attempts, simulation attempts, projects, and review workflow to authorised PostgreSQL/Supabase access.",
+      "Replace placeholder source records with approved evidence and review records before publishing technical content.",
+      "Fix formatting failures and establish a committed baseline on a non-production branch.",
+      "Add automated accessibility scans for interactive UI."
+    ]
+  }
+}

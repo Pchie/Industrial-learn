@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://industriallearn.local/schemas/project.schema.json",
+  "title": "Industrial Learn Project",
+  "type": "object",
+  "required": ["id", "title", "brief", "deliverables", "sourceIds", "reviewStatus"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^PRJ-[A-Z0-9-]+$" },
+    "title": { "type": "string" },
+    "brief": { "type": "string" },
+    "deliverables": { "type": "array", "items": { "type": "string" } },
+    "sourceIds": { "type": "array", "items": { "type": "string" } },
+    "reviewStatus": { "$ref": "lesson.schema.json#/$defs/reviewStatus" }
+  }
+}

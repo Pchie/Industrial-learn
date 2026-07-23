@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://industriallearn.local/schemas/technical-review-record.schema.json",
+  "title": "Industrial Learn Technical Review Record",
+  "type": "object",
+  "required": [
+    "id",
+    "entityId",
+    "entityType",
+    "reviewer",
+    "decision",
+    "reviewStatus",
+    "sourceCheckPassed",
+    "equationCheckPassed",
+    "simulationCheckPassed",
+    "notes",
+    "reviewedAt"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^REV-[A-Z0-9-]+$" },
+    "entityId": { "type": "string" },
+    "entityType": { "type": "string" },
+    "reviewer": { "type": "string" },
+    "decision": { "enum": ["approved", "changes_requested", "rejected"] },
+    "reviewStatus": { "$ref": "lesson.schema.json#/$defs/reviewStatus" },
+    "sourceCheckPassed": { "type": "boolean" },
+    "equationCheckPassed": { "type": "boolean" },
+    "simulationCheckPassed": { "type": "boolean" },
+    "notes": { "type": "string" },
+    "reviewedAt": { "type": "string" }
+  }
+}

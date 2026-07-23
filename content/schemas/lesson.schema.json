@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://industriallearn.local/schemas/lesson.schema.json",
+  "title": "Industrial Learn Lesson",
+  "type": "object",
+  "required": [
+    "id",
+    "slug",
+    "title",
+    "description",
+    "publicationStatus",
+    "reviewStatus",
+    "version",
+    "estimatedCompletionTime",
+    "difficulty",
+    "prerequisites",
+    "knowledgeFileIds",
+    "sourceIds",
+    "learningOutcomes",
+    "requiredSections",
+    "sections",
+    "quizIds",
+    "projectIds"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^LES-[A-Z0-9-]+$" },
+    "slug": { "type": "string" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "publicationStatus": {
+      "enum": ["draft", "internal", "scheduled", "published", "archived"]
+    },
+    "reviewStatus": { "$ref": "#/$defs/reviewStatus" },
+    "version": { "type": "string" },
+    "knowledgeFileIds": { "type": "array", "items": { "type": "string" } },
+    "sourceIds": { "type": "array", "items": { "type": "string" } },
+    "learningOutcomes": { "type": "array", "items": { "type": "string" } },
+    "estimatedCompletionTime": { "type": "string" },
+    "difficulty": { "type": "string" },
+    "prerequisites": { "type": "array", "items": { "type": "string" } },
+    "requiredSections": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/requiredSectionId" },
+      "contains": { "const": "lessonHeader" }
+    },
+    "sections": {
+      "type": "object",
+      "required": [
+        "lessonHeader",
+        "estimatedCompletionTime",
+        "difficulty",
+        "prerequisites",
+        "learningOutcomes",
+        "whyTopicMatters",
+        "keyTerminology",
+        "visualExplanation",
+        "theory",
+        "equations",
+        "workedExamples",
+        "interactiveActivity",
+        "faultFindingExercise",
+        "safetyConsiderations",
+        "knowledgeCheck",
+        "summary",
+        "sources",
+        "nextRecommendedLesson"
+      ],
+      "additionalProperties": {
+        "type": "object",
+        "required": ["title", "blocks"],
+        "properties": {
+          "title": { "type": "string" },
+          "blocks": {
+            "type": "array",
+            "items": { "$ref": "content-block.schema.json" }
+          }
+        }
+      }
+    },
+    "equationIds": { "type": "array", "items": { "type": "string" } },
+    "workedExampleIds": { "type": "array", "items": { "type": "string" } },
+    "faultScenarioIds": { "type": "array", "items": { "type": "string" } },
+    "safetyWarningIds": { "type": "array", "items": { "type": "string" } },
+    "quizIds": { "type": "array", "items": { "type": "string" } },
+    "projectIds": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "requiredSectionId": {
+      "type": "string",
+      "enum": [
+        "lessonHeader",
+        "estimatedCompletionTime",
+        "difficulty",
+        "prerequisites",
+        "learningOutcomes",
+        "whyTopicMatters",
+        "keyTerminology",
+        "visualExplanation",
+        "theory",
+        "equations",
+        "workedExamples",
+        "interactiveActivity",
+        "faultFindingExercise",
+        "safetyConsiderations",
+        "knowledgeCheck",
+        "summary",
+        "sources",
+        "nextRecommendedLesson"
+      ]
+    },
+    "reviewStatus": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Source required",
+        "Source checked",
+        "Equation checked",
+        "Simulation checked",
+        "Engineering review required",
+        "Approved for student use"
+      ]
+    }
+  }
+}

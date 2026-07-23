@@ -1,0 +1,39 @@
+{
+  "id": "SRC-SMART-PUMP-PLACEHOLDER-001",
+  "title": "Smart pump systems units and measurements references required",
+  "fullTitle": "Sources needed for pump-system SI units, measurement channels, instrumentation context and diagnostic boundaries",
+  "author": "Not yet available",
+  "organisation": "Not yet available",
+  "edition": "Not yet available",
+  "version": "source-needed-record-v1",
+  "publicationDate": "Not yet available",
+  "accessDate": "2026-07-22",
+  "documentType": "technical reference placeholder",
+  "discipline": "Smart pump systems",
+  "topics": [
+    "SI units",
+    "pump measurements",
+    "measurement channels",
+    "instrumentation context"
+  ],
+  "filePath": null,
+  "copyrightStatus": "Source required",
+  "reliabilityLevel": 5,
+  "citation": "Source required before student-use approval. This placeholder must be replaced with approved references for SI units, pump-system measurements, hydraulics, instrumentation, monitoring, and diagnostic practice.",
+  "approvalStatus": "Source required",
+  "reviewStatus": "Source required",
+  "evidenceStatus": "missing",
+  "reviewer": null,
+  "reviewDate": null,
+  "relevantChapters": [],
+  "relevantSections": [],
+  "relevantPages": [],
+  "limitations": [
+    "This sample source record exists so Smart Pump Systems planning and pilot lesson source IDs can be validated during development.",
+    "It is not an approved engineering reference.",
+    "No manufacturer data, equipment ratings, standards clauses, pump curves, diagnostic thresholds, or IoT requirements may be inferred from this placeholder."
+  ],
+  "notes": "The actual source documents are absent from sources/. Content that cites this ID must remain Source required.",
+  "createdAt": "2026-07-21",
+  "updatedAt": "2026-07-22"
+}

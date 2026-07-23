@@ -1,0 +1,102 @@
+{
+  "metadata": {
+    "id": "KF-FLUID-PRESSURE-FUNDAMENTALS-001",
+    "slug": "pressure-fundamentals",
+    "title": "Pressure Fundamentals",
+    "topic": "Pressure as force distributed over area",
+    "version": "0.1.0",
+    "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+  },
+  "learningPurpose": "Give students a focused, source-gated reference for the pressure relationship used in the first fluid-pressure lesson.",
+  "definitions": [
+    {
+      "term": "Pressure",
+      "meaning": "Force distributed normally over a stated area for the introductory training case.",
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+    }
+  ],
+  "governingPrinciples": [
+    "Use SI units internally: pascal for pressure, newton for force, and square metre for area.",
+    "The introductory relationship applies only when the force and area are stated and the force is normal to the area.",
+    "This file is blocked from approval until a real fluid-mechanics source is onboarded."
+  ],
+  "equations": [
+    {
+      "id": "EQ-FLUID-PRESSURE-001",
+      "name": "Pressure from force and area",
+      "expression": "p = F / A",
+      "symbols": ["p", "F", "A"],
+      "siUnits": {
+        "p": "Pa",
+        "F": "N",
+        "A": "m^2"
+      },
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
+      "sourceReferences": [],
+      "reviewStatus": "Source required"
+    }
+  ],
+  "symbolDefinitions": [
+    { "symbol": "p", "name": "pressure", "unit": "Pa" },
+    { "symbol": "F", "name": "normal force", "unit": "N" },
+    { "symbol": "A", "name": "area", "unit": "m^2" }
+  ],
+  "siUnits": [
+    { "quantity": "pressure", "unit": "pascal", "symbol": "Pa" },
+    { "quantity": "force", "unit": "newton", "symbol": "N" },
+    { "quantity": "area", "unit": "square metre", "symbol": "m^2" }
+  ],
+  "assumptions": [
+    "Force is normal to the surface.",
+    "Area is greater than zero.",
+    "The training case does not model dynamic pressure or equipment design."
+  ],
+  "limitations": [
+    "Does not cover compressibility, dynamic flow, pressure-vessel rules, pressure ratings, or safety procedures.",
+    "No approved source section or page range is available yet."
+  ],
+  "workedExample": {
+    "id": "WE-FLUID-PRESSURE-FUNDAMENTALS-001",
+    "title": "Pressure from stated force and area",
+    "purpose": "Show the SI relationship without adding unreviewed manufacturer or standards information.",
+    "given": ["Force is 100 N.", "Area is 0.5 m^2."],
+    "steps": ["Confirm SI units.", "Apply p = F / A.", "Calculate 100 / 0.5."],
+    "answer": "200 Pa",
+    "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
+    "reviewStatus": "Source required"
+  },
+  "components": ["force input", "area input", "pressure result"],
+  "normalOperation": [
+    "The calculation is acceptable for the training case only after units and source evidence are checked."
+  ],
+  "commonMisconceptions": [
+    "Treating pressure as the same quantity as force.",
+    "Using area in cm^2 without an explicit conversion step.",
+    "Applying the classroom equation to real pressurised equipment without safety approval."
+  ],
+  "faultConditions": [
+    {
+      "id": "FAULT-FLUID-PRESSURE-FUNDAMENTALS-001",
+      "title": "Incorrect area unit",
+      "symptoms": ["The calculated pressure is off by orders of magnitude."],
+      "likelyCauses": ["Area was entered in cm^2 or mm^2 as if it were m^2."],
+      "safeResponse": "Stop the calculation, identify the unit, and perform only an explicit reviewed conversion.",
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
+      "reviewStatus": "Source required"
+    }
+  ],
+  "safety": [
+    {
+      "id": "SAFE-FLUID-PRESSURE-FUNDAMENTALS-001",
+      "hazard": "Stored pressure",
+      "warning": "Introductory pressure calculations do not authorise work on real pressurised systems.",
+      "studentBoundary": "Students must use approved training examples or supervised laboratory procedures.",
+      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
+      "reviewStatus": "Source required"
+    }
+  ],
+  "relatedSimulations": ["SIM-HYD-CYL-FORCE-001"],
+  "sourceCitations": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
+  "sourceReferences": [],
+  "reviewStatus": "Source required"
+}

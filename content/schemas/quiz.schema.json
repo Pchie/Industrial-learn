@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://industriallearn.local/schemas/quiz.schema.json",
+  "title": "Industrial Learn Assessment",
+  "type": "object",
+  "required": [
+    "id",
+    "lessonId",
+    "title",
+    "learningOutcomeIds",
+    "questions",
+    "sourceIds",
+    "reviewStatus"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^(QUIZ|ASM)-[A-Z0-9-]+$" },
+    "lessonId": { "type": "string" },
+    "title": { "type": "string" },
+    "learningOutcomeIds": { "type": "array", "items": { "type": "string" } },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "prompt",
+          "learningOutcomeIds",
+          "competencyLevel",
+          "points",
+          "explanation",
+          "sourceIds"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "type": {
+            "enum": [
+              "multiple-choice",
+              "numeric-engineering-calculation",
+              "component-identification",
+              "diagram-question",
+              "sequence-question",
+              "simulation-task",
+              "fault-diagnosis",
+              "design-challenge"
+            ]
+          },
+          "prompt": { "type": "string" },
+          "learningOutcomeIds": { "type": "array", "items": { "type": "string" } },
+          "competencyLevel": {
+            "enum": [
+              "Introduced",
+              "Understood",
+              "Calculated",
+              "Operated",
+              "Diagnosed",
+              "Designed"
+            ]
+          },
+          "points": { "type": "number", "minimum": 0 },
+          "explanation": { "type": "string" },
+          "sourceIds": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "sourceIds": { "type": "array", "items": { "type": "string" } },
+    "reviewStatus": { "$ref": "lesson.schema.json#/$defs/reviewStatus" }
+  }
+}

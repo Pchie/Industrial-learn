@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://industriallearn.local/schemas/source-record.schema.json",
+  "title": "Industrial Learn Source Record",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "documentType",
+    "citation",
+    "approvalStatus",
+    "reviewStatus",
+    "evidenceStatus",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^SRC-[A-Z0-9-]+$" },
+    "title": { "type": "string", "minLength": 1 },
+    "documentType": { "type": "string", "minLength": 1 },
+    "citation": { "type": "string", "minLength": 1 },
+    "url": { "type": "string" },
+    "approvalStatus": { "$ref": "#/$defs/reviewStatus" },
+    "reviewStatus": { "$ref": "#/$defs/reviewStatus" },
+    "evidenceStatus": {
+      "type": "string",
+      "enum": ["missing", "partial", "approved"]
+    },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "createdAt": { "type": "string" },
+    "updatedAt": { "type": "string" }
+  },
+  "$defs": {
+    "reviewStatus": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Source required",
+        "Source checked",
+        "Equation checked",
+        "Simulation checked",
+        "Engineering review required",
+        "Approved for student use"
+      ]
+    }
+  }
+}

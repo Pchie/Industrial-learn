@@ -1,0 +1,21 @@
+{
+  "name": "@industrial-learn/database",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@industrial-learn/assessment-core": "0.1.0",
+    "@industrial-learn/content-review-workflow": "0.1.0",
+    "@industrial-learn/engineering-core": "0.1.0",
+    "@industrial-learn/env": "0.1.0",
+    "@industrial-learn/simulation-engine": "0.1.0",
+    "@supabase/supabase-js": "latest",
+    "zod": "latest"
+  }
+}
