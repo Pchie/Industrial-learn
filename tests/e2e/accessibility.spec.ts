@@ -173,4 +173,6 @@ async function signIn(page: Page, email: string, nextPath: string) {
   await page.getByLabel("Password").fill("IndustrialLearn1!");
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL(new RegExp(nextPath.replaceAll("/", "\\/")));
+  await expect(page.locator("main")).toBeVisible();
+  await expect(page).toHaveTitle(/Industrial Learn/);
 }
