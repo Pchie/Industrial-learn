@@ -124,6 +124,28 @@ describe("database schema", () => {
     }
   });
 
+  it("does not expose answer correctness through student-readable answer choice policies", () => {
+    const policies = policiesForTable("answer_choices").join("\n");
+
+    expect(policySql).toContain(
+      "drop policy if exists answer_choices_read_accessible_question"
+    );
+    expect(policies).toContain("answer_choices_content_staff_read");
+    expect(policies).toContain("public.is_content_staff()");
+  });
+
+  it("keeps server-calculated attempt fields out of direct student write policies", () => {
+    for (const table of ["assessment_attempts", "simulation_attempts"] as const) {
+      const policies = policiesForTable(table).join("\n");
+
+      expect(policySql).toContain(
+        `drop policy if exists ${table}_student_self_read_write`
+      );
+      expect(policies).toContain(`${table}_student_self_select`);
+      expect(policies).toContain("for insert with check (\n    false\n  )");
+    }
+  });
+
   it("seeds all required roles", () => {
     for (const role of [
       "student",
