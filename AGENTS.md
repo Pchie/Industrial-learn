@@ -33,7 +33,7 @@ These rules are permanent development instructions for this repository.
 17. All new calculations require automated tests.
 18. All new simulations require normal-state, boundary, and fault-state tests.
 19. Every task must include a change summary and known limitations.
-20. Never commit directly to the production branch.
+20. Never commit directly to the production-controlled branch, currently `main`.
 
 ## Required Workflow
 

@@ -14,19 +14,19 @@ Industrial Learn uses separated development, staging, and production environment
 
 ## Branch Strategy
 
-| Branch type                   | Purpose                           | Deployment behaviour                        | Protection requirements                                                         |
-| ----------------------------- | --------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------- |
-| `production`                  | Approved production releases only | Manual production deployment after approval | No direct commits, pull requests required, CI required, named approver required |
-| `development`                 | Integrated pre-release work       | Staging deployment candidate                | CI required before merge, migration validation required                         |
-| `codex/*` or feature branches | Isolated task work                | No automatic deployment                     | Pull request into `development`                                                 |
+| Branch type                   | Purpose                             | Deployment behaviour                        | Protection requirements                                                         |
+| ----------------------------- | ----------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------- |
+| `main`                        | Production-controlled releases only | Manual production deployment after approval | No direct commits, pull requests required, CI required, named approver required |
+| `development`                 | Integrated pre-release work         | Staging deployment candidate                | CI required before merge, migration validation required                         |
+| `codex/*` or feature branches | Isolated task work                  | No automatic deployment                     | Pull request into `development`                                                 |
 
 Recommended flow:
 
 ```text
-feature branch -> pull request -> automated checks -> development -> staging verification -> approved production pull request -> manual production deployment
+feature branch -> pull request -> automated checks -> development -> staging verification -> approved main pull request -> manual production deployment
 ```
 
-No work should be committed directly to the production branch.
+No work should be committed directly to `main`.
 
 ## Environment Separation
 
