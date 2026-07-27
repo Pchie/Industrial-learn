@@ -8,7 +8,7 @@ Industrial Learn now resolves private user identity from a trusted server sessio
 
 The implemented provider is Supabase authentication, matching the selected architecture. Browser-safe code may use only public anonymous Supabase credentials. Server code resolves sessions and profiles and may use server-only Supabase configuration for trusted profile provisioning.
 
-For local automated tests, `INDUSTRIAL_LEARN_AUTH_MODE=local` plus `INDUSTRIAL_LEARN_E2E=true` dynamically loads a test-local auth provider. This mode is intended for Playwright only and is not a production or general development fallback.
+For local automated tests, `INDUSTRIAL_LEARN_AUTH_MODE=local` plus `INDUSTRIAL_LEARN_E2E=true` dynamically loads a test-local auth provider. This mode is intended for Playwright only and is not a production or general development fallback. The provider is blocked when `NEXT_PUBLIC_APP_ENV` is `staging` or `production`, when E2E mode is not explicitly enabled, or when `APP_BASE_URL` is not an approved local test host.
 
 ## Session Model
 
@@ -91,5 +91,5 @@ The dashboard no longer accepts `searchParams.studentId`. It calls `requireStude
 ## Known Boundaries
 
 - Supabase-backed role resolution expects the existing `profiles`, `roles`, and `profile_roles` tables.
-- In production, Supabase credentials must be configured. The test-local provider is not statically imported by the server auth module and must not be enabled for production deployment.
+- In staging and production, Supabase credentials must be configured. The test-local provider is not statically imported by the server auth module and is blocked by environment validation outside approved local E2E hosts.
 - Real student progress persistence remains a later task; the dashboard now shows authenticated empty states rather than query-selected seeded progress.

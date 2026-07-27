@@ -15,6 +15,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "scan:secrets": "node scripts/secret-scan.mjs",
+    "validate:staging-env": "node scripts/validate-staging-env.mjs",
     "validate:content": "vitest run packages/content-system/src/content-system.test.ts",
     "validate:migrations": "vitest run packages/database/src/schema.test.ts",
     "test:unit": "vitest run",

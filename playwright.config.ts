@@ -14,8 +14,10 @@ export default defineConfig({
   webServer: {
     command: "npm run start --workspace @industrial-learn/web -- --hostname 127.0.0.1",
     env: {
+      APP_BASE_URL: "http://127.0.0.1:3000",
       INDUSTRIAL_LEARN_E2E: "true",
-      INDUSTRIAL_LEARN_AUTH_MODE: "local"
+      INDUSTRIAL_LEARN_AUTH_MODE: "local",
+      NEXT_PUBLIC_APP_ENV: "test"
     },
     url: "http://127.0.0.1:3000",
     reuseExistingServer: !process.env.CI,

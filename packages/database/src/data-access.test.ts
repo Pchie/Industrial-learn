@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   createDataAccessServices,
+  createSupabasePublicClient,
+  createSupabaseServerClient,
   createSupabaseServiceRoleClient,
   type AssessmentAttemptDto,
   type AuditEventInput,
@@ -25,6 +27,22 @@ const reviewerId = "55555555-5555-4555-8555-555555555555";
 const adminId = "66666666-6666-4666-8666-666666666666";
 const lessonId = "77777777-7777-4777-8777-777777777777";
 const assessmentId = "88888888-8888-4888-8888-888888888888";
+
+const configuredEnv = {
+  nodeEnv: "test" as const,
+  appEnv: "test" as const,
+  appBaseUrl: "http://127.0.0.1:3000",
+  authMode: "supabase" as const,
+  isE2E: false,
+  supabase: {
+    isConfigured: true,
+    url: "https://example.supabase.co",
+    anonKey: "anon",
+    serviceRoleKey: "service-role",
+    projectRef: "project-ref",
+    dbUrl: "postgresql://example.invalid/app"
+  }
+};
 
 function principal(profileId: string, roles: Principal["roles"]): Principal {
   return {
@@ -559,6 +577,14 @@ describe("data-access services", () => {
     expect(secondPage.items[0]?.id).toBe("bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb");
   });
 
+  it("creates public and session-bound Supabase clients from configured env", () => {
+    expect(createSupabasePublicClient(configuredEnv)).toBeDefined();
+    expect(createSupabaseServerClient(configuredEnv, "session-token")).toBeDefined();
+    expect(() => createSupabaseServerClient(configuredEnv, "")).toThrow(
+      "session access token"
+    );
+  });
+
   it("keeps service-role clients server-only", () => {
     const writableGlobal = globalThis as typeof globalThis & { window?: unknown };
     const originalWindow = writableGlobal.window;
@@ -569,23 +595,27 @@ describe("data-access services", () => {
     });
 
     expect(() =>
-      createSupabaseServiceRoleClient(
-        {
-          nodeEnv: "test",
-          supabase: {
-            isConfigured: true,
-            url: "https://example.supabase.co",
-            anonKey: "anon",
-            serviceRoleKey: "service-role"
-          }
-        },
-        "audit-administration"
-      )
+      createSupabaseServiceRoleClient(configuredEnv, "audit-administration")
     ).toThrow("server-only");
 
     Object.defineProperty(globalThis, "window", {
       configurable: true,
       value: originalWindow
     });
+  });
+
+  it("requires server-only service-role configuration for privileged clients", () => {
+    expect(() =>
+      createSupabaseServiceRoleClient(
+        {
+          ...configuredEnv,
+          supabase: {
+            ...configuredEnv.supabase,
+            serviceRoleKey: undefined
+          }
+        },
+        "profile-provisioning"
+      )
+    ).toThrow("service-role configuration");
   });
 });
