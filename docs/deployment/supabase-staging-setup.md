@@ -4,6 +4,16 @@
 
 Industrial Learn staging uses a dedicated Supabase project that is separate from local development, automated tests, personal experiments, and future production.
 
+## Current Staging Project
+
+| Item                       | Value                                                         |
+| -------------------------- | ------------------------------------------------------------- |
+| Supabase project reference | `lgjujyaclrpaopdabyzg`                                        |
+| Supabase project URL       | `https://lgjujyaclrpaopdabyzg.supabase.co`                    |
+| Supabase dashboard URL     | `https://supabase.com/dashboard/project/lgjujyaclrpaopdabyzg` |
+
+The project reference and project URL are not service credentials. Anon, service-role, and database connection values must still be supplied through secure human entry.
+
 ## Completed In Code
 
 - Added `NEXT_PUBLIC_APP_ENV` environment validation with explicit `staging` support.
@@ -31,29 +41,28 @@ Store real values only in the approved hosting secret manager or local untracked
 
 ## Manual Supabase Dashboard Actions
 
-1. Create a dedicated Supabase staging project.
-2. Select the project region closest to the expected staging reviewers while keeping production region selection separate.
-3. Record the staging project reference in the approved secret manager.
-4. Configure email and password authentication only.
-5. Do not enable anonymous sign-in.
-6. Do not enable social identity providers unless a later product decision approves them.
-7. Set the site URL to the approved staging `APP_BASE_URL`.
-8. Add redirect URLs for:
+1. Confirm the project region is appropriate for expected staging reviewers while keeping production region selection separate.
+2. Enter staging secrets into the approved secret manager.
+3. Configure email and password authentication only.
+4. Do not enable anonymous sign-in.
+5. Do not enable social identity providers unless a later product decision approves them.
+6. Set the site URL to the approved staging `APP_BASE_URL`.
+7. Add redirect URLs for:
    - staging sign-in callback
    - staging email verification callback
    - staging password-reset callback
    - approved local development callbacks separately
-9. Do not use localhost as the only allowed redirect.
-10. Enable email confirmation for registration.
-11. Configure password reset to return to the staging password-reset route.
-12. Set secure password requirements appropriate for staging verification.
-13. Enable refresh token rotation where available.
-14. Set session expiry to a bounded staging value and document it in the release checklist.
-15. Configure a staging email provider or Supabase-managed email only for authorised staging tests.
-16. Review auth rate limits and enable bot protection where available.
-17. Restrict database access to approved operators and deployment automation.
-18. Keep storage disabled or private until a storage feature is approved.
-19. Use the minimum practical log retention period for staging.
+8. Do not use localhost as the only allowed redirect.
+9. Enable email confirmation for registration.
+10. Configure password reset to return to the staging password-reset route.
+11. Set secure password requirements appropriate for staging verification.
+12. Enable refresh token rotation where available.
+13. Set session expiry to a bounded staging value and document it in the release checklist.
+14. Configure a staging email provider or Supabase-managed email only for authorised staging tests.
+15. Review auth rate limits and enable bot protection where available.
+16. Restrict database access to approved operators and deployment automation.
+17. Keep storage disabled or private until a storage feature is approved.
+18. Use the minimum practical log retention period for staging.
 
 ## Authentication Verification
 
@@ -116,3 +125,5 @@ STAGING_ENV_FILE=/secure/path/to/staging.env npm run validate:staging-env
 ```
 
 The validator checks required values and environment boundaries without printing secret values.
+
+For this local workspace, `.env.staging.local` has been created as an ignored operator file with the non-secret project reference and project URL prefilled. Fill only through secure local entry; it remains excluded from Git.

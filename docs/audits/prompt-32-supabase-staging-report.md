@@ -8,7 +8,7 @@ PASS
 
 ## Scope
 
-This task configured repository support and documentation for a dedicated Supabase staging backend. It did not create a Supabase project, apply database migrations, deploy the web application, configure production, or commit real credentials.
+This task configured repository support and documentation for a dedicated Supabase staging backend. The user-created Supabase staging project reference is now recorded as non-secret deployment metadata. This task did not apply database migrations, deploy the web application, configure production, or commit real credentials.
 
 ## Code Changes
 
@@ -19,6 +19,7 @@ This task configured repository support and documentation for a dedicated Supaba
 - Updated Playwright local web-server environment with approved local test metadata.
 - Added a narrow `.gitignore` exception so `.env.staging.example` is version-controlled while filled `.env.*` files remain ignored.
 - Added `npm run validate:staging-env` so operators can validate a securely supplied staging env file without printing secret values.
+- Created an ignored local `.env.staging.local` operator file with only the non-secret project reference and project URL prefilled.
 
 ## Configuration Templates
 
@@ -28,8 +29,8 @@ This task configured repository support and documentation for a dedicated Supaba
 
 ## Manual Supabase Actions Still Required
 
-- Create the dedicated staging Supabase project.
-- Select and record the staging project region.
+- Confirm the dedicated staging Supabase project settings.
+- Confirm and record the staging project region.
 - Enter staging secrets into the approved secret manager.
 - Configure email/password authentication.
 - Configure staging site URL and redirect URLs.
@@ -51,6 +52,14 @@ This task configured repository support and documentation for a dedicated Supaba
 - `SUPABASE_DB_URL`
 - `INDUSTRIAL_LEARN_AUTH_MODE`
 - `INDUSTRIAL_LEARN_E2E`
+
+## Staging Project Metadata
+
+| Item                       | Value                                                         |
+| -------------------------- | ------------------------------------------------------------- |
+| Supabase project reference | `lgjujyaclrpaopdabyzg`                                        |
+| Supabase project URL       | `https://lgjujyaclrpaopdabyzg.supabase.co`                    |
+| Supabase dashboard URL     | `https://supabase.com/dashboard/project/lgjujyaclrpaopdabyzg` |
 
 ## Security Protections Added
 
@@ -97,10 +106,10 @@ Warnings observed:
 ## Known Limitations
 
 - The dedicated Supabase staging project still requires manual dashboard configuration.
-- Real staging secrets are not present in the repository and must be supplied through approved secret storage.
+- Real staging secrets are not present in the repository and must be supplied through approved secret storage or ignored local operator env files.
 - The staging seed template depends on authorised Supabase Auth users being created first.
 - The Supabase CLI is not installed in the local environment inspected during this task, so project creation and remote migration execution require a human operator or approved CLI setup.
 
 ## Prompt 33 Readiness
 
-Prompt 33 may proceed after a human creates and configures the dedicated Supabase staging project, enters the required staging secrets through the approved secret manager, and runs the staging migration and seed runbooks. No production resources were configured.
+Prompt 33 may proceed after a human completes the Supabase dashboard settings, enters the required staging secrets through the approved secret manager or ignored local operator env file, and runs the staging migration and seed runbooks. No production resources were configured.
