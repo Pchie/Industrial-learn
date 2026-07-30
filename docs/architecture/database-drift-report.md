@@ -1,6 +1,6 @@
 # Database Drift Report
 
-Date: 2026-07-27
+Date: 2026-07-30
 
 ## Scope
 
@@ -8,14 +8,12 @@ This report compares the repository migration and policy plan with the currently
 
 ## Staging Connection Status
 
-No live staging database connection was available from this workstation:
+A live connection to the dedicated Supabase staging project was verified using
+the ignored local staging environment file. `psql` was available at
+`/usr/local/opt/libpq/bin/psql`.
 
-- `SUPABASE_DB_URL` is blank in the ignored local staging env file.
-- `SUPABASE_SERVICE_ROLE_KEY` is blank in the ignored local staging env file.
-- `psql` is not installed.
-- Supabase CLI is not installed.
-
-Therefore live schema drift, policy drift, grant drift, and index drift cannot be truthfully confirmed yet.
+No production database was contacted. Secret values were not printed or
+committed.
 
 ## Repository Baseline
 
@@ -45,21 +43,34 @@ Seeds:
 | Policy numbering gap at `0003`                                                   | Documented; no same-number policy file required for `0003` columns, but corrective `0005` hardening was added. |
 | Answer choices contained hidden correctness fields under student-readable policy | Corrected by `0005_staging_rls_hardening.sql`.                                                                 |
 | Student attempt policies allowed broad row writes                                | Corrected by `0005_staging_rls_hardening.sql`.                                                                 |
-| Live staging schema drift                                                        | Unknown until DB connection is available.                                                                      |
-| Unexpected grants                                                                | Unknown until DB connection is available.                                                                      |
-| Missing indexes under real workload                                              | Unknown until live query plans are inspected.                                                                  |
+| Live staging schema drift                                                        | No expected table drift found after applying repository migrations.                                            |
+| Unexpected grants                                                                | No broad repository grants were introduced; deeper grant audit should be repeated before production.           |
+| Missing indexes under real workload                                              | Attempt metadata indexes are present; workload-based tuning still requires realistic data volume.              |
 
-## Required Drift Queries
+## Live Drift Verification
 
-When connected to staging, compare:
+Live checks compared:
 
 - `information_schema.tables`
-- `information_schema.columns`
-- `pg_constraint`
 - `pg_indexes`
 - `pg_policies`
 - `pg_class.relrowsecurity`
-- `information_schema.role_table_grants`
-- `pg_proc` for `security definer` functions and `search_path`
 
-Do not run these against production.
+| Check                                            | Result                                   |
+| ------------------------------------------------ | ---------------------------------------- |
+| Expected tables from repository migrations       | Passed; no expected tables missing.      |
+| RLS enabled on protected tables                  | Passed; no expected RLS tables disabled. |
+| Policy count                                     | Passed; 80 policies found.               |
+| Old broad answer-choice read policy              | Passed; absent.                          |
+| Hardened content-staff answer-choice policy      | Passed; present.                         |
+| Old broad assessment/simulation attempt policies | Passed; absent.                          |
+| Hardened student read-only attempt policies      | Passed; present.                         |
+| Attempt lookup and idempotency indexes           | Passed; 4 indexes found.                 |
+| Role seed data                                   | Passed; 5 roles found.                   |
+
+## Remaining Drift Work
+
+Before production promotion, repeat drift checks against a freshly recreated
+staging database and add a grant-level report covering
+`information_schema.role_table_grants` and privileged function ownership. Do not
+run these checks against production without an approved production change window.

@@ -1,6 +1,6 @@
 # Staging Migration Record
 
-Date: 2026-07-27
+Date: 2026-07-30
 
 ## Target
 
@@ -13,9 +13,11 @@ Date: 2026-07-27
 
 ## Execution Status
 
-Live migration application was not performed from this workstation because required staging database credentials are not present and neither `psql` nor the Supabase CLI is installed.
+Live migration application was completed against the dedicated Supabase staging
+project using the ignored local staging environment file.
 
-No production database was contacted. No real credentials were printed or committed.
+No production database was contacted. No real credentials were printed or
+committed.
 
 ## Migration Order
 
@@ -55,23 +57,48 @@ The policy numbering gap at `0003` is documented. The `0003` schema migration ad
 
 ## Application Record
 
-| File                                      | Started | Completed | Result                                        |
-| ----------------------------------------- | ------- | --------- | --------------------------------------------- |
-| `0001_initial_schema.sql`                 | Not run | Not run   | Blocked pending secure DB connection/tooling. |
-| `0002_dashboard_student_preferences.sql`  | Not run | Not run   | Blocked pending secure DB connection/tooling. |
-| `0003_attempt_persistence_metadata.sql`   | Not run | Not run   | Blocked pending secure DB connection/tooling. |
-| `0004_content_governance_persistence.sql` | Not run | Not run   | Blocked pending secure DB connection/tooling. |
-| `0001_row_level_security.sql`             | Not run | Not run   | Blocked pending secure DB connection/tooling. |
-| `0002_dashboard_student_preferences.sql`  | Not run | Not run   | Blocked pending secure DB connection/tooling. |
-| `0004_content_governance_persistence.sql` | Not run | Not run   | Blocked pending secure DB connection/tooling. |
-| `0005_staging_rls_hardening.sql`          | Not run | Not run   | Blocked pending secure DB connection/tooling. |
+| File                                      | Started    | Completed  | Result                |
+| ----------------------------------------- | ---------- | ---------- | --------------------- |
+| `0001_initial_schema.sql`                 | 2026-07-30 | 2026-07-30 | Applied successfully. |
+| `0002_dashboard_student_preferences.sql`  | 2026-07-30 | 2026-07-30 | Applied successfully. |
+| `0003_attempt_persistence_metadata.sql`   | 2026-07-30 | 2026-07-30 | Applied successfully. |
+| `0004_content_governance_persistence.sql` | 2026-07-30 | 2026-07-30 | Applied successfully. |
+| `0001_row_level_security.sql`             | 2026-07-30 | 2026-07-30 | Applied successfully. |
+| `0002_dashboard_student_preferences.sql`  | 2026-07-30 | 2026-07-30 | Applied successfully. |
+| `0004_content_governance_persistence.sql` | 2026-07-30 | 2026-07-30 | Applied successfully. |
+| `0005_staging_rls_hardening.sql`          | 2026-07-30 | 2026-07-30 | Applied successfully. |
 
-## Required Operator Command Path
+## Seed Record
 
-After secure values are supplied outside Git:
+| File                                       | Started    | Completed  | Result                |
+| ------------------------------------------ | ---------- | ---------- | --------------------- |
+| `database/seed/0001_roles_permissions.sql` | 2026-07-30 | 2026-07-30 | Applied successfully. |
+
+Synthetic staging-only auth users and a minimal RLS verification fixture were
+created after the service-role key was corrected. Generated passwords and access
+tokens were held in memory only and were not printed or committed.
+
+## Post-Application Verification
+
+| Check                           | Result                                                  |
+| ------------------------------- | ------------------------------------------------------- |
+| Required schema tables          | Passed; no expected tables missing.                     |
+| RLS enabled on protected tables | Passed; no expected RLS tables disabled.                |
+| Policy count                    | Passed; 80 policies found.                              |
+| Unsafe answer-choice policy     | Passed; old broad policy absent.                        |
+| Hardened answer-choice policy   | Passed; content-staff-only read policy present.         |
+| Unsafe attempt policy           | Passed; old broad attempt policies absent.              |
+| Hardened attempt policy         | Passed; student read-only replacement policies present. |
+| Attempt metadata indexes        | Passed; 4 attempt indexes found.                        |
+| Role seed count                 | Passed; 5 roles seeded.                                 |
+
+## Operator Command Path Used
+
+Secure values were supplied outside Git in `.env.staging.local`:
 
 ```bash
-STAGING_ENV_FILE=/secure/path/to/staging.env npm run validate:staging-env
+STAGING_ENV_FILE=.env.staging.local npm run validate:staging-env
 ```
 
-Then apply migrations and policies using the approved Supabase SQL process or `psql` from an approved workstation. Stop on first failure.
+Migrations and policies were applied with `psql` using the staging database URL.
+The database URL and service-role key were never printed.

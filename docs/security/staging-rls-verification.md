@@ -1,10 +1,12 @@
 # Staging RLS Verification
 
-Date: 2026-07-27
+Date: 2026-07-30
 
 ## Status
 
-Repository-level RLS review and corrective policy hardening are complete. Live Supabase staging verification is blocked until secure staging credentials and approved SQL tooling are available.
+Repository-level RLS review, corrective policy hardening, live Supabase staging
+migration, and live RLS verification are complete for project
+`lgjujyaclrpaopdabyzg`.
 
 ## Corrective Policy Added
 
@@ -16,19 +18,35 @@ Repository-level RLS review and corrective policy hardening are complete. Live S
 - keeps students able to read their own attempts
 - prevents direct student writes to scored attempt tables so server-side services remain the trusted scoring boundary
 
-## Required Live RLS Tests
+## Live RLS Tests
 
-The live staging database must prove:
+The live staging database was tested with synthetic authenticated staging users.
+Passwords and access tokens were generated in memory only and were not printed or
+committed.
 
-- Student A can read own profile and private records.
-- Student A cannot read Student B profile or private records.
-- Lecturer A can read students in authorised cohorts only.
-- Content authors cannot read private student records.
-- Engineering reviewers cannot read private student records by default.
-- Unauthenticated users cannot read private tables, drafts, hidden answers, or attempts.
-- Students cannot modify server-calculated score, competency awards, content version, or assessment/simulation completion state.
-- Content governance drafts remain hidden from students.
-- Review decisions persist and self-approval remains blocked by application services.
+| Test                                                                                            | Result |
+| ----------------------------------------------------------------------------------------------- | ------ |
+| Student A can read own profile.                                                                 | Passed |
+| Student A cannot read Student B profile.                                                        | Passed |
+| Student A can read own lesson progress.                                                         | Passed |
+| Student A cannot read Student B lesson progress.                                                | Passed |
+| Student A can read own assessment attempt.                                                      | Passed |
+| Student A cannot read Student B assessment attempt.                                             | Passed |
+| Student A can read own simulation attempt.                                                      | Passed |
+| Student A cannot read Student B simulation attempt.                                             | Passed |
+| Student A can read own project submission.                                                      | Passed |
+| Student A cannot read Student B project submission.                                             | Passed |
+| Lecturer A can read an associated student's attempt.                                            | Passed |
+| Unrelated Lecturer B cannot read Student A's attempt.                                           | Passed |
+| Engineering reviewer cannot read student private attempts by default.                           | Passed |
+| Content author cannot read student private attempts by default.                                 | Passed |
+| Anonymous caller cannot read assessment attempts.                                               | Passed |
+| Student cannot read hidden answer choices containing correctness fields.                        | Passed |
+| Content staff can read answer choices for review.                                               | Passed |
+| Student cannot alter server-calculated assessment score, competency awards, or content version. | Passed |
+| Student cannot alter server-calculated simulation score or competency awards.                   | Passed |
+
+Summary: 19 checks run, 19 passed.
 
 ## Integration Test Harness
 
@@ -53,15 +71,20 @@ RUN_STAGING_DB_INTEGRATION=true npm run test:unit -- packages/database/src/stagi
 
 ## Current Evidence
 
-Local schema validation now asserts:
+Live staging evidence confirms:
 
 - private student tables are scoped by `student_profile_id = auth.uid()`
-- lecturer access uses `public.lecturer_has_student(student_profile_id)`
+- lecturer access uses cohort association through
+  `public.lecturer_has_student(student_profile_id)`
 - content staff and reviewers are not included in student-private table policies
-- old direct answer-choice read policy is explicitly dropped
-- broad student attempt write policies are explicitly dropped
-- replacement student attempt policies are read-only with direct inserts denied
+- old direct answer-choice read policy is absent from staging
+- broad student attempt write policies are absent from staging
+- replacement student attempt policies are read-only for students, with direct
+  inserts denied
 
-## Remaining Live Verification
+## Remaining Verification
 
-Live verification is still required against project `lgjujyaclrpaopdabyzg` after migrations and policies are applied.
+Content-governance self-approval controls remain application-service behavior and
+should be verified when the governance service workflow is exercised against
+staging. The current RLS pass does not claim GitHub branch protection or
+production readiness.
