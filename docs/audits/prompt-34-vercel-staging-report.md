@@ -4,8 +4,7 @@ Date: 2026-07-31
 
 ## Executive Verdict
 
-CONDITIONAL PASS FOR STAGING CONFIGURATION; DEPLOYED APP CHECKS BLOCKED BY
-VERCEL PROTECTION
+PASS FOR STAGING CONFIGURATION AND AUTOMATION-BYPASS ROUTE VERIFICATION
 
 Repository-side Vercel staging configuration, branch deployment controls,
 security headers, private cache headers, and deployment documentation were
@@ -19,11 +18,10 @@ project is not the active deployment target for the current staging flow.
 No secrets were printed or committed. Automatic deployment from `main` remains
 disabled.
 
-The latest `development` Preview deployment is ready, but unauthenticated
-automated checks are intercepted by Vercel SSO/protection before the application
-responds. App-level remote smoke, header, and Supabase checks therefore require
-an authenticated Vercel browser session or an approved Preview protection bypass
-secret.
+The latest `development` Preview deployment is ready. Unauthenticated automated
+checks are intercepted by Vercel SSO/protection before the application responds,
+so app-level remote route and header checks were completed with Vercel's
+automation protection bypass through authenticated CLI requests.
 
 ## Repository State Reviewed
 
@@ -138,55 +136,58 @@ Recommended production process later:
 | Authentication callbacks work       | Pending Supabase dashboard update and deployed test       |
 | Private data not publicly cached    | Configured in Next.js; verified locally                   |
 | Security headers reviewed           | Configured in Next.js; verified locally                   |
+| Remote route/header checks          | Passed through Vercel automation bypass                   |
 | Preview deployment risks documented | Complete                                                  |
 | No production deployment enabled    | Repository config disables `main` auto-deploy             |
 | No secrets in Git/logs              | Passed local secret scan                                  |
 
 ## Commands Run
 
-| Command                                                                                                                                                                                            | Result                                                                                              |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `git status --short --branch`                                                                                                                                                                      | Clean at start on `development`                                                                     |
-| `npx --yes vercel whoami`                                                                                                                                                                          | Passed after device login; authenticated as `pchie`                                                 |
-| `npx --yes vercel link --yes --team kolobe --project industrial-learn-staging`                                                                                                                     | Passed; created and linked `kolobe/industrial-learn-staging`                                        |
-| `npx --yes vercel project update industrial-learn-staging --scope kolobe --framework nextjs --install-command "npm ci" --build-command "npm run build" --output-directory "apps/web/.next" --json` | Passed; settings matched repository configuration                                                   |
-| `npx --yes vercel ls industrial-learn-staging --scope kolobe`                                                                                                                                      | Passed; no deployments existed yet                                                                  |
-| Repository inspection commands                                                                                                                                                                     | Completed                                                                                           |
-| Vercel staging secret upload                                                                                                                                                                       | Passed after explicit operator approval                                                             |
-| `npx --yes vercel env list preview development --scope kolobe`                                                                                                                                     | Passed; expected keys present and encrypted                                                         |
-| Vercel development-target env upload                                                                                                                                                               | Passed after preview deployments were observed as production                                        |
-| `npx --yes vercel deploy --target=preview --yes --scope kolobe`                                                                                                                                    | Blocked; Vercel created a production-target deployment                                              |
-| `npx --yes vercel remove dpl_H5evA7dYqXvgyqvoBKqn1EQgwL5n --yes --scope kolobe`                                                                                                                    | Passed; removed first unintended production-target deployment                                       |
-| `npx --yes vercel remove dpl_4E3szXw45NiF6W542wgLLYFxPGUr --yes --scope kolobe`                                                                                                                    | Passed; removed second unintended production-target deployment                                      |
-| Post-removal `npx --yes vercel ls industrial-learn-staging --scope kolobe`                                                                                                                         | Passed; no deployments remain                                                                       |
-| `vercel inspect https://industrial-learn-acwjtmcdn-kolobe.vercel.app --scope kolobe`                                                                                                               | Passed; deployment target is Preview with development branch alias                                  |
-| Vercel active-project staging secret upload                                                                                                                                                        | Passed after explicit operator approval for `kolobe/industrial-learn`                               |
-| `vercel env list preview development --project industrial-learn --scope kolobe`                                                                                                                    | Passed; expected Preview `development` keys present and encrypted                                   |
-| `vercel inspect https://industrial-learn-o34hmn85t-kolobe.vercel.app --scope kolobe`                                                                                                               | Passed; deployment `dpl_Gn4pZtDqQ6CJhdGDA4g35cbU8iU6` is Ready and target is Preview                |
-| Remote `curl -I -L` checks for `/`, `/learn`, and `/dashboard`                                                                                                                                     | Reached Vercel SSO/protection before app response                                                   |
-| `npx --yes vercel target list --scope kolobe`                                                                                                                                                      | Passed; production tracks `main`, preview covers unassigned branches, development is CLI-accessible |
-| `npm run scan:secrets`                                                                                                                                                                             | Passed                                                                                              |
-| `npm run format:check`                                                                                                                                                                             | Passed                                                                                              |
-| `npm run typecheck`                                                                                                                                                                                | Passed                                                                                              |
-| `npm run lint`                                                                                                                                                                                     | Passed                                                                                              |
-| `npm run validate:content`                                                                                                                                                                         | Passed; 7 tests passed                                                                              |
-| `npm run validate:migrations`                                                                                                                                                                      | Passed; 8 tests passed                                                                              |
-| `npm run test:unit`                                                                                                                                                                                | Passed; 148 tests passed, 4 skipped                                                                 |
-| `npm run build`                                                                                                                                                                                    | Passed                                                                                              |
-| `npm run test:e2e`                                                                                                                                                                                 | Passed; 61 Playwright tests passed                                                                  |
-| `npm run test:smoke`                                                                                                                                                                               | Passed after clean sequential run; 5 Playwright tests passed                                        |
-| Local header probe against `next start`                                                                                                                                                            | Passed; security headers present and private routes no-store                                        |
+| Command                                                                                                                                                                                            | Result                                                                                                    |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `git status --short --branch`                                                                                                                                                                      | Clean at start on `development`                                                                           |
+| `npx --yes vercel whoami`                                                                                                                                                                          | Passed after device login; authenticated as `pchie`                                                       |
+| `npx --yes vercel link --yes --team kolobe --project industrial-learn-staging`                                                                                                                     | Passed; created and linked `kolobe/industrial-learn-staging`                                              |
+| `npx --yes vercel project update industrial-learn-staging --scope kolobe --framework nextjs --install-command "npm ci" --build-command "npm run build" --output-directory "apps/web/.next" --json` | Passed; settings matched repository configuration                                                         |
+| `npx --yes vercel ls industrial-learn-staging --scope kolobe`                                                                                                                                      | Passed; no deployments existed yet                                                                        |
+| Repository inspection commands                                                                                                                                                                     | Completed                                                                                                 |
+| Vercel staging secret upload                                                                                                                                                                       | Passed after explicit operator approval                                                                   |
+| `npx --yes vercel env list preview development --scope kolobe`                                                                                                                                     | Passed; expected keys present and encrypted                                                               |
+| Vercel development-target env upload                                                                                                                                                               | Passed after preview deployments were observed as production                                              |
+| `npx --yes vercel deploy --target=preview --yes --scope kolobe`                                                                                                                                    | Blocked; Vercel created a production-target deployment                                                    |
+| `npx --yes vercel remove dpl_H5evA7dYqXvgyqvoBKqn1EQgwL5n --yes --scope kolobe`                                                                                                                    | Passed; removed first unintended production-target deployment                                             |
+| `npx --yes vercel remove dpl_4E3szXw45NiF6W542wgLLYFxPGUr --yes --scope kolobe`                                                                                                                    | Passed; removed second unintended production-target deployment                                            |
+| Post-removal `npx --yes vercel ls industrial-learn-staging --scope kolobe`                                                                                                                         | Passed; no deployments remain                                                                             |
+| `vercel inspect https://industrial-learn-acwjtmcdn-kolobe.vercel.app --scope kolobe`                                                                                                               | Passed; deployment target is Preview with development branch alias                                        |
+| Vercel active-project staging secret upload                                                                                                                                                        | Passed after explicit operator approval for `kolobe/industrial-learn`                                     |
+| `vercel env list preview development --project industrial-learn --scope kolobe`                                                                                                                    | Passed; expected Preview `development` keys present and encrypted                                         |
+| `vercel inspect https://industrial-learn-o34hmn85t-kolobe.vercel.app --scope kolobe`                                                                                                               | Passed; deployment `dpl_Gn4pZtDqQ6CJhdGDA4g35cbU8iU6` is Ready and target is Preview                      |
+| Remote `curl -I -L` checks for `/`, `/learn`, and `/dashboard`                                                                                                                                     | Reached Vercel SSO/protection before app response                                                         |
+| `vercel project protection enable industrial-learn --protection-bypass --json --scope kolobe`                                                                                                      | Passed; automation bypass enabled without printing secret values                                          |
+| `vercel curl` route checks through bypass                                                                                                                                                          | Passed for `/`, `/learn`, `/lessons/basic-fluid-pressure`, `/auth/sign-in`, `/auth/sign-up`, `/dashboard` |
+| `npx --yes vercel target list --scope kolobe`                                                                                                                                                      | Passed; production tracks `main`, preview covers unassigned branches, development is CLI-accessible       |
+| `npm run scan:secrets`                                                                                                                                                                             | Passed                                                                                                    |
+| `npm run format:check`                                                                                                                                                                             | Passed                                                                                                    |
+| `npm run typecheck`                                                                                                                                                                                | Passed                                                                                                    |
+| `npm run lint`                                                                                                                                                                                     | Passed                                                                                                    |
+| `npm run validate:content`                                                                                                                                                                         | Passed; 7 tests passed                                                                                    |
+| `npm run validate:migrations`                                                                                                                                                                      | Passed; 8 tests passed                                                                                    |
+| `npm run test:unit`                                                                                                                                                                                | Passed; 148 tests passed, 4 skipped                                                                       |
+| `npm run build`                                                                                                                                                                                    | Passed                                                                                                    |
+| `npm run test:e2e`                                                                                                                                                                                 | Passed; 61 Playwright tests passed                                                                        |
+| `npm run test:smoke`                                                                                                                                                                               | Passed after clean sequential run; 5 Playwright tests passed                                              |
+| Local header probe against `next start`                                                                                                                                                            | Passed; security headers present and private routes no-store                                              |
 
 ## Known Limitations
 
 - Supabase callback URLs must be finalized in the Supabase dashboard.
-- Deployed app-level header, auth, performance, and smoke verification require
-  an authenticated Vercel session or approved Preview protection bypass secret.
+- Full Supabase auth flow verification still requires configured Supabase
+  redirect URLs and a synthetic staging user.
+- Cross-student privacy and role checks still require authenticated staging
+  test accounts.
 - Vercel project Node.js version still reports 24.x in CLI output; project
   runtime should be reviewed in the Vercel dashboard if Node 22.x is required.
 
 ## Prompt 35 Readiness
 
-Prompt 35 may proceed once the Preview protection access method is approved and
-the verification matrix in `docs/deployment/staging-url-verification.md` is
-completed.
+Prompt 35 may proceed for Supabase callback and authenticated staging checks.
