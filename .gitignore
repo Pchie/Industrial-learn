@@ -32,3 +32,4 @@ test-results/
 *.sqlite
 *.sqlite3
 *.db
+.vercel/
