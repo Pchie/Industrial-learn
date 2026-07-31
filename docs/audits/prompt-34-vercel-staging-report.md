@@ -4,7 +4,8 @@ Date: 2026-07-31
 
 ## Executive Verdict
 
-CONDITIONAL PASS FOR STAGING CONFIGURATION; DEPLOYED VERIFICATION IN PROGRESS
+CONDITIONAL PASS FOR STAGING CONFIGURATION; DEPLOYED APP CHECKS BLOCKED BY
+VERCEL PROTECTION
 
 Repository-side Vercel staging configuration, branch deployment controls,
 security headers, private cache headers, and deployment documentation were
@@ -17,6 +18,12 @@ project is not the active deployment target for the current staging flow.
 
 No secrets were printed or committed. Automatic deployment from `main` remains
 disabled.
+
+The latest `development` Preview deployment is ready, but unauthenticated
+automated checks are intercepted by Vercel SSO/protection before the application
+responds. App-level remote smoke, header, and Supabase checks therefore require
+an authenticated Vercel browser session or an approved Preview protection bypass
+secret.
 
 ## Repository State Reviewed
 
@@ -155,6 +162,8 @@ Recommended production process later:
 | `vercel inspect https://industrial-learn-acwjtmcdn-kolobe.vercel.app --scope kolobe`                                                                                                               | Passed; deployment target is Preview with development branch alias                                  |
 | Vercel active-project staging secret upload                                                                                                                                                        | Passed after explicit operator approval for `kolobe/industrial-learn`                               |
 | `vercel env list preview development --project industrial-learn --scope kolobe`                                                                                                                    | Passed; expected Preview `development` keys present and encrypted                                   |
+| `vercel inspect https://industrial-learn-o34hmn85t-kolobe.vercel.app --scope kolobe`                                                                                                               | Passed; deployment `dpl_Gn4pZtDqQ6CJhdGDA4g35cbU8iU6` is Ready and target is Preview                |
+| Remote `curl -I -L` checks for `/`, `/learn`, and `/dashboard`                                                                                                                                     | Reached Vercel SSO/protection before app response                                                   |
 | `npx --yes vercel target list --scope kolobe`                                                                                                                                                      | Passed; production tracks `main`, preview covers unassigned branches, development is CLI-accessible |
 | `npm run scan:secrets`                                                                                                                                                                             | Passed                                                                                              |
 | `npm run format:check`                                                                                                                                                                             | Passed                                                                                              |
@@ -171,13 +180,13 @@ Recommended production process later:
 ## Known Limitations
 
 - Supabase callback URLs must be finalized in the Supabase dashboard.
-- Deployed header, auth, performance, and smoke verification remain pending
-  after the next Preview deployment built with the corrected environment.
+- Deployed app-level header, auth, performance, and smoke verification require
+  an authenticated Vercel session or approved Preview protection bypass secret.
 - Vercel project Node.js version still reports 24.x in CLI output; project
   runtime should be reviewed in the Vercel dashboard if Node 22.x is required.
 
 ## Prompt 35 Readiness
 
-Prompt 35 may proceed after the next `development` Preview deployment completes
-with the corrected environment and the verification matrix in
-`docs/deployment/staging-url-verification.md` is completed.
+Prompt 35 may proceed once the Preview protection access method is approved and
+the verification matrix in `docs/deployment/staging-url-verification.md` is
+completed.
