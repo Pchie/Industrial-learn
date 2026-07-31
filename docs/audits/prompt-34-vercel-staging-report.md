@@ -76,8 +76,9 @@ Supabase staging project `lgjujyaclrpaopdabyzg` is ready at the database/RLS
 level from Prompt 33. Supabase auth callback configuration should use
 `https://industrial-learn-git-development-kolobe.vercel.app`.
 
-Do not add broad wildcard redirects. Add only the final staging URL and any
-approved protected preview URLs.
+Supabase Auth URL configuration has been updated for staging with the
+development Preview Site URL and three exact redirect URLs for verification,
+password reset, and sign-in. No wildcard redirect URLs were added.
 
 ## Security Header Status
 
@@ -133,7 +134,7 @@ Recommended production process later:
 | Development branch deployment works | Complete: Preview deployment exists                       |
 | Staging Supabase connected          | Vercel Preview env variables configured for `development` |
 | Test auth disabled                  | Configured as `INDUSTRIAL_LEARN_AUTH_MODE=supabase`       |
-| Authentication callbacks work       | Pending Supabase dashboard update and deployed test       |
+| Authentication callbacks work       | Supabase redirect URLs configured; flow test pending      |
 | Private data not publicly cached    | Configured in Next.js; verified locally                   |
 | Security headers reviewed           | Configured in Next.js; verified locally                   |
 | Remote route/header checks          | Passed through Vercel automation bypass                   |
@@ -165,6 +166,7 @@ Recommended production process later:
 | Remote `curl -I -L` checks for `/`, `/learn`, and `/dashboard`                                                                                                                                     | Reached Vercel SSO/protection before app response                                                         |
 | `vercel project protection enable industrial-learn --protection-bypass --json --scope kolobe`                                                                                                      | Passed; automation bypass enabled without printing secret values                                          |
 | `vercel curl` route checks through bypass                                                                                                                                                          | Passed for `/`, `/learn`, `/lessons/basic-fluid-pressure`, `/auth/sign-in`, `/auth/sign-up`, `/dashboard` |
+| Supabase dashboard URL configuration                                                                                                                                                               | Passed; Site URL and three exact redirect URLs persisted after reload                                     |
 | `npx --yes vercel target list --scope kolobe`                                                                                                                                                      | Passed; production tracks `main`, preview covers unassigned branches, development is CLI-accessible       |
 | `npm run scan:secrets`                                                                                                                                                                             | Passed                                                                                                    |
 | `npm run format:check`                                                                                                                                                                             | Passed                                                                                                    |
@@ -180,9 +182,8 @@ Recommended production process later:
 
 ## Known Limitations
 
-- Supabase callback URLs must be finalized in the Supabase dashboard.
 - Full Supabase auth flow verification still requires configured Supabase
-  redirect URLs and a synthetic staging user.
+  staging users.
 - Cross-student privacy and role checks still require authenticated staging
   test accounts.
 - Vercel project Node.js version still reports 24.x in CLI output; project

@@ -25,6 +25,7 @@ authenticated Vercel CLI requests.
 | Auth mode             | `supabase`                                                   |
 | Test auth             | Disabled                                                     |
 | Production deployment | Disabled for `main`                                          |
+| Supabase Site URL     | `https://industrial-learn-git-development-kolobe.vercel.app` |
 
 ## Verification Matrix
 
@@ -35,8 +36,8 @@ authenticated Vercel CLI requests.
 | Public lesson         | `/lessons/basic-fluid-pressure`   | Published lesson renders            | Passed via Vercel bypass       |
 | Sign-up               | `/auth/sign-up`                   | Staging Supabase account flow works | Route passed via Vercel bypass |
 | Sign-in               | `/auth/sign-in`                   | Synthetic staging user signs in     | Pending                        |
-| Email verification    | `/auth/verify`                    | Redirect allowlist works            | Pending                        |
-| Password reset        | `/auth/reset-password`            | Redirect allowlist works            | Pending                        |
+| Email verification    | `/auth/verify`                    | Redirect allowlist works            | Supabase redirect configured   |
+| Password reset        | `/auth/reset-password`            | Redirect allowlist works            | Supabase redirect configured   |
 | Dashboard             | `/dashboard`                      | Authenticated student sees own data | Route passed via Vercel bypass |
 | Protected denial      | `/dashboard` unauthenticated      | Redirects to sign-in                | Pending                        |
 | Cross-student privacy | Dashboard query tampering         | No other student data shown         | Pending                        |
@@ -120,3 +121,18 @@ files. Checks were executed with authenticated `vercel curl` requests.
 
 All checked routes include `x-robots-tag: noindex`, consistent with protected
 Preview deployment behavior.
+
+## Supabase Redirect Configuration
+
+Supabase Auth URL configuration was updated in the dedicated staging project
+`lgjujyaclrpaopdabyzg` through the Supabase dashboard.
+
+| Setting        | Value                                                                            |
+| -------------- | -------------------------------------------------------------------------------- |
+| Site URL       | `https://industrial-learn-git-development-kolobe.vercel.app`                     |
+| Redirect URL 1 | `https://industrial-learn-git-development-kolobe.vercel.app/auth/verify`         |
+| Redirect URL 2 | `https://industrial-learn-git-development-kolobe.vercel.app/auth/reset-password` |
+| Redirect URL 3 | `https://industrial-learn-git-development-kolobe.vercel.app/auth/sign-in`        |
+
+No wildcard redirect URLs were added. Reload verification confirmed the Site URL
+and all three redirect URLs persisted in the Supabase dashboard.
