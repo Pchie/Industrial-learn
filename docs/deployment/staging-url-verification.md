@@ -4,23 +4,21 @@ Date: 2026-07-31
 
 ## Status
 
-The Vercel staging project exists and branch-scoped preview/development
-environment variables are configured. Live URL verification is blocked because
-Vercel created production-target deployments for attempted staging deployments.
-Those deployments were removed. This document defines the verification evidence
-that must be completed once Vercel target behavior is corrected and a
-non-production staging deployment URL is available.
+The `development` branch Preview deployment on `kolobe/industrial-learn` is the
+Industrial Learn staging deployment. Branch-scoped Preview environment variables
+are configured for `development`. This document tracks deployed staging
+verification evidence.
 
 ## Required URL
 
-| Item                  | Value                                        |
-| --------------------- | -------------------------------------------- |
-| Staging URL           | Blocked pending non-production Vercel target |
-| Branch                | `development`                                |
-| Supabase project      | `lgjujyaclrpaopdabyzg`                       |
-| Auth mode             | `supabase`                                   |
-| Test auth             | Disabled                                     |
-| Production deployment | Disabled                                     |
+| Item                  | Value                                                        |
+| --------------------- | ------------------------------------------------------------ |
+| Staging URL           | `https://industrial-learn-git-development-kolobe.vercel.app` |
+| Branch                | `development`                                                |
+| Supabase project      | `lgjujyaclrpaopdabyzg`                                       |
+| Auth mode             | `supabase`                                                   |
+| Test auth             | Disabled                                                     |
+| Production deployment | Disabled for `main`                                          |
 
 ## Verification Matrix
 

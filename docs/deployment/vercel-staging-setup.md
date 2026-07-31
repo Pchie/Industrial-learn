@@ -39,48 +39,50 @@ branch behavior, and live setup steps without enabling production deployment.
 - `installCommand: "npm ci"`
 - `buildCommand: "npm run build"`
 - `outputDirectory: "apps/web/.next"`
-- `git.deploymentEnabled: false`
+- `git.deploymentEnabled.development: true`
+- `git.deploymentEnabled.main: false`
 
-Automatic Git deployments are disabled until the Vercel project has a verified
-non-production staging target. This prevents Vercel from creating a production
-deployment from `development` while the project-level environment behavior is
-being corrected.
+The `development` branch Preview deployment is the Industrial Learn staging
+deployment. The `main` branch remains blocked from automatic Vercel production
+deployment until a separate production-release prompt approves it.
 
 ## Required Vercel Project Settings
 
-Create or configure one Vercel project for staging only:
+Use the existing Vercel project for branch-based staging:
 
-| Setting               | Required value                                           |
-| --------------------- | -------------------------------------------------------- |
-| Git repository        | `Pchie/industrial-learn`                                 |
-| Project root          | Repository root                                          |
-| Framework preset      | Next.js                                                  |
-| Build command         | Use repository `vercel.json`                             |
-| Install command       | Use repository `vercel.json`                             |
-| Output directory      | Use repository `vercel.json`                             |
-| Node.js version       | 22.x                                                     |
-| Deployment branch     | Disabled until non-production staging target is verified |
-| Production deployment | Disabled for this prompt                                 |
+| Setting               | Required value                                               |
+| --------------------- | ------------------------------------------------------------ |
+| Git repository        | `Pchie/industrial-learn`                                     |
+| Vercel project        | `kolobe/industrial-learn`                                    |
+| Project root          | Repository root                                              |
+| Framework preset      | Next.js                                                      |
+| Build command         | Use repository `vercel.json`                                 |
+| Install command       | Use repository `vercel.json`                                 |
+| Output directory      | Use repository `vercel.json`                                 |
+| Node.js version       | 22.x                                                         |
+| Deployment branch     | `development` Preview deployment                             |
+| Staging URL           | `https://industrial-learn-git-development-kolobe.vercel.app` |
+| Production deployment | Disabled for `main`                                          |
 
-Do not create or connect a production Vercel project during this task.
+Do not promote or deploy `main` during this task.
 
 ## Staging Environment Variables
 
 Set these in the Vercel project for the staging runtime. Do not paste real values
 into repository files, build logs, screenshots, or reports.
 
-| Variable                        | Vercel scope                 | Secret?    | Required value policy               |
-| ------------------------------- | ---------------------------- | ---------- | ----------------------------------- |
-| `NODE_ENV`                      | Preview/staging runtime      | No         | `production`                        |
-| `NEXT_PUBLIC_APP_ENV`           | Preview/staging runtime      | No         | `staging`                           |
-| `APP_BASE_URL`                  | Preview/staging runtime      | No         | Approved Vercel staging URL         |
-| `NEXT_PUBLIC_SUPABASE_URL`      | Preview/staging runtime      | No         | Staging Supabase project URL        |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Preview/staging runtime      | Public key | Staging anon key only               |
-| `SUPABASE_SERVICE_ROLE_KEY`     | Trusted staging runtime only | Yes        | Staging service-role key only       |
-| `SUPABASE_PROJECT_REF`          | Trusted staging runtime only | No         | `lgjujyaclrpaopdabyzg`              |
-| `SUPABASE_DB_URL`               | Migration operators only     | Yes        | Do not expose to untrusted previews |
-| `INDUSTRIAL_LEARN_AUTH_MODE`    | Preview/staging runtime      | No         | `supabase`                          |
-| `INDUSTRIAL_LEARN_E2E`          | Preview/staging runtime      | No         | `false` or unset                    |
+| Variable                        | Vercel scope                 | Secret?    | Required value policy                                        |
+| ------------------------------- | ---------------------------- | ---------- | ------------------------------------------------------------ |
+| `NODE_ENV`                      | Preview/staging runtime      | No         | `production`                                                 |
+| `NEXT_PUBLIC_APP_ENV`           | Preview/staging runtime      | No         | `staging`                                                    |
+| `APP_BASE_URL`                  | Preview/staging runtime      | No         | `https://industrial-learn-git-development-kolobe.vercel.app` |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Preview/staging runtime      | No         | Staging Supabase project URL                                 |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Preview/staging runtime      | Public key | Staging anon key only                                        |
+| `SUPABASE_SERVICE_ROLE_KEY`     | Trusted staging runtime only | Yes        | Staging service-role key only                                |
+| `SUPABASE_PROJECT_REF`          | Trusted staging runtime only | No         | `lgjujyaclrpaopdabyzg`                                       |
+| `SUPABASE_DB_URL`               | Migration operators only     | Yes        | Do not expose to untrusted previews                          |
+| `INDUSTRIAL_LEARN_AUTH_MODE`    | Preview/staging runtime      | No         | `supabase`                                                   |
+| `INDUSTRIAL_LEARN_E2E`          | Preview/staging runtime      | No         | `false` or unset                                             |
 
 Preview deployments from untrusted pull requests must not receive
 `SUPABASE_SERVICE_ROLE_KEY` or `SUPABASE_DB_URL`. If Vercel preview deployments
@@ -89,11 +91,11 @@ synthetic staging records.
 
 ## Supabase Authentication Callbacks
 
-After the staging deployment URL exists, configure the Supabase staging project:
+Configure the Supabase staging project with the development-branch Preview URL:
 
 | Supabase setting              | Required value                                                   |
 | ----------------------------- | ---------------------------------------------------------------- |
-| Site URL                      | Exact staging `APP_BASE_URL`                                     |
+| Site URL                      | `https://industrial-learn-git-development-kolobe.vercel.app`     |
 | Sign-in redirect              | `${APP_BASE_URL}/auth/verify` where used by Supabase email flows |
 | Sign-up verification redirect | `${APP_BASE_URL}/auth/verify`                                    |
 | Password reset redirect       | `${APP_BASE_URL}/auth/reset-password`                            |
@@ -142,17 +144,16 @@ the content is public and approved for student use.
 
 ## Deployment Commands
 
-After authenticating the Vercel CLI and linking the staging project:
+After authenticating the Vercel CLI:
 
 ```bash
-npx --yes vercel pull --environment=preview
-npx --yes vercel build
-npx --yes vercel deploy --prebuilt
+npx --yes vercel ls industrial-learn --scope kolobe
+npx --yes vercel inspect https://industrial-learn-git-development-kolobe.vercel.app --scope kolobe
 ```
 
-For Git-connected deployment, re-enable only after the Vercel project maps
-`development` to a non-production staging or preview target. Push `development`
-after CI passes and verify the created staging deployment in Vercel.
+For Git-connected deployment, push `development` after local validation and
+verify that Vercel creates a Preview deployment for
+`industrial-learn-git-development-kolobe.vercel.app`.
 
 ## Production Enablement Later
 

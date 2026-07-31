@@ -4,19 +4,19 @@ Date: 2026-07-31
 
 ## Executive Verdict
 
-CONDITIONAL PASS FOR REPOSITORY CONFIGURATION; LIVE VERCEL DEPLOYMENT BLOCKED
+CONDITIONAL PASS FOR STAGING CONFIGURATION; DEPLOYED VERIFICATION IN PROGRESS
 
 Repository-side Vercel staging configuration, branch deployment controls,
-security headers, private cache headers, deployment documentation, and a
-separate Vercel staging project were created. Secret environment-variable upload
-was completed after explicit operator approval.
+security headers, private cache headers, and deployment documentation were
+created. Secret environment-variable upload was completed after explicit
+operator approval.
 
-Live deployment is blocked because Vercel created production-target deployments
-for the staging project even when deployment was intended for preview. Both
-production-target deployments were removed and automatic Git deployments were
-disabled in `vercel.json` to prevent recurrence.
+The active staging deployment is the `development` branch Preview deployment on
+`kolobe/industrial-learn`. The separate `kolobe/industrial-learn-staging`
+project is not the active deployment target for the current staging flow.
 
-No production deployment remains active. No secrets were printed or committed.
+No secrets were printed or committed. Automatic deployment from `main` remains
+disabled.
 
 ## Repository State Reviewed
 
@@ -39,11 +39,12 @@ No production deployment remains active. No secrets were printed or committed.
 - Next.js framework detection
 - repository-root install and build commands
 - `apps/web/.next` output directory
-- automatic Git deployments disabled pending Vercel target correction
+- automatic Git deployment enabled for `development`
+- automatic Git deployment disabled for `main`
 
-Production deployment remains disabled for this prompt. The Vercel dashboard or
-API must be corrected so `development` maps to a non-production staging target
-before Git deployments are re-enabled.
+Production deployment remains disabled for this prompt. The `development`
+branch Preview deployment is treated as staging because `main` is behind
+`development` and production release has not been approved.
 
 ## Environment Configuration Status
 
@@ -52,8 +53,8 @@ Required staging variables are documented in
 
 Live Vercel environment variables were configured after explicit operator
 approval. Values were read from the ignored local staging environment file and
-uploaded without printing the values. The project exists as
-`kolobe/industrial-learn-staging`.
+uploaded without printing the values. The active project is
+`kolobe/industrial-learn`.
 
 Staging must use:
 
@@ -67,8 +68,8 @@ Staging must use:
 ## Authentication Callback Status
 
 Supabase staging project `lgjujyaclrpaopdabyzg` is ready at the database/RLS
-level from Prompt 33. Supabase auth callback configuration still requires the
-final Vercel staging URL.
+level from Prompt 33. Supabase auth callback configuration should use
+`https://industrial-learn-git-development-kolobe.vercel.app`.
 
 Do not add broad wildcard redirects. Add only the final staging URL and any
 approved protected preview URLs.
@@ -121,18 +122,18 @@ Recommended production process later:
 
 ## Live Deployment Status
 
-| Requirement                         | Status                                                     |
-| ----------------------------------- | ---------------------------------------------------------- |
-| Vercel staging project exists       | Complete: `kolobe/industrial-learn-staging`                |
-| Development branch deployment works | Blocked; Vercel marked attempted deployments as production |
-| Staging Supabase connected          | Vercel preview/development env variables configured        |
-| Test auth disabled                  | Configured as `INDUSTRIAL_LEARN_AUTH_MODE=supabase`        |
-| Authentication callbacks work       | Pending safe staging URL and Supabase dashboard update     |
-| Private data not publicly cached    | Configured in Next.js; verified locally                    |
-| Security headers reviewed           | Configured in Next.js; verified locally                    |
-| Preview deployment risks documented | Complete                                                   |
-| No production deployment enabled    | Repository config disables `main` auto-deploy              |
-| No secrets in Git/logs              | Passed local secret scan                                   |
+| Requirement                         | Status                                                    |
+| ----------------------------------- | --------------------------------------------------------- |
+| Vercel staging project exists       | Complete: `kolobe/industrial-learn`                       |
+| Development branch deployment works | Complete: Preview deployment exists                       |
+| Staging Supabase connected          | Vercel Preview env variables configured for `development` |
+| Test auth disabled                  | Configured as `INDUSTRIAL_LEARN_AUTH_MODE=supabase`       |
+| Authentication callbacks work       | Pending Supabase dashboard update and deployed test       |
+| Private data not publicly cached    | Configured in Next.js; verified locally                   |
+| Security headers reviewed           | Configured in Next.js; verified locally                   |
+| Preview deployment risks documented | Complete                                                  |
+| No production deployment enabled    | Repository config disables `main` auto-deploy             |
+| No secrets in Git/logs              | Passed local secret scan                                  |
 
 ## Commands Run
 
@@ -151,6 +152,9 @@ Recommended production process later:
 | `npx --yes vercel remove dpl_H5evA7dYqXvgyqvoBKqn1EQgwL5n --yes --scope kolobe`                                                                                                                    | Passed; removed first unintended production-target deployment                                       |
 | `npx --yes vercel remove dpl_4E3szXw45NiF6W542wgLLYFxPGUr --yes --scope kolobe`                                                                                                                    | Passed; removed second unintended production-target deployment                                      |
 | Post-removal `npx --yes vercel ls industrial-learn-staging --scope kolobe`                                                                                                                         | Passed; no deployments remain                                                                       |
+| `vercel inspect https://industrial-learn-acwjtmcdn-kolobe.vercel.app --scope kolobe`                                                                                                               | Passed; deployment target is Preview with development branch alias                                  |
+| Vercel active-project staging secret upload                                                                                                                                                        | Passed after explicit operator approval for `kolobe/industrial-learn`                               |
+| `vercel env list preview development --project industrial-learn --scope kolobe`                                                                                                                    | Passed; expected Preview `development` keys present and encrypted                                   |
 | `npx --yes vercel target list --scope kolobe`                                                                                                                                                      | Passed; production tracks `main`, preview covers unassigned branches, development is CLI-accessible |
 | `npm run scan:secrets`                                                                                                                                                                             | Passed                                                                                              |
 | `npm run format:check`                                                                                                                                                                             | Passed                                                                                              |
@@ -166,15 +170,14 @@ Recommended production process later:
 
 ## Known Limitations
 
-- Live deployment URL verification is blocked until Vercel can create a
-  non-production staging deployment.
-- Supabase callback URLs cannot be finalized until the staging URL exists.
-- Vercel protected preview settings and target behavior require dashboard/API
-  correction.
-- Deployed header, auth, performance, and smoke verification remain pending.
+- Supabase callback URLs must be finalized in the Supabase dashboard.
+- Deployed header, auth, performance, and smoke verification remain pending
+  after the next Preview deployment built with the corrected environment.
+- Vercel project Node.js version still reports 24.x in CLI output; project
+  runtime should be reviewed in the Vercel dashboard if Node 22.x is required.
 
 ## Prompt 35 Readiness
 
-Prompt 35 should wait until Vercel target behavior is corrected, a live
-non-production staging URL exists, and the verification matrix in
+Prompt 35 may proceed after the next `development` Preview deployment completes
+with the corrected environment and the verification matrix in
 `docs/deployment/staging-url-verification.md` is completed.
