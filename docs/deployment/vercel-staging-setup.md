@@ -39,28 +39,28 @@ branch behavior, and live setup steps without enabling production deployment.
 - `installCommand: "npm ci"`
 - `buildCommand: "npm run build"`
 - `outputDirectory: "apps/web/.next"`
-- `git.deploymentEnabled.development: true`
-- `git.deploymentEnabled.main: false`
+- `git.deploymentEnabled: false`
 
-Feature branches remain eligible for preview deployments unless disabled in the
-Vercel dashboard. The `main` branch is explicitly disabled from automatic Vercel
-deployment in repository configuration.
+Automatic Git deployments are disabled until the Vercel project has a verified
+non-production staging target. This prevents Vercel from creating a production
+deployment from `development` while the project-level environment behavior is
+being corrected.
 
 ## Required Vercel Project Settings
 
 Create or configure one Vercel project for staging only:
 
-| Setting               | Required value               |
-| --------------------- | ---------------------------- |
-| Git repository        | `Pchie/industrial-learn`     |
-| Project root          | Repository root              |
-| Framework preset      | Next.js                      |
-| Build command         | Use repository `vercel.json` |
-| Install command       | Use repository `vercel.json` |
-| Output directory      | Use repository `vercel.json` |
-| Node.js version       | 22.x                         |
-| Deployment branch     | `development` for staging    |
-| Production deployment | Disabled for this prompt     |
+| Setting               | Required value                                           |
+| --------------------- | -------------------------------------------------------- |
+| Git repository        | `Pchie/industrial-learn`                                 |
+| Project root          | Repository root                                          |
+| Framework preset      | Next.js                                                  |
+| Build command         | Use repository `vercel.json`                             |
+| Install command       | Use repository `vercel.json`                             |
+| Output directory      | Use repository `vercel.json`                             |
+| Node.js version       | 22.x                                                     |
+| Deployment branch     | Disabled until non-production staging target is verified |
+| Production deployment | Disabled for this prompt                                 |
 
 Do not create or connect a production Vercel project during this task.
 
@@ -150,8 +150,9 @@ npx --yes vercel build
 npx --yes vercel deploy --prebuilt
 ```
 
-For Git-connected deployment, push `development` after CI passes and verify the
-created preview/staging deployment in Vercel.
+For Git-connected deployment, re-enable only after the Vercel project maps
+`development` to a non-production staging or preview target. Push `development`
+after CI passes and verify the created staging deployment in Vercel.
 
 ## Production Enablement Later
 

@@ -4,21 +4,23 @@ Date: 2026-07-31
 
 ## Status
 
-The Vercel staging project exists and branch-scoped preview environment
-variables are configured for `development`. This document defines the
-verification evidence that must be completed once the first development-branch
-deployment URL is available.
+The Vercel staging project exists and branch-scoped preview/development
+environment variables are configured. Live URL verification is blocked because
+Vercel created production-target deployments for attempted staging deployments.
+Those deployments were removed. This document defines the verification evidence
+that must be completed once Vercel target behavior is corrected and a
+non-production staging deployment URL is available.
 
 ## Required URL
 
-| Item                  | Value                           |
-| --------------------- | ------------------------------- |
-| Staging URL           | Pending first Vercel deployment |
-| Branch                | `development`                   |
-| Supabase project      | `lgjujyaclrpaopdabyzg`          |
-| Auth mode             | `supabase`                      |
-| Test auth             | Disabled                        |
-| Production deployment | Disabled                        |
+| Item                  | Value                                        |
+| --------------------- | -------------------------------------------- |
+| Staging URL           | Blocked pending non-production Vercel target |
+| Branch                | `development`                                |
+| Supabase project      | `lgjujyaclrpaopdabyzg`                       |
+| Auth mode             | `supabase`                                   |
+| Test auth             | Disabled                                     |
+| Production deployment | Disabled                                     |
 
 ## Verification Matrix
 
