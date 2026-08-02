@@ -22,15 +22,23 @@ type SupabaseAuthResponse = {
   access_token?: string;
   refresh_token?: string;
   expires_in?: number;
-  user?: {
-    id: string;
-    email?: string;
-    email_confirmed_at?: string | null;
-    user_metadata?: {
-      display_name?: string;
-      full_name?: string;
-    };
+  user?: SupabaseAuthUser;
+  error?: string;
+  error_description?: string;
+  msg?: string;
+};
+
+type SupabaseAuthUser = {
+  id: string;
+  email?: string;
+  email_confirmed_at?: string | null;
+  user_metadata?: {
+    display_name?: string;
+    full_name?: string;
   };
+};
+
+type SupabaseUserResponse = SupabaseAuthUser & {
   error?: string;
   error_description?: string;
   msg?: string;
@@ -161,7 +169,7 @@ export function createSupabaseAuthProvider(env: IndustrialLearnEnv): AuthProvide
         return fail("missing_session");
       }
 
-      const userResponse = await authFetch<SupabaseAuthResponse>(
+      const userResponse = await authFetch<SupabaseUserResponse>(
         env,
         `${authBase}/user`,
         {
@@ -170,21 +178,17 @@ export function createSupabaseAuthProvider(env: IndustrialLearnEnv): AuthProvide
         }
       );
 
-      if (
-        !userResponse.ok ||
-        !userResponse.value.user?.id ||
-        !userResponse.value.user.email
-      ) {
+      if (!userResponse.ok || !userResponse.value.id || !userResponse.value.email) {
         return fail("expired_session");
       }
 
       const profile = await resolveSupabaseProfile(env, restBase, tokens.accessToken, {
-        authUserId: userResponse.value.user.id,
-        email: userResponse.value.user.email,
+        authUserId: userResponse.value.id,
+        email: userResponse.value.email,
         displayName:
-          userResponse.value.user.user_metadata?.display_name ??
-          userResponse.value.user.user_metadata?.full_name ??
-          userResponse.value.user.email
+          userResponse.value.user_metadata?.display_name ??
+          userResponse.value.user_metadata?.full_name ??
+          userResponse.value.email
       });
 
       if (!profile.ok) {
@@ -192,8 +196,8 @@ export function createSupabaseAuthProvider(env: IndustrialLearnEnv): AuthProvide
       }
 
       const session: AuthenticatedSession = {
-        authUserId: userResponse.value.user.id,
-        email: userResponse.value.user.email,
+        authUserId: userResponse.value.id,
+        email: userResponse.value.email,
         profile: profile.value,
         roles: profile.value.roles,
         capabilities: capabilitiesForRoles(profile.value.roles),
