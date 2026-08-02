@@ -92,6 +92,30 @@ tokens were held in memory only and were not printed or committed.
 | Attempt metadata indexes        | Passed; 4 attempt indexes found.                        |
 | Role seed count                 | Passed; 5 roles seeded.                                 |
 
+## 2026-08-02 Re-Verification
+
+After the deployed Supabase session-resolution fix, the staging database was
+re-verified against the repository migration and policy set without reapplying
+non-idempotent historical migrations.
+
+| Check                                      | Result                                                                                      |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| Staging environment validation             | Passed without printing secret values.                                                      |
+| Required schema tables                     | Passed; no expected tables missing.                                                         |
+| RLS enabled on expected tables             | Passed; no expected RLS tables disabled.                                                    |
+| Policy count                               | Passed; 80 public policies found.                                                           |
+| Unsafe answer-choice policy                | Passed; `answer_choices_read_accessible_question` absent.                                   |
+| Hardened answer-choice policy              | Passed; `answer_choices_content_staff_read` present.                                        |
+| Unsafe attempt write policies              | Passed; old broad assessment/simulation student read-write policies absent.                 |
+| Hardened attempt read policies             | Passed; student self-select policies present.                                               |
+| Attempt idempotency indexes                | Passed; repository-defined assessment and simulation idempotency indexes present.           |
+| Role seed count                            | Passed; 5 required roles found.                                                             |
+| `PUBLIC` table grants                      | Passed; no `PUBLIC` table grants found.                                                     |
+| Supabase `anon` and `authenticated` grants | Present as expected for Supabase REST, with RLS enforcing access.                           |
+| Security-definer helper ownership          | Passed; inspected security-definer helpers are owned by `postgres`.                         |
+| Direct attempt write denial                | Passed; anonymous requests were denied and student direct writes returned forbidden status. |
+| Authenticated RLS integration              | Passed; 4 live checks passed using synthetic staging users and in-memory tokens.            |
+
 ## Operator Command Path Used
 
 Secure values were supplied outside Git in `.env.staging.local`:

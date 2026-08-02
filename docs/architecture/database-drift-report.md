@@ -2,6 +2,8 @@
 
 Date: 2026-07-30
 
+Latest staging re-verification: 2026-08-02
+
 ## Scope
 
 This report compares the repository migration and policy plan with the currently available staging evidence.
@@ -70,7 +72,11 @@ Live checks compared:
 
 ## Remaining Drift Work
 
-Before production promotion, repeat drift checks against a freshly recreated
-staging database and add a grant-level report covering
-`information_schema.role_table_grants` and privileged function ownership. Do not
-run these checks against production without an approved production change window.
+Staging grant-level checks were repeated on 2026-08-02. The live staging
+database had no `PUBLIC` table grants, security-definer helper functions were
+owned by `postgres`, and direct anonymous/student writes to server-scored attempt
+tables were denied by live RLS.
+
+Before production promotion, repeat these checks against the production database
+only inside an approved production change window. Do not copy staging synthetic
+users or staging verification records into production.
