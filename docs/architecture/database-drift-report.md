@@ -4,6 +4,8 @@ Date: 2026-07-30
 
 Latest staging re-verification: 2026-08-02
 
+Latest content RLS remediation: 2026-08-03
+
 ## Scope
 
 This report compares the repository migration and policy plan with the currently available staging evidence.
@@ -76,6 +78,17 @@ Staging grant-level checks were repeated on 2026-08-02. The live staging
 database had no `PUBLIC` table grants, security-definer helper functions were
 owned by `postgres`, and direct anonymous/student writes to server-scored attempt
 tables were denied by live RLS.
+
+Prompt 33b content-visibility drift was remediated on 2026-08-03 by applying:
+
+- `database/migrations/0005_restrict_unapproved_content_visibility.sql`
+- `database/migrations/0006_restrict_author_self_approval.sql`
+
+The staging database now includes the
+`public.is_student_visible_content(publication_status, content_status)` helper
+and replacement content read policies that require published and approved status
+for student-visible technical content. Direct author self-approval through RLS
+was also restricted.
 
 Before production promotion, repeat these checks against the production database
 only inside an approved production change window. Do not copy staging synthetic

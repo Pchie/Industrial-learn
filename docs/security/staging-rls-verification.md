@@ -88,3 +88,25 @@ Content-governance self-approval controls remain application-service behavior an
 should be verified when the governance service workflow is exercised against
 staging. The current RLS pass does not claim GitHub branch protection or
 production readiness.
+
+## 2026-08-03 Content Visibility Remediation
+
+Prompt 33b applied two additive corrective migrations to staging:
+
+- `database/migrations/0005_restrict_unapproved_content_visibility.sql`
+- `database/migrations/0006_restrict_author_self_approval.sql`
+
+Live staging checks after the migration confirmed:
+
+- Students cannot read draft, unapproved, unpublished, revision-required,
+  archived, or published-but-unapproved lessons, assessments, simulations,
+  projects, or knowledge files.
+- Published and approved records remain student-readable.
+- Hidden answer choices remain hidden from students.
+- Content versions, review records, and audit events remain hidden from
+  students.
+- Author direct self-approval is blocked at the database policy boundary.
+- Reviewer evidence access remains functional.
+- Reviewer access to private student attempts remains denied by default.
+
+Prompt 33b final verdict: GO FOR PROMPT 34.
