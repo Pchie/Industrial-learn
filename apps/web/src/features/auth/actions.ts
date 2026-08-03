@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { getServerEnv } from "@industrial-learn/env";
 
 import {
   clearSessionCookies,
@@ -9,7 +10,12 @@ import {
   resolveAuthenticatedSession,
   setSessionCookies
 } from "./server";
-import { normaliseEmail, readRequiredString, safeInternalRedirect } from "./session-core";
+import {
+  absoluteAppUrl,
+  normaliseEmail,
+  readRequiredString,
+  safeInternalRedirect
+} from "./session-core";
 
 export async function signUpAction(formData: FormData) {
   const next = safeInternalRedirect(formData.get("next"), "/dashboard");
@@ -22,7 +28,7 @@ export async function signUpAction(formData: FormData) {
     email,
     password,
     displayName,
-    redirectTo: "/auth/verify"
+    redirectTo: absoluteAppUrl("/auth/verify", getServerEnv().appBaseUrl)
   });
 
   if (!result.ok) {
@@ -73,7 +79,7 @@ export async function forgotPasswordAction(formData: FormData) {
     await getAuthProvider()
   ).requestPasswordReset({
     email,
-    redirectTo: "/auth/reset-password"
+    redirectTo: absoluteAppUrl("/auth/reset-password", getServerEnv().appBaseUrl)
   });
   redirect("/auth/forgot-password?status=reset_requested");
 }

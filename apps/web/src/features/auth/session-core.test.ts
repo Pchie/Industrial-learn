@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  absoluteAppUrl,
   capabilitiesForRoles,
   fail,
   requireAnyRoleResult,
@@ -33,6 +34,23 @@ describe("auth session core", () => {
     expect(safeInternalRedirect("//evil.example/dashboard")).toBe("/dashboard");
     expect(safeInternalRedirect("/\\evil")).toBe("/dashboard");
     expect(safeInternalRedirect("")).toBe("/dashboard");
+  });
+
+  it("builds absolute auth callback URLs from the configured app base URL", () => {
+    expect(
+      absoluteAppUrl(
+        "/auth/verify?token=example",
+        "https://industrial-learn-staging-git-development-kolobe.vercel.app"
+      )
+    ).toBe(
+      "https://industrial-learn-staging-git-development-kolobe.vercel.app/auth/verify?token=example"
+    );
+    expect(
+      absoluteAppUrl("https://evil.example/auth/verify", "https://app.example")
+    ).toBe("https://app.example/");
+    expect(absoluteAppUrl("/auth/reset-password", undefined)).toBe(
+      "/auth/reset-password"
+    );
   });
 
   it("resolves capabilities from trusted roles", () => {
