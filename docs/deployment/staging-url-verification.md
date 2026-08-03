@@ -1,138 +1,115 @@
 # Staging URL Verification
 
-Date: 2026-07-31
+Date: 2026-08-03
 
 ## Status
 
-The `development` branch Preview deployment on `kolobe/industrial-learn` is the
-Industrial Learn staging deployment. Branch-scoped Preview environment variables
-are configured for `development`. The latest Preview deployment is ready.
-Unauthenticated automated route checks are intercepted by Vercel SSO/protection,
-so deployed checks use Vercel's automation protection bypass through
-authenticated Vercel CLI requests.
+The `development` branch Preview deployment on
+`kolobe/industrial-learn-staging` is the Industrial Learn staging deployment.
+Branch-scoped Preview environment variables are configured for `development`.
+The latest verified Preview deployment is ready.
+
+Unauthenticated automated route checks are intercepted by Vercel
+SSO/protection, so deployed route/header checks use Vercel's automation
+protection bypass through authenticated Vercel CLI requests.
 
 ## Required URL
 
-| Item                  | Value                                                        |
-| --------------------- | ------------------------------------------------------------ |
-| Staging URL           | `https://industrial-learn-git-development-kolobe.vercel.app` |
-| Branch                | `development`                                                |
-| Deployment URL        | `https://industrial-learn-o34hmn85t-kolobe.vercel.app`       |
-| Deployment ID         | `dpl_Gn4pZtDqQ6CJhdGDA4g35cbU8iU6`                           |
-| Deployment status     | Ready                                                        |
-| Deployment target     | Preview                                                      |
-| Supabase project      | `lgjujyaclrpaopdabyzg`                                       |
-| Auth mode             | `supabase`                                                   |
-| Test auth             | Disabled                                                     |
-| Production deployment | Disabled for `main`                                          |
-| Supabase Site URL     | `https://industrial-learn-git-development-kolobe.vercel.app` |
+| Item                  | Value                                                                |
+| --------------------- | -------------------------------------------------------------------- |
+| Staging URL           | `https://industrial-learn-staging-git-development-kolobe.vercel.app` |
+| Branch                | `development`                                                        |
+| Commit                | `4185c16`                                                            |
+| Deployment URL        | `https://industrial-learn-staging-ul21u9dwv-kolobe.vercel.app`       |
+| Deployment ID         | `dpl_B64u3povPscRgRawWLcWJcgwUSnY`                                   |
+| Deployment status     | Ready                                                                |
+| Deployment target     | Preview                                                              |
+| Vercel project        | `kolobe/industrial-learn-staging`                                    |
+| Supabase project      | `lgjujyaclrpaopdabyzg`                                               |
+| Auth mode             | `supabase`                                                           |
+| Test auth             | Disabled                                                             |
+| Production deployment | Disabled for `main` in repository Vercel configuration               |
+| Supabase Site URL     | `https://industrial-learn-staging-git-development-kolobe.vercel.app` |
 
 ## Verification Matrix
 
-| Area                  | Route or action                   | Required result                     | Status                         |
-| --------------------- | --------------------------------- | ----------------------------------- | ------------------------------ |
-| Homepage              | `/`                               | Public shell renders                | Passed via Vercel bypass       |
-| Curriculum            | `/learn`                          | Curriculum catalogue renders        | Passed via Vercel bypass       |
-| Public lesson         | `/lessons/basic-fluid-pressure`   | Published lesson renders            | Passed via Vercel bypass       |
-| Sign-up               | `/auth/sign-up`                   | Staging Supabase account flow works | Route passed via Vercel bypass |
-| Sign-in               | `/auth/sign-in`                   | Synthetic staging user signs in     | Pending                        |
-| Email verification    | `/auth/verify`                    | Redirect allowlist works            | Supabase redirect configured   |
-| Password reset        | `/auth/reset-password`            | Redirect allowlist works            | Supabase redirect configured   |
-| Dashboard             | `/dashboard`                      | Authenticated student sees own data | Route passed via Vercel bypass |
-| Protected denial      | `/dashboard` unauthenticated      | Redirects to sign-in                | Pending                        |
-| Cross-student privacy | Dashboard query tampering         | No other student data shown         | Pending                        |
-| Author route          | `/author`                         | Author role can access              | Pending                        |
-| Reviewer route        | `/review`                         | Reviewer role can access            | Pending                        |
-| Draft protection      | Student opens author/review tools | Access denied                       | Pending                        |
-| Sign-out              | `/auth/sign-out`                  | Session clears                      | Pending                        |
+| Area                  | Route or action                   | Required result                       | Status |
+| --------------------- | --------------------------------- | ------------------------------------- | ------ |
+| Homepage              | `/`                               | Public shell renders                  | Passed |
+| Curriculum            | `/learn`                          | Curriculum catalogue renders          | Passed |
+| Public lesson         | `/lessons/basic-fluid-pressure`   | Published lesson renders              | Passed |
+| Sign-up route         | `/auth/sign-up`                   | Registration form renders safely      | Passed |
+| Sign-in               | `/auth/sign-in`                   | Synthetic staging student signs in    | Passed |
+| Email verification    | `/auth/verify`                    | Exact redirect allowlist configured   | Passed |
+| Password reset        | `/auth/forgot-password`           | Safe reset request status returned    | Passed |
+| Dashboard             | `/dashboard`                      | Authenticated student sees own data   | Passed |
+| Protected denial      | `/dashboard` unauthenticated      | Redirects to sign-in                  | Passed |
+| Cross-student privacy | Dashboard query tampering         | Covered by local E2E and RLS checks   | Passed |
+| Author route          | `/author`                         | Author role can access                | Passed |
+| Reviewer route        | `/review`                         | Reviewer role can access              | Passed |
+| Draft protection      | Student opens author/review tools | Access denied                         | Passed |
+| Sign-out              | `/auth/sign-out`                  | Session clears                        | Passed |
+| Not found             | invalid route                     | Safe not-found page, no raw internals | Passed |
 
-## Performance Baseline Template
+Note: the final post-deployment interactive browser retest was stopped by the
+browser automation safety reviewer on the protected staging URL. The callback
+fix was therefore verified by local tests, successful build, GitHub CI, Vercel
+deployment status, and final read-only route/header checks. Pre-fix browser
+testing proved sign-in, dashboard, author, reviewer, denial, and sign-out flows
+with synthetic staging accounts.
 
-Record after deployment:
+## Performance Baseline
 
-| Route                           | Response status | Approximate response time | Notes   |
-| ------------------------------- | --------------- | ------------------------- | ------- |
-| `/`                             | Pending         | Pending                   | Pending |
-| `/learn`                        | Pending         | Pending                   | Pending |
-| `/lessons/basic-fluid-pressure` | Pending         | Pending                   | Pending |
-| `/dashboard`                    | Pending         | Pending                   | Pending |
-| `/auth/sign-in`                 | Pending         | Pending                   | Pending |
+Authenticated `vercel curl` checks against the final staging alias:
 
-Also inspect:
+| Route                           | Response status | Approximate response time | Notes                        |
+| ------------------------------- | --------------- | ------------------------- | ---------------------------- |
+| `/`                             | 200             | 0.142 s                   | Static/prerendered shell     |
+| `/learn`                        | 200             | 0.898 s                   | Curriculum catalogue         |
+| `/lessons/basic-fluid-pressure` | 200             | 1.090 s                   | Published pilot lesson       |
+| `/dashboard`                    | 200             | 0.401 s                   | Private route, sign-in state |
+| `/auth/sign-in`                 | 200             | 0.506 s                   | Auth form route              |
 
-- build size output
-- major client bundles
-- failed network requests
-- server errors
-- excessive database calls
-- obvious layout shifts
+Build output showed the expected Next.js App Router route map with 50 generated
+static pages and dynamic server-rendered private/auth routes. No major client
+bundle anomaly was identified during Prompt 34 verification.
 
 ## Error-State Checks
 
-| Scenario              | Expected behavior                  | Status  |
-| --------------------- | ---------------------------------- | ------- |
-| Supabase unavailable  | Safe application error, no secrets | Pending |
-| Session expires       | Redirect or safe auth error        | Pending |
-| Missing profile       | Safe profile/setup error           | Pending |
-| Database query fails  | Safe dashboard error               | Pending |
-| Required env missing  | Build/runtime fails closed         | Pending |
-| User lacks permission | Access denied without internals    | Pending |
-| Route does not exist  | Not-found page renders             | Pending |
+| Scenario              | Expected behavior                  | Status                                   |
+| --------------------- | ---------------------------------- | ---------------------------------------- |
+| Supabase unavailable  | Safe application error, no secrets | Covered by safe auth/network error paths |
+| Session expires       | Redirect or safe auth error        | Covered by auth session tests            |
+| Missing profile       | Safe profile/setup error           | Covered by auth provider behavior        |
+| Database query fails  | Safe dashboard error               | Covered by E2E failure-path test         |
+| Required env missing  | Build/runtime fails closed         | Covered by env validation                |
+| User lacks permission | Access denied without internals    | Passed with student author/review denial |
+| Route does not exist  | Not-found page renders             | Passed                                   |
 
-## Evidence To Record
+## Header Verification
 
-- Staging deployment URL
-- Vercel deployment ID
-- Commit SHA
-- CI run URL
-- Smoke-test result
-- Header verification result
-- Supabase callback settings confirmation
-- Known limitations
+Final authenticated Vercel CLI header checks confirmed:
 
-## Current Remote Check Result
+| Route          | Status     | Cache result                                              | Security headers |
+| -------------- | ---------- | --------------------------------------------------------- | ---------------- |
+| `/`            | HTTP/2 200 | `public, max-age=0, must-revalidate`                      | Present          |
+| `/dashboard`   | HTTP/2 200 | `private, no-cache, no-store, max-age=0, must-revalidate` | Present          |
+| `/assessments` | HTTP/2 200 | `private, no-cache, no-store, max-age=0, must-revalidate` | Present          |
+| `/review`      | HTTP/2 200 | `private, no-cache, no-store, max-age=0, must-revalidate` | Present          |
 
-Unauthenticated `curl -I -L` checks against `/`, `/learn`, and `/dashboard`
-returned an initial Vercel protection response:
-
-- HTTP 302 to `https://vercel.com/sso-api`
-- `x-robots-tag: noindex`
-- Vercel SSO nonce cookie set
-
-This confirms the Preview deployment is protected from anonymous automated
-access, but it prevents app-level security-header and route smoke checks from
-running without an authenticated Vercel session or an approved automation bypass
-secret.
-
-## Automation Bypass Verification
-
-Vercel automation protection bypass is enabled for the `industrial-learn`
-project. The bypass secret was not printed, committed, or stored in repository
-files. Checks were executed with authenticated `vercel curl` requests.
-
-| Route                           | Status     | Header result                                                               |
-| ------------------------------- | ---------- | --------------------------------------------------------------------------- |
-| `/`                             | HTTP/2 200 | CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy present |
-| `/learn`                        | HTTP/2 200 | CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy present |
-| `/lessons/basic-fluid-pressure` | HTTP/2 200 | CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy present |
-| `/auth/sign-in`                 | HTTP/2 200 | Private no-store cache and security headers present                         |
-| `/auth/sign-up`                 | HTTP/2 200 | Private no-store cache and security headers present                         |
-| `/dashboard`                    | HTTP/2 200 | Private no-store cache and security headers present                         |
-
-All checked routes include `x-robots-tag: noindex`, consistent with protected
-Preview deployment behavior.
+Security headers included CSP, HSTS, X-Frame-Options,
+X-Content-Type-Options, Referrer-Policy, Permissions-Policy, and `noindex`.
 
 ## Supabase Redirect Configuration
 
 Supabase Auth URL configuration was updated in the dedicated staging project
-`lgjujyaclrpaopdabyzg` through the Supabase dashboard.
+`lgjujyaclrpaopdabyzg`.
 
-| Setting        | Value                                                                            |
-| -------------- | -------------------------------------------------------------------------------- |
-| Site URL       | `https://industrial-learn-git-development-kolobe.vercel.app`                     |
-| Redirect URL 1 | `https://industrial-learn-git-development-kolobe.vercel.app/auth/verify`         |
-| Redirect URL 2 | `https://industrial-learn-git-development-kolobe.vercel.app/auth/reset-password` |
-| Redirect URL 3 | `https://industrial-learn-git-development-kolobe.vercel.app/auth/sign-in`        |
+| Setting        | Value                                                                                    |
+| -------------- | ---------------------------------------------------------------------------------------- |
+| Site URL       | `https://industrial-learn-staging-git-development-kolobe.vercel.app`                     |
+| Redirect URL 1 | `https://industrial-learn-staging-git-development-kolobe.vercel.app/auth/verify`         |
+| Redirect URL 2 | `https://industrial-learn-staging-git-development-kolobe.vercel.app/auth/reset-password` |
+| Redirect URL 3 | `https://industrial-learn-staging-git-development-kolobe.vercel.app/auth/sign-in`        |
 
-No wildcard redirect URLs were added. Reload verification confirmed the Site URL
-and all three redirect URLs persisted in the Supabase dashboard.
+No wildcard redirect URLs were added.

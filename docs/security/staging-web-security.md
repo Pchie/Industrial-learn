@@ -1,6 +1,6 @@
 # Staging Web Security
 
-Date: 2026-07-31
+Date: 2026-08-03
 
 ## Purpose
 
@@ -14,36 +14,42 @@ project and synthetic or approved test data.
 - IL-DEPLOY-ENV-001: `docs/deployment/environment-strategy.md`
 - IL-STAGING-RLS-001: `docs/security/staging-rls-verification.md`
 - IL-STAGING-DB-001: `docs/audits/prompt-33-staging-database-report.md`
+- IL-P33B-RLS-001: `docs/audits/prompt-33b-content-rls-remediation.md`
 
 ## Environment Boundary
 
-| Boundary               | Requirement                                               |
-| ---------------------- | --------------------------------------------------------- |
-| Data                   | Synthetic staging users and approved staging records only |
-| Auth                   | Supabase staging authentication                           |
-| Local auth             | Disabled in staging                                       |
-| Production credentials | Not configured                                            |
-| Service role           | Server-only and excluded from untrusted previews          |
-| Database URL           | Migration/operator use only; not browser-exposed          |
+| Boundary               | Current staging control                                            |
+| ---------------------- | ------------------------------------------------------------------ |
+| Data                   | Synthetic staging users and approved staging records only          |
+| Auth                   | Supabase staging authentication                                    |
+| Local auth             | Disabled with `INDUSTRIAL_LEARN_AUTH_MODE=supabase`                |
+| Test mode              | Disabled with `INDUSTRIAL_LEARN_E2E=false`                         |
+| Production credentials | Not configured                                                     |
+| Service role           | Server-only Vercel encrypted variable                              |
+| Database URL           | Server/operator value; not exposed to browser code                 |
+| Deployment protection  | Vercel SSO/protection with automation bypass for controlled checks |
+| Git fork protection    | Enabled on the staging Vercel project                              |
 
 ## Browser Security Headers
 
-The staging app sends:
+Final staging header checks through authenticated `vercel curl` confirmed:
 
-| Header                      | Purpose                                                    |
-| --------------------------- | ---------------------------------------------------------- |
-| `Content-Security-Policy`   | Restricts resource loading to the app and staging Supabase |
-| `Referrer-Policy`           | Limits referrer leakage across origins                     |
-| `X-Content-Type-Options`    | Prevents MIME sniffing                                     |
-| `X-Frame-Options`           | Blocks clickjacking through framing                        |
-| `Permissions-Policy`        | Disables unused browser capabilities                       |
-| `Strict-Transport-Security` | Enforces HTTPS on deployed staging browsers                |
+| Header                      | Status  | Purpose                                                    |
+| --------------------------- | ------- | ---------------------------------------------------------- |
+| `Content-Security-Policy`   | Present | Restricts resource loading to the app and staging Supabase |
+| `Referrer-Policy`           | Present | Limits referrer leakage across origins                     |
+| `X-Content-Type-Options`    | Present | Prevents MIME sniffing                                     |
+| `X-Frame-Options`           | Present | Blocks clickjacking through framing                        |
+| `Permissions-Policy`        | Present | Disables unused browser capabilities                       |
+| `Strict-Transport-Security` | Present | Enforces HTTPS on deployed staging browsers                |
+| `x-robots-tag`              | Present | Keeps protected Preview deployment out of indexes          |
 
 ## CSP Notes
 
-The current CSP includes temporary inline script and style allowances because the
-current Next.js output requires inline runtime/style behavior. This is acceptable
-for staging verification but should be revisited before production hardening.
+The current CSP includes temporary inline script and style allowances because
+the current Next.js output requires inline runtime/style behavior. This is
+acceptable for staging verification but should be revisited before production
+hardening.
 
 Allowed network connections are limited to:
 
@@ -64,8 +70,9 @@ The following routes are explicitly marked `private, no-store`:
 - `/review`
 - `/admin`
 
-These routes must not be publicly cached by the browser, Vercel CDN, or any
-intermediate cache.
+Final staging checks confirmed `/dashboard`, `/assessments`, and `/review`
+return private no-store headers. Local E2E coverage also verifies private
+dashboard cache behavior.
 
 ## Preview Deployment Security
 
@@ -76,10 +83,11 @@ Required controls:
 
 - Do not provide production secrets to preview deployments.
 - Do not provide `SUPABASE_DB_URL` to untrusted previews.
-- Avoid providing `SUPABASE_SERVICE_ROLE_KEY` to untrusted previews.
+- Avoid providing `SUPABASE_SERVICE_ROLE_KEY` to untrusted previews unless the
+  branch is trusted and protected.
 - Use only synthetic staging users and records.
 - Restrict Supabase redirect allowlists to approved URLs.
-- Prefer Vercel protected previews for branches outside trusted maintainers.
+- Keep Vercel protected previews enabled for non-public staging access.
 
 ## Error-State Requirements
 
@@ -93,12 +101,15 @@ Staging errors must not reveal:
 - internal SQL errors
 - another student's private data
 
-Existing browser tests verify protected-route denial, dashboard safe error
-handling, private cache headers, and cross-student dashboard protection.
+Existing tests verify protected-route denial, safe dashboard database-failure
+handling, private cache headers, and cross-student dashboard protection. Final
+remote route checks did not show raw PostgreSQL, Supabase, RLS, or service-role
+errors.
 
 ## Remaining Security Work
 
-- Verify headers on the live Vercel staging URL after deployment.
-- Confirm Supabase redirect allowlists in the dashboard.
-- Confirm Vercel project access controls and protected preview settings.
-- Revisit CSP inline allowances before production.
+- Replace CSP inline allowances with nonce/hash-based controls before
+  production if practical.
+- Confirm Vercel project member access and branch protection manually in the
+  Vercel/GitHub dashboards.
+- Keep production deployment disabled until the production release prompt.
