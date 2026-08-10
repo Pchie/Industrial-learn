@@ -5,9 +5,9 @@ import type {
   WorkflowActor,
   WorkflowRole
 } from "@industrial-learn/content-review-workflow";
-import { ApplicationError, translateDatabaseError } from "./errors.js";
-import { requireAuthenticated } from "./authorization.js";
-import type { Caller } from "./domain.js";
+import { ApplicationError, translateDatabaseError } from "./errors";
+import { requireAuthenticated } from "./authorization";
+import type { Caller } from "./domain";
 
 export type GovernedContentType =
   | "theory_lesson"

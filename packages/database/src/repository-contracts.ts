@@ -14,7 +14,7 @@ import type {
   SavedLessonDto,
   SimulationAttemptDto,
   SortDirection
-} from "./domain.js";
+} from "./domain";
 
 export type StudentRecordQuery = PaginationInput & {
   studentProfileId: string;

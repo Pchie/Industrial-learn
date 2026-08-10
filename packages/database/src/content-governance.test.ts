@@ -9,9 +9,9 @@ import {
   type GovernanceItem,
   type GovernanceReviewRecord,
   type GovernanceVersion
-} from "./index.js";
+} from "./index";
 import type { StructuredLessonContent } from "@industrial-learn/content-review-workflow";
-import type { DataAccessRole } from "./domain.js";
+import type { DataAccessRole } from "./domain";
 
 const authorId = "11111111-1111-4111-8111-111111111111";
 const reviewerId = "22222222-2222-4222-8222-222222222222";
