@@ -46,9 +46,10 @@ Supported event categories:
 
 ## Staging Probe
 
-`POST /api/monitoring/staging-probe` is an operations-only diagnostic endpoint
-for staging release-candidate verification. It is unavailable outside staging
-and requires the `x-industrial-learn-probe: staging-monitoring-check` header.
+`GET /api/monitoring/staging-probe?probe=staging-monitoring-check` is an
+operations-only diagnostic endpoint for staging release-candidate verification.
+It is unavailable outside staging and remains behind Vercel deployment
+protection.
 
 The probe emits one synthetic redacted operational event and returns only a
 correlation ID. It must not be used as a product feature or production health

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { POST } from "./route";
+import { GET } from "./route";
 
 const originalEnv = { ...process.env };
 
@@ -12,13 +12,10 @@ afterEach(() => {
 describe("staging monitoring probe", () => {
   it("is unavailable outside staging", () => {
     process.env.NEXT_PUBLIC_APP_ENV = "development";
-    const response = POST(
-      new Request("https://app.example/api/monitoring/staging-probe", {
-        method: "POST",
-        headers: {
-          "x-industrial-learn-probe": "staging-monitoring-check"
-        }
-      })
+    const response = GET(
+      new Request(
+        "https://app.example/api/monitoring/staging-probe?probe=staging-monitoring-check"
+      )
     );
 
     expect(response.status).toBe(404);
@@ -26,11 +23,7 @@ describe("staging monitoring probe", () => {
 
   it("requires the probe header in staging", () => {
     process.env.NEXT_PUBLIC_APP_ENV = "staging";
-    const response = POST(
-      new Request("https://app.example/api/monitoring/staging-probe", {
-        method: "POST"
-      })
-    );
+    const response = GET(new Request("https://app.example/api/monitoring/staging-probe"));
 
     expect(response.status).toBe(404);
   });
@@ -50,13 +43,10 @@ describe("staging monitoring probe", () => {
     };
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
 
-    const response = POST(
-      new Request("https://app.example/api/monitoring/staging-probe", {
-        method: "POST",
-        headers: {
-          "x-industrial-learn-probe": "staging-monitoring-check"
-        }
-      })
+    const response = GET(
+      new Request(
+        "https://app.example/api/monitoring/staging-probe?probe=staging-monitoring-check"
+      )
     );
     const body = (await response.json()) as { status: string; correlationId: string };
 

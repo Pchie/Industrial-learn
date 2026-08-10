@@ -7,14 +7,14 @@ import {
 
 export const dynamic = "force-dynamic";
 
-const requiredProbeHeader = "staging-monitoring-check";
+const requiredProbeValue = "staging-monitoring-check";
 
-export function POST(request: Request) {
+export function GET(request: Request) {
   if (process.env.NEXT_PUBLIC_APP_ENV !== "staging") {
     return safeResponse("not_found", 404);
   }
 
-  if (request.headers.get("x-industrial-learn-probe") !== requiredProbeHeader) {
+  if (new URL(request.url).searchParams.get("probe") !== requiredProbeValue) {
     return safeResponse("not_found", 404);
   }
 
