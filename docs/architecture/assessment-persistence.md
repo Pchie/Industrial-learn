@@ -42,6 +42,15 @@ Current examples:
 
 Completion, competency awards, lesson-progress updates, and audit recording are performed inside a transaction runner. A failed competency or progress write rolls back the completed attempt state.
 
+In Supabase mode, assessment completion uses
+`public.complete_assessment_attempt_transaction`, a service-role-only PostgreSQL
+function. The browser never calls this function directly. Server-side code calculates the
+score and competency awards, then passes those trusted results to the function so the
+attempt row, lesson-progress row, and audit event are written atomically.
+
 ## Current Adapter Status
 
-`packages/database/src/attempt-persistence.ts` defines the application-service boundary and repository ports. The tests use an isolated in-memory repository harness; production wiring should provide Supabase/PostgreSQL repository adapters.
+`packages/database/src/attempt-persistence.ts` defines the application-service boundary
+and repository ports. The tests use an isolated in-memory repository harness. Supabase
+production wiring calls the database function through the server-only service-role REST
+client.

@@ -35,14 +35,14 @@ test.describe("staging smoke checks", () => {
     ).not.toBeVisible();
   });
 
-  test("assessment and simulation attempt areas are authenticated placeholders", async ({
-    page
-  }) => {
+  test("assessment and simulation attempt areas are authenticated", async ({ page }) => {
     await signIn(page, "active.student@example.test");
 
     await page.goto("/assessments");
     await expect(page.getByRole("heading", { name: "Assessments" })).toBeVisible();
-    await expect(page.getByText("Assessment attempts require")).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "View assessment" }).first()
+    ).toBeVisible();
 
     await page.goto("/simulations/history");
     await expect(page.getByRole("heading", { name: "Simulation history" })).toBeVisible();

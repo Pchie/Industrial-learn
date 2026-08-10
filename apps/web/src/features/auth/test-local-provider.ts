@@ -202,6 +202,7 @@ function seedLocalUsers() {
     "student"
   ]);
   addSeedUser("quiet.student@example.test", "Quiet Industrial Student", ["student"]);
+  addSeedUser("assessment.student@example.test", "Assessment Test Student", ["student"]);
   addSeedUser("database.failure@example.test", "Database Failure Student", ["student"]);
   addSeedUser("student.b@example.test", "Second Industrial Student", ["student"]);
   addSeedUser("lecturer@example.test", "Industrial Lecturer", ["lecturer"]);

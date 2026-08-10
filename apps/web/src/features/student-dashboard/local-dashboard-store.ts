@@ -1,12 +1,19 @@
-import type { DashboardEnrolment, SavedLessonRecord, StudentDashboardData } from "./data";
+import type {
+  AssessmentAttemptRecord,
+  DashboardEnrolment,
+  SavedLessonRecord,
+  StudentDashboardData
+} from "./data";
 import type { AuthProfile } from "../auth/session-core";
 
 const dismissedRecommendations = new Map<string, Set<string>>();
+const completedAssessmentAttempts = new Map<string, AssessmentAttemptRecord[]>();
 
 const baseDate = "2026-07-22T10:00:00.000Z";
 
 export function resetLocalDashboardStoreForTests() {
   dismissedRecommendations.clear();
+  completedAssessmentAttempts.clear();
 }
 
 export function dismissLocalDashboardRecommendation(
@@ -22,9 +29,11 @@ export function loadLocalStudentDashboardData(
   profile: AuthProfile
 ): StudentDashboardData {
   const seed = localDashboardSeeds[profile.email] ?? emptyStudentSeed(profile);
+  const dynamicAssessmentAttempts = completedAssessmentAttempts.get(profile.id) ?? [];
 
   return {
     ...seed,
+    assessmentAttempts: [...dynamicAssessmentAttempts, ...seed.assessmentAttempts],
     profile: {
       id: profile.id,
       displayName: profile.displayName,
@@ -32,6 +41,15 @@ export function loadLocalStudentDashboardData(
     },
     dismissedRecommendationIds: Array.from(dismissedRecommendations.get(profile.id) ?? [])
   };
+}
+
+export function recordLocalAssessmentDashboardAttempt(
+  studentProfileId: string,
+  attempt: AssessmentAttemptRecord
+) {
+  const current = completedAssessmentAttempts.get(studentProfileId) ?? [];
+  const next = [attempt, ...current.filter((item) => item.id !== attempt.id)];
+  completedAssessmentAttempts.set(studentProfileId, next);
 }
 
 function emptyStudentSeed(profile: AuthProfile): StudentDashboardData {

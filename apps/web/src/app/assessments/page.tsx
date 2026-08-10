@@ -1,14 +1,13 @@
-import { ProtectedPage } from "@/features/auth/protected-page";
-import { requireAuthenticatedUser } from "@/features/auth/server";
+import { AssessmentList } from "@/features/assessments/components";
+import { listAssessmentsForStudent } from "@/features/assessments/server";
+import { requireStudentProfile } from "@/features/auth/server";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function AssessmentsPage() {
-  const session = await requireAuthenticatedUser("/assessments");
+  const session = await requireStudentProfile("/assessments");
+  const assessments = await listAssessmentsForStudent(session);
 
-  return (
-    <ProtectedPage
-      description="Assessment attempts require authenticated session ownership before private results are loaded."
-      session={session}
-      title="Assessments"
-    />
-  );
+  return <AssessmentList assessments={assessments} />;
 }
