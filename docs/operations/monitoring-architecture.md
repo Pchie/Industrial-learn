@@ -44,6 +44,16 @@ Supported event categories:
 - `server_error`
 - `slow_route`
 
+## Staging Probe
+
+`POST /api/monitoring/staging-probe` is an operations-only diagnostic endpoint
+for staging release-candidate verification. It is unavailable outside staging
+and requires the `x-industrial-learn-probe: staging-monitoring-check` header.
+
+The probe emits one synthetic redacted operational event and returns only a
+correlation ID. It must not be used as a product feature or production health
+check.
+
 ## Staging Data Flow
 
 1. A server-side route, server action, or health check detects a failure.
