@@ -264,6 +264,23 @@ describe("database schema", () => {
     expect(migrationSql).toContain("from anon");
   });
 
+  it("defines atomic simulation completion as a service-role-only database function", () => {
+    expect(migrationSql).toContain(
+      "create or replace function public.complete_simulation_attempt_transaction"
+    );
+    expect(migrationSql).toContain("returns setof public.simulation_attempts");
+    expect(migrationSql).toContain("security definer");
+    expect(migrationSql).toContain("update public.simulation_attempts");
+    expect(migrationSql).toContain("insert into public.lesson_progress");
+    expect(migrationSql).toContain("insert into public.audit_events");
+    expect(migrationSql).toContain(
+      "grant execute on function public.complete_simulation_attempt_transaction"
+    );
+    expect(migrationSql).toContain("to service_role");
+    expect(migrationSql).toContain("from authenticated");
+    expect(migrationSql).toContain("from anon");
+  });
+
   it("seeds all required roles", () => {
     for (const role of [
       "student",

@@ -44,9 +44,11 @@ test.describe("staging smoke checks", () => {
       page.getByRole("link", { name: "View assessment" }).first()
     ).toBeVisible();
 
-    await page.goto("/simulations/history");
-    await expect(page.getByRole("heading", { name: "Simulation history" })).toBeVisible();
-    await expect(page.getByText("Simulation history is private")).toBeVisible();
+    await page.goto("/simulations");
+    await expect(page.getByRole("heading", { name: "Simulations" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "View simulation" })).toBeVisible();
+    await page.getByRole("link", { name: "View simulation" }).click();
+    await expect(page.getByText("Source required")).toBeVisible();
   });
 
   test("reviewer can access review workspace and student cannot access draft tools", async ({

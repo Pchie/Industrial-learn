@@ -337,6 +337,308 @@ dd {
   }
 }
 
+.simulation-shell {
+  display: grid;
+  gap: var(--il-space-5);
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: var(--il-space-5) var(--il-space-4) var(--il-space-7);
+}
+
+.simulation-hero {
+  display: grid;
+  gap: var(--il-space-3);
+}
+
+.simulation-hero h1 {
+  color: var(--il-color-text-primary);
+  font-size: var(--il-font-size-display-md);
+  line-height: var(--il-line-height-tight);
+  margin: 0;
+}
+
+.simulation-hero p {
+  color: var(--il-color-text-secondary);
+  line-height: var(--il-line-height-relaxed);
+  margin: 0;
+  max-width: 74ch;
+}
+
+.simulation-grid,
+.simulation-layout,
+.simulation-workbench {
+  display: grid;
+  gap: var(--il-space-4);
+}
+
+.simulation-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.simulation-layout {
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
+}
+
+.simulation-workbench {
+  align-items: start;
+  grid-template-columns: minmax(280px, 1.2fr) minmax(260px, 0.8fr);
+}
+
+.simulation-card,
+.simulation-panel {
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-panel);
+  box-shadow: var(--il-shadow-panel);
+  color: var(--il-color-text-primary);
+  display: grid;
+  gap: var(--il-space-3);
+  padding: var(--il-space-4);
+}
+
+.simulation-card h2,
+.simulation-panel h2 {
+  color: var(--il-color-text-primary);
+  font-size: var(--il-font-size-xl);
+  line-height: var(--il-line-height-tight);
+  margin: 0;
+}
+
+.simulation-card p,
+.simulation-panel p,
+.simulation-list,
+.simulation-history {
+  color: var(--il-color-text-secondary);
+  line-height: var(--il-line-height-relaxed);
+  margin: 0;
+}
+
+.simulation-card__meta {
+  color: var(--il-color-text-secondary);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: var(--il-font-size-sm);
+  gap: var(--il-space-2);
+}
+
+.simulation-card__meta span + span::before {
+  content: "/";
+  margin-right: var(--il-space-2);
+}
+
+.simulation-facts {
+  display: grid;
+  gap: var(--il-space-2);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  margin: 0;
+}
+
+.simulation-facts--wide {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.simulation-facts div {
+  display: grid;
+  gap: var(--il-space-1);
+}
+
+.simulation-facts dt {
+  color: var(--il-color-text-secondary);
+  font-size: var(--il-font-size-sm);
+}
+
+.simulation-facts dd {
+  color: var(--il-color-text-primary);
+  font-weight: var(--il-font-weight-bold);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.simulation-mode-grid,
+.simulation-actions,
+.measurement-grid {
+  display: grid;
+  gap: var(--il-space-3);
+}
+
+.simulation-mode-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.simulation-mode-button {
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-strong);
+  border-radius: var(--il-radius-control);
+  color: var(--il-color-text-primary);
+  cursor: pointer;
+  display: grid;
+  font: inherit;
+  gap: var(--il-space-1);
+  min-height: 96px;
+  padding: var(--il-space-3);
+  text-align: left;
+  width: 100%;
+}
+
+.simulation-mode-button:hover,
+.simulation-mode-button:focus-visible {
+  border-color: var(--il-color-brand-accent);
+  outline: 3px solid var(--il-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.simulation-mode-button span {
+  font-weight: var(--il-font-weight-heavy);
+}
+
+.simulation-mode-button small,
+.simulation-field small {
+  color: var(--il-color-text-secondary);
+}
+
+.simulation-visual {
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0 48%,
+      var(--il-color-domain-hydraulic) 48% 52%,
+      transparent 52%
+    ),
+    var(--il-color-bg-muted);
+  border: var(--il-border-strong);
+  border-radius: var(--il-radius-panel);
+  display: grid;
+  gap: var(--il-space-4);
+  grid-column: 1 / -1;
+  min-height: 240px;
+  padding: var(--il-space-4);
+}
+
+.simulation-cylinder {
+  align-items: center;
+  display: grid;
+  min-height: 110px;
+  position: relative;
+}
+
+.simulation-cylinder__bar {
+  background: var(--il-color-domain-hydraulic);
+  border-radius: 999px;
+  height: 28px;
+}
+
+.simulation-cylinder__piston {
+  background: var(--il-color-brand-accent);
+  border: 3px solid var(--il-color-bg-surface);
+  border-radius: 999px;
+  height: 76px;
+  left: 54%;
+  position: absolute;
+  width: 76px;
+}
+
+.simulation-visual__readout {
+  align-items: center;
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-control);
+  display: flex;
+  justify-content: space-between;
+  padding: var(--il-space-3);
+}
+
+.simulation-field {
+  color: var(--il-color-text-primary);
+  display: grid;
+  gap: var(--il-space-2);
+}
+
+.simulation-field--inline {
+  align-items: center;
+  grid-template-columns: minmax(140px, 1fr) minmax(140px, 1fr);
+}
+
+.simulation-field input,
+.simulation-field select {
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-strong);
+  border-radius: var(--il-radius-control);
+  color: var(--il-color-text-primary);
+  font: inherit;
+  min-height: var(--il-size-control-min);
+  padding: var(--il-space-2) var(--il-space-3);
+}
+
+.measurement-grid {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.measurement-card {
+  background: var(--il-color-bg-muted);
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-control);
+  display: grid;
+  gap: var(--il-space-1);
+  padding: var(--il-space-3);
+}
+
+.measurement-card span {
+  color: var(--il-color-text-secondary);
+  font-size: var(--il-font-size-sm);
+}
+
+.measurement-card strong {
+  color: var(--il-color-text-primary);
+  font-size: var(--il-font-size-lg);
+}
+
+.simulation-alert {
+  background: var(--il-color-bg-surface);
+  border: 2px solid var(--il-color-state-fault);
+  border-radius: var(--il-radius-panel);
+  color: var(--il-color-state-fault);
+  padding: var(--il-space-3);
+}
+
+.simulation-history,
+.simulation-list {
+  display: grid;
+  gap: var(--il-space-2);
+  padding-left: var(--il-space-4);
+}
+
+.simulation-history li {
+  display: grid;
+  gap: var(--il-space-1);
+}
+
+.simulation-score {
+  color: var(--il-color-brand-accent-strong);
+  font-size: var(--il-font-size-display-sm);
+  font-weight: var(--il-font-weight-heavy);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .simulation-cylinder__piston {
+    transition: none;
+  }
+}
+
+@media (max-width: 820px) {
+  .simulation-shell {
+    padding-inline: var(--il-space-3);
+  }
+
+  .simulation-layout,
+  .simulation-workbench {
+    grid-template-columns: 1fr;
+  }
+
+  .simulation-field--inline {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

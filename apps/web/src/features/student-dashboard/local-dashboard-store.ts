@@ -2,18 +2,21 @@ import type {
   AssessmentAttemptRecord,
   DashboardEnrolment,
   SavedLessonRecord,
+  SimulationAttemptRecord,
   StudentDashboardData
 } from "./data";
 import type { AuthProfile } from "../auth/session-core";
 
 const dismissedRecommendations = new Map<string, Set<string>>();
 const completedAssessmentAttempts = new Map<string, AssessmentAttemptRecord[]>();
+const completedSimulationAttempts = new Map<string, SimulationAttemptRecord[]>();
 
 const baseDate = "2026-07-22T10:00:00.000Z";
 
 export function resetLocalDashboardStoreForTests() {
   dismissedRecommendations.clear();
   completedAssessmentAttempts.clear();
+  completedSimulationAttempts.clear();
 }
 
 export function dismissLocalDashboardRecommendation(
@@ -30,10 +33,12 @@ export function loadLocalStudentDashboardData(
 ): StudentDashboardData {
   const seed = localDashboardSeeds[profile.email] ?? emptyStudentSeed(profile);
   const dynamicAssessmentAttempts = completedAssessmentAttempts.get(profile.id) ?? [];
+  const dynamicSimulationAttempts = completedSimulationAttempts.get(profile.id) ?? [];
 
   return {
     ...seed,
     assessmentAttempts: [...dynamicAssessmentAttempts, ...seed.assessmentAttempts],
+    simulationAttempts: [...dynamicSimulationAttempts, ...seed.simulationAttempts],
     profile: {
       id: profile.id,
       displayName: profile.displayName,
@@ -50,6 +55,15 @@ export function recordLocalAssessmentDashboardAttempt(
   const current = completedAssessmentAttempts.get(studentProfileId) ?? [];
   const next = [attempt, ...current.filter((item) => item.id !== attempt.id)];
   completedAssessmentAttempts.set(studentProfileId, next);
+}
+
+export function recordLocalSimulationDashboardAttempt(
+  studentProfileId: string,
+  attempt: SimulationAttemptRecord
+) {
+  const current = completedSimulationAttempts.get(studentProfileId) ?? [];
+  const next = [attempt, ...current.filter((item) => item.id !== attempt.id)];
+  completedSimulationAttempts.set(studentProfileId, next);
 }
 
 function emptyStudentSeed(profile: AuthProfile): StudentDashboardData {
