@@ -16,6 +16,7 @@ import {
   readRequiredString,
   safeInternalRedirect
 } from "./session-core";
+import { recordOperationalEvent, safeHashIdentifier } from "../monitoring/server";
 
 export async function signUpAction(formData: FormData) {
   const next = safeInternalRedirect(formData.get("next"), "/dashboard");
@@ -32,6 +33,14 @@ export async function signUpAction(formData: FormData) {
   });
 
   if (!result.ok) {
+    recordOperationalEvent({
+      category: "auth_failure",
+      operation: "sign_up",
+      result: "failure",
+      route: "/auth/sign-up",
+      safeUserId: safeHashIdentifier(email),
+      details: { code: result.code }
+    });
     redirect(`/auth/sign-up?next=${encodeURIComponent(next)}&error=${result.code}`);
   }
 
@@ -50,6 +59,14 @@ export async function signInAction(formData: FormData) {
   const result = await (await getAuthProvider()).signIn({ email, password });
 
   if (!result.ok) {
+    recordOperationalEvent({
+      category: "auth_failure",
+      operation: "sign_in",
+      result: "failure",
+      route: "/auth/sign-in",
+      safeUserId: safeHashIdentifier(email),
+      details: { code: result.code }
+    });
     redirect(`/auth/sign-in?next=${encodeURIComponent(next)}&error=${result.code}`);
   }
 
@@ -98,6 +115,13 @@ export async function resetPasswordAction(formData: FormData) {
   });
 
   if (!result.ok) {
+    recordOperationalEvent({
+      category: "auth_failure",
+      operation: "reset_password",
+      result: "failure",
+      route: "/auth/reset-password",
+      details: { code: result.code }
+    });
     redirect(`/auth/reset-password?error=${result.code}`);
   }
 

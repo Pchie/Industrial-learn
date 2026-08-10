@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 
 import { requireStudentProfile } from "../auth/server";
+import { recordError, safeHashIdentifier } from "../monitoring/server";
 import { parseAssessmentAnswers } from "./answers";
 import {
   loadAssessmentAttemptPage,
@@ -14,7 +15,17 @@ import {
 export async function startAssessmentAction(formData: FormData) {
   const slug = requiredString(formData, "assessmentSlug");
   const session = await requireStudentProfile(`/assessments/${slug}`);
-  const attempt = await startAssessmentForStudent(session, slug);
+  const attempt = await startAssessmentForStudent(session, slug).catch((error) => {
+    recordError({
+      category: "assessment_operation_failure",
+      operation: "start_assessment_attempt",
+      route: `/assessments/${slug}`,
+      safeUserId: safeHashIdentifier(session.profile.id),
+      error,
+      details: { assessmentSlug: slug }
+    });
+    throw error;
+  });
 
   redirect(`/assessments/${slug}/attempt/${attempt.id}`);
 }
@@ -36,6 +47,18 @@ export async function saveAssessmentProgressAction(formData: FormData) {
   });
 
   if (parsed.invalidMessages.length > 0) {
+    recordError({
+      category: "assessment_operation_failure",
+      operation: "save_assessment_progress_validation",
+      route: `/assessments/${slug}/attempt/${attemptId}`,
+      safeUserId: safeHashIdentifier(session.profile.id),
+      error: new Error("Assessment progress validation failed."),
+      details: {
+        assessmentSlug: slug,
+        attemptId,
+        invalidMessageCount: parsed.invalidMessages.length
+      }
+    });
     redirect(
       `/assessments/${slug}/attempt/${attemptId}?error=${encodeURIComponent(
         parsed.invalidMessages[0] ?? "Invalid answer."
@@ -48,6 +71,16 @@ export async function saveAssessmentProgressAction(formData: FormData) {
     slug,
     attemptId,
     answers: parsed.answers
+  }).catch((error) => {
+    recordError({
+      category: "assessment_operation_failure",
+      operation: "save_assessment_progress",
+      route: `/assessments/${slug}/attempt/${attemptId}`,
+      safeUserId: safeHashIdentifier(session.profile.id),
+      error,
+      details: { assessmentSlug: slug, attemptId }
+    });
+    throw error;
   });
 
   redirect(`/assessments/${slug}/attempt/${attemptId}?saved=1`);
@@ -78,6 +111,19 @@ export async function submitAssessmentAction(formData: FormData) {
       attemptId,
       answers: parsed.answers
     });
+    recordError({
+      category: "assessment_operation_failure",
+      operation: "submit_assessment_validation",
+      route: `/assessments/${slug}/attempt/${attemptId}`,
+      safeUserId: safeHashIdentifier(session.profile.id),
+      error: new Error("Assessment final submission validation failed."),
+      details: {
+        assessmentSlug: slug,
+        attemptId,
+        invalidMessageCount: parsed.invalidMessages.length,
+        missingQuestionCount: parsed.missingQuestionIds.length
+      }
+    });
     const message =
       parsed.invalidMessages[0] ??
       `Answer every question before final submission. Missing: ${parsed.missingQuestionIds.join(", ")}.`;
@@ -92,6 +138,16 @@ export async function submitAssessmentAction(formData: FormData) {
     attemptId,
     answers: parsed.answers,
     idempotencyKey
+  }).catch((error) => {
+    recordError({
+      category: "assessment_operation_failure",
+      operation: "submit_assessment_attempt",
+      route: `/assessments/${slug}/attempt/${attemptId}`,
+      safeUserId: safeHashIdentifier(session.profile.id),
+      error,
+      details: { assessmentSlug: slug, attemptId }
+    });
+    throw error;
   });
 
   redirect(`/assessments/${slug}/attempt/${attemptId}/review`);

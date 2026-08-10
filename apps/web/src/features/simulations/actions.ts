@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 
 import { requireStudentProfile } from "../auth/server";
+import { recordError, safeHashIdentifier } from "../monitoring/server";
 import {
   completeSimulationForStudent,
   loadSimulationAttemptPage,
@@ -18,7 +19,17 @@ export async function startSimulationAction(formData: FormData) {
   }
 
   const session = await requireStudentProfile(`/simulations/${slug}`);
-  const attempt = await startSimulationForStudent(session, slug, mode);
+  const attempt = await startSimulationForStudent(session, slug, mode).catch((error) => {
+    recordError({
+      category: "simulation_operation_failure",
+      operation: "start_simulation_attempt",
+      route: `/simulations/${slug}`,
+      safeUserId: safeHashIdentifier(session.profile.id),
+      error,
+      details: { simulationSlug: slug, mode }
+    });
+    throw error;
+  });
   redirect(`/simulations/${slug}/attempt/${attempt.id}`);
 }
 
@@ -56,6 +67,14 @@ export async function completeSimulationAction(formData: FormData) {
       idempotencyKey
     });
   } catch (error) {
+    recordError({
+      category: "simulation_operation_failure",
+      operation: "complete_simulation_attempt",
+      route: `/simulations/${slug}/attempt/${attemptId}`,
+      safeUserId: safeHashIdentifier(session.profile.id),
+      error,
+      details: { simulationSlug: slug, attemptId, mode: page.attempt.mode }
+    });
     const message =
       error instanceof Error ? error.message : "Simulation completion failed.";
     redirect(

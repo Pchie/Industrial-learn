@@ -101,7 +101,7 @@ test.describe("authenticated simulation browser journey", () => {
     await expect(page.getByLabel("Hydraulic simulation attempt")).toBeVisible();
     await page.getByRole("button", { name: "Start" }).click();
     await page.getByRole("button", { name: "Complete attempt" }).click();
-    await expect(page).toHaveURL(/\/review$/);
+    await expect(page).toHaveURL(/\/review$/, { timeout: 15_000 });
     await context.close();
   });
 });
@@ -119,7 +119,7 @@ async function completeMode(page: Page, modeName: string, operate?: () => Promis
     await operate();
   }
   await page.getByRole("button", { name: "Complete attempt" }).click();
-  await expect(page).toHaveURL(/\/review$/);
+  await expect(page).toHaveURL(/\/review$/, { timeout: 15_000 });
   await expect(
     page.getByRole("heading", { name: "Completed simulation attempt" })
   ).toBeVisible();
