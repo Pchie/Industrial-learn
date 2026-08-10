@@ -68,6 +68,35 @@ Live function privilege verification:
 - `authenticated` execute privilege: denied
 - `service_role` execute privilege: allowed
 
+`database/migrations/0009_staging_hydraulic_simulation_fixture.sql` was applied to the linked Supabase staging project on 2026-08-10 to add the expected application-facing staging slug `hydraulic-cylinder-force`. The fixture is idempotent and only inserts the row when the earlier staging hydraulic simulation fixture exists.
+
+## Live Deployed Staging Simulation
+
+Live deployed browser verification was run against:
+
+`https://industrial-learn-staging-git-development-kolobe.vercel.app`
+
+Vercel SSO deployment protection was temporarily disabled for the test and restored immediately afterward.
+
+Live result:
+
+- Synthetic staging-only student created.
+- Student signed in through the deployed Supabase-backed application.
+- `/simulations/hydraulic-cylinder-force` loaded successfully.
+- Source-gated review status `Source required` was visible.
+- Fault diagnosis mode started an authenticated attempt.
+- Pressure-loss fault was introduced through the browser controls.
+- Attempt completed and redirected to review.
+- Simulation history displayed the completed fault-diagnosis attempt.
+- Dashboard displayed simulation activity and `Diagnosed` competency evidence.
+- Supabase stored attempt `9cd60285-769b-45ef-a05f-b33825f7abf1` as `submitted`.
+- Stored mode: `fault-diagnosis`.
+- Stored fault: `pressure-loss`.
+- Stored score: `1.00`.
+- Stored competency awards: `Diagnosed: 1`.
+- Stored measurement count: `6`.
+- Stored output summary includes `cylinderForce: 6000`, `status: faulted`, and `scenarioState: fault-state`.
+
 ## Source And Review Status
 
 The pilot remains `Source required`. The browser labels it as training content and does not present it as engineering-approved.
@@ -76,4 +105,4 @@ The pilot remains `Source required`. The browser labels it as training content a
 
 - The hydraulic source record is still a placeholder.
 - Fault behaviours remain pedagogical until reviewed source evidence is onboarded.
-- The simulation browser code must still be committed and pushed before Vercel can deploy this browser journey from GitHub.
+- The dashboard currently displays the persisted live Supabase simulation row with the generic title `Simulation attempt` because the dashboard reader does not yet join simulation metadata for titles. Competency and activity evidence still appeared correctly.
