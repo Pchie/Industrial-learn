@@ -233,15 +233,15 @@ passwords, or private assessment answers.
 
 ## Recommended Next Step
 
-Run a protected-deployment browser recovery check with an approved Vercel
-automation bypass, or temporarily disable protection for the narrow check and
-restore it immediately afterward.
+Completed follow-up: the protected-deployment browser recovery check passed with
+the approved Vercel automation bypass. Evidence is recorded in
+`docs/audits/protected-vercel-session-recovery-report.md`.
 
-The check should:
+That check:
 
-1. Create a temporary synthetic staging user.
-2. Sign in through the protected staging app.
-3. Confirm `/dashboard` resolves the authenticated user's own profile.
-4. Confirm sign-out clears the session.
-5. Verify private routes redirect after sign-out.
-6. Delete the temporary user and confirm cleanup.
+1. Created a temporary synthetic staging user.
+2. Signed in through the protected staging app.
+3. Confirmed `/dashboard` resolved the authenticated user's own profile.
+4. Confirmed sign-out redirected to `/auth/sign-in`.
+5. Verified private routes redirected after sign-out.
+6. Deleted the temporary user and confirmed cleanup.
