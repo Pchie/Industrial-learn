@@ -16,6 +16,8 @@ configure paging tools, or deploy production.
 - IL-PROD-CHECKLIST-001: `docs/deployment/production-release-checklist.md`
 - IL-MONITORING-PROD-001:
   `docs/operations/production-monitoring-decision-plan.md`
+- IL-PROD-OWNER-TEMPLATE-001:
+  `docs/deployment/production-owner-record-template.md`
 
 ## Required Owners Before Production
 
@@ -29,12 +31,18 @@ Record named owners in a private release or operations record:
 | Security reviewer        | Yes                    |
 | Supabase/database owner  | Yes                    |
 | Vercel/application owner | Yes                    |
+| GitHub/repository owner  | Yes                    |
 | Content/education owner  | Yes                    |
+| Backup/restore owner     | Yes                    |
 | Rollback owner           | Yes                    |
 | Communications owner     | Yes                    |
 
 Git documentation may describe the roles, but personal contact details should
 be stored only in an approved private operations location.
+
+Use `docs/deployment/production-owner-record-template.md` for the required
+private fields. A completed local working copy, if needed, must use
+`docs/deployment/production-owner-record.private.md`, which is ignored by Git.
 
 ## Severity Ownership
 
@@ -79,7 +87,9 @@ Incident commander:
 Security reviewer:
 Supabase/database owner:
 Vercel/application owner:
+GitHub/repository owner:
 Content/education owner:
+Backup/restore owner:
 Rollback owner:
 Communications owner:
 Critical acknowledgement target:

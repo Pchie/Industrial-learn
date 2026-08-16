@@ -32,6 +32,25 @@ provider, but no provider is approved until the review records:
 
 No dependency may be installed without documenting why it is required.
 
+## MVP Production Monitoring Decision
+
+For the first production setup, Industrial Learn will use provider-native and
+repository-native evidence before adding a monitoring SDK:
+
+| Decision item        | MVP decision                                                                                      |
+| -------------------- | ------------------------------------------------------------------------------------------------- |
+| Primary app evidence | Vercel runtime logs, deployment status, build status, and production-safe health endpoint checks  |
+| Database evidence    | Supabase project health, migration state, backup metadata, Auth health, and RLS verification logs |
+| Application evidence | Redacted operational events already designed for staging                                          |
+| Alert destination    | Private release, incident, security, and database owner routes                                    |
+| SDK dependency       | None approved for first production setup                                                          |
+| Deferred providers   | Sentry, PostHog, or other SDK-based tools require separate privacy and dependency review          |
+| Launch condition     | Test alert must be acknowledged and recorded in private release evidence                          |
+
+This decision avoids adding dependencies before launch while still requiring a
+verified owner route for critical production alerts. It does not approve
+production launch until alert routing is configured and tested.
+
 ## Required Production Signals
 
 Production monitoring must cover:

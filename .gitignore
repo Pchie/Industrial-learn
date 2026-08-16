@@ -3,6 +3,7 @@
 .env.*
 !.env.example
 !.env.staging.example
+docs/deployment/production-owner-record.private.md
 
 # Dependencies
 node_modules/
