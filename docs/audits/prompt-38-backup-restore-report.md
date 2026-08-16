@@ -207,3 +207,9 @@ Prompt 39 may proceed for PostgreSQL backup/restore readiness with caveats.
 
 Before production launch, run a separate Supabase-managed recovery rehearsal or
 explicitly document provider configuration recovery for Auth, REST, and storage.
+
+Follow-up evidence is recorded in
+`docs/audits/supabase-managed-recovery-rehearsal-report.md`. That rehearsal
+verified direct Supabase Auth, REST/RLS, and temporary private Storage behavior,
+but still requires a protected Vercel browser-session check with an approved
+deployment-protection bypass.
