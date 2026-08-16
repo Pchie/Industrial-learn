@@ -1,6 +1,7 @@
 # Staging Backup Inventory
 
 Date prepared: 2026-08-16
+Date exercised: 2026-08-16
 
 ## Purpose
 
@@ -8,7 +9,9 @@ This inventory prepares the controlled Prompt 38 staging backup and restore
 rehearsal. It identifies what must be backed up and what evidence must be
 captured during the live rehearsal.
 
-This document does not claim that a backup has been created or restored.
+The live rehearsal results are recorded in
+`docs/operations/restore-rehearsal-results.md` and
+`docs/audits/prompt-38-backup-restore-report.md`.
 
 ## Source IDs
 
@@ -86,21 +89,21 @@ Seed files:
 
 Before creating the backup, confirm or create controlled synthetic records for:
 
-| Fixture              | Status before live rehearsal |
-| -------------------- | ---------------------------- |
-| Student A            | To verify                    |
-| Student B            | To verify                    |
-| Lecturer             | To verify                    |
-| Content author       | To verify                    |
-| Engineering reviewer | To verify                    |
-| Programme enrolment  | To verify or create          |
-| Lesson progress      | To verify or create          |
-| Assessment attempt   | To verify or create          |
-| Simulation attempt   | To verify or create          |
-| Content draft        | To verify or create          |
-| Content version      | To verify or create          |
-| Review record        | To verify or create          |
-| Audit event          | To verify or create          |
+| Fixture              | Live rehearsal status                                      |
+| -------------------- | ---------------------------------------------------------- |
+| Student A            | Verified                                                   |
+| Student B            | Verified                                                   |
+| Lecturer             | Verified                                                   |
+| Content author       | Verified                                                   |
+| Engineering reviewer | Verified                                                   |
+| Programme enrolment  | Verified                                                   |
+| Lesson progress      | Verified                                                   |
+| Assessment attempt   | Verified                                                   |
+| Simulation attempt   | Verified                                                   |
+| Content draft        | Verified through draft/unapproved lesson visibility checks |
+| Content version      | Verified                                                   |
+| Review record        | Verified                                                   |
+| Audit event          | Verified                                                   |
 
 Record only non-sensitive identifiers such as UUIDs, slugs, migration names,
 counts, and timestamps. Do not record passwords, tokens, or private answers.
@@ -128,9 +131,10 @@ counts, and timestamps. Do not record passwords, tokens, or private answers.
 | App compatibility result  | Yes      |
 | Cleanup result            | Yes      |
 
-## Current Preparedness Verdict
+## Current Verdict
 
-READY FOR PROMPT 38 EXECUTION.
+PROMPT 38 POSTGRESQL BACKUP/RESTORE REHEARSAL COMPLETED WITH CAVEATS.
 
-The inventory is prepared, but the backup and restore rehearsal has not yet been
-performed.
+The inventory was exercised during the 2026-08-16 staging restore rehearsal.
+Remaining caveats are recorded in
+`docs/audits/prompt-38-backup-restore-report.md`.

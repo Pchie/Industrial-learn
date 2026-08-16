@@ -48,7 +48,7 @@ test.describe("staging smoke checks", () => {
     await expect(page.getByRole("heading", { name: "Simulations" })).toBeVisible();
     await expect(page.getByRole("link", { name: "View simulation" })).toBeVisible();
     await page.getByRole("link", { name: "View simulation" }).click();
-    await expect(page.getByText("Source required")).toBeVisible();
+    await expect(page.getByText("Source required", { exact: true })).toBeVisible();
   });
 
   test("reviewer can access review workspace and student cannot access draft tools", async ({
