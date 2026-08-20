@@ -28,8 +28,8 @@ Production deployment requires explicit approval, release evidence, and rollback
 
 ## Production Deployment Steps
 
-1. Confirm the release commit is merged to `production` through a pull request.
-2. Confirm no direct production-branch commit was made.
+1. Confirm the release commit is merged to `main` through a pull request.
+2. Confirm no direct commit to `main` was made.
 3. Confirm production environment variables are configured in the provider secret manager.
 4. Confirm service-role credentials are server-only.
 5. Confirm database backup requirements for the release.

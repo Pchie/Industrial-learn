@@ -11,7 +11,7 @@ import {
   type PersistedAssessmentAttempt,
   type PersistedSimulationAttempt,
   type SimulationAttemptRepository
-} from "./index.js";
+} from "./index";
 import type {
   Assessment,
   CompetencyLevel,

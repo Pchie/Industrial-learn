@@ -202,6 +202,18 @@ function seedLocalUsers() {
     "student"
   ]);
   addSeedUser("quiet.student@example.test", "Quiet Industrial Student", ["student"]);
+  addSeedUser("assessment.student@example.test", "Assessment Test Student", ["student"]);
+  addSeedUser("simulation.student@example.test", "Simulation Test Student", ["student"]);
+  addSeedUser("simulation.keyboard@example.test", "Simulation Keyboard Student", [
+    "student"
+  ]);
+  addSeedUser("simulation.duplicate@example.test", "Simulation Duplicate Student", [
+    "student"
+  ]);
+  addSeedUser("simulation.private@example.test", "Simulation Private Student", [
+    "student"
+  ]);
+  addSeedUser("simulation.mobile@example.test", "Simulation Mobile Student", ["student"]);
   addSeedUser("database.failure@example.test", "Database Failure Student", ["student"]);
   addSeedUser("student.b@example.test", "Second Industrial Student", ["student"]);
   addSeedUser("lecturer@example.test", "Industrial Lecturer", ["lecturer"]);

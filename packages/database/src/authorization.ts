@@ -1,5 +1,5 @@
-import type { Caller, DataAccessRole, Principal } from "./domain.js";
-import { ApplicationError } from "./errors.js";
+import type { Caller, DataAccessRole, Principal } from "./domain";
+import { ApplicationError } from "./errors";
 
 export function requireAuthenticated(caller: Caller): Principal {
   if (caller.kind !== "authenticated") {

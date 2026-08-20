@@ -1,0 +1,290 @@
+{
+  "prompt": "33a-post-migration-gate",
+  "generatedAt": "2026-08-03T18:59:31.718Z",
+  "scope": "Focused staging database verification after Prompt 33",
+  "environment": {
+    "name": "dedicated Supabase staging",
+    "projectRef": "lgjujyaclrpaopdabyzg",
+    "productionTouched": false,
+    "secretsPrinted": false
+  },
+  "fixture": {
+    "prefix": "prompt-33a",
+    "stagingOnly": true,
+    "purpose": "Synthetic records for RLS, migration, and service-boundary verification"
+  },
+  "migrations": {
+    "expectedSchemaFiles": [
+      "database/migrations/0001_initial_schema.sql",
+      "database/migrations/0002_dashboard_student_preferences.sql",
+      "database/migrations/0003_attempt_persistence_metadata.sql",
+      "database/migrations/0004_content_governance_persistence.sql"
+    ],
+    "expectedPolicyFiles": [
+      "database/policies/0001_row_level_security.sql",
+      "database/policies/0002_dashboard_student_preferences.sql",
+      "database/policies/0004_content_governance_persistence.sql",
+      "database/policies/0005_staging_rls_hardening.sql"
+    ],
+    "verifiedByObjectDrift": true,
+    "missingTables": [],
+    "rlsDisabledTables": [],
+    "missingAttemptColumns": [],
+    "missingAttemptIndexes": [],
+    "policyCount": 80,
+    "requiredRoleCount": 5,
+    "publicTableGrantCount": 0,
+    "insecureSecurityDefinerOwnerCount": 0
+  },
+  "attemptPersistencePolicyReview": {
+    "assessmentResponsesTableExists": false,
+    "competencyRecordsTableExists": false,
+    "assessmentAttemptMetadataColumnsPresent": [
+      "content_version",
+      "attempt_number",
+      "idempotency_key",
+      "competency_awards",
+      "scoring_summary",
+      "abandoned_at"
+    ],
+    "simulationAttemptMetadataColumnsPresent": [
+      "simulation_version",
+      "lesson_id",
+      "mode",
+      "idempotency_key",
+      "fault_introduced",
+      "measurements_taken",
+      "diagnosis_submitted",
+      "score",
+      "competency_awards",
+      "output_summary"
+    ],
+    "oldBroadAssessmentPolicyPresent": false,
+    "oldBroadSimulationPolicyPresent": false,
+    "studentAssessmentSelectPolicyPresent": true,
+    "studentSimulationSelectPolicyPresent": true,
+    "studentDirectInsertDenied": true,
+    "studentDirectScorePatchChangedRows": false
+  },
+  "rlsTests": [
+    { "name": "student_a_own_profile", "status": 200, "rows": 1, "passed": true },
+    {
+      "name": "student_a_cannot_read_student_b_profile",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    { "name": "student_a_own_progress", "status": 200, "rows": 1, "passed": true },
+    {
+      "name": "student_a_cannot_read_student_b_progress",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    {
+      "name": "student_a_own_assessment_attempt",
+      "status": 200,
+      "rows": 1,
+      "passed": true
+    },
+    {
+      "name": "student_a_cannot_read_student_b_assessment_attempt",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    {
+      "name": "student_a_own_simulation_attempt",
+      "status": 200,
+      "rows": 1,
+      "passed": true
+    },
+    {
+      "name": "student_a_cannot_read_student_b_simulation_attempt",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    {
+      "name": "student_a_own_project_submission",
+      "status": 200,
+      "rows": 1,
+      "passed": true
+    },
+    {
+      "name": "student_a_cannot_read_student_b_project_submission",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    { "name": "student_a_own_saved_lesson", "status": 200, "rows": 1, "passed": true },
+    {
+      "name": "student_a_cannot_read_student_b_saved_lesson",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    { "name": "student_a_own_preference", "status": 200, "rows": 1, "passed": true },
+    {
+      "name": "student_a_cannot_read_student_b_preference",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    {
+      "name": "lecturer_authorised_cohort_assessment_attempt",
+      "status": 200,
+      "rows": 1,
+      "passed": true
+    },
+    {
+      "name": "lecturer_unrelated_cohort_assessment_attempt_denied",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    { "name": "lecturer_authorised_enrolment", "status": 200, "rows": 1, "passed": true },
+    {
+      "name": "lecturer_unrelated_enrolment_denied",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    {
+      "name": "author_can_read_governance_draft",
+      "status": 200,
+      "rows": 1,
+      "passed": true
+    },
+    {
+      "name": "author_cannot_read_private_student_assessment_attempt",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    {
+      "name": "reviewer_can_read_reviewable_governance_item",
+      "status": 200,
+      "rows": 1,
+      "passed": true
+    },
+    {
+      "name": "reviewer_can_read_review_record",
+      "status": 200,
+      "rows": 1,
+      "passed": true
+    },
+    {
+      "name": "reviewer_can_read_content_versions",
+      "status": 200,
+      "rows": 2,
+      "passed": true
+    },
+    {
+      "name": "reviewer_cannot_read_private_student_assessment_attempt",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    {
+      "name": "anonymous_cannot_read_draft_governance",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    {
+      "name": "anonymous_cannot_read_assessment_attempts",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    {
+      "name": "anonymous_cannot_read_project_submissions",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    {
+      "name": "anonymous_cannot_read_review_records",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    {
+      "name": "anonymous_cannot_read_audit_events",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    {
+      "name": "student_cannot_read_answer_choices",
+      "status": 200,
+      "rows": 0,
+      "passed": true
+    },
+    {
+      "name": "content_author_can_read_answer_choices",
+      "status": 200,
+      "rows": 1,
+      "passed": true
+    },
+    {
+      "name": "student_can_read_published_lesson",
+      "status": 200,
+      "rows": 1,
+      "passed": true
+    },
+    {
+      "name": "student_cannot_read_draft_lesson_same_module",
+      "status": 200,
+      "rows": 1,
+      "passed": false,
+      "finding": "Enrolled student can read a draft lesson in the same module through the student_has_module branch of the lesson policy."
+    },
+    {
+      "name": "anonymous_cannot_insert_assessment_attempt",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "name": "student_cannot_insert_assessment_attempt_directly",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "name": "student_cannot_update_assessment_score_directly",
+      "status": 204,
+      "passed": true,
+      "note": "PostgREST returned 204, but server-side verification confirmed score and competency_awards were unchanged."
+    },
+    {
+      "name": "student_cannot_insert_simulation_attempt_directly",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "name": "student_cannot_update_simulation_score_directly",
+      "status": 204,
+      "passed": true,
+      "note": "PostgREST returned 204, but server-side verification confirmed score and competency_awards were unchanged."
+    }
+  ],
+  "serviceIntegration": {
+    "profileResolution": "Verified by live Supabase Auth sign-in and profile/role reads.",
+    "dashboardSummaryQueries": "Verified by direct session-bound REST reads of dashboard source tables.",
+    "assessmentAttemptCreationAndCompletion": "Verified by controlled trusted transaction fixture.",
+    "simulationAttemptCreationAndCompletion": "Verified by controlled trusted transaction fixture.",
+    "contentReviewRecordCreation": "Verified by controlled trusted transaction fixture.",
+    "auditEventCreation": "Verified by controlled trusted transaction fixture.",
+    "rollbackProtection": true,
+    "duplicateProtectionIndexesPresent": true
+  },
+  "summary": {
+    "rlsPassed": 37,
+    "rlsTotal": 38,
+    "criticalFindings": [
+      "Draft lesson visibility policy allows an enrolled student to read a draft lesson in the same module."
+    ],
+    "verdict": "CONDITIONAL GO FOR PROMPT 34"
+  }
+}

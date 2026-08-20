@@ -1,20 +1,10 @@
 /* global console, process */
 
-import { readdirSync, readFileSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { execFileSync } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 
 const root = process.cwd();
-
-const ignoredDirectories = new Set([
-  ".git",
-  ".next",
-  "coverage",
-  "dist",
-  "build",
-  "node_modules",
-  "playwright-report",
-  "test-results"
-]);
 
 const ignoredFiles = new Set(["package-lock.json"]);
 
@@ -62,9 +52,8 @@ const secretPatterns = [
 /** @type {{ file: string; line: number; name: string }[]} */
 const findings = [];
 
-for (const filePath of walk(root)) {
-  const relativePath = relative(root, filePath);
-  const content = readFileSync(filePath, "utf8");
+for (const relativePath of listScannableFiles()) {
+  const content = readFileSync(join(root, relativePath), "utf8");
   const lines = content.split(/\r?\n/);
 
   lines.forEach((line, index) => {
@@ -95,31 +84,21 @@ if (findings.length > 0) {
 console.log("Secret scan passed: no obvious committed secret values found.");
 
 /**
- * @param {string} directory
- * @returns {Generator<string>}
+ * @returns {string[]}
  */
-function* walk(directory) {
-  for (const entry of readdirSync(directory)) {
-    if (ignoredDirectories.has(entry)) {
-      continue;
-    }
+function listScannableFiles() {
+  const output = execFileSync(
+    "git",
+    ["ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+    { cwd: root, encoding: "utf8" }
+  );
 
-    const fullPath = join(directory, entry);
-    const stats = statSync(fullPath);
-
-    if (stats.isDirectory()) {
-      yield* walk(fullPath);
-      continue;
-    }
-
-    if (!stats.isFile() || ignoredFiles.has(entry)) {
-      continue;
-    }
-
-    if (shouldScan(entry)) {
-      yield fullPath;
-    }
-  }
+  return output
+    .split("\0")
+    .filter(Boolean)
+    .filter((relativePath) => existsSync(join(root, relativePath)))
+    .filter((relativePath) => !ignoredFiles.has(relativePath))
+    .filter(shouldScan);
 }
 
 /** @param {string} fileName */

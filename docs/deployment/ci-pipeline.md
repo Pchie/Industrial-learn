@@ -17,8 +17,9 @@ CI is defined in `.github/workflows/ci.yml`.
 Triggers:
 
 - Pull requests targeting `development`.
-- Pull requests targeting `production`.
+- Pull requests targeting `main`.
 - Pushes to `development`.
+- Pushes to `main`.
 
 Production deployment is intentionally not part of this workflow.
 
@@ -74,7 +75,7 @@ For `development`:
 - Require pull requests for feature branches.
 - Prevent force pushes.
 
-For `production`:
+For `main`:
 
 - Require pull requests from `development` or a release branch.
 - Require CI before merge.

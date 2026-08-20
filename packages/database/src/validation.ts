@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ApplicationError } from "./errors.js";
+import { ApplicationError } from "./errors";
 
 export const uuidSchema = z.string().uuid();
 

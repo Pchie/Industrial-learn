@@ -4,19 +4,13 @@ import {
   assertStudentPrivateAccess,
   hasRole,
   requireAuthenticated
-} from "./authorization.js";
-import type {
-  AssessmentAttemptDto,
-  Caller,
-  Page,
-  Principal,
-  ProfileDto
-} from "./domain.js";
-import { ApplicationError, translateDatabaseError } from "./errors.js";
+} from "./authorization";
+import type { AssessmentAttemptDto, Caller, Page, Principal, ProfileDto } from "./domain";
+import { ApplicationError, translateDatabaseError } from "./errors";
 import type {
   IndustrialLearnRepositories,
   StudentRecordQuery
-} from "./repository-contracts.js";
+} from "./repository-contracts";
 import {
   profileIdInputSchema,
   paginationSchema,
@@ -25,7 +19,7 @@ import {
   studentRecordListInputSchema,
   submitAssessmentAttemptInputSchema,
   updateProfileInputSchema
-} from "./validation.js";
+} from "./validation";
 
 type StudentRecordInput = {
   studentProfileId: string;

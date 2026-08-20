@@ -1,6 +1,6 @@
-import type { AuditEventInput, Principal } from "./domain.js";
-import type { AuditRepository } from "./repository-contracts.js";
-import { auditEventSchema, parseInput } from "./validation.js";
+import type { AuditEventInput, Principal } from "./domain";
+import type { AuditRepository } from "./repository-contracts";
+import { auditEventSchema, parseInput } from "./validation";
 
 export async function recordAuditEvent(
   auditRepository: AuditRepository,

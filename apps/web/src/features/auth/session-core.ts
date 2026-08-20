@@ -195,6 +195,16 @@ export function safeInternalRedirect(
   }
 }
 
+export function absoluteAppUrl(path: string, appBaseUrl: string | undefined) {
+  const internalPath = safeInternalRedirect(path, "/");
+
+  if (!appBaseUrl) {
+    return internalPath;
+  }
+
+  return new URL(internalPath, appBaseUrl).toString();
+}
+
 export function publicAuthMessage(code: string | null | undefined) {
   if (!code || !(code in safeErrorMessages)) {
     return "";

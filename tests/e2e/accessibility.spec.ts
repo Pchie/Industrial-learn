@@ -25,6 +25,34 @@ const overflowRoutes = [
 
 const viewportWidths = [320, 375, 430, 768, 1024, 1366];
 
+const authenticatedRoutes = [
+  {
+    email: "active.student@example.test",
+    path: "/dashboard",
+    label: "student dashboard"
+  },
+  {
+    email: "author@example.test",
+    path: "/author",
+    label: "author workspace"
+  },
+  {
+    email: "reviewer@example.test",
+    path: "/review",
+    label: "review workspace"
+  },
+  {
+    email: "active.student@example.test",
+    path: "/assessments",
+    label: "assessment workspace"
+  },
+  {
+    email: "active.student@example.test",
+    path: "/simulations/history",
+    label: "simulation history"
+  }
+];
+
 test.describe("browser accessibility scans", () => {
   for (const route of publicRoutes) {
     test(`has no critical automated accessibility violations on ${route}`, async ({
@@ -36,24 +64,14 @@ test.describe("browser accessibility scans", () => {
     });
   }
 
-  test("has no critical automated accessibility violations on authenticated states", async ({
-    page
-  }) => {
-    await signIn(page, "active.student@example.test", "/dashboard");
-    await expectNoAxeViolations(page);
-
-    await signIn(page, "author@example.test", "/author");
-    await expectNoAxeViolations(page);
-
-    await signIn(page, "reviewer@example.test", "/review");
-    await expectNoAxeViolations(page);
-
-    await signIn(page, "active.student@example.test", "/assessments");
-    await expectNoAxeViolations(page);
-
-    await signIn(page, "active.student@example.test", "/simulations/history");
-    await expectNoAxeViolations(page);
-  });
+  for (const route of authenticatedRoutes) {
+    test(`has no critical automated accessibility violations on authenticated ${route.label}`, async ({
+      page
+    }) => {
+      await signIn(page, route.email, route.path);
+      await expectNoAxeViolations(page);
+    });
+  }
 });
 
 test("skip link moves keyboard focus to main content", async ({ page }) => {
@@ -173,4 +191,6 @@ async function signIn(page: Page, email: string, nextPath: string) {
   await page.getByLabel("Password").fill("IndustrialLearn1!");
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL(new RegExp(nextPath.replaceAll("/", "\\/")));
+  await expect(page.locator("main")).toBeVisible();
+  await expect(page).toHaveTitle(/Industrial Learn/);
 }

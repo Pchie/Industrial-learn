@@ -15,6 +15,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "scan:secrets": "node scripts/secret-scan.mjs",
+    "validate:staging-env": "node scripts/validate-staging-env.mjs",
     "validate:content": "vitest run packages/content-system/src/content-system.test.ts",
     "validate:migrations": "vitest run packages/database/src/schema.test.ts",
     "test:unit": "vitest run",
@@ -26,10 +27,16 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "latest",
-    "next": "latest",
+    "next": "16.2.12",
     "react": "latest",
     "react-dom": "latest",
     "zod": "latest"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "8.5.18",
+      "sharp": "0.35.0"
+    }
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",

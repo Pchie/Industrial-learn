@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { getServerEnv } from "@industrial-learn/env";
 
 import {
   clearSessionCookies,
@@ -9,7 +10,13 @@ import {
   resolveAuthenticatedSession,
   setSessionCookies
 } from "./server";
-import { normaliseEmail, readRequiredString, safeInternalRedirect } from "./session-core";
+import {
+  absoluteAppUrl,
+  normaliseEmail,
+  readRequiredString,
+  safeInternalRedirect
+} from "./session-core";
+import { recordOperationalEvent, safeHashIdentifier } from "../monitoring/server";
 
 export async function signUpAction(formData: FormData) {
   const next = safeInternalRedirect(formData.get("next"), "/dashboard");
@@ -22,10 +29,18 @@ export async function signUpAction(formData: FormData) {
     email,
     password,
     displayName,
-    redirectTo: "/auth/verify"
+    redirectTo: absoluteAppUrl("/auth/verify", getServerEnv().appBaseUrl)
   });
 
   if (!result.ok) {
+    recordOperationalEvent({
+      category: "auth_failure",
+      operation: "sign_up",
+      result: "failure",
+      route: "/auth/sign-up",
+      safeUserId: safeHashIdentifier(email),
+      details: { code: result.code }
+    });
     redirect(`/auth/sign-up?next=${encodeURIComponent(next)}&error=${result.code}`);
   }
 
@@ -44,6 +59,14 @@ export async function signInAction(formData: FormData) {
   const result = await (await getAuthProvider()).signIn({ email, password });
 
   if (!result.ok) {
+    recordOperationalEvent({
+      category: "auth_failure",
+      operation: "sign_in",
+      result: "failure",
+      route: "/auth/sign-in",
+      safeUserId: safeHashIdentifier(email),
+      details: { code: result.code }
+    });
     redirect(`/auth/sign-in?next=${encodeURIComponent(next)}&error=${result.code}`);
   }
 
@@ -73,7 +96,7 @@ export async function forgotPasswordAction(formData: FormData) {
     await getAuthProvider()
   ).requestPasswordReset({
     email,
-    redirectTo: "/auth/reset-password"
+    redirectTo: absoluteAppUrl("/auth/reset-password", getServerEnv().appBaseUrl)
   });
   redirect("/auth/forgot-password?status=reset_requested");
 }
@@ -92,6 +115,13 @@ export async function resetPasswordAction(formData: FormData) {
   });
 
   if (!result.ok) {
+    recordOperationalEvent({
+      category: "auth_failure",
+      operation: "reset_password",
+      result: "failure",
+      route: "/auth/reset-password",
+      details: { code: result.code }
+    });
     redirect(`/auth/reset-password?error=${result.code}`);
   }
 

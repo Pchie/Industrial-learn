@@ -1,14 +1,10 @@
-import { ProtectedPage } from "@/features/auth/protected-page";
 import { requireAuthenticatedUser } from "@/features/auth/server";
+import { SimulationHistoryView } from "@/features/simulations/components";
+import { listSimulationHistory } from "@/features/simulations/server";
 
 export default async function SimulationHistoryPage() {
   const session = await requireAuthenticatedUser("/simulations/history");
+  const attempts = await listSimulationHistory(session);
 
-  return (
-    <ProtectedPage
-      description="Simulation history is private learning evidence and requires server-side session verification."
-      session={session}
-      title="Simulation history"
-    />
-  );
+  return <SimulationHistoryView attempts={attempts} />;
 }

@@ -14,19 +14,19 @@ Industrial Learn uses separated development, staging, and production environment
 
 ## Branch Strategy
 
-| Branch type                   | Purpose                           | Deployment behaviour                        | Protection requirements                                                         |
-| ----------------------------- | --------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------- |
-| `production`                  | Approved production releases only | Manual production deployment after approval | No direct commits, pull requests required, CI required, named approver required |
-| `development`                 | Integrated pre-release work       | Staging deployment candidate                | CI required before merge, migration validation required                         |
-| `codex/*` or feature branches | Isolated task work                | No automatic deployment                     | Pull request into `development`                                                 |
+| Branch type                   | Purpose                             | Deployment behaviour                        | Protection requirements                                                         |
+| ----------------------------- | ----------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------- |
+| `main`                        | Production-controlled releases only | Manual production deployment after approval | No direct commits, pull requests required, CI required, named approver required |
+| `development`                 | Integrated pre-release work         | Staging deployment candidate                | CI required before merge, migration validation required                         |
+| `codex/*` or feature branches | Isolated task work                  | No automatic deployment                     | Pull request into `development`                                                 |
 
 Recommended flow:
 
 ```text
-feature branch -> pull request -> automated checks -> development -> staging verification -> approved production pull request -> manual production deployment
+feature branch -> pull request -> automated checks -> development -> staging verification -> approved main pull request -> manual production deployment
 ```
 
-No work should be committed directly to the production branch.
+No work should be committed directly to `main`.
 
 ## Environment Separation
 
@@ -40,16 +40,22 @@ Production student data must never be copied into development or staging.
 
 ## Environment Variables
 
-| Variable                        | Boundary                  | Development                                                  | Staging                           | Production                     |
-| ------------------------------- | ------------------------- | ------------------------------------------------------------ | --------------------------------- | ------------------------------ |
-| `NODE_ENV`                      | Runtime                   | `development` or `test`                                      | `production`                      | `production`                   |
-| `NEXT_PUBLIC_SUPABASE_URL`      | Browser-safe public value | Development project URL                                      | Staging project URL               | Production project URL         |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Browser-safe public value | Development anon key                                         | Staging anon key                  | Production anon key            |
-| `SUPABASE_SERVICE_ROLE_KEY`     | Server-only secret        | Optional local server operations                             | Restricted server runtime only    | Restricted server runtime only |
-| `INDUSTRIAL_LEARN_AUTH_MODE`    | Server runtime control    | `local` only for Playwright with `INDUSTRIAL_LEARN_E2E=true` | Must not be `local`               | Must not be `local`            |
-| `INDUSTRIAL_LEARN_E2E`          | Test runtime control      | `true` only for E2E                                          | unset except controlled smoke run | unset                          |
+| Variable                        | Boundary                    | Development                                                  | Staging                            | Production                      |
+| ------------------------------- | --------------------------- | ------------------------------------------------------------ | ---------------------------------- | ------------------------------- |
+| `NODE_ENV`                      | Runtime                     | `development` or `test`                                      | `production`                       | `production`                    |
+| `NEXT_PUBLIC_APP_ENV`           | Public environment label    | `development` or `test`                                      | `staging`                          | `production`                    |
+| `APP_BASE_URL`                  | Server runtime              | Approved local host for E2E local auth                       | Staging application URL            | Production application URL      |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Browser-safe public value   | Development project URL                                      | Staging project URL                | Production project URL          |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Browser-safe public value   | Development anon key                                         | Staging anon key                   | Production anon key             |
+| `SUPABASE_SERVICE_ROLE_KEY`     | Server-only secret          | Optional local server operations                             | Restricted server runtime only     | Restricted server runtime only  |
+| `SUPABASE_PROJECT_REF`          | Server/deployment metadata  | Optional development project reference                       | Required staging project reference | Production project reference    |
+| `SUPABASE_DB_URL`               | Server-only migration value | Local or development migration connection                    | Staging migration connection       | Production migration connection |
+| `INDUSTRIAL_LEARN_AUTH_MODE`    | Server runtime control      | `local` only for Playwright with `INDUSTRIAL_LEARN_E2E=true` | Must not be `local`                | Must not be `local`             |
+| `INDUSTRIAL_LEARN_E2E`          | Test runtime control        | `true` only for E2E                                          | unset except controlled smoke run  | unset                           |
 
 Public variables may appear in browser bundles. Server-only variables must not be logged, documented with real values, copied into screenshots, or exposed to preview deployments unless that deployment requires trusted server behaviour.
+
+Local test authentication additionally requires `APP_BASE_URL` to use an approved local test host such as `localhost`, `127.0.0.1`, or `[::1]`.
 
 ## Secrets Policy
 

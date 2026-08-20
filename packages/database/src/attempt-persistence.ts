@@ -17,9 +17,9 @@ import {
   type SimulationState
 } from "@industrial-learn/simulation-engine";
 
-import { assertSelfOrAdmin, requireAuthenticated } from "./authorization.js";
-import type { Caller } from "./domain.js";
-import { ApplicationError, translateDatabaseError } from "./errors.js";
+import { assertSelfOrAdmin, requireAuthenticated } from "./authorization";
+import type { Caller } from "./domain";
+import { ApplicationError, translateDatabaseError } from "./errors";
 
 export type PersistenceAttemptStatus =
   "not_started" | "in_progress" | "submitted" | "graded" | "abandoned";
@@ -91,6 +91,7 @@ export type AssessmentAttemptRepository = {
     competencyAwards: Partial<Record<CompetencyLevel, number>>;
     idempotencyKey: string;
     submittedAt: string;
+    auditMetadata?: Record<string, string | number | boolean | null> | undefined;
   }): Promise<PersistedAssessmentAttempt>;
   findCompletedAssessmentByIdempotency(input: {
     studentProfileId: string;
@@ -316,7 +317,12 @@ export function createAttemptPersistenceServices(
             scoringSummary,
             competencyAwards: scoringSummary.competencyProgress,
             idempotencyKey: input.idempotencyKey,
-            submittedAt
+            submittedAt,
+            auditMetadata: {
+              earnedPoints: scoringSummary.earnedPoints,
+              maxPoints: scoringSummary.maxPoints,
+              convertedAnswerCount: normalisedAnswers.convertedAnswerCount
+            }
           });
 
           await repositories.assessments.recordCompetencyAwards({

@@ -4,10 +4,11 @@ on:
   pull_request:
     branches:
       - development
-      - production
+      - main
   push:
     branches:
       - development
+      - main
 
 permissions:
   contents: read

@@ -18,6 +18,13 @@ This file documents why each initial application dependency is required before d
 | `@industrial-learn/engineering-core`        | `packages/database`                 | Allows explicit supported SI normalisation before scoring numeric engineering answers.                    | Conversions remain explicit and validated.                                                           |
 | `@industrial-learn/simulation-engine`       | `packages/database`                 | Allows registered simulation validation and server-side assessment-mode simulation scoring.               | Stores attempt summaries rather than animation frames.                                               |
 
+## Security Overrides
+
+| Override         | Owning module | Why it is required                                                                                                      | Review note                                                                                               |
+| ---------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `next > postcss` | `apps/web`    | Keeps Next.js on a patched PostCSS release while Next.js still declares an older vulnerable transitive PostCSS version. | Added during prompt 31 dependency triage after npm audit reported PostCSS source-map and stringify risks. |
+| `next > sharp`   | `apps/web`    | Keeps Next.js image optimization on a Sharp release patched for inherited libvips vulnerabilities.                      | Added during prompt 31 dependency triage; compatibility is constrained by the repository Node >=22 rule.  |
+
 ## Development Dependencies
 
 | Dependency             | Owning module | Why it is required                                                                              | Notes                                                     |

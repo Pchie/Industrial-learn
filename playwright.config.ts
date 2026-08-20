@@ -5,7 +5,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: [["html", { open: "never" }], ["list"]],
   use: {
     baseURL: "http://127.0.0.1:3000",
@@ -14,8 +14,10 @@ export default defineConfig({
   webServer: {
     command: "npm run start --workspace @industrial-learn/web -- --hostname 127.0.0.1",
     env: {
+      APP_BASE_URL: "http://127.0.0.1:3000",
       INDUSTRIAL_LEARN_E2E: "true",
-      INDUSTRIAL_LEARN_AUTH_MODE: "local"
+      INDUSTRIAL_LEARN_AUTH_MODE: "local",
+      NEXT_PUBLIC_APP_ENV: "test"
     },
     url: "http://127.0.0.1:3000",
     reuseExistingServer: !process.env.CI,
