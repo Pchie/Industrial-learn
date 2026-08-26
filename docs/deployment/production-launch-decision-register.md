@@ -30,39 +30,49 @@ Supabase resources, or store private owner contact details.
   `docs/deployment/production-incident-ownership-plan.md`
 - IL-PROD-OWNER-TEMPLATE-001:
   `docs/deployment/production-owner-record-template.md`
+- IL-PROD-REMAINING-GATES-001:
+  `docs/audits/production-remaining-gates-report.md`
+- IL-PROD-AUTH-GATE-001:
+  `docs/audits/production-auth-and-launch-gate-report.md`
 
 ## Current Launch Verdict
 
-NO-GO for production launch.
+NO-GO for public production launch.
 
-CONDITIONAL GO for preparing production setup only.
+CONDITIONAL GO for protected production pre-launch verification only.
 
-The repository and staging branch controls are improved, and the required public
-owner fields and environment decisions are now defined. Production launch
-remains blocked because the dedicated production Supabase project, production
-provider secrets, backup evidence, live production RLS verification, alert
-routing, and private named owner record have not yet been created or verified.
+The dedicated production Supabase project exists, production Vercel runtime
+variable names are present, production health checks pass through the approved
+protected-access path, production migrations/RLS have been verified, and a
+disposable production Auth user can sign in through the deployed application.
+
+Public launch remains blocked because the routable-address sign-up recheck is
+still rejected by the Supabase email rate limit, no approved student-facing
+production seed content exists for a live assessment attempt, and alert routing
+has not been acknowledged. The private owner record is complete and remains
+excluded from version control.
 
 ## Decision Register
 
-| Area                        | Required decision                             | Current status | Evidence link                                                   |
-| --------------------------- | --------------------------------------------- | -------------- | --------------------------------------------------------------- |
-| `main` protection           | Production branch protected                   | PASS           | `docs/audits/prompt-39-production-readiness-gap-review.md`      |
-| `development` protection    | Staging branch protected                      | PASS           | `docs/audits/prompt-40-development-branch-protection-report.md` |
-| Production deployment guard | `main` deployment disabled until approval     | PASS           | `vercel.json`                                                   |
-| Production Supabase project | Dedicated production project created          | BLOCKED        | `docs/deployment/production-supabase-separation-plan.md`        |
-| Production env vars         | Provider secrets configured                   | BLOCKED        | Provider secret manager evidence required; do not commit values |
-| Auth redirects              | Production-only redirect allowlist approved   | BLOCKED        | `docs/deployment/production-supabase-separation-plan.md`        |
-| Migration tracking          | Version-controlled production migration proof | BLOCKED        | `docs/deployment/database-migration-runbook.md`                 |
-| Production RLS verification | Production-safe RLS test report               | BLOCKED        | Future production RLS report required                           |
-| Backup enabled              | Automated backup evidence                     | BLOCKED        | `docs/deployment/production-backup-restore-rehearsal-plan.md`   |
-| Restore rehearsal           | Restore drill passed                          | BLOCKED        | Future production restore report required                       |
-| Monitoring provider         | MVP provider decision recorded                | PASS           | `docs/operations/production-monitoring-decision-plan.md`        |
-| Alert routing               | Test alert acknowledged                       | BLOCKED        | Private owner record and provider alert evidence required       |
-| Incident ownership          | Owner fields defined for private record       | CONDITIONAL    | `docs/deployment/production-owner-record-template.md`           |
-| Rollback readiness          | Rollback owner and target named               | BLOCKED        | Private owner record and release checklist required             |
-| Release approval            | Named production approver                     | BLOCKED        | Private owner record required                                   |
-| Production seed policy      | Approved seed list                            | BLOCKED        | `docs/deployment/production-supabase-separation-plan.md`        |
+| Area                        | Required decision                             | Current status | Evidence link                                                                              |
+| --------------------------- | --------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------ |
+| `main` protection           | Production branch protected                   | PASS           | `docs/audits/prompt-39-production-readiness-gap-review.md`                                 |
+| `development` protection    | Staging branch protected                      | PASS           | `docs/audits/prompt-40-development-branch-protection-report.md`                            |
+| Production deployment guard | `main` deployment disabled until approval     | PASS           | `vercel.json`                                                                              |
+| Production Supabase project | Dedicated production project created          | PASS           | `docs/audits/production-migration-and-rls-verification-report.md`                          |
+| Production env vars         | Provider secrets configured                   | PASS           | `docs/audits/production-auth-and-launch-gate-report.md`                                    |
+| Public sign-up              | Confirmation email can be sent                | CONDITIONAL    | Live routable-address probe returned provider HTTP 429; no user was created                |
+| Auth redirects              | Production-only redirect allowlist approved   | PASS           | Live dashboard verification recorded in `docs/audits/production-gates-follow-up-report.md` |
+| Migration tracking          | Version-controlled production migration proof | PASS           | `docs/audits/production-migration-and-rls-verification-report.md`                          |
+| Production RLS verification | Production-safe RLS test report               | PASS           | `docs/audits/production-migration-and-rls-verification-report.md`                          |
+| Backup enabled              | Automated backup evidence                     | CONDITIONAL    | WAL-G enabled; PITR disabled; physical backup list not returned by CLI                     |
+| Restore rehearsal           | Restore drill passed                          | PASS           | `docs/audits/production-remaining-gates-report.md`                                         |
+| Monitoring provider         | MVP provider decision recorded                | PASS           | `docs/operations/production-monitoring-decision-plan.md`                                   |
+| Alert routing               | Test alert acknowledged                       | BLOCKED        | Vercel deployment-failure email/web routing is enabled; test acknowledgement is required   |
+| Incident ownership          | Owner fields defined for private record       | PASS           | Required private fields contain values; values remain ignored and unreported               |
+| Rollback readiness          | Rollback owner and target named               | PASS           | Private owner and evidence-location fields are complete                                    |
+| Release approval            | Named production approver                     | CONDITIONAL    | Approver is named privately; approval of the exact launch commit remains required          |
+| Production seed policy      | Approved seed list                            | BLOCKED        | `docs/deployment/production-supabase-separation-plan.md`                                   |
 
 ## Public Owner Field Decisions
 
@@ -103,15 +113,15 @@ ignored by Git.
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
 | Production branch            | `main` remains the production-controlled branch. Direct commits are not allowed.                                                                          | PASS          |
 | Integration branch           | `development` remains the staging/integration branch.                                                                                                     | PASS          |
-| Production Supabase boundary | Use a dedicated production Supabase project separate from staging project `lgjujyaclrpaopdabyzg`.                                                         | BLOCKED       |
-| Production Supabase evidence | Store project ref, owner, region, plan, backup capability, and emergency owner in the private owner/release record; do not commit connection credentials. | BLOCKED       |
-| Production Vercel boundary   | Use a production Vercel project or production environment that is separate from the staging project evidence.                                             | BLOCKED       |
-| Production secrets           | Store only in provider secret managers. Service-role and database credentials are server-only and unavailable to browser code.                            | BLOCKED       |
-| Production auth redirects    | Allow only canonical production HTTPS auth routes unless a time-bounded emergency exception is documented.                                                | BLOCKED       |
+| Production Supabase boundary | Use a dedicated production Supabase project separate from staging project `lgjujyaclrpaopdabyzg`.                                                         | PASS          |
+| Production Supabase evidence | Store project ref, owner, region, plan, backup capability, and emergency owner in the private owner/release record; do not commit connection credentials. | CONDITIONAL   |
+| Production Vercel boundary   | Use a production Vercel project or production environment that is separate from the staging project evidence.                                             | PASS          |
+| Production secrets           | Store only in provider secret managers. Service-role and database credentials are server-only and unavailable to browser code.                            | PASS          |
+| Production auth redirects    | Allow only canonical production HTTPS auth routes unless a time-bounded emergency exception is documented.                                                | PASS          |
 | MVP monitoring destination   | Use provider-native Vercel runtime/deployment evidence, Supabase project health, repository health endpoints, and redacted operational events first.      | PASS          |
 | Monitoring SDKs              | No monitoring SDK dependency is approved for the first production setup; add one only after privacy and dependency review.                                | PASS          |
 | Alert routing                | Configure provider alerts to the private incident/release/security/database owner routes and record a test acknowledgement.                               | BLOCKED       |
-| Backup and recovery          | Confirm automated production backups, retention, and restore rehearsal before real student data.                                                          | BLOCKED       |
+| Backup and recovery          | Confirm automated production backups, retention, and restore rehearsal before real student data.                                                          | CONDITIONAL   |
 | Production seed data         | Seed only platform metadata, roles, and permissions approved for production; do not promote staging users or test attempts.                               | BLOCKED       |
 | Launch approval              | A named private release approver must approve the exact production commit and known limitations.                                                          | BLOCKED       |
 
