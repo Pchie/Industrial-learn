@@ -4,11 +4,19 @@ Date: 2026-08-20
 
 ## Executive Verdict
 
-IN PROGRESS.
+CONDITIONAL PASS for production release promotion.
 
-This report records the controlled promotion of the current `development`
-release candidate toward the production-controlled `main` branch and protected
-Vercel production verification. It does not approve general production launch.
+NO-GO for general production launch.
+
+The current `development` release candidate was promoted to the
+production-controlled `main` branch through a pull request, `main` CI passed,
+and the promoted commit was deployed explicitly to the Vercel production project
+`industrial-learn`. Protected production health and sign-in checks now pass
+through the existing Vercel automation bypass.
+
+This task did not approve use with real student data. Production launch remains
+blocked by the database, RLS, backup/restore, alert-routing, and final owner
+acknowledgement gates listed below.
 
 ## Source Release Candidate
 
@@ -20,6 +28,7 @@ Vercel production verification. It does not approve general production launch.
 | Target branch                         | `main`                                                 |
 | Production Vercel project             | `industrial-learn`                                     |
 | Staging Vercel project linked locally | `industrial-learn-staging`                             |
+| Main promotion commit                 | `26a2022c4a04761abe6c6ca8611d849b6794a615`             |
 
 ## Promotion Plan
 
@@ -45,12 +54,40 @@ Vercel production verification. It does not approve general production launch.
 
 ## Results
 
-Pending.
+| Check                                 | Result                                                          |
+| ------------------------------------- | --------------------------------------------------------------- |
+| `main` approval requirement corrected | Passed; GitHub ruleset now requires one approving review        |
+| PR from `development` to `main`       | Passed; PR #16 merged normally, without administrator bypass    |
+| `main` post-merge CI                  | Passed; GitHub Actions run `32408889449` completed successfully |
+| Production deployment target          | Passed; explicit project `industrial-learn` was used            |
+| Production deployment ID              | `dpl_3Y28R6HveZ7YoFbRPqrLn9MdRZcW`                              |
+| Production deployment URL             | `https://industrial-learn-o4abgbung-kolobe.vercel.app`          |
+| Production alias                      | `https://industrial-learn-kolobe.vercel.app`                    |
+| Production alias status               | Passed; alias points to the ready deployment                    |
+| Bypass secret printed                 | No                                                              |
+| Response bodies printed               | No                                                              |
+| Protected `/api/health/live`          | Passed; HTTP 200 JSON                                           |
+| Protected `/api/health/ready`         | Passed; HTTP 200 JSON                                           |
+| Protected `/auth/sign-in`             | Passed; HTTP 200 HTML sign-in page                              |
 
 ## Remaining Risks
 
-Pending final verification.
+- Production migration tracking still requires production-specific evidence.
+- Production migrations have not been applied by this task.
+- Production-safe RLS verification with synthetic users remains required after
+  approved production migrations.
+- Production backup retention and restore rehearsal remain required before real
+  student data.
+- Production alert routing must be configured and acknowledged by the private
+  owner route.
+- The production deployment remains behind Vercel protection; this is acceptable
+  for pre-launch verification but is not a public launch state.
+- The local workspace remains linked to the staging Vercel project, so future
+  production deploys must continue to explicitly target `industrial-learn`.
 
 ## Recommended Next Step
 
-Pending final verification.
+Apply and verify production database migrations through the approved production
+runbook, then run production-safe RLS verification with synthetic users. Do not
+enter real student data until migration tracking, RLS, backup/restore, and alert
+routing all have passing evidence.

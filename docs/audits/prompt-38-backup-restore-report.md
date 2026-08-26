@@ -4,7 +4,7 @@ Date completed: 2026-08-16
 
 ## Executive Verdict
 
-CONDITIONAL PASS.
+PASS.
 
 Industrial Learn staging PostgreSQL backup and restore were rehearsed in an
 isolated local restore target. Schema, data, RLS-after-restore, and controlled
@@ -12,10 +12,13 @@ database-level application compatibility checks passed.
 
 Production was not touched.
 
-The remaining caveat is that this rehearsal used a plain temporary PostgreSQL
-restore target, not a full temporary Supabase project. Supabase-managed project
-configuration, provider auth settings, REST gateway behavior, and future storage
-objects still require a separate recovery strategy.
+The original rehearsal used a plain temporary PostgreSQL restore target. The
+separate managed-recovery follow-up subsequently verified Supabase Auth,
+authenticated REST/RLS behavior, temporary private Storage handling, and a
+protected Vercel application session. That evidence closes the original
+provider-managed completion condition. Future non-empty Storage backup testing
+and a full temporary Supabase-project reconstruction remain operational maturity
+work rather than Prompt 38 blockers.
 
 ## Scope
 
@@ -177,7 +180,8 @@ Supabase-managed configuration still outstanding.
 
 - Supabase project settings, Auth dashboard configuration, email provider
   settings, redirect URLs, rate limits, and provider-level logs are not fully
-  recovered by a PostgreSQL dump.
+  recovered by a PostgreSQL dump and must remain in the provider-configuration
+  recovery runbook.
 - A full temporary Supabase project restore should be rehearsed before treating
   Auth/REST/project configuration recovery as proven.
 - Storage object restore remains untested because staging currently has no
@@ -203,13 +207,11 @@ Completed:
 
 ## Prompt 39 Readiness
 
-Prompt 39 may proceed for PostgreSQL backup/restore readiness with caveats.
-
-Before production launch, run a separate Supabase-managed recovery rehearsal or
-explicitly document provider configuration recovery for Auth, REST, and storage.
+Prompt 39 may proceed. Prompt 38 is complete.
 
 Follow-up evidence is recorded in
-`docs/audits/supabase-managed-recovery-rehearsal-report.md`. That rehearsal
-verified direct Supabase Auth, REST/RLS, and temporary private Storage behavior,
-but still requires a protected Vercel browser-session check with an approved
+`docs/audits/supabase-managed-recovery-rehearsal-report.md` and
+`docs/audits/protected-vercel-session-recovery-report.md`. Together those
+reports verify direct Supabase Auth, REST/RLS, temporary private Storage
+behavior, and the protected Vercel browser-session check using the approved
 deployment-protection bypass.
