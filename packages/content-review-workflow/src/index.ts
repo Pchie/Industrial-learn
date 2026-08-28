@@ -1,16 +1,6 @@
-export const CONTENT_REVIEW_STATUSES = [
-  "Draft",
-  "Source required",
-  "Source checked",
-  "Equation checked",
-  "Simulation checked",
-  "Engineering review required",
-  "Approved for student use"
-] as const;
+import type { ContentReviewStatus, PublicationStatus } from "./publication-visibility";
 
-export type ContentReviewStatus = (typeof CONTENT_REVIEW_STATUSES)[number];
-
-export type PublicationStatus = "draft" | "published" | "archived";
+export * from "./publication-visibility";
 
 export type WorkflowRole =
   "content_author" | "lecturer" | "engineering_reviewer" | "administrator";
