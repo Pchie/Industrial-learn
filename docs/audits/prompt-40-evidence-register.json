@@ -1,0 +1,491 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "prompt-40-independent-staging-audit",
+  "generatedAt": "2026-08-27T20:30:28Z",
+  "auditMode": "read-only",
+  "repository": {
+    "root": "/Users/zungu/Documents/Master Industrial Learning",
+    "remote": "https://github.com/Pchie/industrial-learn.git",
+    "branch": "codex/prompt-39-approved-sources",
+    "head": "e094d985f2be55f3ac96bcb23750863ed4a05d7f",
+    "developmentHead": "e094d985f2be55f3ac96bcb23750863ed4a05d7f",
+    "mainHead": "642277f72bdabb107c7a7beee396b07f6528f2fc",
+    "baselineCommit": "a807885"
+  },
+  "stagingRelease": {
+    "vercelProject": "industrial-learn-staging",
+    "deploymentId": "BdEB9fxmeQor6Ek5ZgRcMM5BpumH",
+    "deploymentUrl": "https://industrial-learn-staging-2uzb75ocv-kolobe.vercel.app",
+    "stableAlias": "https://industrial-learn-staging-git-development-kolobe.vercel.app",
+    "commit": "e094d985f2be55f3ac96bcb23750863ed4a05d7f",
+    "supabaseProjectRef": "lgjujyaclrpaopdabyzg",
+    "supabaseStatus": "INACTIVE"
+  },
+  "verdicts": {
+    "continuedStagingDevelopment": "CONDITIONAL GO",
+    "controlledStudentPilot": "NO-GO",
+    "productionRelease": "NO-GO",
+    "aiMentorImplementation": "NO-GO"
+  },
+  "evidence": [
+    {
+      "id": "E-GIT-001",
+      "category": "git",
+      "sourceType": "git",
+      "locator": "git log --reverse --all",
+      "observedAt": "2026-08-27",
+      "result": "PASS",
+      "summary": "Baseline commit a807885 exists.",
+      "limitations": []
+    },
+    {
+      "id": "E-GIT-002",
+      "category": "git",
+      "sourceType": "git",
+      "locator": "git branch -vv; git remote -v",
+      "observedAt": "2026-08-27",
+      "result": "PASS",
+      "summary": "development tracks origin/development; main and origin/main exist; origin is GitHub.",
+      "limitations": ["Local main is one commit behind origin/main."]
+    },
+    {
+      "id": "E-GIT-003",
+      "category": "git",
+      "sourceType": "git",
+      "locator": "git status --short",
+      "observedAt": "2026-08-27",
+      "result": "FAIL",
+      "summary": "Worktree contains 58 tracked modifications and 78 untracked status entries.",
+      "limitations": ["Prompt 39 work cannot be tied to a commit or remote CI run."]
+    },
+    {
+      "id": "E-GH-001",
+      "category": "ci",
+      "sourceType": "github-api",
+      "locator": "GitHub Actions run 33006302019",
+      "observedAt": "2026-08-27",
+      "result": "PASS",
+      "summary": "Verify repository completed successfully at deployed commit e094d98.",
+      "limitations": ["This run does not include the current dirty Prompt 39 worktree."]
+    },
+    {
+      "id": "E-GH-002",
+      "category": "git",
+      "sourceType": "github-api",
+      "locator": "Repository rulesets 20740430 and 19723870",
+      "observedAt": "2026-08-27",
+      "result": "PASS",
+      "summary": "main and development are protected by active strict status-check rulesets; main requires one-approval PRs.",
+      "limitations": ["development does not require a pull request."]
+    },
+    {
+      "id": "E-CI-001",
+      "category": "ci",
+      "sourceType": "repository",
+      "locator": ".github/workflows/ci.yml",
+      "observedAt": "2026-08-27",
+      "result": "PARTIAL",
+      "summary": "CI gates secrets, format, types, lint, content, migrations, unit/integration, build, accessibility, smoke, and critical audit.",
+      "limitations": [
+        "Full npm run test:e2e is not a CI step.",
+        "CI Node 22 differs from Vercel Node 24."
+      ]
+    },
+    {
+      "id": "E-DEP-001",
+      "category": "dependency-security",
+      "sourceType": "command",
+      "locator": "npm audit --omit=dev --json",
+      "observedAt": "2026-08-27",
+      "result": "FAIL",
+      "summary": "Production tree reports 0 critical, 1 high, and 2 moderate vulnerabilities.",
+      "limitations": [
+        "High nanoid path is build-time and no reachable application use was found."
+      ]
+    },
+    {
+      "id": "E-DEP-002",
+      "category": "dependency-security",
+      "sourceType": "command",
+      "locator": "npm audit --json; npm ls next postcss nanoid brace-expansion --all",
+      "observedAt": "2026-08-27",
+      "result": "FAIL",
+      "summary": "Full tree reports 0 critical, 2 high, and 2 moderate vulnerabilities, including development-only brace-expansion.",
+      "limitations": []
+    },
+    {
+      "id": "E-VERCEL-001",
+      "category": "staging",
+      "sourceType": "vercel-ui",
+      "locator": "Deployment BdEB9fxmeQor6Ek5ZgRcMM5BpumH",
+      "observedAt": "2026-08-27",
+      "result": "PASS",
+      "summary": "Development preview is Ready and identifies commit e094d98.",
+      "limitations": ["This is the committed release, not current local Prompt 39 work."]
+    },
+    {
+      "id": "E-VERCEL-002",
+      "category": "staging-security",
+      "sourceType": "http",
+      "locator": "GET stable staging alias",
+      "observedAt": "2026-08-27T20:34:25Z",
+      "result": "PASS",
+      "summary": "Unauthenticated request receives Vercel SSO 302, no-store, HSTS, frame denial, and noindex.",
+      "limitations": []
+    },
+    {
+      "id": "E-VERCEL-003",
+      "category": "monitoring",
+      "sourceType": "vercel-runtime-log",
+      "locator": "staging auth_failure event",
+      "observedAt": "2026-08-27",
+      "result": "PASS",
+      "summary": "Event includes environment staging and release e094d98 and excludes raw email, password, tokens, and assessment answers.",
+      "limitations": ["External alert delivery is not connected or proven."]
+    },
+    {
+      "id": "E-SUPA-001",
+      "category": "staging",
+      "sourceType": "supabase-cli",
+      "locator": "supabase projects list --output json",
+      "observedAt": "2026-08-27",
+      "result": "FAIL",
+      "summary": "Dedicated staging project lgjujyaclrpaopdabyzg is INACTIVE; production project is separate and ACTIVE_HEALTHY.",
+      "limitations": []
+    },
+    {
+      "id": "E-SUPA-002",
+      "category": "migration",
+      "sourceType": "supabase-cli",
+      "locator": "supabase migration list --linked",
+      "observedAt": "2026-08-27",
+      "result": "FAIL",
+      "summary": "Current applied migration state could not be read because the staging login role timed out.",
+      "limitations": ["Historical Prompt 33c found migration tracking empty."]
+    },
+    {
+      "id": "E-RLS-001",
+      "category": "rls",
+      "sourceType": "live-integration-test",
+      "locator": "packages/database/src/staging-database.integration.test.ts",
+      "observedAt": "2026-08-27",
+      "result": "FAIL",
+      "summary": "All 4 current live checks failed or could not initialize due missing synthetic tokens and staging DNS failure.",
+      "limitations": ["No current live RLS assertion passed."]
+    },
+    {
+      "id": "E-RLS-002",
+      "category": "rls",
+      "sourceType": "historical-live-test",
+      "locator": "docs/audits/prompt-33c-live-rls-results.md",
+      "observedAt": "2026-08-10",
+      "result": "HISTORICAL_PASS",
+      "summary": "17 live behaviors passed, including cross-student, hidden-answer, draft, reviewer, and self-approval controls.",
+      "limitations": ["Not current and not reproducible while staging is inactive."]
+    },
+    {
+      "id": "E-RLS-003",
+      "category": "attempt-security",
+      "sourceType": "repository",
+      "locator": "migrations 0003, 0007, 0008; policies 0001; attempt-persistence.ts",
+      "observedAt": "2026-08-27",
+      "result": "DESIGN_PASS",
+      "summary": "Prompt 24 metadata remains inside owner-scoped attempt rows; direct student writes are denied and trusted completion is service-role transactional.",
+      "limitations": ["Current live enforcement was not reverified."]
+    },
+    {
+      "id": "E-AUTH-001",
+      "category": "authentication",
+      "sourceType": "repository-and-local-e2e",
+      "locator": "apps/web/src/features/auth; tests/e2e/authentication.spec.ts",
+      "observedAt": "2026-08-27",
+      "result": "PARTIAL",
+      "summary": "Local registration, sign-in/out, reset request, protected route, role, profile, and redirect tests pass.",
+      "limitations": [
+        "Local test provider is not live Supabase.",
+        "Live staging auth was blocked by inactive Supabase."
+      ]
+    },
+    {
+      "id": "E-AUTH-002",
+      "category": "authentication",
+      "sourceType": "repository",
+      "locator": "apps/web/src/features/auth/supabase-provider.ts:167-205",
+      "observedAt": "2026-08-27",
+      "result": "FAIL",
+      "summary": "resolveSession does not exchange refreshToken after access-token expiry.",
+      "limitations": []
+    },
+    {
+      "id": "E-DASH-001",
+      "category": "dashboard",
+      "sourceType": "repository-and-local-e2e",
+      "locator": "student-dashboard server/data/components and tests",
+      "observedAt": "2026-08-27",
+      "result": "DESIGN_PASS",
+      "summary": "Session identity scopes reads; no opening-only progress; recommendation dismissal, empty/error states, and responsive views are tested.",
+      "limitations": ["Current live Supabase data path was not executable."]
+    },
+    {
+      "id": "E-ASSESS-001",
+      "category": "assessment",
+      "sourceType": "repository-and-local-e2e",
+      "locator": "assessment server/actions/components; attempt persistence; assessment-browser.spec.ts",
+      "observedAt": "2026-08-27",
+      "result": "DESIGN_PASS",
+      "summary": "Server scoring, units/tolerance, hidden-answer delivery, idempotency, atomic completion, review, and dashboard integration pass locally.",
+      "limitations": [
+        "Current live start/save/resume/submit journey was blocked by staging outage."
+      ]
+    },
+    {
+      "id": "E-SIM-001",
+      "category": "simulation",
+      "sourceType": "repository",
+      "locator": "database/migrations/0009_staging_hydraulic_simulation_fixture.sql",
+      "observedAt": "2026-08-27",
+      "result": "FAIL",
+      "summary": "Fixture sets technical review Source required and publication status published.",
+      "limitations": []
+    },
+    {
+      "id": "E-SIM-002",
+      "category": "simulation",
+      "sourceType": "repository",
+      "locator": "apps/web/src/features/simulations/server.ts:501-527 at e094d98",
+      "observedAt": "2026-08-27",
+      "result": "FAIL",
+      "summary": "Service-role simulation lookup filters published but omits Approved for student use.",
+      "limitations": ["Current backend outage prevents live reachability retest."]
+    },
+    {
+      "id": "E-CONTENT-001",
+      "category": "content-governance",
+      "sourceType": "repository-and-live-browser",
+      "locator": "lesson route/data at e094d98; /lessons/basic-fluid-pressure",
+      "observedAt": "2026-08-27",
+      "result": "FAIL",
+      "summary": "Public route renders bundled lesson JSON without publication/review filter; live draft Source-required lesson was visible.",
+      "limitations": []
+    },
+    {
+      "id": "E-CONTENT-002",
+      "category": "content-governance",
+      "sourceType": "repository-and-unit-test",
+      "locator": "packages/database/src/content-governance.ts and tests; migration 0006",
+      "observedAt": "2026-08-27",
+      "result": "DESIGN_PASS",
+      "summary": "Author/reviewer permissions, self-approval denial, independent approval, review version, and publication requirements are implemented and tested.",
+      "limitations": ["Delivery routes bypass parts of the governance model."]
+    },
+    {
+      "id": "E-SOURCE-001",
+      "category": "source-quality",
+      "sourceType": "deployed-repository",
+      "locator": "content and sources at e094d98",
+      "observedAt": "2026-08-27",
+      "result": "FAIL",
+      "summary": "Deployed fluid-pressure lesson cites a placeholder source and remains Source required.",
+      "limitations": []
+    },
+    {
+      "id": "E-SOURCE-002",
+      "category": "source-quality",
+      "sourceType": "repository-and-authoritative-web",
+      "locator": "current Prompt 39 source records",
+      "observedAt": "2026-08-27",
+      "result": "PARTIAL",
+      "summary": "Real source-checked records with rights and section metadata exist locally for seven pilot areas; none is approved for student use.",
+      "limitations": [
+        "Uncommitted.",
+        "NIST DOI and Caterpillar page were not independently reopened in this audit."
+      ]
+    },
+    {
+      "id": "E-THERMO-001",
+      "category": "thermodynamics",
+      "sourceType": "repository-and-authoritative-source",
+      "locator": "systems-surroundings-boundaries lesson/knowledge/source",
+      "observedAt": "2026-08-27",
+      "result": "CORRECTLY_BLOCKED",
+      "summary": "Draft is source-linked, Engineering review required, and contains no property tables or unsupported property values.",
+      "limitations": ["Uncommitted and not remotely tested or deployed."]
+    },
+    {
+      "id": "E-A11Y-001",
+      "category": "accessibility",
+      "sourceType": "local-playwright",
+      "locator": "npm run test:a11y using prebuilt server",
+      "observedAt": "2026-08-27",
+      "result": "PASS",
+      "summary": "36 of 36 automated accessibility tests passed.",
+      "limitations": [
+        "Manual assistive-technology review was not performed.",
+        "Direct self-starting command first timed out before tests."
+      ]
+    },
+    {
+      "id": "E-TEST-001",
+      "category": "quality",
+      "sourceType": "local-command",
+      "locator": "scan, format, typecheck, lint, content, migrations, unit, build, smoke, e2e",
+      "observedAt": "2026-08-27",
+      "result": "PASS_WITH_CAVEATS",
+      "summary": "Static gates passed; 276 unit tests passed with 4 skipped; build passed; smoke 5/5 and full E2E 103/103 passed.",
+      "limitations": [
+        "Live staging integration skipped or failed.",
+        "Browser tests use local auth/persistence fixtures."
+      ]
+    },
+    {
+      "id": "E-MON-001",
+      "category": "monitoring",
+      "sourceType": "repository-and-live-log",
+      "locator": "monitoring features, health routes, Vercel logs",
+      "observedAt": "2026-08-27",
+      "result": "PARTIAL",
+      "summary": "Redaction, environment/release tags, health routes, and safe auth failure event are proven.",
+      "limitations": [
+        "Alert notification route is unconnected.",
+        "Live DB/assessment/simulation failure events were not exercised."
+      ]
+    },
+    {
+      "id": "E-RECOVERY-001",
+      "category": "backup-restore",
+      "sourceType": "version-controlled-rehearsal-evidence",
+      "locator": "Prompt 38 and managed recovery reports",
+      "observedAt": "2026-08-16",
+      "result": "HISTORICAL_CONDITIONAL_PASS",
+      "summary": "Isolated PG17 restore matched schema/data/RLS and database-level app reads; managed Auth/REST/RLS/private Storage checks later passed and cleaned up.",
+      "limitations": [
+        "No retained dump to replay read-only.",
+        "No full temporary Supabase project restore.",
+        "No non-empty Storage backup restore."
+      ]
+    },
+    {
+      "id": "E-PERF-001",
+      "category": "performance-reliability",
+      "sourceType": "build-e2e-vercel",
+      "locator": "Next build, browser suite, Vercel deployment/logs",
+      "observedAt": "2026-08-27",
+      "result": "PARTIAL",
+      "summary": "Build and interaction tests pass and deployed release is Ready with no observed 5xx row.",
+      "limitations": [
+        "No bundle budget, query plan, load test, or live DB latency baseline.",
+        "Playwright startup exceeded 120 seconds once."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "P40-C01",
+      "severity": "Critical",
+      "title": "Draft Source-required technical lesson is publicly accessible",
+      "evidenceIds": ["E-CONTENT-001", "E-SOURCE-001"]
+    },
+    {
+      "id": "P40-C02",
+      "severity": "Critical",
+      "title": "Unapproved simulation publication bypasses review gate",
+      "evidenceIds": ["E-SIM-001", "E-SIM-002"]
+    },
+    {
+      "id": "P40-H01",
+      "severity": "High",
+      "title": "Supabase staging project is inactive",
+      "evidenceIds": ["E-SUPA-001", "E-SUPA-002", "E-RLS-001"]
+    },
+    {
+      "id": "P40-H02",
+      "severity": "High",
+      "title": "Prompt 39 worktree is not a version-controlled release",
+      "evidenceIds": ["E-GIT-003"]
+    },
+    {
+      "id": "P40-H03",
+      "severity": "High",
+      "title": "No approved pilot content corpus exists",
+      "evidenceIds": ["E-SOURCE-001", "E-SOURCE-002", "E-THERMO-001"]
+    },
+    {
+      "id": "P40-M01",
+      "severity": "Medium",
+      "title": "Unresolved dependency advisories and stale risk register",
+      "evidenceIds": ["E-DEP-001", "E-DEP-002"]
+    },
+    {
+      "id": "P40-M02",
+      "severity": "Medium",
+      "title": "Session refresh is absent and provider outage errors are ambiguous",
+      "evidenceIds": ["E-AUTH-001", "E-AUTH-002"]
+    },
+    {
+      "id": "P40-M03",
+      "severity": "Medium",
+      "title": "Manual assistive-technology verification is outstanding",
+      "evidenceIds": ["E-A11Y-001"]
+    },
+    {
+      "id": "P40-M04",
+      "severity": "Medium",
+      "title": "External monitoring alert delivery is not proven",
+      "evidenceIds": ["E-MON-001", "E-VERCEL-003"]
+    },
+    {
+      "id": "P40-M05",
+      "severity": "Medium",
+      "title": "Managed-project and non-empty Storage restore gaps remain",
+      "evidenceIds": ["E-RECOVERY-001"]
+    },
+    {
+      "id": "P40-M06",
+      "severity": "Medium",
+      "title": "Playwright startup timeout and incomplete CI E2E gate",
+      "evidenceIds": ["E-A11Y-001", "E-TEST-001", "E-CI-001"]
+    },
+    {
+      "id": "P40-M07",
+      "severity": "Medium",
+      "title": "Current migration traceability and live Prompt 24 RLS are unverified",
+      "evidenceIds": ["E-SUPA-002", "E-RLS-001", "E-RLS-003"]
+    },
+    {
+      "id": "P40-M08",
+      "severity": "Medium",
+      "title": "Performance and live reliability baselines are incomplete",
+      "evidenceIds": ["E-PERF-001"]
+    },
+    {
+      "id": "P40-L01",
+      "severity": "Low",
+      "title": "Staging release has no Git tag",
+      "evidenceIds": ["E-GIT-001", "E-VERCEL-001"]
+    },
+    {
+      "id": "P40-L02",
+      "severity": "Low",
+      "title": "CI and Vercel use different supported Node major versions",
+      "evidenceIds": ["E-CI-001", "E-VERCEL-001"]
+    },
+    {
+      "id": "P40-L03",
+      "severity": "Low",
+      "title": "Local main is behind origin/main",
+      "evidenceIds": ["E-GIT-002"]
+    },
+    {
+      "id": "P40-L04",
+      "severity": "Low",
+      "title": "Development branch protection does not require pull requests",
+      "evidenceIds": ["E-GH-002"]
+    },
+    {
+      "id": "P40-L05",
+      "severity": "Low",
+      "title": "Two non-approved source URLs were not independently reopened",
+      "evidenceIds": ["E-SOURCE-002"]
+    }
+  ]
+}
