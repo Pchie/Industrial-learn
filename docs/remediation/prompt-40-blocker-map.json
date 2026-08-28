@@ -1,0 +1,383 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-28",
+  "scope": "Prompt 40 remediation planning and verification only",
+  "repository": {
+    "root": "/Users/zungu/Documents/Master Industrial Learning",
+    "branch": "codex/prompt-39-approved-sources",
+    "head": "e094d985f2be55f3ac96bcb23750863ed4a05d7f",
+    "remoteBaseline": "origin/development",
+    "trackedChanges": 58,
+    "untrackedFiles": 109,
+    "untrackedFilesBeforePrompt41Deliverables": 105,
+    "clean": false
+  },
+  "studentVisibilityRule": {
+    "requiredPublicationStatus": "published",
+    "requiredReviewStatus": "Approved for student use",
+    "databaseAuthority": {
+      "file": "database/migrations/0005_restrict_unapproved_content_visibility.sql",
+      "symbol": "public.is_student_visible_content",
+      "lines": "5-16"
+    },
+    "applicationAuthorityPresent": false
+  },
+  "blockers": [
+    {
+      "id": "P40-B01",
+      "title": "Public delivery of draft or unapproved lesson content",
+      "severity": "critical",
+      "rootCause": "Public routes resolve repository JSON by slug and render it without evaluating publicationStatus and reviewStatus or technicalReviewStatus.",
+      "layers": {
+        "frontendRoute": "defective",
+        "applicationRegistry": "defective",
+        "contentValidation": "correct but not a delivery authorization boundary",
+        "databasePolicy": "correct but bypassed by bundled JSON"
+      },
+      "routes": [
+        "/lessons/[lessonSlug]",
+        "/learn",
+        "/learn/core-engineering",
+        "/learn/future-engineering",
+        "/programmes/[programmeSlug]",
+        "/programmes/[programmeSlug]/year/[year]",
+        "/modules/[moduleSlug]",
+        "/pathways/[pathwaySlug]"
+      ],
+      "ignoredFields": ["publicationStatus", "reviewStatus", "technicalReviewStatus"],
+      "symbols": [
+        {
+          "file": "apps/web/src/app/lessons/[lessonSlug]/page.tsx",
+          "symbol": "generateStaticParams",
+          "lines": "17-21",
+          "finding": "Enumerates every imported lesson."
+        },
+        {
+          "file": "apps/web/src/app/lessons/[lessonSlug]/page.tsx",
+          "symbol": "LessonPage",
+          "lines": "23-39",
+          "finding": "Checks existence only before rendering LessonRenderer."
+        },
+        {
+          "file": "apps/web/src/features/lesson-engine/data.ts",
+          "symbol": "lessons",
+          "lines": "17-23",
+          "finding": "Unrestricted static registry."
+        },
+        {
+          "file": "apps/web/src/features/lesson-engine/data.ts",
+          "symbol": "getLessons",
+          "lines": "35-37",
+          "finding": "Returns every registry record."
+        },
+        {
+          "file": "apps/web/src/features/lesson-engine/data.ts",
+          "symbol": "getLessonBySlug",
+          "lines": "39-41",
+          "finding": "Direct slug resolution has no visibility predicate."
+        },
+        {
+          "file": "apps/web/src/features/lesson-engine/components.tsx",
+          "symbol": "LessonRenderer",
+          "finding": "Displays status but does not authorize delivery."
+        },
+        {
+          "file": "apps/web/src/features/lesson-engine/visual-experience-registry.tsx",
+          "symbol": "getVisualExperienceOverrides",
+          "lines": "38-48",
+          "finding": "Embedded visual resolution checks simulation ID only."
+        },
+        {
+          "file": "apps/web/src/features/curriculum/data.ts",
+          "symbol": "getCurriculum/getSchool/getProgramme/getModule/getPathway",
+          "lines": "135-213",
+          "finding": "Student-facing curriculum projection does not filter draft or unapproved records."
+        }
+      ],
+      "affectedLessonRecords": [
+        {
+          "slug": "basic-fluid-pressure",
+          "publicationStatus": "draft",
+          "reviewStatus": "Engineering review required"
+        },
+        {
+          "slug": "pump-system-units-and-measurements",
+          "publicationStatus": "draft",
+          "reviewStatus": "Engineering review required"
+        },
+        {
+          "slug": "hydraulic-cylinder-force",
+          "publicationStatus": "internal",
+          "reviewStatus": "Engineering review required"
+        },
+        {
+          "slug": "bernoulli-flow-lab",
+          "publicationStatus": "internal",
+          "reviewStatus": "Engineering review required"
+        },
+        {
+          "slug": "systems-surroundings-boundaries",
+          "publicationStatus": "draft",
+          "reviewStatus": "Engineering review required"
+        }
+      ],
+      "oldVersionExposure": {
+        "publicVersionRouteExists": false,
+        "databaseContentVersionsStudentReadable": false,
+        "residualRisk": "Old deployment bundles and any historical JSON imported into the unrestricted registry remain reachable unless both enumeration and direct lookup fail closed."
+      },
+      "requiredTests": [
+        "draft lesson hidden",
+        "internal lesson hidden",
+        "published-unapproved lesson hidden",
+        "approved-published lesson visible",
+        "direct slug denied",
+        "static params exclude hidden slugs",
+        "embedded simulation denied",
+        "old content version denied"
+      ]
+    },
+    {
+      "id": "P40-B02",
+      "title": "Unapproved simulation publication bypass",
+      "severity": "critical",
+      "rootCause": "Hard-coded catalogue availability and public registry resolution ignore review/publication state, while service-role database queries filter only publication_status and therefore bypass RLS approval and parent-content checks.",
+      "layers": {
+        "catalogueRegistry": "defective",
+        "publicDetailResolver": "defective",
+        "attemptStartService": "defective",
+        "serviceRoleDatabaseAccess": "defective predicate",
+        "databasePolicy": "correct but bypassed"
+      },
+      "registryEntries": [
+        {
+          "slug": "hydraulic-cylinder-force",
+          "catalogueAvailability": "available",
+          "lessonPublicationStatus": "internal",
+          "lessonReviewStatus": "Engineering review required",
+          "engineReviewStatus": "Equation checked"
+        },
+        {
+          "slug": "bernoulli-flow-lab",
+          "catalogueAvailability": "available",
+          "lessonPublicationStatus": "internal",
+          "lessonReviewStatus": "Engineering review required",
+          "engineReviewStatus": "Engineering review required"
+        },
+        {
+          "slug": "thermal-system-boundary-simulation",
+          "catalogueAvailability": "coming-later",
+          "lessonPublicationStatus": "draft",
+          "lessonReviewStatus": "Engineering review required",
+          "engineReviewStatus": "Engineering review required",
+          "note": "Attempt start is disabled, but direct public detail still exposes unapproved technical material."
+        }
+      ],
+      "symbols": [
+        {
+          "file": "apps/web/src/features/simulations/catalog.ts",
+          "symbol": "simulationCatalog",
+          "lines": "70-194",
+          "finding": "Operational availability is independent of technical approval."
+        },
+        {
+          "file": "apps/web/src/features/simulations/server.ts",
+          "symbol": "loadSimulationLabModel",
+          "lines": "110-181",
+          "finding": "Projects the full registry to anonymous and authenticated users."
+        },
+        {
+          "file": "apps/web/src/features/simulations/server.ts",
+          "symbol": "loadPublicSimulationOverview",
+          "lines": "183-200",
+          "finding": "Direct public slug resolution ignores governance fields."
+        },
+        {
+          "file": "apps/web/src/features/simulations/server.ts",
+          "symbol": "startSimulationForStudent",
+          "lines": "252-277",
+          "finding": "Uses derived availability as authorization."
+        },
+        {
+          "file": "apps/web/src/features/simulations/server.ts",
+          "symbol": "getSupabaseSimulationRowBySlug",
+          "lines": "601-610",
+          "finding": "Service-role query filters publication_status=published only."
+        },
+        {
+          "file": "apps/web/src/features/simulations/server.ts",
+          "symbol": "getSupabaseSimulationRowForDefinition",
+          "lines": "612-628",
+          "finding": "Persistence lookup repeats the incomplete service-role filter."
+        },
+        {
+          "file": "apps/web/src/features/simulations/server.ts",
+          "symbol": "summaryFromRow",
+          "lines": "439-451",
+          "finding": "Does not project the row technical_review_status."
+        },
+        {
+          "file": "apps/web/src/features/simulations/discovery.ts",
+          "symbol": "deriveSimulationAvailability",
+          "lines": "54-71",
+          "finding": "Considers catalogue availability and prerequisites only."
+        },
+        {
+          "file": "apps/web/src/app/simulations/[simulationSlug]/page.tsx",
+          "symbol": "SimulationOverviewPage",
+          "lines": "10-39",
+          "finding": "Direct URL falls back to the unrestricted public model."
+        },
+        {
+          "file": "apps/web/src/features/lesson-engine/visual-experience-registry.tsx",
+          "symbol": "visualExperienceRegistry/getVisualExperienceOverrides",
+          "lines": "23-48",
+          "finding": "Lesson-embedded simulations have no independent publication gate."
+        },
+        {
+          "file": "database/migrations/0009_staging_hydraulic_simulation_fixture.sql",
+          "symbol": "hydraulic-cylinder-force fixture",
+          "lines": "6-34",
+          "finding": "Stores Source required plus published."
+        },
+        {
+          "file": "database/migrations/0010_bernoulli_flow_simulation_registration.sql",
+          "symbol": "bernoulli-flow-lab registration",
+          "finding": "Untracked registration stores Engineering review required plus published and must not be applied as written."
+        }
+      ],
+      "requiredTests": [
+        "unapproved registry item hidden",
+        "published-unapproved database row hidden",
+        "unapproved parent hidden",
+        "direct slug denied",
+        "embedded simulation denied",
+        "approved-published simulation visible",
+        "attempt start rechecks policy",
+        "service-role query checks review status",
+        "cross-student access remains denied"
+      ]
+    },
+    {
+      "id": "P40-B03",
+      "title": "Inactive Supabase staging prevents current live RLS verification",
+      "severity": "high",
+      "project": {
+        "ref": "lgjujyaclrpaopdabyzg",
+        "region": "eu-west-1",
+        "status": "INACTIVE",
+        "linked": true,
+        "checkedAt": "2026-08-28"
+      },
+      "currentFailures": [
+        "Auth hostname does not resolve",
+        "Auth health returned HTTP 000",
+        "linked migration query timed out while creating the login role",
+        "current authentication journeys cannot run",
+        "synthetic RLS token/profile variables are not present in .env.staging.local"
+      ],
+      "environmentKeyPresence": {
+        "passed": true,
+        "valuesPrinted": false,
+        "ignoredLocalFile": true,
+        "presentKeyNames": [
+          "NODE_ENV",
+          "NEXT_PUBLIC_APP_ENV",
+          "APP_BASE_URL",
+          "NEXT_PUBLIC_SUPABASE_URL",
+          "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+          "SUPABASE_SERVICE_ROLE_KEY",
+          "SUPABASE_PROJECT_REF",
+          "SUPABASE_DB_URL",
+          "INDUSTRIAL_LEARN_AUTH_MODE",
+          "INDUSTRIAL_LEARN_E2E"
+        ],
+        "valueAttestationRequiredAfterRestore": true
+      },
+      "migrationState": {
+        "currentLiveVerdict": "unknown",
+        "historicalEvidence": "Schema and policies were previously verified, but migration tracking drift was reported.",
+        "uncommittedMigration": "database/migrations/0010_bernoulli_flow_simulation_registration.sql"
+      },
+      "requiredSyntheticInputs": [
+        "STAGING_STUDENT_A_ACCESS_TOKEN",
+        "STAGING_STUDENT_B_ACCESS_TOKEN",
+        "STAGING_STUDENT_A_PROFILE_ID",
+        "STAGING_STUDENT_B_PROFILE_ID"
+      ],
+      "actions": {
+        "human": [
+          "Resume or restore the dedicated staging project",
+          "Confirm Auth providers, exact Site URL, and exact callback allowlist",
+          "Approve migration execution",
+          "Provide or authorize synthetic identities",
+          "Attest Vercel Preview/Development secret bindings"
+        ],
+        "codexAfterAuthorization": [
+          "Verify project and endpoint health",
+          "Compare local and live migration states",
+          "Run expanded live RLS and application-route tests",
+          "Prepare conditional corrective migrations",
+          "Record evidence without exposing secrets"
+        ],
+        "secretDependent": [
+          "Session-bound RLS tests",
+          "Synthetic user creation or sign-in",
+          "Migration execution",
+          "Trusted server-row inspection"
+        ]
+      }
+    },
+    {
+      "id": "P40-B04",
+      "title": "Uncommitted Prompt 39 work has no reviewable release identity",
+      "severity": "high",
+      "rootCause": "Prompt 39A-39G changes accumulated on top of origin/development without commits and overlap shared source files.",
+      "status": {
+        "branch": "codex/prompt-39-approved-sources",
+        "head": "e094d985f2be55f3ac96bcb23750863ed4a05d7f",
+        "trackedChanges": 58,
+        "untrackedFiles": 109,
+        "untrackedFilesBeforePrompt41Deliverables": 105,
+        "prompt40AuditFiles": 4,
+        "unsafeUntrackedMigration": "database/migrations/0010_bernoulli_flow_simulation_registration.sql"
+      },
+      "changeGroups": [
+        "Prompt 39 source governance and evidence",
+        "Prompt 39A visual architecture documentation",
+        "Prompt 39B visual simulation foundation",
+        "Prompt 39C hydraulic visual pilot",
+        "Prompt 39D UX audit evidence",
+        "Prompt 39E visual standardization",
+        "Prompt 39F Simulation Lab",
+        "Prompt 39G Bernoulli and thermodynamic replication",
+        "Prompt 40 audit evidence"
+      ],
+      "apparentlyUnrelatedFiles": [],
+      "sharedFilesRequiringHunkReview": [
+        "apps/web/src/features/lesson-engine/components.tsx",
+        "apps/web/src/features/lesson-engine/types.ts",
+        "apps/web/src/features/simulations/catalog.ts",
+        "apps/web/src/features/simulations/server.ts",
+        "packages/engineering-core/src/index.ts",
+        "packages/simulation-engine/src/index.ts",
+        "package.json",
+        "playwright.config.ts"
+      ],
+      "commitRule": "Do not commit or push the current tree wholesale; isolate audit documents, then source governance, visual contracts, pure domain logic, visual lessons, Simulation Lab/security remediation, migration state, and regenerated evidence."
+    }
+  ],
+  "prompt42": {
+    "verdict": "GO WITH SCOPE RESTRICTION",
+    "allowed": "Git recovery and fail-closed lesson/simulation remediation with local tests",
+    "notAllowed": [
+      "feature development",
+      "content approval",
+      "live migration execution",
+      "deployment",
+      "student pilot",
+      "production changes",
+      "AI Mentor implementation"
+    ]
+  }
+}
