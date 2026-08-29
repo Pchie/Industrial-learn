@@ -38,6 +38,22 @@ type BlockBase = {
   sourceIds?: string[];
 };
 
+export type VisualAccessibility = {
+  label: string;
+  textAlternative: string;
+  keyboardInstructions: string;
+  reducedMotionFallback: string;
+};
+
+type VisualBlockBase = {
+  id: string;
+  title: string;
+  description: string;
+  sourceIds: string[];
+  reviewStatus: ReviewStatus;
+  accessibility: VisualAccessibility;
+};
+
 export type ParagraphBlock = BlockBase & {
   type: "paragraph";
   text: string;
@@ -132,6 +148,117 @@ export type SourceCitationBlock = {
   note: string;
 };
 
+export type HeroSimulationBlock = VisualBlockBase & {
+  type: "heroSimulation";
+  simulationId: string;
+  mode:
+    "learn" | "guided" | "explore" | "fault-diagnosis" | "assessment" | "demonstration";
+};
+
+export type InteractiveDiagramBlock = VisualBlockBase & {
+  type: "interactiveDiagram";
+  diagramId: string;
+  componentIds: string[];
+};
+
+export type AnimationBlock = VisualBlockBase & {
+  type: "animation";
+  animationId: string;
+};
+
+export type ObservationQuestionBlock = VisualBlockBase & {
+  type: "observationQuestion";
+  prompt: string;
+  hint?: string;
+  explanation?: string;
+  graded: false;
+};
+
+export type MicroTheoryBlock = VisualBlockBase & {
+  type: "microTheory";
+  principle: string;
+  expandedExplanation?: string;
+  safetyInformation?: string;
+};
+
+export type LiveEquationBlock = VisualBlockBase & {
+  type: "liveEquation";
+  equationId: string;
+  inputBindings: Record<string, string>;
+  outputBinding: string;
+};
+
+export type ComponentCutawayBlock = VisualBlockBase & {
+  type: "componentCutaway";
+  componentId: string;
+  representations: Array<"external" | "cutaway" | "schematic">;
+};
+
+export type LinkedSchematicBlock = VisualBlockBase & {
+  type: "linkedSchematic";
+  simulationId: string;
+  componentIds: string[];
+};
+
+export type EngineeringChallengeBlock = VisualBlockBase & {
+  type: "engineeringChallenge";
+  challengeId: string;
+  objective: string;
+  pattern: "target" | "constraint" | "diagnosis" | "design";
+  goal: string;
+  allowedActions: string[];
+  successCondition: string;
+  feedback: {
+    beforeCheck: string;
+    onSuccess: string;
+    onIncomplete: string;
+  };
+  modelAssumptions: string[];
+};
+
+export type FaultChallengeBlock = VisualBlockBase & {
+  type: "faultChallenge";
+  simulationId: string;
+  faultId: string;
+  pattern: "diagnosis";
+  goal: string;
+  allowedActions: string[];
+  successCondition: string;
+  feedback: {
+    beforeCheck: string;
+    onSuccess: string;
+    onIncomplete: string;
+  };
+  modelAssumptions: string[];
+};
+
+export type RealWorldApplicationBlock = VisualBlockBase & {
+  type: "realWorldApplication";
+  applicationId: string;
+  systemType: string;
+  principle: string;
+  relatedSimulationId?: string;
+};
+
+export type DeepDiveBlock = VisualBlockBase & {
+  type: "deepDive";
+  content: string;
+};
+
+export type VisualLessonContentBlock =
+  | HeroSimulationBlock
+  | InteractiveDiagramBlock
+  | AnimationBlock
+  | ObservationQuestionBlock
+  | MicroTheoryBlock
+  | LiveEquationBlock
+  | ComponentCutawayBlock
+  | LinkedSchematicBlock
+  | EngineeringChallengeBlock
+  | FaultChallengeBlock
+  | RealWorldApplicationBlock
+  | DeepDiveBlock;
+
 export type LessonContentBlock =
   | ParagraphBlock
   | DefinitionBlock
@@ -145,11 +272,72 @@ export type LessonContentBlock =
   | WarningBlock
   | FaultCaseBlock
   | QuestionBlock
-  | SourceCitationBlock;
+  | SourceCitationBlock
+  | VisualLessonContentBlock;
 
 export type LessonSection = {
   title: string;
   blocks: LessonContentBlock[];
+};
+
+export type VisualLessonStageId =
+  | "heroExperience"
+  | "explore"
+  | "observe"
+  | "microTheory"
+  | "liveEquation"
+  | "engineeringChallenge"
+  | "faultMode"
+  | "realWorldApplication"
+  | "knowledgeCheck"
+  | "deepDive"
+  | "sources";
+
+export type VisualLessonStage = {
+  stage: VisualLessonStageId;
+  title: string;
+  blocks: LessonContentBlock[];
+};
+
+export type VisualLessonType =
+  "phenomenon" | "component" | "system" | "calculation" | "diagnostic" | "design";
+
+export type VisualProgressionStep =
+  "see" | "play" | "calculate" | "challenge" | "apply" | "check";
+
+export type VisualLessonMetadata = {
+  firstScreen: {
+    purpose: string;
+    primaryVisualBlockId: string;
+    primaryControlIds: string[];
+  };
+  progression: VisualProgressionStep[];
+  inputs: Array<{
+    id: string;
+    label: string;
+    quantity: string;
+    unit: string;
+    internalUnit: string;
+    default: number;
+    minimum: number;
+    maximum: number;
+    step: number;
+    validation: string;
+    modelValidityRange: { minimum: number; maximum: number };
+    accessibilityLabel: string;
+    educationalDescription: string;
+  }>;
+  outputs: Array<{
+    id: string;
+    label: string;
+    quantity: string;
+    unit: string;
+    internalUnit: string;
+    interpretation: string;
+    validityState: "valid" | "warning" | "invalid" | "unavailable";
+    warning?: string;
+    measurementSource: string;
+  }>;
 };
 
 export type StructuredLesson = {
@@ -168,6 +356,18 @@ export type StructuredLesson = {
   learningOutcomes: string[];
   requiredSections: LessonSectionId[];
   sections: Record<LessonSectionId, LessonSection>;
+  schemaVersion?: string;
+  experienceModel?: "linear-v1" | "visual-v2";
+  experienceSequence?: VisualLessonStage[];
+  visualLessonType?: string;
+  lessonType?: VisualLessonType | "theory";
+  visualStandardVersion?: string;
+  visualMetadata?: VisualLessonMetadata;
+  simulationIds?: string[];
+  equationIds?: string[];
+  estimatedInteractionTime?: string;
+  relatedApplications?: string[];
+  relatedAssessmentIds?: string[];
 };
 
 export type SourceRecord = {

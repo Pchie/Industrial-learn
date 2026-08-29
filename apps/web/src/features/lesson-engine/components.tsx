@@ -7,6 +7,13 @@ import {
 } from "@industrial-learn/design-system";
 import type { ReactNode } from "react";
 
+import {
+  MicroTheory,
+  ObservationPrompt,
+  RealWorldApplication,
+  VisualBlockReference
+} from "../visual-simulation/components";
+
 import type {
   DiagramBlock,
   FaultCaseBlock,
@@ -16,6 +23,10 @@ import type {
   SourceRecord,
   StructuredLesson,
   SymbolRecord,
+  VisualLessonContentBlock,
+  VisualProgressionStep,
+  VisualLessonStage,
+  VisualLessonStageId,
   WarningBlock,
   WorkedCalculationBlock
 } from "./types";
@@ -44,14 +55,22 @@ const sectionOrder: LessonSectionId[] = [
 export function LessonRenderer({
   isAuthenticated = false,
   lesson,
-  sources
+  sources,
+  visualStageOverrides
 }: {
   isAuthenticated?: boolean;
   lesson: StructuredLesson;
   sources: SourceRecord[];
+  visualStageOverrides?: Partial<Record<VisualLessonStageId, ReactNode>>;
 }) {
+  const visualStages =
+    lesson.experienceModel === "visual-v2" && lesson.experienceSequence?.length
+      ? lesson.experienceSequence
+      : null;
+  const firstVisualStage = visualStages?.[0];
+
   return (
-    <article className="lesson-engine">
+    <article className={`lesson-engine${visualStages ? " lesson-engine--visual" : ""}`}>
       <Breadcrumbs
         items={[
           { href: "/learn", label: "Learn" },
@@ -60,37 +79,60 @@ export function LessonRenderer({
       />
       <header className="lesson-engine__header">
         <div>
-          <p className="eyebrow">Structured lesson</p>
+          <p className="eyebrow">
+            {visualStages ? "Visual-first structured lesson" : "Structured lesson"}
+          </p>
           <h1>{lesson.title}</h1>
-          <p>{lesson.description}</p>
+          <p>{lesson.visualMetadata?.firstScreen.purpose ?? lesson.description}</p>
         </div>
         <div className="lesson-engine__status" aria-label="Lesson status">
           <EngineeringReviewBadge status={lesson.reviewStatus} />
-          <Badge tone={lesson.publicationStatus === "published" ? "normal" : "warning"}>
-            {lesson.publicationStatus}
-          </Badge>
-          <span>Version {lesson.version}</span>
+          {!visualStages ? (
+            <>
+              <Badge
+                tone={lesson.publicationStatus === "published" ? "normal" : "warning"}
+              >
+                {lesson.publicationStatus}
+              </Badge>
+              <span>Version {lesson.version}</span>
+            </>
+          ) : null}
         </div>
       </header>
 
-      <dl className="lesson-engine__meta" aria-label="Lesson metadata">
-        <div>
-          <dt>Estimated time</dt>
-          <dd>{lesson.estimatedCompletionTime}</dd>
-        </div>
-        <div>
-          <dt>Difficulty</dt>
-          <dd>{lesson.difficulty}</dd>
-        </div>
-        <div>
-          <dt>Prerequisites</dt>
-          <dd>
-            {lesson.prerequisites.length > 0
-              ? lesson.prerequisites.join(", ")
-              : "None listed"}
-          </dd>
-        </div>
-      </dl>
+      {lesson.visualMetadata ? (
+        <VisualLessonProgression steps={lesson.visualMetadata.progression} />
+      ) : null}
+
+      {firstVisualStage ? (
+        <VisualLessonStageSection
+          index={0}
+          override={visualStageOverrides?.[firstVisualStage.stage]}
+          stage={firstVisualStage}
+        />
+      ) : null}
+
+      {visualStages ? (
+        <details className="lesson-engine__compact-details">
+          <summary>Outcomes, prerequisites and lesson details</summary>
+          <div className="lesson-engine__compact-details-content">
+            <div>
+              <h2>By the end you can</h2>
+              <ul>
+                {lesson.learningOutcomes.map((outcome) => (
+                  <li key={outcome}>{outcome}</li>
+                ))}
+              </ul>
+              <p>
+                Publication: {lesson.publicationStatus}. Version {lesson.version}.
+              </p>
+            </div>
+            <LessonMetadata lesson={lesson} />
+          </div>
+        </details>
+      ) : (
+        <LessonMetadata lesson={lesson} />
+      )}
 
       <Alert title="Progress" tone="info">
         {isAuthenticated
@@ -98,61 +140,147 @@ export function LessonRenderer({
           : "Progress is not saved in signed-out mode. No completion data is displayed."}
       </Alert>
 
-      <nav className="lesson-engine__toc" aria-label="Lesson sections">
-        {sectionOrder.map((sectionId) => (
-          <a href={`#${sectionId}`} key={sectionId}>
-            {lesson.sections[sectionId].title}
-          </a>
-        ))}
-      </nav>
+      {!visualStages ? (
+        <nav className="lesson-engine__toc" aria-label="Lesson sections">
+          {sectionOrder.map((sectionId) => (
+            <a href={`#${sectionId}`} key={sectionId}>
+              {lesson.sections[sectionId].title}
+            </a>
+          ))}
+        </nav>
+      ) : null}
 
       <div className="lesson-engine__sections">
-        {sectionOrder.map((sectionId) => {
-          const section = lesson.sections[sectionId];
+        {visualStages
+          ? visualStages
+              .slice(1)
+              .map((stage, index) => (
+                <VisualLessonStageSection
+                  index={index + 1}
+                  key={`${stage.stage}-${index + 1}`}
+                  override={visualStageOverrides?.[stage.stage]}
+                  stage={stage}
+                />
+              ))
+          : sectionOrder.map((sectionId) => {
+              const section = lesson.sections[sectionId];
 
-          return (
-            <section className="lesson-section" id={sectionId} key={sectionId}>
-              <h2>{section.title}</h2>
-              <div className="lesson-section__blocks">
-                {section.blocks.map((block) => (
-                  <ContentBlockRenderer block={block} key={block.id} />
-                ))}
-              </div>
-            </section>
-          );
-        })}
+              return (
+                <section className="lesson-section" id={sectionId} key={sectionId}>
+                  <h2>{section.title}</h2>
+                  <div className="lesson-section__blocks">
+                    {section.blocks.map((block) => (
+                      <ContentBlockRenderer block={block} key={block.id} />
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
       </div>
 
-      <section
-        className="lesson-section lesson-section--sources"
-        aria-labelledby="source-records-title"
-      >
-        <h2 id="source-records-title">Source records</h2>
-        {sources.map((source) => (
-          <article className="lesson-source-record" key={source.id}>
-            <h3>{source.title}</h3>
-            <p>{source.citation}</p>
-            <dl>
-              <div>
-                <dt>Source ID</dt>
-                <dd>
-                  <code>{source.id}</code>
-                </dd>
-              </div>
-              <div>
-                <dt>Evidence</dt>
-                <dd>{source.evidenceStatus}</dd>
-              </div>
-              <div>
-                <dt>Review</dt>
-                <dd>{source.reviewStatus}</dd>
-              </div>
-            </dl>
-          </article>
-        ))}
-      </section>
+      <details className="lesson-section lesson-section--sources" open={!visualStages}>
+        <summary id="source-records-title">
+          <span aria-level={2} role="heading">
+            Source records
+          </span>
+        </summary>
+        <div className="lesson-section__blocks">
+          {sources.map((source) => (
+            <article className="lesson-source-record" key={source.id}>
+              <h3>{source.title}</h3>
+              <p>{source.citation}</p>
+              <dl>
+                <div>
+                  <dt>Source ID</dt>
+                  <dd>
+                    <code>{source.id}</code>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Evidence</dt>
+                  <dd>{source.evidenceStatus}</dd>
+                </div>
+                <div>
+                  <dt>Review</dt>
+                  <dd>{source.reviewStatus}</dd>
+                </div>
+              </dl>
+            </article>
+          ))}
+        </div>
+      </details>
     </article>
   );
+}
+
+function VisualLessonStageSection({
+  index,
+  override,
+  stage
+}: {
+  index: number;
+  override: ReactNode | undefined;
+  stage: VisualLessonStage;
+}) {
+  const overrideProvidesHeading = index === 0 && override !== undefined;
+
+  return (
+    <section
+      className={`lesson-section${index === 0 ? " lesson-section--visual-hero" : ""}`}
+      id={visualStageAnchor(stage, index)}
+      key={`${stage.stage}-${index}`}
+    >
+      {overrideProvidesHeading ? null : <h2>{stage.title}</h2>}
+      <div className="lesson-section__blocks">
+        {override ??
+          stage.blocks.map((block) => (
+            <ContentBlockRenderer block={block} key={block.id} />
+          ))}
+      </div>
+    </section>
+  );
+}
+
+function VisualLessonProgression({ steps }: { steps: VisualProgressionStep[] }) {
+  return (
+    <nav aria-label="Visual lesson progression" className="lesson-progression">
+      <ol>
+        {steps.map((step, index) => (
+          <li key={step}>
+            <span aria-hidden="true">{index + 1}</span>
+            {formatProgressionStep(step)}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+}
+
+function LessonMetadata({ lesson }: { lesson: StructuredLesson }) {
+  return (
+    <dl className="lesson-engine__meta" aria-label="Lesson metadata">
+      <div>
+        <dt>Estimated time</dt>
+        <dd>{lesson.estimatedCompletionTime}</dd>
+      </div>
+      <div>
+        <dt>Difficulty</dt>
+        <dd>{lesson.difficulty}</dd>
+      </div>
+      <div>
+        <dt>Prerequisites</dt>
+        <dd>
+          {lesson.prerequisites.length > 0
+            ? lesson.prerequisites.join(", ")
+            : "None listed"}
+        </dd>
+      </div>
+    </dl>
+  );
+}
+
+function formatProgressionStep(step: string) {
+  return step === "play" ? "Explore" : `${step.charAt(0).toUpperCase()}${step.slice(1)}`;
 }
 
 export function ContentBlockRenderer({ block }: { block: LessonContentBlock }) {
@@ -228,7 +356,119 @@ export function ContentBlockRenderer({ block }: { block: LessonContentBlock }) {
           <p>{block.note}</p>
         </BlockFrame>
       );
+    case "heroSimulation":
+    case "interactiveDiagram":
+    case "animation":
+    case "observationQuestion":
+    case "microTheory":
+    case "liveEquation":
+    case "componentCutaway":
+    case "linkedSchematic":
+    case "engineeringChallenge":
+    case "faultChallenge":
+    case "realWorldApplication":
+    case "deepDive":
+      return <VisualContentBlockView block={block} />;
   }
+}
+
+function VisualContentBlockView({ block }: { block: VisualLessonContentBlock }) {
+  if (block.type === "observationQuestion") {
+    return (
+      <BlockFrame block={block}>
+        <ObservationPrompt
+          explanation={block.explanation}
+          hint={block.hint}
+          prompt={block.prompt}
+        />
+      </BlockFrame>
+    );
+  }
+
+  if (block.type === "microTheory") {
+    return (
+      <BlockFrame block={block}>
+        <MicroTheory
+          deeperTheory={block.expandedExplanation}
+          principle={block.principle}
+          safetyInformation={
+            block.safetyInformation ? (
+              <Alert title="Safety context" tone="warning">
+                {block.safetyInformation}
+              </Alert>
+            ) : null
+          }
+          title={block.title}
+        />
+      </BlockFrame>
+    );
+  }
+
+  if (block.type === "realWorldApplication") {
+    return (
+      <BlockFrame block={block}>
+        <RealWorldApplication
+          principle={block.principle}
+          relatedSimulation={block.relatedSimulationId}
+          systemType={block.systemType}
+          title={block.title}
+          visualDescription={block.accessibility.textAlternative}
+        />
+      </BlockFrame>
+    );
+  }
+
+  if (block.type === "deepDive") {
+    return (
+      <BlockFrame block={block}>
+        <details>
+          <summary>{block.title}</summary>
+          <p>{block.content}</p>
+        </details>
+      </BlockFrame>
+    );
+  }
+
+  return (
+    <BlockFrame block={block}>
+      <VisualBlockReference
+        accessibilityLabel={block.accessibility.label}
+        description={block.description}
+        referenceId={visualBlockReferenceId(block)}
+        title={block.title}
+        type={block.type}
+      />
+    </BlockFrame>
+  );
+}
+
+function visualBlockReferenceId(block: VisualLessonContentBlock) {
+  switch (block.type) {
+    case "heroSimulation":
+    case "linkedSchematic":
+    case "faultChallenge":
+      return block.simulationId;
+    case "interactiveDiagram":
+      return block.diagramId;
+    case "animation":
+      return block.animationId;
+    case "liveEquation":
+      return block.equationId;
+    case "componentCutaway":
+      return block.componentId;
+    case "engineeringChallenge":
+      return block.challengeId;
+    case "realWorldApplication":
+      return block.applicationId;
+    case "observationQuestion":
+    case "microTheory":
+    case "deepDive":
+      return undefined;
+  }
+}
+
+function visualStageAnchor(stage: VisualLessonStage, index: number) {
+  return `visual-${index + 1}-${stage.stage}`;
 }
 
 function BlockFrame({

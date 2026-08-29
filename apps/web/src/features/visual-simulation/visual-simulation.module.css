@@ -1,0 +1,607 @@
+.shell {
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-panel);
+  display: grid;
+  gap: var(--il-space-4);
+  overflow: clip;
+}
+
+.header,
+.playbackRegion,
+.primaryControlsRegion,
+.workbench,
+.learningRegion {
+  padding: var(--il-space-4);
+}
+
+.header {
+  align-items: start;
+  border-bottom: var(--il-border-subtle);
+  display: flex;
+  gap: var(--il-space-4);
+  justify-content: space-between;
+}
+
+.header h2,
+.viewportTitle,
+.panel h3,
+.observation h3,
+.microTheory h3,
+.challenge h3,
+.application h3,
+.referenceBlock h3,
+.liveEquation h3 {
+  font-size: var(--il-font-size-lg);
+  margin: 0;
+}
+
+.eyebrow {
+  color: var(--il-color-text-secondary);
+  font-size: var(--il-font-size-caption);
+  font-weight: var(--il-font-weight-bold);
+  letter-spacing: 0;
+  margin: 0 0 var(--il-space-1);
+  text-transform: uppercase;
+}
+
+.statuses,
+.playback {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--il-space-2);
+}
+
+.primaryControlJump {
+  align-items: center;
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-control);
+  display: none;
+  font-size: var(--il-font-size-sm);
+  font-weight: var(--il-font-weight-bold);
+  min-height: var(--il-size-control-min);
+  padding: var(--il-space-2) var(--il-space-3);
+  text-decoration: none;
+}
+
+.playbackRegion {
+  background: var(--il-color-bg-muted);
+  border-bottom: var(--il-border-subtle);
+}
+
+.primaryControlsRegion {
+  border-bottom: var(--il-border-subtle);
+  padding-block: var(--il-space-3);
+}
+
+.frameReadout {
+  font-family: var(--il-font-family-mono);
+  font-size: var(--il-font-size-sm);
+  min-width: 5rem;
+}
+
+.workbench {
+  display: grid;
+  gap: var(--il-space-4);
+  grid-template-columns: minmax(0, 1.8fr) minmax(260px, 0.8fr);
+}
+
+.viewportRegion,
+.contextRegion,
+.learningRegion,
+.panel {
+  display: grid;
+  gap: var(--il-space-4);
+  min-width: 0;
+}
+
+.contextRegion {
+  align-content: start;
+}
+
+.learningRegion {
+  border-top: var(--il-border-subtle);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.panel,
+.observation,
+.microTheory,
+.challenge,
+.application,
+.referenceBlock,
+.liveEquation {
+  background: var(--il-color-bg-muted);
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-card);
+  padding: var(--il-space-4);
+}
+
+.viewport {
+  display: grid;
+  gap: var(--il-space-3);
+  min-width: 0;
+}
+
+.canvas {
+  aspect-ratio: 16 / 9;
+  background: var(--il-color-bg-muted);
+  border: var(--il-border-strong);
+  border-radius: var(--il-radius-card);
+  display: grid;
+  gap: var(--il-space-3);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-height: 280px;
+  overflow: hidden;
+  padding: var(--il-space-3);
+  place-items: center;
+}
+
+.canvasSingle {
+  aspect-ratio: auto;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 0;
+  place-items: stretch;
+}
+
+.stateSummary {
+  border-left: 4px solid var(--il-color-state-info);
+  margin: 0;
+  padding-left: var(--il-space-3);
+}
+
+.visualFigure,
+.gauge {
+  display: grid;
+  gap: var(--il-space-2);
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.visualFigure figcaption,
+.gauge figcaption {
+  display: grid;
+  font-size: var(--il-font-size-sm);
+  gap: var(--il-space-1);
+  text-align: center;
+}
+
+.flowSvg,
+.vectorSvg,
+.gauge svg {
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+.flowBase {
+  stroke: var(--il-color-domain-hydraulic);
+  stroke-linecap: round;
+}
+
+.flowStopped {
+  stroke-dasharray: 10 8;
+}
+
+.flowRestricted {
+  stroke-dasharray: 18 5 5 5;
+}
+
+.flowArrow,
+.flowParticle {
+  fill: var(--il-color-domain-hydraulic);
+}
+
+.restrictionPattern,
+.stopMark {
+  stroke: var(--il-color-state-warning);
+  stroke-width: 4;
+}
+
+.flowLabel,
+.vectorLabel,
+.gaugeMin,
+.gaugeMax {
+  fill: var(--il-color-text-primary);
+  font-family: var(--il-font-family-sans);
+  font-size: var(--il-font-size-sm);
+}
+
+.vectorLine {
+  stroke: var(--il-color-brand-accent);
+  stroke-linecap: round;
+  stroke-width: 8;
+}
+
+.vectorArrow,
+.vectorOrigin {
+  fill: var(--il-color-brand-accent);
+}
+
+.selectedVisual {
+  outline: var(--il-focus-ring);
+  outline-offset: 2px;
+}
+
+.gauge {
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-card);
+  padding: var(--il-space-3);
+}
+
+.gaugeArc {
+  fill: none;
+  stroke: var(--il-color-border-strong);
+  stroke-linecap: round;
+  stroke-width: 12;
+}
+
+.gaugeNeedle {
+  stroke: var(--il-color-state-normal);
+  stroke-linecap: round;
+  stroke-width: 5;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+.gaugeNeedleWarning {
+  stroke: var(--il-color-state-warning);
+}
+
+.gaugeHub {
+  fill: var(--il-color-text-primary);
+}
+
+.instrumentWarning {
+  color: var(--il-color-state-warning);
+  font-weight: var(--il-font-weight-bold);
+}
+
+.digitalMeasurement {
+  border-left: 5px solid var(--il-color-state-info);
+  margin: 0;
+  padding-left: var(--il-space-3);
+}
+
+.digitalMeasurement dt {
+  color: var(--il-color-text-secondary);
+  font-size: var(--il-font-size-sm);
+  font-weight: var(--il-font-weight-bold);
+}
+
+.digitalMeasurement dd {
+  font-family: var(--il-font-family-mono);
+  font-size: var(--il-font-size-xl);
+  font-weight: var(--il-font-weight-heavy);
+  margin: var(--il-space-1) 0 0;
+}
+
+.measurementStatus {
+  color: var(--il-color-text-secondary);
+  display: block;
+  font-family: var(--il-font-family-sans);
+  font-size: var(--il-font-size-sm);
+  font-weight: var(--il-font-weight-regular);
+  margin-top: var(--il-space-1);
+}
+
+.selectionGroup,
+.segmentedControl {
+  border: 0;
+  display: grid;
+  gap: var(--il-space-2);
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+}
+
+.selectionGroup legend,
+.segmentedControl legend {
+  font-weight: var(--il-font-weight-bold);
+  margin-bottom: var(--il-space-2);
+}
+
+.selectionGroup label {
+  align-items: center;
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-control);
+  display: grid;
+  gap: var(--il-space-2);
+  grid-template-columns: auto minmax(0, 1fr);
+  min-height: var(--il-size-control-min);
+  padding: var(--il-space-2) var(--il-space-3);
+}
+
+.selectionGroup small {
+  color: var(--il-color-text-secondary);
+  grid-column: 2;
+}
+
+.segmentedControl > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--il-space-2);
+}
+
+.segmentedControl label {
+  cursor: pointer;
+  position: relative;
+}
+
+.segmentedControl input {
+  block-size: 1px;
+  clip-path: inset(50%);
+  inline-size: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.segmentedControl span {
+  align-items: center;
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-control);
+  display: inline-flex;
+  font-weight: var(--il-font-weight-bold);
+  min-height: var(--il-size-control-min);
+  padding: var(--il-space-2) var(--il-space-3);
+}
+
+.segmentedControl input:checked + span {
+  background: var(--il-color-text-primary);
+  color: var(--il-color-bg-surface);
+}
+
+.segmentedControl input:focus-visible + span {
+  outline: var(--il-focus-ring);
+  outline-offset: 2px;
+}
+
+.liveEquation {
+  display: grid;
+  gap: var(--il-space-3);
+}
+
+.liveEquation header {
+  display: grid;
+  gap: var(--il-space-2);
+}
+
+.liveEquation header code,
+.equationResult {
+  font-family: var(--il-font-family-mono);
+}
+
+.substitution,
+.capabilityList {
+  display: grid;
+  gap: var(--il-space-2);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  margin: 0;
+}
+
+.substitution div,
+.capabilityList div {
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-control);
+  padding: var(--il-space-2);
+}
+
+.substitution dt,
+.capabilityList dt {
+  color: var(--il-color-text-secondary);
+  font-size: var(--il-font-size-sm);
+  font-weight: var(--il-font-weight-bold);
+}
+
+.substitution dd,
+.capabilityList dd {
+  margin: var(--il-space-1) 0 0;
+  overflow-wrap: anywhere;
+}
+
+.symbolTable {
+  border-collapse: collapse;
+  margin-block: var(--il-space-3);
+  width: 100%;
+}
+
+.symbolTable th,
+.symbolTable td {
+  border: var(--il-border-subtle);
+  padding: var(--il-space-2);
+  text-align: left;
+}
+
+.equationId,
+.muted {
+  color: var(--il-color-text-secondary);
+  font-size: var(--il-font-size-sm);
+}
+
+.observation,
+.microTheory,
+.challenge,
+.referenceBlock {
+  display: grid;
+  gap: var(--il-space-3);
+}
+
+.linkedView {
+  display: grid;
+  gap: var(--il-space-2);
+  width: 100%;
+}
+
+.componentDiagram {
+  display: grid;
+  gap: var(--il-space-3);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  width: 100%;
+}
+
+.componentButton {
+  align-items: center;
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-strong);
+  border-radius: var(--il-radius-control);
+  color: var(--il-color-text-primary);
+  cursor: pointer;
+  display: grid;
+  font: inherit;
+  gap: var(--il-space-2);
+  justify-items: center;
+  min-height: 92px;
+  padding: var(--il-space-3);
+}
+
+.componentButton:focus-visible,
+.componentSelected {
+  outline: var(--il-focus-ring);
+  outline-offset: 2px;
+}
+
+.componentSelected {
+  border-color: var(--il-color-brand-accent);
+}
+
+.componentSymbol {
+  font-size: var(--il-font-size-2xl);
+}
+
+.application {
+  align-items: center;
+  display: grid;
+  gap: var(--il-space-4);
+  grid-template-columns: minmax(140px, 0.6fr) minmax(0, 1.4fr);
+}
+
+.applicationVisual {
+  align-items: center;
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-strong);
+  border-radius: var(--il-radius-card);
+  display: flex;
+  font-size: var(--il-font-size-2xl);
+  gap: var(--il-space-3);
+  justify-content: center;
+  min-height: 120px;
+}
+
+.preferenceGrid {
+  align-items: start;
+  display: grid;
+  gap: var(--il-space-4);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-bottom: var(--il-space-4);
+}
+
+@media (min-width: 1024px) {
+  .shell:has(.primaryControlsRegion) {
+    grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.8fr);
+  }
+
+  .shell:has(.primaryControlsRegion) .header {
+    grid-column: 1 / -1;
+  }
+
+  .shell:has(.primaryControlsRegion) .primaryControlsRegion {
+    border-bottom: 0;
+    border-right: var(--il-border-subtle);
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .shell:has(.primaryControlsRegion) .workbench {
+    grid-column: 2;
+    grid-row: 2;
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 820px) {
+  .workbench {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contextRegion {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .canvas {
+    aspect-ratio: auto;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 420px;
+  }
+}
+
+@media (max-width: 520px) {
+  .header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .application {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .header,
+  .playbackRegion,
+  .primaryControlsRegion,
+  .workbench,
+  .learningRegion {
+    padding: var(--il-space-3);
+  }
+
+  .shell:has(.primaryControlsRegion) .header {
+    order: 1;
+  }
+
+  .shell:has(.primaryControlsRegion) .workbench {
+    order: 2;
+  }
+
+  .shell:has(.primaryControlsRegion) .primaryControlsRegion {
+    order: 3;
+  }
+
+  .shell:has(.primaryControlsRegion) .learningRegion {
+    order: 4;
+  }
+
+  .primaryControlJump {
+    display: inline-flex;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flowParticle {
+    display: none;
+  }
+
+  .gaugeNeedle {
+    transition: none;
+  }
+}
+
+@media print {
+  .playbackRegion,
+  .selectionGroup,
+  .segmentedControl {
+    display: none;
+  }
+
+  .shell,
+  .panel,
+  .viewport {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+}

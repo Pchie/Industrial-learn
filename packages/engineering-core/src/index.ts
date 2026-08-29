@@ -60,9 +60,20 @@ export const engineeringEquationMetadata: Record<string, EngineeringEquationMeta
       "Only conversions declared in the unit-conversion table are supported.",
       "No conversion is applied silently."
     ],
-    sourceIds: ["SRC-SMART-PUMP-PLACEHOLDER-001"],
-    sourceReferences: [],
-    engineeringReviewStatus: "Source required"
+    sourceIds: ["SRC-NIST-SP330-2019"],
+    sourceReferences: [
+      {
+        sourceId: "SRC-NIST-SP330-2019",
+        section: "Table 7: SI prefixes",
+        pages: "23"
+      },
+      {
+        sourceId: "SRC-NIST-SP330-2019",
+        section: "Table 8: Non-SI units accepted for use with SI units",
+        pages: "25"
+      }
+    ],
+    engineeringReviewStatus: "Equation checked"
   },
   "EQ-FLUID-PRESSURE-001": {
     equationId: "EQ-FLUID-PRESSURE-001",
@@ -83,9 +94,14 @@ export const engineeringEquationMetadata: Record<string, EngineeringEquationMeta
       "Introductory static-pressure relationship only.",
       "Not a pressure-vessel or equipment-rating calculation."
     ],
-    sourceIds: ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
-    sourceReferences: [],
-    engineeringReviewStatus: "Source required"
+    sourceIds: ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+    sourceReferences: [
+      {
+        sourceId: "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+        section: "11.3 Pressure"
+      }
+    ],
+    engineeringReviewStatus: "Equation checked"
   },
   "EQ-FLUID-FORCE-PRESSURE-AREA-001": {
     equationId: "EQ-FLUID-FORCE-PRESSURE-AREA-001",
@@ -102,9 +118,249 @@ export const engineeringEquationMetadata: Record<string, EngineeringEquationMeta
       "Ideal training relationship only.",
       "Does not include cylinder friction, seal leakage, dynamics, or equipment ratings."
     ],
-    sourceIds: ["SRC-HYDRAULIC-CYLINDER-PLACEHOLDER-001"],
-    sourceReferences: [],
-    engineeringReviewStatus: "Source required"
+    sourceIds: ["SRC-PARKER-140H8-CYLINDER-2024"],
+    sourceReferences: [
+      {
+        sourceId: "SRC-PARKER-140H8-CYLINDER-2024",
+        section: "Theoretical Push and Pull Forces",
+        pages: "Catalog p. 26 (PDF p. 28)"
+      }
+    ],
+    engineeringReviewStatus: "Equation checked"
+  },
+  "EQ-HYD-PISTON-AREA-DIAMETER-001": {
+    equationId: "EQ-HYD-PISTON-AREA-DIAMETER-001",
+    expression: "A = pi * D^2 / 4",
+    symbols: [
+      { symbol: "A", name: "cap-end piston area", unit: "m^2" },
+      { symbol: "D", name: "piston diameter", unit: "m" }
+    ],
+    inputUnits: { D: "m" },
+    outputUnit: "m^2",
+    assumptions: [
+      "The cap-end piston face is circular.",
+      "Diameter is positive and supplied in metres.",
+      "The result is a geometric area, not a cylinder rating."
+    ],
+    validityLimits: [
+      "Cap-end full piston area only.",
+      "Does not calculate rod-side annular area, tolerances, deformation, or leakage."
+    ],
+    sourceIds: ["SRC-PARKER-140H8-CYLINDER-2024"],
+    sourceReferences: [
+      {
+        sourceId: "SRC-PARKER-140H8-CYLINDER-2024",
+        section: "Theoretical Push and Pull Forces",
+        pages: "Catalog p. 26 (PDF p. 28)"
+      }
+    ],
+    engineeringReviewStatus: "Equation checked"
+  },
+  "EQ-GEOMETRY-CIRCULAR-AREA-DIAMETER-001": {
+    equationId: "EQ-GEOMETRY-CIRCULAR-AREA-DIAMETER-001",
+    expression: "A = pi * D^2 / 4",
+    symbols: [
+      { symbol: "A", name: "circular cross-sectional area", unit: "m^2" },
+      { symbol: "D", name: "internal diameter", unit: "m" }
+    ],
+    inputUnits: { D: "m" },
+    outputUnit: "m^2",
+    assumptions: [
+      "The section is circular.",
+      "Diameter is positive and supplied in metres."
+    ],
+    validityLimits: [
+      "Geometric area only; no tolerance, deformation, or roughness model."
+    ],
+    sourceIds: ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"],
+    sourceReferences: [
+      {
+        sourceId: "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+        section: "12.1 Flow Rate and Its Relation to Velocity"
+      }
+    ],
+    engineeringReviewStatus: "Engineering review required"
+  },
+  "EQ-FLUID-VOLUMETRIC-FLOW-001": {
+    equationId: "EQ-FLUID-VOLUMETRIC-FLOW-001",
+    expression: "Q = V / t",
+    symbols: [
+      { symbol: "Q", name: "volumetric flow rate", unit: "m^3/s" },
+      { symbol: "V", name: "fluid volume", unit: "m^3" },
+      { symbol: "t", name: "elapsed time", unit: "s" }
+    ],
+    inputUnits: { V: "m^3", t: "s" },
+    outputUnit: "m^3/s",
+    assumptions: ["Volume passes the stated section during the stated interval."],
+    validityLimits: ["Elapsed time must be greater than zero."],
+    sourceIds: ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"],
+    sourceReferences: [
+      {
+        sourceId: "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+        section: "12.1 Flow Rate and Its Relation to Velocity"
+      }
+    ],
+    engineeringReviewStatus: "Engineering review required"
+  },
+  "EQ-FLUID-VELOCITY-FLOW-AREA-001": {
+    equationId: "EQ-FLUID-VELOCITY-FLOW-AREA-001",
+    expression: "v = Q / A",
+    symbols: [
+      { symbol: "v", name: "average fluid velocity", unit: "m/s" },
+      { symbol: "Q", name: "volumetric flow rate", unit: "m^3/s" },
+      { symbol: "A", name: "cross-sectional area", unit: "m^2" }
+    ],
+    inputUnits: { Q: "m^3/s", A: "m^2" },
+    outputUnit: "m/s",
+    assumptions: ["The velocity is the average across the stated section."],
+    validityLimits: ["Area must be greater than zero."],
+    sourceIds: ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"],
+    sourceReferences: [
+      {
+        sourceId: "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+        section: "12.1 Flow Rate and Its Relation to Velocity"
+      }
+    ],
+    engineeringReviewStatus: "Engineering review required"
+  },
+  "EQ-FLUID-CONTINUITY-INCOMPRESSIBLE-001": {
+    equationId: "EQ-FLUID-CONTINUITY-INCOMPRESSIBLE-001",
+    expression: "A1 * v1 = A2 * v2",
+    symbols: [
+      { symbol: "A1", name: "section 1 area", unit: "m^2" },
+      { symbol: "v1", name: "section 1 average velocity", unit: "m/s" },
+      { symbol: "A2", name: "section 2 area", unit: "m^2" },
+      { symbol: "v2", name: "section 2 average velocity", unit: "m/s" }
+    ],
+    inputUnits: { A1: "m^2", v1: "m/s", A2: "m^2" },
+    outputUnit: "m/s",
+    assumptions: [
+      "Flow is steady and incompressible.",
+      "There is no leakage between sections."
+    ],
+    validityLimits: ["Both cross-sectional areas must be greater than zero."],
+    sourceIds: ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"],
+    sourceReferences: [
+      {
+        sourceId: "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+        section: "12.1 Flow Rate and Its Relation to Velocity"
+      }
+    ],
+    engineeringReviewStatus: "Engineering review required"
+  },
+  "EQ-FLUID-BERNOULLI-TWO-POINT-001": {
+    equationId: "EQ-FLUID-BERNOULLI-TWO-POINT-001",
+    expression: "P1 + rho*v1^2/2 + rho*g*z1 = P2 + rho*v2^2/2 + rho*g*z2",
+    symbols: [
+      { symbol: "P", name: "absolute pressure", unit: "Pa" },
+      { symbol: "rho", name: "fluid density", unit: "kg/m^3" },
+      { symbol: "v", name: "average fluid velocity", unit: "m/s" },
+      { symbol: "g", name: "gravitational acceleration parameter", unit: "m/s^2" },
+      { symbol: "z", name: "elevation above the selected reference", unit: "m" }
+    ],
+    inputUnits: {
+      P1: "Pa",
+      rho: "kg/m^3",
+      v1: "m/s",
+      v2: "m/s",
+      g: "m/s^2",
+      z1: "m",
+      z2: "m"
+    },
+    outputUnit: "Pa",
+    assumptions: [
+      "Flow is steady, incompressible, and frictionless along the modelled path.",
+      "No pump work, turbine work, heat transfer, or loss term is included."
+    ],
+    validityLimits: [
+      "The calculated absolute pressure must remain greater than zero.",
+      "The model does not predict turbulence, cavitation, or component ratings."
+    ],
+    sourceIds: ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022", "SRC-NASA-GLENN-BERNOULLI"],
+    sourceReferences: [
+      {
+        sourceId: "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+        section: "12.2 Bernoulli's Equation"
+      },
+      {
+        sourceId: "SRC-NASA-GLENN-BERNOULLI",
+        section: "Assumptions and limitations"
+      }
+    ],
+    engineeringReviewStatus: "Engineering review required"
+  },
+  "EQ-FLUID-PRESSURE-HEAD-001": {
+    equationId: "EQ-FLUID-PRESSURE-HEAD-001",
+    expression: "h_p = P / (rho * g)",
+    symbols: [
+      { symbol: "h_p", name: "pressure head", unit: "m" },
+      { symbol: "P", name: "absolute pressure", unit: "Pa" },
+      { symbol: "rho", name: "fluid density", unit: "kg/m^3" },
+      { symbol: "g", name: "gravitational acceleration parameter", unit: "m/s^2" }
+    ],
+    inputUnits: { P: "Pa", rho: "kg/m^3", g: "m/s^2" },
+    outputUnit: "m",
+    assumptions: [
+      "Density and gravitational acceleration are positive model parameters."
+    ],
+    validityLimits: [
+      "Head is referenced to the modelled fluid and selected gravitational parameter."
+    ],
+    sourceIds: ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"],
+    sourceReferences: [
+      {
+        sourceId: "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+        section: "12.2 Bernoulli's Equation"
+      }
+    ],
+    engineeringReviewStatus: "Engineering review required"
+  },
+  "EQ-FLUID-VELOCITY-HEAD-001": {
+    equationId: "EQ-FLUID-VELOCITY-HEAD-001",
+    expression: "h_v = v^2 / (2 * g)",
+    symbols: [
+      { symbol: "h_v", name: "velocity head", unit: "m" },
+      { symbol: "v", name: "average fluid velocity", unit: "m/s" },
+      { symbol: "g", name: "gravitational acceleration parameter", unit: "m/s^2" }
+    ],
+    inputUnits: { v: "m/s", g: "m/s^2" },
+    outputUnit: "m",
+    assumptions: ["Velocity is the section-average model velocity."],
+    validityLimits: ["Gravitational acceleration must be greater than zero."],
+    sourceIds: ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"],
+    sourceReferences: [
+      {
+        sourceId: "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+        section: "12.2 Bernoulli's Equation"
+      }
+    ],
+    engineeringReviewStatus: "Engineering review required"
+  },
+  "EQ-FLUID-TOTAL-HEAD-001": {
+    equationId: "EQ-FLUID-TOTAL-HEAD-001",
+    expression: "H = P/(rho*g) + v^2/(2*g) + z",
+    symbols: [
+      { symbol: "H", name: "total ideal head", unit: "m" },
+      { symbol: "P", name: "absolute pressure", unit: "Pa" },
+      { symbol: "rho", name: "fluid density", unit: "kg/m^3" },
+      { symbol: "v", name: "average fluid velocity", unit: "m/s" },
+      { symbol: "g", name: "gravitational acceleration parameter", unit: "m/s^2" },
+      { symbol: "z", name: "elevation above the selected reference", unit: "m" }
+    ],
+    inputUnits: { P: "Pa", rho: "kg/m^3", v: "m/s", g: "m/s^2", z: "m" },
+    outputUnit: "m",
+    assumptions: ["Bernoulli model assumptions apply to the stated point."],
+    validityLimits: [
+      "No loss, machine-work, heat-transfer, or compressibility term is included."
+    ],
+    sourceIds: ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022", "SRC-NASA-GLENN-BERNOULLI"],
+    sourceReferences: [
+      {
+        sourceId: "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+        section: "12.2 Bernoulli's Equation"
+      }
+    ],
+    engineeringReviewStatus: "Engineering review required"
   }
 };
 
@@ -124,9 +380,11 @@ type ValidResultInput<Unit extends string> = {
 
 type Quantity =
   | "force"
+  | "length"
   | "area"
   | "pressure"
   | "volume"
+  | "volumetricFlowRate"
   | "time"
   | "mass"
   | "massFlowRate"
@@ -147,6 +405,9 @@ const conversionFactors: Record<
   force: {
     kN: { unit: "N", factor: 1_000 }
   },
+  length: {
+    mm: { unit: "m", factor: 0.001 }
+  },
   area: {
     "cm^2": { unit: "m^2", factor: 0.0001 },
     "mm^2": { unit: "m^2", factor: 0.000001 }
@@ -157,6 +418,10 @@ const conversionFactors: Record<
   },
   volume: {
     L: { unit: "m^3", factor: 0.001 }
+  },
+  volumetricFlowRate: {
+    "L/s": { unit: "m^3/s", factor: 0.001 },
+    "L/min": { unit: "m^3/s", factor: 0.001 / 60 }
   },
   time: {
     min: { unit: "s", factor: 60 }
@@ -227,6 +492,49 @@ export function convertToSi<Unit extends string>({
   });
 }
 
+export function convertFromSi<Unit extends string>({
+  quantity,
+  value,
+  fromUnit,
+  toUnit
+}: {
+  quantity: Quantity;
+  value: number;
+  fromUnit: string;
+  toUnit: Unit;
+}): EngineeringCalculationResult<Unit> {
+  const errors = validateFinite({ value, unit: fromUnit }, "conversion input");
+  const conversion = conversionFactors[quantity][toUnit];
+
+  if (!conversion || conversion.unit !== fromUnit) {
+    errors.push(`Unsupported conversion from ${fromUnit} to ${toUnit} for ${quantity}.`);
+  }
+
+  if (errors.length > 0 || !conversion) {
+    return invalidResult({
+      unit: toUnit,
+      inputValues: { quantity, value: { value, unit: fromUnit }, targetUnit: toUnit },
+      equationId: "EQ-SI-CONVERSION-EXPLICIT-001",
+      errors,
+      assumptions: [
+        "Display conversions are explicit and are never applied inside governing calculations."
+      ]
+    });
+  }
+
+  return validResult({
+    calculatedValue: value / conversion.factor,
+    unit: toUnit,
+    inputValues: { quantity, value: { value, unit: fromUnit }, targetUnit: toUnit },
+    equationId: "EQ-SI-CONVERSION-EXPLICIT-001",
+    calculationSteps: [
+      `Confirm requested ${quantity} display conversion from ${fromUnit} to ${toUnit}.`,
+      `Divide ${value} ${fromUnit} by ${conversion.factor}.`
+    ],
+    assumptions: ["The caller explicitly requested this display conversion."]
+  });
+}
+
 export type PressureFromForceAreaInput = {
   force: UnitValue<"N">;
   area: UnitValue<"m^2">;
@@ -277,6 +585,52 @@ export function forceFromPressureAndArea({
     assumptions: ["Pressure is uniform across the stated area.", "Inputs are SI values."],
     steps: [`F = p * A`, `F = ${pressure.value} * ${area.value}`],
     compute: () => pressure.value * area.value
+  });
+}
+
+export type PistonAreaFromDiameterInput = {
+  diameter: UnitValue<"m">;
+};
+
+export function pistonAreaFromDiameter({
+  diameter
+}: PistonAreaFromDiameterInput): EngineeringCalculationResult<"m^2"> {
+  return calculate({
+    unit: "m^2",
+    inputValues: { diameter },
+    equationId: "EQ-HYD-PISTON-AREA-DIAMETER-001",
+    errors: [
+      ...validateUnit(diameter, "m", "diameter"),
+      ...validateGreaterThanZero(diameter.value, "diameter")
+    ],
+    assumptions: [
+      "The cap-end piston face is circular.",
+      "Diameter is supplied in metres.",
+      "The result is a geometric area, not an equipment rating."
+    ],
+    steps: ["A = pi * D^2 / 4", `A = pi * (${diameter.value})^2 / 4`],
+    compute: () => (Math.PI * diameter.value ** 2) / 4
+  });
+}
+
+export type CircularAreaFromDiameterInput = {
+  diameter: UnitValue<"m">;
+};
+
+export function circularAreaFromDiameter({
+  diameter
+}: CircularAreaFromDiameterInput): EngineeringCalculationResult<"m^2"> {
+  return calculate({
+    unit: "m^2",
+    inputValues: { diameter },
+    equationId: "EQ-GEOMETRY-CIRCULAR-AREA-DIAMETER-001",
+    errors: [
+      ...validateUnit(diameter, "m", "diameter"),
+      ...validateGreaterThanZero(diameter.value, "diameter")
+    ],
+    assumptions: ["The section is circular.", "Diameter is supplied in metres."],
+    steps: ["A = pi * D^2 / 4", `A = pi * (${diameter.value})^2 / 4`],
+    compute: () => (Math.PI * diameter.value ** 2) / 4
   });
 }
 
@@ -365,6 +719,208 @@ export function fluidVelocity({
     assumptions: ["Flow rate is uniformly distributed across the stated area."],
     steps: [`v = Q / A`, `v = ${flowRate.value} / ${area.value}`],
     compute: () => flowRate.value / area.value
+  });
+}
+
+export type BernoulliPressureAtPoint2Input = {
+  pressure1: UnitValue<"Pa">;
+  density: UnitValue<"kg/m^3">;
+  velocity1: UnitValue<"m/s">;
+  velocity2: UnitValue<"m/s">;
+  elevation1: UnitValue<"m">;
+  elevation2: UnitValue<"m">;
+  gravitationalAcceleration: UnitValue<"m/s^2">;
+};
+
+export function bernoulliPressureAtPoint2({
+  pressure1,
+  density,
+  velocity1,
+  velocity2,
+  elevation1,
+  elevation2,
+  gravitationalAcceleration
+}: BernoulliPressureAtPoint2Input): EngineeringCalculationResult<"Pa"> {
+  const assumptions = [
+    "Flow is steady, incompressible, and frictionless along the modelled path.",
+    "No pump work, turbine work, heat transfer, or loss term is included.",
+    "Pressure values are absolute and inputs use SI units."
+  ];
+  const inputValues = {
+    pressure1,
+    density,
+    velocity1,
+    velocity2,
+    elevation1,
+    elevation2,
+    gravitationalAcceleration
+  };
+  const result = calculate({
+    unit: "Pa",
+    inputValues,
+    equationId: "EQ-FLUID-BERNOULLI-TWO-POINT-001",
+    errors: [
+      ...validateUnit(pressure1, "Pa", "pressure1"),
+      ...validateGreaterThanZero(pressure1.value, "pressure1"),
+      ...validateUnit(density, "kg/m^3", "density"),
+      ...validateGreaterThanZero(density.value, "density"),
+      ...validateUnit(velocity1, "m/s", "velocity1"),
+      ...validateNonNegative(velocity1.value, "velocity1"),
+      ...validateUnit(velocity2, "m/s", "velocity2"),
+      ...validateNonNegative(velocity2.value, "velocity2"),
+      ...validateUnit(elevation1, "m", "elevation1"),
+      ...validateUnit(elevation2, "m", "elevation2"),
+      ...validateUnit(gravitationalAcceleration, "m/s^2", "gravitationalAcceleration"),
+      ...validateGreaterThanZero(
+        gravitationalAcceleration.value,
+        "gravitationalAcceleration"
+      )
+    ],
+    assumptions,
+    steps: [
+      "P2 = P1 + rho*(v1^2 - v2^2)/2 + rho*g*(z1 - z2)",
+      `P2 = ${pressure1.value} + ${density.value} * (${velocity1.value}^2 - ${velocity2.value}^2) / 2 + ${density.value} * ${gravitationalAcceleration.value} * (${elevation1.value} - ${elevation2.value})`
+    ],
+    compute: () =>
+      pressure1.value +
+      (density.value * (velocity1.value ** 2 - velocity2.value ** 2)) / 2 +
+      density.value *
+        gravitationalAcceleration.value *
+        (elevation1.value - elevation2.value)
+  });
+
+  if (result.calculatedValue !== null && result.calculatedValue <= 0) {
+    return invalidResult({
+      unit: "Pa",
+      inputValues,
+      equationId: "EQ-FLUID-BERNOULLI-TWO-POINT-001",
+      errors: [
+        "calculated absolute pressure at point 2 must be greater than zero within this model."
+      ],
+      assumptions,
+      warnings: [
+        "The selected state is outside this ideal educational model; cavitation is not predicted."
+      ]
+    });
+  }
+
+  return result;
+}
+
+export type PressureHeadInput = {
+  pressure: UnitValue<"Pa">;
+  density: UnitValue<"kg/m^3">;
+  gravitationalAcceleration: UnitValue<"m/s^2">;
+};
+
+export function pressureHead({
+  pressure,
+  density,
+  gravitationalAcceleration
+}: PressureHeadInput): EngineeringCalculationResult<"m"> {
+  return calculate({
+    unit: "m",
+    inputValues: { pressure, density, gravitationalAcceleration },
+    equationId: "EQ-FLUID-PRESSURE-HEAD-001",
+    errors: [
+      ...validateUnit(pressure, "Pa", "pressure"),
+      ...validateGreaterThanZero(pressure.value, "pressure"),
+      ...validateUnit(density, "kg/m^3", "density"),
+      ...validateGreaterThanZero(density.value, "density"),
+      ...validateUnit(gravitationalAcceleration, "m/s^2", "gravitationalAcceleration"),
+      ...validateGreaterThanZero(
+        gravitationalAcceleration.value,
+        "gravitationalAcceleration"
+      )
+    ],
+    assumptions: ["Pressure is absolute and all inputs use SI units."],
+    steps: [
+      "h_p = P / (rho * g)",
+      `h_p = ${pressure.value} / (${density.value} * ${gravitationalAcceleration.value})`
+    ],
+    compute: () => pressure.value / (density.value * gravitationalAcceleration.value)
+  });
+}
+
+export type VelocityHeadInput = {
+  velocity: UnitValue<"m/s">;
+  gravitationalAcceleration: UnitValue<"m/s^2">;
+};
+
+export function velocityHead({
+  velocity,
+  gravitationalAcceleration
+}: VelocityHeadInput): EngineeringCalculationResult<"m"> {
+  return calculate({
+    unit: "m",
+    inputValues: { velocity, gravitationalAcceleration },
+    equationId: "EQ-FLUID-VELOCITY-HEAD-001",
+    errors: [
+      ...validateUnit(velocity, "m/s", "velocity"),
+      ...validateNonNegative(velocity.value, "velocity"),
+      ...validateUnit(gravitationalAcceleration, "m/s^2", "gravitationalAcceleration"),
+      ...validateGreaterThanZero(
+        gravitationalAcceleration.value,
+        "gravitationalAcceleration"
+      )
+    ],
+    assumptions: ["Velocity is the section-average model velocity."],
+    steps: [
+      "h_v = v^2 / (2 * g)",
+      `h_v = ${velocity.value}^2 / (2 * ${gravitationalAcceleration.value})`
+    ],
+    compute: () => velocity.value ** 2 / (2 * gravitationalAcceleration.value)
+  });
+}
+
+export type TotalBernoulliHeadInput = PressureHeadInput & {
+  velocity: UnitValue<"m/s">;
+  elevation: UnitValue<"m">;
+};
+
+export function totalBernoulliHead({
+  pressure,
+  density,
+  velocity,
+  elevation,
+  gravitationalAcceleration
+}: TotalBernoulliHeadInput): EngineeringCalculationResult<"m"> {
+  return calculate({
+    unit: "m",
+    inputValues: {
+      pressure,
+      density,
+      velocity,
+      elevation,
+      gravitationalAcceleration
+    },
+    equationId: "EQ-FLUID-TOTAL-HEAD-001",
+    errors: [
+      ...validateUnit(pressure, "Pa", "pressure"),
+      ...validateGreaterThanZero(pressure.value, "pressure"),
+      ...validateUnit(density, "kg/m^3", "density"),
+      ...validateGreaterThanZero(density.value, "density"),
+      ...validateUnit(velocity, "m/s", "velocity"),
+      ...validateNonNegative(velocity.value, "velocity"),
+      ...validateUnit(elevation, "m", "elevation"),
+      ...validateUnit(gravitationalAcceleration, "m/s^2", "gravitationalAcceleration"),
+      ...validateGreaterThanZero(
+        gravitationalAcceleration.value,
+        "gravitationalAcceleration"
+      )
+    ],
+    assumptions: [
+      "Bernoulli model assumptions apply at the stated point.",
+      "Elevation uses the selected reference datum."
+    ],
+    steps: [
+      "H = P/(rho*g) + v^2/(2*g) + z",
+      `H = ${pressure.value}/(${density.value}*${gravitationalAcceleration.value}) + ${velocity.value}^2/(2*${gravitationalAcceleration.value}) + ${elevation.value}`
+    ],
+    compute: () =>
+      pressure.value / (density.value * gravitationalAcceleration.value) +
+      velocity.value ** 2 / (2 * gravitationalAcceleration.value) +
+      elevation.value
   });
 }
 

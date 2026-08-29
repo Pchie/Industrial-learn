@@ -1,0 +1,772 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "LES-FLUID-BERNOULLI-VISUAL-001",
+  "slug": "bernoulli-flow-lab",
+  "title": "Bernoulli Flow Lab",
+  "description": "A visual-first investigation of how pipe area, average velocity, pressure, and elevation terms relate in an ideal horizontal two-section flow model.",
+  "experienceModel": "visual-v2",
+  "visualStandardVersion": "1.0.0",
+  "lessonType": "phenomenon",
+  "visualLessonType": "phenomenon",
+  "publicationStatus": "internal",
+  "reviewStatus": "Engineering review required",
+  "version": "1.0.0",
+  "estimatedCompletionTime": "35 minutes",
+  "estimatedInteractionTime": "20 minutes",
+  "difficulty": "Intermediate",
+  "prerequisites": ["LES-FLUID-PRESSURE-001"],
+  "knowledgeFileIds": ["KF-FLUID-BERNOULLI-001"],
+  "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022", "SRC-NASA-GLENN-BERNOULLI"],
+  "simulationIds": ["SIM-FLUID-BERNOULLI-FLOW-001"],
+  "equationIds": [
+    "EQ-GEOMETRY-CIRCULAR-AREA-DIAMETER-001",
+    "EQ-FLUID-VELOCITY-FLOW-AREA-001",
+    "EQ-FLUID-CONTINUITY-INCOMPRESSIBLE-001",
+    "EQ-FLUID-BERNOULLI-TWO-POINT-001",
+    "EQ-FLUID-PRESSURE-HEAD-001",
+    "EQ-FLUID-VELOCITY-HEAD-001",
+    "EQ-FLUID-TOTAL-HEAD-001"
+  ],
+  "learningOutcomes": [
+    "Predict how reducing a circular pipe section changes average velocity at fixed volumetric flow rate.",
+    "Relate pressure, average velocity, and elevation terms using the ideal two-point Bernoulli equation.",
+    "Read pressure and velocity measurements at two linked points in a horizontal contraction.",
+    "State why the ideal model does not represent real losses, cavitation, transients, or equipment ratings."
+  ],
+  "relatedApplications": ["Venturi measurement", "Pipe contraction", "Nozzle concept"],
+  "relatedAssessmentIds": [],
+  "workedExampleIds": ["WE-FLUID-BERNOULLI-001"],
+  "faultScenarioIds": [],
+  "safetyWarningIds": ["SW-FLUID-BERNOULLI-001"],
+  "quizIds": [],
+  "projectIds": [],
+  "visualMetadata": {
+    "firstScreen": {
+      "purpose": "Change flow rate and section 2 diameter, then compare velocity and pressure at two points.",
+      "primaryVisualBlockId": "VIS-FLUID-BERNOULLI-HERO-001",
+      "primaryControlIds": ["flowRateLps", "outletDiameterMm"]
+    },
+    "progression": ["see", "play", "calculate", "challenge", "apply", "check"],
+    "inputs": [
+      {
+        "id": "flowRateLps",
+        "label": "Volumetric flow rate",
+        "quantity": "volumetric flow rate",
+        "unit": "L/s",
+        "internalUnit": "m^3/s",
+        "default": 3,
+        "minimum": 1,
+        "maximum": 6,
+        "step": 0.1,
+        "validation": "Finite values are constrained to the educational interaction range before explicit SI conversion.",
+        "modelValidityRange": { "minimum": 1, "maximum": 6 },
+        "accessibilityLabel": "Volumetric flow rate in litres per second",
+        "educationalDescription": "Controls one steady flow rate through both sections."
+      },
+      {
+        "id": "outletDiameterMm",
+        "label": "Section 2 diameter",
+        "quantity": "length",
+        "unit": "mm",
+        "internalUnit": "m",
+        "default": 30,
+        "minimum": 20,
+        "maximum": 60,
+        "step": 1,
+        "validation": "Finite values are constrained to the educational interaction range before explicit SI conversion.",
+        "modelValidityRange": { "minimum": 20, "maximum": 60 },
+        "accessibilityLabel": "Section 2 internal diameter in millimetres",
+        "educationalDescription": "Changes circular section 2 area while section 1 remains fixed at 60 mm."
+      }
+    ],
+    "outputs": [
+      {
+        "id": "velocity1",
+        "label": "Section 1 average velocity",
+        "quantity": "velocity",
+        "unit": "m/s",
+        "internalUnit": "m/s",
+        "interpretation": "Average velocity at the fixed 60 mm inlet section.",
+        "validityState": "valid",
+        "measurementSource": "simulation state from engineering-core"
+      },
+      {
+        "id": "velocity2",
+        "label": "Section 2 average velocity",
+        "quantity": "velocity",
+        "unit": "m/s",
+        "internalUnit": "m/s",
+        "interpretation": "Average velocity at the adjustable outlet section.",
+        "validityState": "valid",
+        "measurementSource": "simulation state from engineering-core"
+      },
+      {
+        "id": "pressure2KPa",
+        "label": "Section 2 absolute pressure",
+        "quantity": "pressure",
+        "unit": "kPa",
+        "internalUnit": "Pa",
+        "interpretation": "Ideal downstream absolute pressure for the declared model.",
+        "validityState": "warning",
+        "warning": "Ideal model only; losses and cavitation are not predicted.",
+        "measurementSource": "simulation state from engineering-core"
+      }
+    ]
+  },
+  "requiredSections": [
+    "lessonHeader",
+    "estimatedCompletionTime",
+    "difficulty",
+    "prerequisites",
+    "learningOutcomes",
+    "whyTopicMatters",
+    "keyTerminology",
+    "visualExplanation",
+    "theory",
+    "equations",
+    "workedExamples",
+    "interactiveActivity",
+    "faultFindingExercise",
+    "safetyConsiderations",
+    "knowledgeCheck",
+    "summary",
+    "sources",
+    "nextRecommendedLesson"
+  ],
+  "sections": {
+    "lessonHeader": {
+      "title": "Lesson header",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-HEADER-001",
+          "type": "paragraph",
+          "text": "This internal visual pilot models ideal horizontal flow and remains Engineering review required.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+            "SRC-NASA-GLENN-BERNOULLI"
+          ]
+        }
+      ]
+    },
+    "estimatedCompletionTime": {
+      "title": "Estimated completion time",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-TIME-001",
+          "type": "paragraph",
+          "text": "Allow about 20 minutes for interaction and 15 minutes for the check and optional Deep Dive."
+        }
+      ]
+    },
+    "difficulty": {
+      "title": "Difficulty",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-DIFFICULTY-001",
+          "type": "paragraph",
+          "text": "Intermediate: requires pressure, SI units, circular area, and basic algebra."
+        }
+      ]
+    },
+    "prerequisites": {
+      "title": "Prerequisites",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-PREREQ-001",
+          "type": "paragraph",
+          "text": "Complete the basic fluid-pressure lesson and review explicit SI conversion first."
+        }
+      ]
+    },
+    "learningOutcomes": {
+      "title": "Learning outcomes",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-OUTCOMES-001",
+          "type": "paragraph",
+          "text": "Predict and calculate how area, average velocity, and ideal static pressure change between two horizontal pipe sections, then state the model assumptions.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+            "SRC-NASA-GLENN-BERNOULLI"
+          ]
+        }
+      ]
+    },
+    "whyTopicMatters": {
+      "title": "Why this topic matters",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-WHY-001",
+          "type": "paragraph",
+          "text": "Area changes can produce important velocity and pressure changes, but the ideal relationship must be separated from real loss and equipment behavior.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+            "SRC-NASA-GLENN-BERNOULLI"
+          ]
+        }
+      ]
+    },
+    "keyTerminology": {
+      "title": "Key terminology",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-TERM-001",
+          "type": "definition",
+          "term": "Total ideal head",
+          "definition": "The pressure, velocity, and elevation terms expressed as equivalent metres for the declared ideal fluid model.",
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"]
+        }
+      ]
+    },
+    "visualExplanation": {
+      "title": "Visual explanation",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-VISUAL-001",
+          "type": "paragraph",
+          "text": "Two linked measurement points show the same volumetric flow rate while area, average velocity, and ideal pressure redistribute across the contraction.",
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"]
+        }
+      ]
+    },
+    "theory": {
+      "title": "Theory",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-THEORY-001",
+          "type": "paragraph",
+          "text": "Continuity connects area and average velocity. Bernoulli's equation then connects pressure, velocity, and elevation for the stated ideal conditions. Detailed derivation is optional in Deep Dive.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+            "SRC-NASA-GLENN-BERNOULLI"
+          ]
+        }
+      ]
+    },
+    "equations": {
+      "title": "Equations",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-EQ-CONTINUITY-001",
+          "type": "equation",
+          "name": "Incompressible continuity",
+          "expression": "A1 v1 = A2 v2",
+          "symbols": [
+            { "symbol": "A1", "name": "section 1 area", "unit": "m^2" },
+            { "symbol": "v1", "name": "section 1 average velocity", "unit": "m/s" },
+            { "symbol": "A2", "name": "section 2 area", "unit": "m^2" },
+            { "symbol": "v2", "name": "section 2 average velocity", "unit": "m/s" }
+          ],
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"]
+        },
+        {
+          "id": "BLK-FLUID-BERNOULLI-EQ-001",
+          "type": "equation",
+          "name": "Two-point Bernoulli equation",
+          "expression": "P1 + rho v1^2/2 + rho g z1 = P2 + rho v2^2/2 + rho g z2",
+          "symbols": [
+            { "symbol": "P", "name": "absolute pressure", "unit": "Pa" },
+            { "symbol": "rho", "name": "fluid density", "unit": "kg/m^3" },
+            { "symbol": "v", "name": "average velocity", "unit": "m/s" },
+            {
+              "symbol": "g",
+              "name": "gravitational acceleration parameter",
+              "unit": "m/s^2"
+            },
+            {
+              "symbol": "z",
+              "name": "elevation above the selected reference",
+              "unit": "m"
+            }
+          ],
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+            "SRC-NASA-GLENN-BERNOULLI"
+          ]
+        }
+      ]
+    },
+    "workedExamples": {
+      "title": "Worked example",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-WORKED-001",
+          "type": "workedCalculation",
+          "title": "Default horizontal contraction",
+          "given": [
+            "Q = 3 L/s",
+            "D1 = 60 mm",
+            "D2 = 30 mm",
+            "P1 = 250 kPa absolute",
+            "rho = 1000 kg/m^3",
+            "z1 = z2 = 0 m"
+          ],
+          "steps": [
+            {
+              "label": "Convert inputs",
+              "expression": "3 L/s = 0.003 m^3/s; 60 mm = 0.060 m; 30 mm = 0.030 m",
+              "explanation": "Convert display inputs explicitly to SI before calculation."
+            },
+            {
+              "label": "Calculate areas and velocities",
+              "expression": "A = pi D^2/4; v = Q/A",
+              "explanation": "The smaller second area produces the greater section-average velocity."
+            },
+            {
+              "label": "Calculate downstream pressure",
+              "expression": "P2 = P1 + rho(v1^2 - v2^2)/2",
+              "explanation": "The elevation terms cancel because the model is horizontal."
+            }
+          ],
+          "result": "At the default state, section 2 has greater average velocity and lower ideal absolute pressure than section 1.",
+          "interpretation": "This result excludes real losses and does not establish equipment design sufficiency.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+            "SRC-NASA-GLENN-BERNOULLI"
+          ]
+        }
+      ]
+    },
+    "interactiveActivity": {
+      "title": "Interactive activity",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-ACTIVITY-001",
+          "type": "paragraph",
+          "text": "Change flow rate and section 2 diameter, compare both measurement points, then complete the velocity target and pressure-prediction challenges."
+        }
+      ]
+    },
+    "faultFindingExercise": {
+      "title": "Fault finding",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-FAULT-DEFERRED-001",
+          "type": "paragraph",
+          "text": "Fault diagnosis is deferred because this pilot contains no reviewed loss, blockage, leak, sensor, or cavitation fault model."
+        }
+      ]
+    },
+    "safetyConsiderations": {
+      "title": "Safety considerations",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-SAFETY-001",
+          "type": "warning",
+          "severity": "warning",
+          "title": "Ideal educational model only",
+          "text": "The lab omits losses, transients, cavitation, structural limits, and equipment ratings. Do not use it to authorise real system operation or design.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+            "SRC-NASA-GLENN-BERNOULLI"
+          ]
+        }
+      ]
+    },
+    "knowledgeCheck": {
+      "title": "Knowledge check",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-CHECK-INTRO-001",
+          "type": "paragraph",
+          "text": "Complete five concise questions after the visual experience. This pilot does not add a new graded assessment."
+        }
+      ]
+    },
+    "summary": {
+      "title": "Summary",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-SUMMARY-001",
+          "type": "paragraph",
+          "text": "At fixed incompressible flow rate, a smaller area produces greater average velocity. In the ideal horizontal Bernoulli model, that velocity increase is accompanied by lower static pressure while total ideal head is conserved.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+            "SRC-NASA-GLENN-BERNOULLI"
+          ]
+        }
+      ]
+    },
+    "sources": {
+      "title": "Sources",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-SOURCE-001",
+          "type": "sourceCitation",
+          "sourceId": "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+          "note": "Supports volumetric flow rate, continuity, Bernoulli terms, and the ideal pressure-velocity relationship."
+        },
+        {
+          "id": "BLK-FLUID-BERNOULLI-SOURCE-002",
+          "type": "sourceCitation",
+          "sourceId": "SRC-NASA-GLENN-BERNOULLI",
+          "note": "Supports the stated Bernoulli model restrictions."
+        }
+      ]
+    },
+    "nextRecommendedLesson": {
+      "title": "Next recommended lesson",
+      "blocks": [
+        {
+          "id": "BLK-FLUID-BERNOULLI-NEXT-001",
+          "type": "paragraph",
+          "text": "Continue to reviewed pipe-loss fundamentals before applying the energy equation to real pipe systems."
+        }
+      ]
+    }
+  },
+  "experienceSequence": [
+    {
+      "stage": "heroExperience",
+      "title": "See the flow state",
+      "blocks": [
+        {
+          "id": "VIS-FLUID-BERNOULLI-HERO-001",
+          "type": "heroSimulation",
+          "title": "Bernoulli Flow Lab",
+          "description": "A horizontal contraction links flow rate and section diameter to area, average velocity, absolute pressure, and ideal head at two points.",
+          "simulationId": "SIM-FLUID-BERNOULLI-FLOW-001",
+          "mode": "learn",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+            "SRC-NASA-GLENN-BERNOULLI"
+          ],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Interactive ideal flow through a horizontal pipe contraction",
+            "textAlternative": "Two pipe sections have linked pressure points and velocity arrows. Text reports each area, average velocity, absolute pressure, and head term.",
+            "keyboardInstructions": "Use the labelled sliders or numeric inputs, select either measurement point, and switch between cutaway and schematic views with the keyboard.",
+            "reducedMotionFallback": "Static direction arrows and numeric state replace moving flow indicators."
+          }
+        }
+      ]
+    },
+    {
+      "stage": "observe",
+      "title": "Observe the relationships",
+      "blocks": [
+        {
+          "id": "VIS-FLUID-BERNOULLI-OBSERVE-001",
+          "type": "observationQuestion",
+          "title": "Observe area and velocity",
+          "description": "Compare average velocity while changing only section 2 diameter.",
+          "prompt": "What happens to section 2 average velocity when its diameter decreases at fixed flow rate?",
+          "hint": "Compare the circular area and velocity readings.",
+          "explanation": "A smaller diameter produces a smaller area, so the same incompressible flow rate requires greater average velocity.",
+          "graded": false,
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Non-graded diameter and velocity observation",
+            "textAlternative": "The prompt and explanation are available as text.",
+            "keyboardInstructions": "Open the hint or explanation with Enter or Space.",
+            "reducedMotionFallback": "Use the numeric area and velocity readings."
+          }
+        },
+        {
+          "id": "VIS-FLUID-BERNOULLI-OBSERVE-002",
+          "type": "observationQuestion",
+          "title": "Observe velocity and pressure",
+          "description": "Compare ideal pressure while the section 2 velocity changes.",
+          "prompt": "In this horizontal ideal model, what happens to section 2 static pressure when section 2 velocity increases?",
+          "hint": "Compare both pressure gauges before and after increasing flow or reducing diameter.",
+          "explanation": "With equal elevation and no losses or machine work, greater section 2 velocity corresponds to lower section 2 static pressure.",
+          "graded": false,
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+            "SRC-NASA-GLENN-BERNOULLI"
+          ],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Non-graded velocity and pressure observation",
+            "textAlternative": "The prompt and explanation are available as text.",
+            "keyboardInstructions": "Open the hint or explanation with Enter or Space.",
+            "reducedMotionFallback": "Use the numeric pressure and velocity readings."
+          }
+        }
+      ]
+    },
+    {
+      "stage": "microTheory",
+      "title": "Explain the ideal relationship",
+      "blocks": [
+        {
+          "id": "VIS-FLUID-BERNOULLI-MICRO-001",
+          "type": "microTheory",
+          "title": "Area redistributes velocity and pressure",
+          "description": "A concise explanation connects continuity to Bernoulli without preceding the interaction.",
+          "principle": "For steady incompressible flow, the same volumetric flow rate passes both sections. A smaller area therefore increases average velocity; under this horizontal frictionless model, static pressure decreases as velocity increases.",
+          "expandedExplanation": "Continuity gives the section velocities. The ideal Bernoulli equation then balances pressure, velocity, and elevation terms between the selected points.",
+          "safetyInformation": "The relationship does not include losses, cavitation, transients, or equipment ratings.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+            "SRC-NASA-GLENN-BERNOULLI"
+          ],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Continuity and Bernoulli micro theory",
+            "textAlternative": "Concise text explains area, velocity, pressure, and assumptions.",
+            "keyboardInstructions": "Open the additional explanation with Enter or Space.",
+            "reducedMotionFallback": "The theory is entirely text based."
+          }
+        }
+      ]
+    },
+    {
+      "stage": "liveEquation",
+      "title": "Calculate the current state",
+      "blocks": [
+        {
+          "id": "VIS-FLUID-BERNOULLI-LIVE-CONTINUITY-001",
+          "type": "liveEquation",
+          "title": "Continuity at section 2",
+          "description": "Displays the engineering-core area and average velocity result for the current inputs.",
+          "equationId": "EQ-FLUID-VELOCITY-FLOW-AREA-001",
+          "inputBindings": { "Q": "flowRate", "A": "area2" },
+          "outputBinding": "velocity2",
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Live section 2 velocity equation",
+            "textAlternative": "Current SI substitution, result, symbols, and assumptions are provided in text.",
+            "keyboardInstructions": "Open calculation steps with Enter or Space.",
+            "reducedMotionFallback": "Equation values update without animation."
+          }
+        },
+        {
+          "id": "VIS-FLUID-BERNOULLI-LIVE-PRESSURE-001",
+          "type": "liveEquation",
+          "title": "Ideal section 2 pressure",
+          "description": "Displays the engineering-core two-point Bernoulli result for the current state.",
+          "equationId": "EQ-FLUID-BERNOULLI-TWO-POINT-001",
+          "inputBindings": {
+            "P1": "pressure1",
+            "rho": "density",
+            "v1": "velocity1",
+            "v2": "velocity2",
+            "z1": "elevation1",
+            "z2": "elevation2"
+          },
+          "outputBinding": "pressure2",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+            "SRC-NASA-GLENN-BERNOULLI"
+          ],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Live two-point Bernoulli equation",
+            "textAlternative": "Current SI substitution, result, symbols, and assumptions are provided in text.",
+            "keyboardInstructions": "Open calculation steps with Enter or Space.",
+            "reducedMotionFallback": "Equation values update without animation."
+          }
+        }
+      ]
+    },
+    {
+      "stage": "engineeringChallenge",
+      "title": "Complete two ideal-flow challenges",
+      "blocks": [
+        {
+          "id": "VIS-FLUID-BERNOULLI-CHALLENGE-VELOCITY-001",
+          "type": "engineeringChallenge",
+          "title": "Reach the target velocity",
+          "description": "Adjust flow rate and section 2 diameter to bring section 2 average velocity near 6 m/s.",
+          "challengeId": "CH-FLUID-BERNOULLI-VELOCITY-001",
+          "objective": "Reach 6 m/s at section 2",
+          "pattern": "target",
+          "goal": "Set section 2 average velocity to 6.0 m/s within 0.2 m/s.",
+          "allowedActions": ["Change volumetric flow rate", "Change section 2 diameter"],
+          "successCondition": "abs(velocity2 - 6.0) <= 0.2 m/s",
+          "feedback": {
+            "beforeCheck": "Adjust the controls, then check the calculated section 2 velocity.",
+            "onSuccess": "The section 2 average velocity is within the ideal challenge tolerance.",
+            "onIncomplete": "The section 2 average velocity is outside the target tolerance."
+          },
+          "modelAssumptions": [
+            "Ideal horizontal steady incompressible flow",
+            "Practice only; no competency is awarded"
+          ],
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Section 2 velocity target challenge",
+            "textAlternative": "Target, current velocity, signed difference, and result are reported in text.",
+            "keyboardInstructions": "Use the labelled controls and activate Check current state.",
+            "reducedMotionFallback": "Challenge feedback is text and numeric."
+          }
+        },
+        {
+          "id": "VIS-FLUID-BERNOULLI-CHALLENGE-PRESSURE-001",
+          "type": "engineeringChallenge",
+          "title": "Predict the pressure change",
+          "description": "Predict whether section 2 ideal static pressure will be higher, lower, or the same before revealing the current result.",
+          "challengeId": "CH-FLUID-BERNOULLI-PRESSURE-001",
+          "objective": "Predict section 2 pressure",
+          "pattern": "target",
+          "goal": "Predict the pressure relationship before revealing the calculated state.",
+          "allowedActions": [
+            "Choose higher",
+            "Choose lower",
+            "Choose the same",
+            "Reveal result"
+          ],
+          "successCondition": "Prediction matches the calculated pressure comparison.",
+          "feedback": {
+            "beforeCheck": "Choose a prediction before revealing the current pressure comparison.",
+            "onSuccess": "The prediction matches the current ideal model state.",
+            "onIncomplete": "Compare the section areas and average velocities, then try again."
+          },
+          "modelAssumptions": [
+            "Equal elevation",
+            "No loss or machine-work term",
+            "Practice only; no competency is awarded"
+          ],
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+            "SRC-NASA-GLENN-BERNOULLI"
+          ],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Ideal pressure prediction challenge",
+            "textAlternative": "Prediction choices and the calculated pressure comparison are reported in text.",
+            "keyboardInstructions": "Choose one radio option, then activate Reveal result.",
+            "reducedMotionFallback": "Challenge feedback is text and numeric."
+          }
+        }
+      ]
+    },
+    {
+      "stage": "realWorldApplication",
+      "title": "Connect the ideal model to practice",
+      "blocks": [
+        {
+          "id": "VIS-FLUID-BERNOULLI-APPLICATION-001",
+          "type": "realWorldApplication",
+          "title": "Venturi-style differential-pressure concept",
+          "description": "An original schematic shows two pressure points around a contraction without importing a product design or calibration.",
+          "applicationId": "APP-FLUID-BERNOULLI-VENTURI-001",
+          "systemType": "Flow measurement concept",
+          "principle": "A contraction can create a measurable pressure difference associated with the velocity change. A real flow meter also requires reviewed geometry, calibration, fluid properties, and loss treatment.",
+          "relatedSimulationId": "SIM-FLUID-BERNOULLI-FLOW-001",
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Simplified venturi-style measurement concept",
+            "textAlternative": "A pipe contraction has pressure taps at wide and narrow sections connected to two measurements.",
+            "keyboardInstructions": "No interaction is required for this explanatory visual.",
+            "reducedMotionFallback": "The application visual is static."
+          }
+        }
+      ]
+    },
+    {
+      "stage": "knowledgeCheck",
+      "title": "Check your understanding",
+      "blocks": [
+        {
+          "id": "Q-FLUID-BERNOULLI-CONCEPT-001",
+          "type": "question",
+          "prompt": "At fixed incompressible flow rate, what happens to average velocity when circular area decreases?",
+          "options": [
+            { "id": "A", "text": "It increases.", "isCorrect": true },
+            { "id": "B", "text": "It decreases.", "isCorrect": false },
+            { "id": "C", "text": "It becomes unrelated to area.", "isCorrect": false }
+          ],
+          "answerExplanation": "From Q = A v, the same flow rate through a smaller area requires greater average velocity.",
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"]
+        },
+        {
+          "id": "Q-FLUID-BERNOULLI-PRESSURE-001",
+          "type": "question",
+          "prompt": "For the horizontal frictionless pilot, which change accompanies greater section 2 velocity?",
+          "options": [
+            { "id": "A", "text": "Lower section 2 static pressure.", "isCorrect": true },
+            { "id": "B", "text": "An invented pump rating.", "isCorrect": false },
+            { "id": "C", "text": "Automatic elevation gain.", "isCorrect": false }
+          ],
+          "answerExplanation": "With equal elevation and no loss or machine-work term, the pressure term decreases as the velocity term increases.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+            "SRC-NASA-GLENN-BERNOULLI"
+          ]
+        },
+        {
+          "id": "Q-FLUID-BERNOULLI-UNIT-001",
+          "type": "question",
+          "prompt": "Which is the internal SI unit for volumetric flow rate?",
+          "options": [
+            { "id": "A", "text": "m^3/s", "isCorrect": true },
+            { "id": "B", "text": "L only", "isCorrect": false },
+            { "id": "C", "text": "Pa", "isCorrect": false }
+          ],
+          "answerExplanation": "Display flow in L/s is explicitly converted to m^3/s before engineering calculation.",
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"]
+        },
+        {
+          "id": "Q-FLUID-BERNOULLI-HEAD-001",
+          "type": "question",
+          "prompt": "Which ideal head term is zero at both points in this pilot?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Elevation head relative to the selected datum.",
+              "isCorrect": true
+            },
+            { "id": "B", "text": "Velocity head for moving fluid.", "isCorrect": false },
+            {
+              "id": "C",
+              "text": "Pressure head for positive absolute pressure.",
+              "isCorrect": false
+            }
+          ],
+          "answerExplanation": "The pilot is horizontal and defines z1 = z2 = 0 m relative to its selected datum.",
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"]
+        },
+        {
+          "id": "Q-FLUID-BERNOULLI-LIMIT-001",
+          "type": "question",
+          "prompt": "Why is this ideal result insufficient for professional pipe-system design?",
+          "options": [
+            {
+              "id": "A",
+              "text": "It omits real losses, transients, cavitation, equipment ratings, and design constraints.",
+              "isCorrect": true
+            },
+            {
+              "id": "B",
+              "text": "Continuity never applies to liquids.",
+              "isCorrect": false
+            },
+            { "id": "C", "text": "Pressure has no units.", "isCorrect": false }
+          ],
+          "answerExplanation": "The pilot is intentionally restricted to the declared ideal assumptions and educational ranges.",
+          "sourceIds": ["SRC-NASA-GLENN-BERNOULLI"]
+        }
+      ]
+    },
+    {
+      "stage": "deepDive",
+      "title": "Deep Dive",
+      "blocks": [
+        {
+          "id": "VIS-FLUID-BERNOULLI-DEEP-001",
+          "type": "deepDive",
+          "title": "Energy terms, SI units, and model limits",
+          "description": "Optional detail preserves the full equation, head form, assumptions, and exclusions.",
+          "content": "Continuity first determines section-average velocities from the same volumetric flow rate. Bernoulli's equation then balances pressure, kinetic, and elevation terms between points. Dividing the pressure form by rho g expresses pressure head, velocity head, and elevation head in metres. This pilot fixes equal elevation and excludes viscosity, roughness, fittings, turbulence, compressibility, pump or turbine work, heat transfer, transient flow, cavitation, and equipment ratings.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+            "SRC-NASA-GLENN-BERNOULLI"
+          ],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Optional Bernoulli derivation and limitations",
+            "textAlternative": "Expandable text explains energy terms, head form, and excluded effects.",
+            "keyboardInstructions": "Open or close the details control with Enter or Space.",
+            "reducedMotionFallback": "Deep Dive is text and contains no required motion."
+          }
+        }
+      ]
+    }
+  ]
+}

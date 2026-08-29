@@ -1,0 +1,174 @@
+{
+  "auditId": "PROMPT-39D",
+  "auditDate": "2026-08-27",
+  "route": "/lessons/hydraulic-cylinder-force",
+  "lessonId": "LES-HYD-CYL-FORCE-VISUAL-001",
+  "lessonVersion": "0.1.0",
+  "publicationStatus": "internal",
+  "reviewStatus": "Engineering review required",
+  "experienceClassification": "interactive engineering learning platform",
+  "pageOrientation": "simulation-first in sequence, interface-heavy in composition",
+  "primaryExperienceClassification": "NEEDS IMPROVEMENT",
+  "verdict": "CONDITIONAL VISUAL-FIRST FOUNDATION",
+  "score": {
+    "awarded": 71,
+    "maximum": 100,
+    "categories": [
+      {
+        "id": "first-interaction",
+        "label": "First interaction",
+        "awarded": 5,
+        "maximum": 10,
+        "evidence": "Zero mandatory theory and zero prerequisite clicks, but the actual diagram starts below the initial viewport and the mobile pressure slider begins at 2511 px."
+      },
+      {
+        "id": "visual-dominance",
+        "label": "Visual dominance",
+        "awarded": 5,
+        "maximum": 10,
+        "evidence": "The visual stage is first, but the desktop hydraulic diagram is 312 by 144 px and occupies 18.2 percent of its canvas while controls and panels dominate."
+      },
+      {
+        "id": "cause-effect",
+        "label": "Cause and effect",
+        "awarded": 14,
+        "maximum": 15,
+        "evidence": "Pressure and diameter update checked area/force results, simulation state, readings, summary, vector, equations, and challenge without a second calculation path."
+      },
+      {
+        "id": "engineering-honesty",
+        "label": "Engineering honesty",
+        "awarded": 12,
+        "maximum": 15,
+        "evidence": "Flow, ratings, vector scale, piston motion, and machine-capacity limits are disclosed; playback speed, frame, and load motion still imply dynamics absent from the model."
+      },
+      {
+        "id": "calculation-integration",
+        "label": "Calculation integration",
+        "awarded": 9,
+        "maximum": 10,
+        "evidence": "Engineering-core supplies SI results and Live Equation exposes substitutions, steps, units, assumptions, and equation IDs; display-unit and spatial connection need refinement."
+      },
+      {
+        "id": "challenge-quality",
+        "label": "Challenge quality",
+        "awarded": 6,
+        "maximum": 10,
+        "evidence": "The 15 kN condition, margin, and idealised feedback are clear, but success is binary, has no intentional submission, and teaches no real trade-off."
+      },
+      {
+        "id": "real-world-connection",
+        "label": "Real-world connection",
+        "awarded": 8,
+        "maximum": 10,
+        "evidence": "The original excavator visual is relevant, concise, source-linked, and appropriately bounded, but remains static context rather than transfer practice."
+      },
+      {
+        "id": "mobile-experience",
+        "label": "Mobile experience",
+        "awarded": 4,
+        "maximum": 10,
+        "evidence": "No overflow and usable input widths, but the page is 12297 px tall, the label-rich SVG is scaled to 257 px, and controls begin after extensive scrolling."
+      },
+      {
+        "id": "accessibility",
+        "label": "Accessibility",
+        "awarded": 4,
+        "maximum": 5,
+        "evidence": "Keyboard, numeric alternatives, descriptions, reduced motion, status text, and zoom are strong; the pressure slider is focus stop 21 and state changes are not automatically announced."
+      },
+      {
+        "id": "performance",
+        "label": "Performance",
+        "awarded": 4,
+        "maximum": 5,
+        "evidence": "The route-specific client code is 21.3 KB gzip with simple SVG and no new renderer dependency; field, low-end-device, long-task, and React commit data are missing."
+      }
+    ]
+  },
+  "theoryBurden": {
+    "classification": "LOW",
+    "totalPageDisclosureBurden": "MODERATE",
+    "requiredTheoryWordsBeforeFirstInteraction": 0,
+    "orientationWordsBeforeSimulationShell": 30,
+    "strictRequiredTheoryWordsBeforeChallenge": 56,
+    "requiredTheoryAndQuickStateWordsBeforeChallenge": 74,
+    "optionalDeepDiveWords": 128,
+    "expandableSectionsQuick": 13,
+    "expandableSectionsDeepDive": 18
+  },
+  "measuredLayout": {
+    "desktop": {
+      "viewport": "1440x900",
+      "documentHeightPx": 7183,
+      "visualExperienceTopPx": 442,
+      "diagramTopPx": 1132,
+      "pressureSliderTopPx": 827,
+      "simulationShellSizePx": "1006x1550",
+      "diagramSizePx": "312x144",
+      "diagramShareOfCanvasPercent": 18.2,
+      "horizontalOverflow": false
+    },
+    "mobile": {
+      "viewport": "375x900",
+      "documentHeightPx": 12297,
+      "visualExperienceTopPx": 645,
+      "diagramTopPx": 1347,
+      "pressureSliderTopPx": 2511,
+      "diagramSizePx": "257x220",
+      "pressureSliderWidthPx": 223,
+      "horizontalOverflow": false
+    }
+  },
+  "verifiedCauseEffect": [
+    {
+      "action": "Pressure changed from 5 MPa to 10 MPa at 50 mm diameter",
+      "result": "Force changed from 9817.5 N to 19635 N and the pressure control pair, measurement, state summary, scene label, vector, and challenge remained synchronized."
+    },
+    {
+      "action": "Diameter changed from 50 mm to 100 mm at 10 MPa",
+      "result": "Area changed from 0.0019635 m2 to 0.00785398 m2 and force changed to 78539.8 N, consistent with the squared-diameter relationship."
+    }
+  ],
+  "criticalFindings": [
+    "The actual engineering diagram is not present in the first viewport at either tested size.",
+    "The mobile lesson is stacked rather than recomposed and delays primary inputs until 2511 px.",
+    "The hydraulic diagram is too small for its embedded labels and occupies only 18.2 percent of the desktop canvas.",
+    "Play, speed, frame, and load motion imply time dynamics absent from the pressure-area model.",
+    "Primary input changes have a text summary but no concise live announcement.",
+    "Challenge feedback, Deep Dive limitations, and source references are duplicated.",
+    "The route uses a hydraulic-slug conditional and custom feature component rather than a simulation-ID experience registry."
+  ],
+  "strengths": [
+    "Pure engineering-core SI calculations drive every technical result.",
+    "The lesson requires no theory before interaction.",
+    "Observation precedes explanation.",
+    "Flow, ratings, dynamics, faults, and real-machine limitations are honestly bounded.",
+    "Formal assessment remains authenticated and server scored.",
+    "The lesson retains honest internal and Engineering review required status.",
+    "Route-scoped SVG implementation passes the pilot bundle budget."
+  ],
+  "requiredImprovementIds": [
+    "VL-P0-001",
+    "VL-P0-002",
+    "VL-P0-003",
+    "VL-P0-004",
+    "VL-P0-005",
+    "VL-P0-006",
+    "VL-P1-001",
+    "VL-P1-002",
+    "VL-P1-003",
+    "VL-P1-004"
+  ],
+  "sourceIds": [
+    "SRC-PARKER-140H8-CYLINDER-2024",
+    "SRC-NIST-SP330-2019",
+    "SRC-CAT-BOOM-CYLINDER-6040431-2026"
+  ],
+  "auditLimitations": [
+    "No field time-to-interactive or Core Web Vitals data was available.",
+    "No named independent engineering, educational, safety, or assistive-technology reviewer participated.",
+    "The dark appearance was visually inspected; automated coverage supplied broader contrast evidence.",
+    "Fault-state visual language could not be audited because the pilot intentionally enables no reviewed fault."
+  ]
+}

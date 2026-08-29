@@ -1,0 +1,504 @@
+.experience {
+  display: grid;
+  gap: var(--il-space-7);
+  min-width: 0;
+}
+
+.nextActions > div,
+.playbackControls {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--il-space-2);
+}
+
+.stage {
+  display: grid;
+  gap: var(--il-space-4);
+  min-width: 0;
+}
+
+.stage + .stage {
+  border-top: var(--il-border-subtle);
+  padding-top: var(--il-space-7);
+}
+
+.stageHeading {
+  display: grid;
+  gap: var(--il-space-1);
+}
+
+.stageHeading p {
+  color: var(--il-color-brand-accent-strong);
+  font-size: var(--il-font-size-sm);
+  font-weight: var(--il-font-weight-heavy);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.stageHeading h2 {
+  font-size: var(--il-font-size-2xl);
+  margin: 0;
+}
+
+.sceneRegion,
+.vectorRegion,
+.measurements,
+.primaryControls,
+.inputControls,
+.pairedInput,
+.outputReadings,
+.challengeReadings,
+.nextActions {
+  display: grid;
+  gap: var(--il-space-3);
+  min-width: 0;
+}
+
+.sceneRegion {
+  align-self: stretch;
+  width: 100%;
+}
+
+.sceneLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--il-space-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sceneLegend li {
+  align-items: center;
+  display: inline-flex;
+  font-size: var(--il-font-size-sm);
+  gap: var(--il-space-2);
+}
+
+.sceneLegend li:not(:last-child)::after {
+  content: "→";
+  font-weight: var(--il-font-weight-heavy);
+}
+
+.sceneSvg {
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-card);
+  display: block;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+.sceneBackground {
+  fill: var(--il-color-bg-surface);
+}
+
+.sceneTitle {
+  fill: var(--il-color-text-primary);
+  font-family: var(--il-font-family-sans);
+  font-size: 22px;
+  font-weight: var(--il-font-weight-heavy);
+}
+
+.sceneLabel,
+.smallLabel,
+.pressureLabel,
+.forceLabel,
+.modelNote,
+.externalLabel,
+.loadText,
+.excavatorLabel {
+  fill: var(--il-color-text-primary);
+  font-family: var(--il-font-family-sans);
+  letter-spacing: 0;
+}
+
+.sceneLabel {
+  font-size: 16px;
+  font-weight: var(--il-font-weight-bold);
+}
+
+.smallLabel,
+.modelNote,
+.externalLabel {
+  font-size: 13px;
+}
+
+.pressureLabel,
+.forceLabel {
+  font-family: var(--il-font-family-mono);
+  font-size: 14px;
+  font-weight: var(--il-font-weight-bold);
+}
+
+.reservoir,
+.cylinderBarrel,
+.schematicCylinder {
+  fill: var(--il-color-bg-muted);
+  stroke: var(--il-color-border-strong);
+  stroke-width: 4;
+}
+
+.reservoirFluid,
+.pressureChamber {
+  fill: var(--il-color-domain-hydraulic);
+}
+
+.reservoirFluid {
+  opacity: 0.62;
+}
+
+.pressurePattern {
+  stroke: var(--il-color-bg-surface);
+  stroke-width: 2;
+}
+
+.inactiveChamber {
+  fill: var(--il-color-state-disabled);
+  opacity: 0.32;
+}
+
+.pressureSource {
+  fill: var(--il-color-bg-surface);
+  stroke: var(--il-color-domain-hydraulic);
+  stroke-width: 6;
+}
+
+.sourceSymbol {
+  fill: var(--il-color-domain-hydraulic);
+  font-family: var(--il-font-family-mono);
+  font-size: 30px;
+  font-weight: var(--il-font-weight-heavy);
+}
+
+.pressurisedLine,
+.inactiveLine {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 12;
+}
+
+.pressurisedLine {
+  stroke: var(--il-color-domain-hydraulic);
+}
+
+.inactiveLine {
+  stroke: var(--il-color-state-disabled);
+  stroke-dasharray: 14 10;
+}
+
+.measurementPoint {
+  fill: var(--il-color-bg-surface);
+  stroke: var(--il-color-state-info);
+  stroke-width: 5;
+}
+
+.piston,
+.schematicPiston {
+  fill: var(--il-color-text-primary);
+  stroke: var(--il-color-text-primary);
+  stroke-width: 6;
+  transition:
+    x 280ms ease,
+    y 280ms ease,
+    height 280ms ease;
+}
+
+.rod,
+.schematicRod {
+  fill: #eef1f3;
+  stroke: #64717d;
+  stroke-width: 5;
+  transition:
+    x 280ms ease,
+    width 280ms ease;
+}
+
+.schematicPiston,
+.schematicRod {
+  fill: none;
+}
+
+.forceArrow {
+  fill: none;
+  stroke: var(--il-color-brand-accent);
+  stroke-linecap: round;
+  stroke-width: 9;
+}
+
+.forceArrowHead {
+  fill: var(--il-color-brand-accent);
+}
+
+.loadBlock {
+  fill: var(--il-color-bg-surface);
+  stroke: var(--il-color-text-primary);
+  stroke-width: 5;
+}
+
+.loadText {
+  font-size: 13px;
+  font-weight: var(--il-font-weight-heavy);
+}
+
+.selectable,
+.selectableSelected {
+  cursor: pointer;
+  outline: none;
+}
+
+.selectable:focus-visible,
+.selectableSelected:focus-visible {
+  outline: var(--il-focus-ring);
+  outline-offset: 5px;
+}
+
+.selectableSelected .cylinderBarrel,
+.selectableSelected .schematicCylinder {
+  stroke: var(--il-color-brand-accent);
+  stroke-dasharray: 16 8;
+  stroke-width: 6;
+}
+
+.pressureStateNote,
+.rangeNote,
+.modelBoundary,
+.vectorRegion p,
+.nextActions > p {
+  color: var(--il-color-text-secondary);
+  font-size: var(--il-font-size-sm);
+  line-height: var(--il-line-height-relaxed);
+  margin: 0;
+}
+
+.vectorRegion {
+  align-content: center;
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-card);
+  padding: var(--il-space-3);
+}
+
+.inputControls {
+  align-content: start;
+}
+
+.primaryControls {
+  align-items: end;
+  display: grid;
+  gap: var(--il-space-3);
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.pairedInput {
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-card);
+  grid-template-columns: minmax(0, 1fr) minmax(9rem, 0.45fr);
+  padding: var(--il-space-3);
+}
+
+.rangeNote,
+.inputControls > [role="status"] {
+  grid-column: 1 / -1;
+}
+
+.inputControls {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.outputReadings,
+.challengeReadings {
+  margin: 0;
+}
+
+.outputReadings div,
+.challengeReadings div {
+  background: var(--il-color-bg-surface);
+  border-left: 5px solid var(--il-color-domain-hydraulic);
+  padding: var(--il-space-3);
+}
+
+.outputReadings dt,
+.challengeReadings dt {
+  color: var(--il-color-text-secondary);
+  font-size: var(--il-font-size-sm);
+  font-weight: var(--il-font-weight-bold);
+}
+
+.outputReadings dd,
+.challengeReadings dd {
+  font-family: var(--il-font-family-mono);
+  font-size: var(--il-font-size-lg);
+  font-weight: var(--il-font-weight-heavy);
+  margin: var(--il-space-1) 0 0;
+}
+
+.observationGrid,
+.equationGrid,
+.challengeGrid {
+  display: grid;
+  gap: var(--il-space-4);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.quickEquation {
+  align-items: start;
+  background: var(--il-color-bg-muted);
+  border-left: 5px solid var(--il-color-domain-hydraulic);
+  display: grid;
+  gap: var(--il-space-2);
+  padding: var(--il-space-4);
+}
+
+.challengeGrid > :last-child {
+  grid-column: 1 / -1;
+}
+
+.deepDiveLink {
+  color: var(--il-color-text-secondary);
+  font-size: var(--il-font-size-sm);
+  margin: 0;
+}
+
+.nextActions {
+  border-top: var(--il-border-subtle);
+  padding-top: var(--il-space-5);
+}
+
+.excavatorSvg {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+.excavatorGround {
+  fill: none;
+  stroke: var(--il-color-border-strong);
+  stroke-width: 4;
+}
+
+.excavatorTrack {
+  fill: var(--il-color-text-primary);
+}
+
+.excavatorBody {
+  fill: var(--il-color-brand-accent);
+  stroke: var(--il-color-text-primary);
+  stroke-width: 4;
+}
+
+.excavatorBoom,
+.excavatorStick,
+.excavatorBucket {
+  fill: var(--il-color-brand-accent);
+  stroke: var(--il-color-text-primary);
+  stroke-linejoin: round;
+  stroke-width: 5;
+}
+
+.excavatorCylinder {
+  stroke: var(--il-color-domain-hydraulic);
+  stroke-linecap: round;
+  stroke-width: 9;
+}
+
+.excavatorPin {
+  fill: var(--il-color-bg-surface);
+  stroke: var(--il-color-text-primary);
+  stroke-width: 3;
+}
+
+.excavatorLabel {
+  font-size: 13px;
+  font-weight: var(--il-font-weight-bold);
+}
+
+@media (max-width: 820px) {
+  .observationGrid,
+  .equationGrid,
+  .challengeGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .primaryControls {
+    align-items: stretch;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .inputControls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .experience {
+    gap: var(--il-space-6);
+  }
+
+  .stage + .stage {
+    padding-top: var(--il-space-6);
+  }
+
+  .sceneTitle {
+    font-size: 18px;
+  }
+
+  .pairedInput {
+    grid-template-columns: minmax(0, 1fr) minmax(7rem, 0.45fr);
+  }
+
+  .sceneRegion > .sceneSvg {
+    order: 1;
+  }
+
+  .sceneRegion > fieldset {
+    order: 2;
+  }
+
+  .sceneLegend {
+    order: 3;
+  }
+
+  .pressureStateNote {
+    order: 4;
+  }
+
+  .smallLabel,
+  .externalLabel,
+  .modelNote {
+    display: none;
+  }
+
+  .sceneLegend {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sceneLegend li:not(:last-child)::after {
+    content: "↓";
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .piston,
+  .rod,
+  .loadWaiting {
+    transition: none;
+  }
+}
+
+@media print {
+  .playbackControls,
+  .inputControls,
+  .nextActions > div {
+    display: none;
+  }
+
+  .stage {
+    break-inside: avoid;
+  }
+}

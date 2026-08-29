@@ -1,0 +1,338 @@
+{
+  "id": "LES-THERMO-SYSTEMS-SURROUNDINGS-001",
+  "slug": "systems-surroundings-boundaries",
+  "title": "Thermodynamic Systems, Surroundings And Boundaries",
+  "description": "A draft foundation lesson for selecting and classifying thermodynamic systems before equations or property data are introduced.",
+  "publicationStatus": "draft",
+  "reviewStatus": "Engineering review required",
+  "version": "0.1.0",
+  "estimatedCompletionTime": "30 minutes",
+  "difficulty": "Introductory",
+  "prerequisites": ["Basic physical-science vocabulary"],
+  "knowledgeFileIds": ["KF-THERMO-SYSTEMS-SURROUNDINGS-001"],
+  "sourceIds": [
+    "SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021",
+    "SRC-OPENSTAX-COLLEGE-PHYSICS-2012"
+  ],
+  "learningOutcomes": [
+    "Identify a selected thermodynamic system, its surroundings, and its boundary.",
+    "Distinguish closed, open, and isolated system classifications from stated boundary conditions.",
+    "Distinguish property, state, process, cycle, intensive property, and extensive property vocabulary."
+  ],
+  "simulationIds": ["sim-core-thermal-system-001"],
+  "requiredSections": [
+    "lessonHeader",
+    "estimatedCompletionTime",
+    "difficulty",
+    "prerequisites",
+    "learningOutcomes",
+    "whyTopicMatters",
+    "keyTerminology",
+    "visualExplanation",
+    "theory",
+    "equations",
+    "workedExamples",
+    "interactiveActivity",
+    "faultFindingExercise",
+    "safetyConsiderations",
+    "knowledgeCheck",
+    "summary",
+    "sources",
+    "nextRecommendedLesson"
+  ],
+  "sections": {
+    "lessonHeader": {
+      "title": "Lesson header",
+      "blocks": [
+        {
+          "id": "BLK-TH-HEADER-001",
+          "type": "paragraph",
+          "text": "This draft lesson introduces the vocabulary needed to declare a thermodynamic system and boundary before later analysis begins.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        }
+      ]
+    },
+    "estimatedCompletionTime": {
+      "title": "Estimated completion time",
+      "blocks": [
+        {
+          "id": "BLK-TH-TIME-001",
+          "type": "paragraph",
+          "text": "Estimated completion time: 30 minutes.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        }
+      ]
+    },
+    "difficulty": {
+      "title": "Difficulty",
+      "blocks": [
+        {
+          "id": "BLK-TH-DIFFICULTY-001",
+          "type": "paragraph",
+          "text": "Difficulty: introductory thermodynamics foundation.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        }
+      ]
+    },
+    "prerequisites": {
+      "title": "Prerequisites",
+      "blocks": [
+        {
+          "id": "BLK-TH-PREREQ-001",
+          "type": "paragraph",
+          "text": "Students need only basic physical-science vocabulary; this lesson introduces no thermodynamic equation or property table.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        }
+      ]
+    },
+    "learningOutcomes": {
+      "title": "Learning outcomes",
+      "blocks": [
+        {
+          "id": "BLK-TH-OUTCOME-001",
+          "type": "paragraph",
+          "text": "After the lesson, students should be able to declare a system and boundary, classify what may cross that boundary, and use introductory property and process vocabulary consistently.",
+          "sourceIds": [
+            "SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021",
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012"
+          ]
+        }
+      ]
+    },
+    "whyTopicMatters": {
+      "title": "Why the topic matters",
+      "blocks": [
+        {
+          "id": "BLK-TH-MATTERS-001",
+          "type": "engineeringInterpretation",
+          "text": "A thermodynamic explanation is ambiguous until the selected system and boundary are stated, because that selection determines how mass and energy interactions will be described in later lessons.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        }
+      ]
+    },
+    "keyTerminology": {
+      "title": "Key terminology",
+      "blocks": [
+        {
+          "id": "BLK-TH-TERM-001",
+          "type": "definition",
+          "term": "System, surroundings, and boundary",
+          "definition": "The system is the matter or region selected for analysis, the surroundings are everything outside it, and the boundary separates the two.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        },
+        {
+          "id": "BLK-TH-TERM-002",
+          "type": "definition",
+          "term": "Closed, open, and isolated systems",
+          "definition": "A closed system contains a fixed quantity of matter, an open system allows mass to cross its selected boundary, and an isolated system exchanges neither matter nor energy with its surroundings.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        },
+        {
+          "id": "BLK-TH-TERM-003",
+          "type": "definition",
+          "term": "Property, state, process, and cycle",
+          "definition": "Properties describe a system state; a process changes the state; a cycle returns the system to its initial state after a sequence of processes.",
+          "sourceIds": [
+            "SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021",
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012"
+          ]
+        },
+        {
+          "id": "BLK-TH-TERM-004",
+          "type": "definition",
+          "term": "Intensive and extensive properties",
+          "definition": "An intensive property does not depend on the amount of matter selected, while an extensive property does.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        }
+      ]
+    },
+    "visualExplanation": {
+      "title": "Visual explanation",
+      "blocks": [
+        {
+          "id": "BLK-TH-DIAGRAM-001",
+          "type": "diagram",
+          "title": "Selected system and boundary",
+          "altText": "A labelled boundary encloses the selected system, with surroundings outside and arrows indicating that possible crossings depend on the chosen classification.",
+          "description": "The boundary is drawn around the selected matter or region. The classification question is whether matter or energy may cross that boundary.",
+          "caption": "Original Industrial Learn concept diagram; no source figure is reproduced.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        }
+      ]
+    },
+    "theory": {
+      "title": "Theory",
+      "blocks": [
+        {
+          "id": "BLK-TH-THEORY-001",
+          "type": "paragraph",
+          "text": "System classification follows the selected boundary. A closed-system analysis follows a fixed quantity of matter, while an open-system analysis uses a control volume that mass may cross.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        },
+        {
+          "id": "BLK-TH-THEORY-002",
+          "type": "paragraph",
+          "text": "A sealed system is not automatically isolated: isolation also requires that energy not be exchanged with the surroundings.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        },
+        {
+          "id": "BLK-TH-ASSUMPTION-001",
+          "type": "assumption",
+          "text": "Each exercise states one selected boundary and asks only for classification; no unprovided property value or equipment limit may be inferred.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        }
+      ]
+    },
+    "equations": {
+      "title": "Equations",
+      "blocks": [
+        {
+          "id": "BLK-TH-EQUATIONS-001",
+          "type": "paragraph",
+          "text": "No equation is required for this classification lesson. Energy balances, property relations, and process equations belong to later source-reviewed lessons.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        }
+      ]
+    },
+    "workedExamples": {
+      "title": "Worked examples",
+      "blocks": [
+        {
+          "id": "WE-THERMO-SYSTEMS-SURROUNDINGS-001",
+          "type": "workedCalculation",
+          "title": "Classify a sealed classroom container",
+          "given": [
+            "The sealed contents are selected as the system.",
+            "The container wall is selected as the boundary."
+          ],
+          "steps": [
+            {
+              "label": "Declare the system",
+              "expression": "system = sealed contents",
+              "explanation": "The selected matter is stated explicitly."
+            },
+            {
+              "label": "Declare the surroundings",
+              "expression": "surroundings = everything outside the wall",
+              "explanation": "The wall separates the selected system from its surroundings."
+            },
+            {
+              "label": "Classify mass crossing",
+              "expression": "mass crossing = none for the stated sealed case",
+              "explanation": "The selected matter is treated as a closed system for this exercise."
+            }
+          ],
+          "result": "Closed system for the stated classroom classification.",
+          "interpretation": "The classification does not imply isolation, operating limits, or permission to use real equipment.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        }
+      ]
+    },
+    "interactiveActivity": {
+      "title": "Interactive activity or simulation",
+      "blocks": [
+        {
+          "id": "BLK-TH-ACTIVITY-001",
+          "type": "paragraph",
+          "text": "Internal review-gated activity: select whether mass and energy may cross one stated boundary, then inspect the resulting open, closed, isolated, or indeterminate classification. The activity remains unavailable for student attempts until independent review is recorded.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        }
+      ]
+    },
+    "faultFindingExercise": {
+      "title": "Fault-finding exercise",
+      "blocks": [
+        {
+          "id": "FAULT-THERMO-BOUNDARY-001",
+          "type": "faultCase",
+          "title": "Changing the boundary during an explanation",
+          "symptoms": [
+            "The answer alternates between the contents and the entire device as the system.",
+            "The learner cannot state whether mass crosses the selected boundary."
+          ],
+          "likelyCauses": ["The system and boundary were not declared first."],
+          "safeResponse": "Stop, restate the selected system and boundary, and repeat the classification without changing them.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        }
+      ]
+    },
+    "safetyConsiderations": {
+      "title": "Safety considerations",
+      "blocks": [
+        {
+          "id": "SAFE-THERMO-SYSTEMS-001",
+          "type": "warning",
+          "severity": "warning",
+          "title": "Classification is not operating authority",
+          "text": "This lesson does not establish pressure limits, temperature limits, equipment ratings, or permission to open, heat, pressurise, or operate real equipment.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        }
+      ]
+    },
+    "knowledgeCheck": {
+      "title": "Knowledge check",
+      "blocks": [
+        {
+          "id": "QUIZ-THERMO-SYSTEMS-001",
+          "type": "question",
+          "prompt": "Which classification describes a selected region whose boundary may be crossed by mass?",
+          "options": [
+            { "id": "A", "text": "Open system or control volume", "isCorrect": true },
+            { "id": "B", "text": "Closed system or control mass", "isCorrect": false },
+            { "id": "C", "text": "Isolated system", "isCorrect": false }
+          ],
+          "answerExplanation": "An open system is represented by a control volume whose selected boundary may be crossed by mass.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        }
+      ]
+    },
+    "summary": {
+      "title": "Summary",
+      "blocks": [
+        {
+          "id": "BLK-TH-SUMMARY-001",
+          "type": "paragraph",
+          "text": "Start thermodynamic analysis by declaring the system, surroundings, and boundary. Classify the system from what may cross that boundary, then use property, state, process, and cycle vocabulary without inventing property data.",
+          "sourceIds": [
+            "SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021",
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012"
+          ]
+        }
+      ]
+    },
+    "sources": {
+      "title": "Sources",
+      "blocks": [
+        {
+          "id": "BLK-TH-SOURCE-001",
+          "type": "sourceCitation",
+          "sourceId": "SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021",
+          "note": "Purdue ME 20000 Lecture 1, pages 6 to 7, supports the system, boundary, classification, property, state, process, and intensive/extensive definitions used in this draft."
+        },
+        {
+          "id": "BLK-TH-SOURCE-002",
+          "type": "sourceCitation",
+          "sourceId": "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+          "note": "OpenStax College Physics, section 15.2, supports the cycle definition used in this draft."
+        }
+      ]
+    },
+    "nextRecommendedLesson": {
+      "title": "Next recommended lesson",
+      "blocks": [
+        {
+          "id": "BLK-TH-NEXT-001",
+          "type": "paragraph",
+          "text": "Next planned foundation lesson: open and closed systems in greater detail. It remains unimplemented until its source and review scope are defined.",
+          "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+        }
+      ]
+    }
+  },
+  "equationIds": [],
+  "workedExampleIds": ["WE-THERMO-SYSTEMS-SURROUNDINGS-001"],
+  "faultScenarioIds": ["FAULT-THERMO-BOUNDARY-001"],
+  "safetyWarningIds": ["SAFE-THERMO-SYSTEMS-001"],
+  "quizIds": [],
+  "projectIds": []
+}

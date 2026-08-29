@@ -1,0 +1,406 @@
+.experience,
+.stage,
+.measurements,
+.primaryControls,
+.inputControls,
+.pairedInput,
+.readingGrid,
+.challengeGrid,
+.headReadings,
+.nextActions {
+  display: grid;
+  min-width: 0;
+}
+
+.experience {
+  gap: var(--il-space-7);
+}
+
+.stage {
+  gap: var(--il-space-4);
+}
+
+.stage + .stage {
+  border-top: var(--il-border-subtle);
+  padding-top: var(--il-space-7);
+}
+
+.stageHeading {
+  display: grid;
+  gap: var(--il-space-1);
+}
+
+.stageHeading p {
+  color: var(--il-color-brand-accent-strong);
+  font-size: var(--il-font-size-sm);
+  font-weight: var(--il-font-weight-heavy);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.stageHeading h2 {
+  font-size: var(--il-font-size-2xl);
+  margin: 0;
+}
+
+.measurements,
+.primaryControls,
+.inputControls,
+.pairedInput,
+.readingGrid,
+.challengeGrid,
+.headReadings,
+.nextActions {
+  gap: var(--il-space-3);
+}
+
+.primaryControls {
+  align-items: end;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.inputControls {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pairedInput {
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-card);
+  grid-template-columns: minmax(0, 1fr) minmax(9rem, 0.45fr);
+  padding: var(--il-space-3);
+}
+
+.rangeNote,
+.inputControls > [role="status"] {
+  grid-column: 1 / -1;
+}
+
+.rangeNote,
+.modelBoundary,
+.visualNote,
+.nextActions p {
+  color: var(--il-color-text-secondary);
+  font-size: var(--il-font-size-sm);
+  line-height: var(--il-line-height-relaxed);
+  margin: 0;
+}
+
+.readingGrid,
+.headReadings {
+  margin: 0;
+}
+
+.readingGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.readingGrid div,
+.headReadings div {
+  background: var(--il-color-bg-surface);
+  border-left: 5px solid var(--il-color-domain-hydraulic);
+  padding: var(--il-space-3);
+}
+
+.readingGrid dt,
+.headReadings dt {
+  color: var(--il-color-text-secondary);
+  font-size: var(--il-font-size-sm);
+  font-weight: var(--il-font-weight-bold);
+}
+
+.readingGrid dd,
+.headReadings dd {
+  font-family: var(--il-font-family-mono);
+  font-size: var(--il-font-size-lg);
+  font-weight: var(--il-font-weight-heavy);
+  margin: var(--il-space-1) 0 0;
+}
+
+.sceneSvg {
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-card);
+  display: block;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+.sceneBackground {
+  fill: var(--il-color-bg-surface);
+}
+
+.sceneTitle,
+.sceneLabel,
+.pointLabel,
+.velocityLabel,
+.flowLabel,
+.modelNote,
+.headLabel {
+  fill: var(--il-color-text-primary);
+  font-family: var(--il-font-family-sans);
+  letter-spacing: 0;
+}
+
+.sceneTitle {
+  font-size: 22px;
+  font-weight: var(--il-font-weight-heavy);
+}
+
+.sceneLabel,
+.pointLabel {
+  font-size: 15px;
+  font-weight: var(--il-font-weight-bold);
+}
+
+.velocityLabel,
+.flowLabel,
+.modelNote,
+.headLabel {
+  font-size: 12px;
+}
+
+.velocityLabel,
+.flowLabel {
+  font-family: var(--il-font-family-mono);
+  font-weight: var(--il-font-weight-bold);
+}
+
+.pipeWall,
+.schematicPipe {
+  fill: none;
+  stroke: var(--il-color-border-strong);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 12;
+}
+
+.fluidBody {
+  fill: color-mix(in srgb, var(--il-color-domain-hydraulic) 58%, transparent);
+  pointer-events: none;
+}
+
+.flowDirection,
+.velocityArrow {
+  fill: none;
+  stroke: var(--il-color-domain-automation);
+  stroke-linecap: round;
+}
+
+.flowDirection {
+  stroke-dasharray: 14 10;
+  stroke-width: 4;
+}
+
+.velocityArrow {
+  stroke-width: 7;
+}
+
+.flowArrowHead {
+  fill: var(--il-color-domain-automation);
+}
+
+.flowParticle {
+  animation: bernoulli-flow-cue 2.4s linear infinite;
+  fill: var(--il-color-bg-surface);
+  opacity: 0.92;
+  pointer-events: none;
+}
+
+.flowParticlePaused {
+  animation-play-state: paused;
+}
+
+@keyframes bernoulli-flow-cue {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(710px);
+  }
+}
+
+.selectionTarget {
+  fill: transparent;
+  stroke: transparent;
+}
+
+.selectable,
+.selectableSelected,
+.point,
+.pointSelected,
+.schematicSection,
+.schematicSelected {
+  cursor: pointer;
+  outline: none;
+}
+
+.selectable:focus-visible,
+.selectableSelected:focus-visible,
+.point:focus-visible,
+.pointSelected:focus-visible,
+.schematicSection:focus-visible,
+.schematicSelected:focus-visible {
+  outline: var(--il-focus-ring);
+  outline-offset: 5px;
+}
+
+.selectableSelected .pipeWall {
+  stroke: var(--il-color-brand-accent);
+  stroke-dasharray: 15 9;
+}
+
+.pressureTap {
+  stroke: var(--il-color-state-info);
+  stroke-width: 4;
+}
+
+.measurementPoint {
+  fill: var(--il-color-bg-surface);
+  stroke: var(--il-color-state-info);
+  stroke-width: 5;
+}
+
+.pointSelected .measurementPoint {
+  fill: var(--il-color-brand-accent);
+  stroke: var(--il-color-text-primary);
+}
+
+.pressureHead {
+  fill: var(--il-color-state-info);
+  opacity: 0.7;
+}
+
+.velocityHead {
+  fill: var(--il-color-domain-automation);
+  opacity: 0.8;
+}
+
+.headOutline {
+  fill: none;
+  stroke: var(--il-color-border-strong);
+  stroke-width: 3;
+}
+
+.schematicSection rect,
+.schematicSelected rect {
+  fill: var(--il-color-bg-muted);
+  stroke: var(--il-color-border-strong);
+  stroke-width: 4;
+}
+
+.schematicSelected rect {
+  stroke: var(--il-color-brand-accent);
+  stroke-dasharray: 14 8;
+  stroke-width: 6;
+}
+
+.observationGrid,
+.equationGrid,
+.challengeGrid {
+  display: grid;
+  gap: var(--il-space-4);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.quickSummary {
+  background: var(--il-color-bg-muted);
+  border-left: 5px solid var(--il-color-domain-hydraulic);
+  display: grid;
+  gap: var(--il-space-2);
+  padding: var(--il-space-4);
+}
+
+.predictionOptions {
+  border: 0;
+  display: grid;
+  gap: var(--il-space-2);
+  margin: 0;
+  padding: 0;
+}
+
+.predictionOptions label {
+  align-items: center;
+  display: flex;
+  gap: var(--il-space-2);
+  min-height: 44px;
+}
+
+.applicationSvg {
+  display: block;
+  height: auto;
+  width: min(100%, 360px);
+}
+
+.applicationPipe,
+.applicationTap {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 5;
+}
+
+.applicationFluid {
+  fill: var(--il-color-domain-hydraulic);
+  opacity: 0.52;
+}
+
+.nextActions > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--il-space-2);
+}
+
+@media (min-width: 1024px) {
+  .primaryControls,
+  .inputControls,
+  .pairedInput {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rangeNote,
+  .inputControls > [role="status"] {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 760px) {
+  .primaryControls,
+  .inputControls,
+  .pairedInput,
+  .readingGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .rangeNote,
+  .inputControls > [role="status"] {
+    grid-column: auto;
+  }
+
+  .sceneSvg {
+    min-height: 280px;
+  }
+
+  .primaryControls button,
+  .nextActions button {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flowParticle {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+@media print {
+  .flowParticle {
+    display: none;
+  }
+
+  .sceneSvg {
+    break-inside: avoid;
+  }
+}
