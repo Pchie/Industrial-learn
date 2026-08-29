@@ -28,7 +28,8 @@
     "It is not an approved engineering reference.",
     "No page, chapter, edition, standard clause, or equipment rating has been verified from an actual source document."
   ],
-  "notes": "The actual source document is absent from sources/. Content that cites this ID must remain Source required.",
+  "supersededBy": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+  "notes": "Superseded on 2026-08-26. This ID remains an unapproved audit record and must not support new content.",
   "createdAt": "2026-07-21",
-  "updatedAt": "2026-07-22"
+  "updatedAt": "2026-08-26"
 }

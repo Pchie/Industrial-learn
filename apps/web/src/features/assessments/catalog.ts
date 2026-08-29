@@ -32,7 +32,7 @@ export const assessmentCatalog: AssessmentCatalogEntry[] = [
     lessonId: "LES-FLUID-PRESSURE-001",
     estimatedMinutes: 15,
     contentVersion: 1,
-    sourceIds: ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+    sourceIds: ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PARKER-140H8-CYLINDER-2024"]
   }
 ];
 

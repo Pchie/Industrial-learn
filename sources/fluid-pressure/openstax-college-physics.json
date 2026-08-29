@@ -1,0 +1,70 @@
+{
+  "id": "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+  "title": "College Physics",
+  "fullTitle": "College Physics",
+  "author": "Paul Peter Urone and Roger Hinrichs",
+  "organisation": "OpenStax, Rice University",
+  "edition": "Web edition",
+  "version": "Published 2012-06-21",
+  "publicationDate": "2012-06-21",
+  "accessDate": "2026-08-26",
+  "documentType": "open educational textbook",
+  "discipline": "Physics and fluid mechanics",
+  "topics": [
+    "pressure as force per perpendicular area",
+    "force from pressure and area",
+    "Pascal's principle",
+    "cyclic thermodynamic processes"
+  ],
+  "url": "https://openstax.org/books/college-physics/pages/11-3-pressure",
+  "accessUrls": [
+    "https://openstax.org/books/college-physics/pages/11-3-pressure",
+    "https://openstax.org/books/college-physics/pages/11-5-pascals-principle",
+    "https://openstax.org/books/college-physics/pages/15-2-the-first-law-of-thermodynamics-and-some-simple-processes",
+    "https://openstax.org/books/college-physics/pages/preface"
+  ],
+  "filePath": null,
+  "accessMode": "metadata-only",
+  "copyrightStatus": "OpenStax textbook content is licensed under CC BY 4.0; OpenStax marks, covers, and excluded media retain separate rights.",
+  "rights": {
+    "licence": "CC BY 4.0 for textbook content, except where otherwise noted",
+    "permittedInternalUse": "Citation, factual verification, and original Industrial Learn explanations with attribution",
+    "mayDistribute": true,
+    "metadataOnly": true,
+    "studentMayOpenDirectly": true
+  },
+  "reliabilityLevel": 3,
+  "citation": "Urone, P. P. and Hinrichs, R. (2012), College Physics, OpenStax, sections 11.3, 11.5, and 15.2, accessed 2026-08-26.",
+  "approvalStatus": "Source checked",
+  "reviewStatus": "Source checked",
+  "evidenceStatus": "approved",
+  "reviewer": "Codex source-verification agent",
+  "reviewerType": "automated-assisted technical librarian review",
+  "reviewDate": "2026-08-26",
+  "independentHumanReviewRequired": true,
+  "verification": {
+    "documentOpened": true,
+    "metadataVerified": true,
+    "verifiedAt": "2026-08-26",
+    "verificationMethod": "Official OpenStax web edition and licensing page inspected",
+    "fixedPageCount": null,
+    "sha256": null
+  },
+  "relevantChapters": ["11 Fluid Statics", "15 Thermodynamics"],
+  "relevantSections": [
+    "11.3 Pressure",
+    "11.5 Pascal's Principle",
+    "15.2 The First Law of Thermodynamics and Some Simple Processes"
+  ],
+  "relevantPages": [],
+  "limitations": [
+    "The web edition has no stable page numbering; citations use section identifiers.",
+    "No OpenStax figures, branding, or long excerpts are copied into Industrial Learn.",
+    "This source does not provide manufacturer cylinder ratings or equipment-specific safety procedures.",
+    "Independent human source review remains required before student-use approval."
+  ],
+  "supersedesSourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
+  "notes": "The repository stores metadata and original explanations only; students may open the official source directly.",
+  "createdAt": "2026-08-26",
+  "updatedAt": "2026-08-26"
+}

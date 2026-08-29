@@ -1,0 +1,180 @@
+{
+  "metadata": {
+    "id": "KF-FLUID-BERNOULLI-001",
+    "slug": "bernoulli-flow",
+    "title": "Ideal Bernoulli Flow Between Two Pipe Sections",
+    "topic": "Continuity and Bernoulli behaviour in a horizontal contraction",
+    "version": "1.0.0",
+    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022", "SRC-NASA-GLENN-BERNOULLI"]
+  },
+  "learningPurpose": "Support a visual comparison of cross-sectional area, average velocity, absolute pressure, and ideal head at two points in a horizontal circular pipe.",
+  "definitions": [
+    {
+      "term": "Volumetric flow rate",
+      "meaning": "Fluid volume passing a section per unit time.",
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"]
+    },
+    {
+      "term": "Continuity",
+      "meaning": "For the steady incompressible two-section model, the same volumetric flow rate passes both sections, so area and average velocity vary inversely.",
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"]
+    },
+    {
+      "term": "Bernoulli equation",
+      "meaning": "An ideal mechanical-energy relationship linking pressure, average velocity, and elevation along the modelled flow path under stated assumptions.",
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022", "SRC-NASA-GLENN-BERNOULLI"]
+    }
+  ],
+  "governingPrinciples": [
+    "For steady incompressible flow without leakage, A1 v1 = A2 v2. [SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022]",
+    "For the ideal frictionless model, the sum of pressure, kinetic, and elevation terms is conserved between two points. [SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022]",
+    "The Bernoulli relationship is restricted by steady, incompressible, inviscid assumptions and excludes added heat or shaft work in this pilot. [SRC-NASA-GLENN-BERNOULLI]"
+  ],
+  "equations": [
+    {
+      "id": "EQ-GEOMETRY-CIRCULAR-AREA-DIAMETER-001",
+      "name": "Circular section area",
+      "expression": "A = pi * D^2 / 4",
+      "symbols": ["A", "D"],
+      "siUnits": { "A": "m^2", "D": "m" },
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"],
+      "reviewStatus": "Engineering review required"
+    },
+    {
+      "id": "EQ-FLUID-VELOCITY-FLOW-AREA-001",
+      "name": "Average velocity from flow rate and area",
+      "expression": "v = Q / A",
+      "symbols": ["v", "Q", "A"],
+      "siUnits": { "v": "m/s", "Q": "m^3/s", "A": "m^2" },
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"],
+      "reviewStatus": "Engineering review required"
+    },
+    {
+      "id": "EQ-FLUID-CONTINUITY-INCOMPRESSIBLE-001",
+      "name": "Incompressible continuity",
+      "expression": "A1 * v1 = A2 * v2",
+      "symbols": ["A1", "v1", "A2", "v2"],
+      "siUnits": { "A1": "m^2", "v1": "m/s", "A2": "m^2", "v2": "m/s" },
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022"],
+      "reviewStatus": "Engineering review required"
+    },
+    {
+      "id": "EQ-FLUID-BERNOULLI-TWO-POINT-001",
+      "name": "Two-point Bernoulli equation",
+      "expression": "P1 + rho*v1^2/2 + rho*g*z1 = P2 + rho*v2^2/2 + rho*g*z2",
+      "symbols": ["P1", "rho", "v1", "g", "z1", "P2", "v2", "z2"],
+      "siUnits": {
+        "P1": "Pa",
+        "rho": "kg/m^3",
+        "v1": "m/s",
+        "g": "m/s^2",
+        "z1": "m",
+        "P2": "Pa",
+        "v2": "m/s",
+        "z2": "m"
+      },
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022", "SRC-NASA-GLENN-BERNOULLI"],
+      "reviewStatus": "Engineering review required"
+    }
+  ],
+  "symbolDefinitions": [
+    { "symbol": "A", "name": "circular cross-sectional area", "unit": "m^2" },
+    { "symbol": "A1", "name": "section 1 circular area", "unit": "m^2" },
+    { "symbol": "A2", "name": "section 2 circular area", "unit": "m^2" },
+    { "symbol": "D", "name": "internal diameter", "unit": "m" },
+    { "symbol": "Q", "name": "volumetric flow rate", "unit": "m^3/s" },
+    { "symbol": "v", "name": "section-average fluid velocity", "unit": "m/s" },
+    { "symbol": "v1", "name": "section 1 average velocity", "unit": "m/s" },
+    { "symbol": "v2", "name": "section 2 average velocity", "unit": "m/s" },
+    { "symbol": "P", "name": "absolute pressure", "unit": "Pa" },
+    { "symbol": "P1", "name": "section 1 absolute pressure", "unit": "Pa" },
+    { "symbol": "P2", "name": "section 2 absolute pressure", "unit": "Pa" },
+    { "symbol": "rho", "name": "fluid density", "unit": "kg/m^3" },
+    { "symbol": "g", "name": "gravitational acceleration parameter", "unit": "m/s^2" },
+    { "symbol": "z", "name": "elevation above the selected reference", "unit": "m" },
+    {
+      "symbol": "z1",
+      "name": "section 1 elevation above the selected reference",
+      "unit": "m"
+    },
+    {
+      "symbol": "z2",
+      "name": "section 2 elevation above the selected reference",
+      "unit": "m"
+    }
+  ],
+  "siUnits": [
+    { "quantity": "area", "unit": "square metre", "symbol": "m^2" },
+    {
+      "quantity": "volumetric flow rate",
+      "unit": "cubic metre per second",
+      "symbol": "m^3/s"
+    },
+    { "quantity": "velocity", "unit": "metre per second", "symbol": "m/s" },
+    { "quantity": "pressure", "unit": "pascal", "symbol": "Pa" },
+    { "quantity": "density", "unit": "kilogram per cubic metre", "symbol": "kg/m^3" },
+    { "quantity": "head or elevation", "unit": "metre", "symbol": "m" }
+  ],
+  "assumptions": [
+    "Steady, incompressible, frictionless flow along the stated path.",
+    "Horizontal pipe: z1 = z2 = 0 m relative to the selected datum.",
+    "No leakage, pump work, turbine work, heat transfer, or loss term.",
+    "Density is the fixed model parameter 1000 kg/m^3; it is not presented as a universal fluid property.",
+    "Inlet absolute pressure is the fixed educational model parameter 250000 Pa.",
+    "Animated flow indicators communicate direction and relative state only; they are not particle trajectories or a time solution."
+  ],
+  "limitations": [
+    "No viscosity, pipe roughness, fittings, turbulence, compressibility, cavitation, transient flow, or equipment rating model is included.",
+    "The result does not establish professional pipe, pump, nozzle, or process design sufficiency.",
+    "Interaction ranges are educational model bounds rather than manufacturer limits.",
+    "Independent engineering and educational review remains required before student-use approval."
+  ],
+  "workedExample": {
+    "id": "WE-FLUID-BERNOULLI-001",
+    "title": "Horizontal contraction at the default state",
+    "purpose": "Connect flow rate, diameter, average velocity, and ideal pressure change.",
+    "given": [
+      "Q = 0.003 m^3/s",
+      "D1 = 0.060 m",
+      "D2 = 0.030 m",
+      "P1 = 250000 Pa absolute",
+      "rho = 1000 kg/m^3",
+      "z1 = z2 = 0 m"
+    ],
+    "steps": [
+      "Calculate A1 and A2 from each circular diameter.",
+      "Calculate v1 = Q/A1 and v2 = Q/A2.",
+      "Apply the two-point Bernoulli equation to calculate P2.",
+      "Compare pressure and velocity head at both points."
+    ],
+    "answer": "The smaller second section has the greater average velocity and lower ideal absolute pressure; the total ideal head is conserved within rounding.",
+    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022", "SRC-NASA-GLENN-BERNOULLI"],
+    "reviewStatus": "Engineering review required"
+  },
+  "components": [
+    "Horizontal inlet section",
+    "Contraction",
+    "Horizontal outlet section",
+    "Pressure measurement point 1",
+    "Pressure measurement point 2"
+  ],
+  "normalOperation": [
+    "The same modelled volumetric flow rate passes both sections.",
+    "Reducing section 2 diameter reduces area and increases section 2 average velocity.",
+    "At equal elevation in the ideal model, an increase in velocity corresponds to a decrease in static pressure."
+  ],
+  "faultConditions": [],
+  "safety": [
+    {
+      "id": "SW-FLUID-BERNOULLI-001",
+      "hazard": "Applying an ideal educational relationship as a real equipment design or operating limit",
+      "warning": "The lab omits losses, transients, cavitation, structural limits, and equipment ratings.",
+      "studentBoundary": "Use the result only to explain the ideal relationship inside the declared model range.",
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022", "SRC-NASA-GLENN-BERNOULLI"],
+      "reviewStatus": "Engineering review required"
+    }
+  ],
+  "relatedSimulations": ["SIM-FLUID-BERNOULLI-FLOW-001"],
+  "sourceCitations": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022", "SRC-NASA-GLENN-BERNOULLI"],
+  "reviewStatus": "Engineering review required"
+}

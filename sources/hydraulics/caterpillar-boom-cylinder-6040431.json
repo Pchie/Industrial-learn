@@ -1,0 +1,63 @@
+{
+  "id": "SRC-CAT-BOOM-CYLINDER-6040431-2026",
+  "title": "Cat Boom Cylinder 604-0431 Product Description",
+  "fullTitle": "604-0431: 110 mm Bore Diameter Boom Cylinder",
+  "author": "Caterpillar Inc.",
+  "organisation": "Caterpillar Inc.",
+  "edition": "Live Cat Parts Store product page",
+  "version": "Page accessed 2026-08-27",
+  "publicationDate": "Undated",
+  "accessDate": "2026-08-27",
+  "documentType": "official manufacturer product description",
+  "discipline": "Hydraulics",
+  "topics": [
+    "excavator boom cylinder application",
+    "hydraulic pressure converted to mechanical force",
+    "boom extension and retraction"
+  ],
+  "url": "https://parts.cat.com/en/catcorp/product/604-0431",
+  "filePath": null,
+  "accessMode": "metadata-only",
+  "copyrightStatus": "Copyright Caterpillar Inc.; all rights reserved.",
+  "rights": {
+    "licence": "All rights reserved; public manufacturer product page",
+    "permittedInternalUse": "Citation and factual verification only; no product imagery or page reproduction",
+    "mayDistribute": false,
+    "metadataOnly": true,
+    "studentMayOpenDirectly": true
+  },
+  "reliabilityLevel": 2,
+  "citation": "Caterpillar Inc. (undated), 604-0431: 110 mm Bore Diameter Boom Cylinder, Cat Parts Store, accessed 2026-08-27.",
+  "approvalStatus": "Source checked",
+  "reviewStatus": "Source checked",
+  "evidenceStatus": "approved",
+  "reviewer": "Codex automated-assisted source verification",
+  "reviewerType": "automated-assisted technical librarian review",
+  "reviewDate": "2026-08-27",
+  "independentHumanReviewRequired": true,
+  "verification": {
+    "documentOpened": true,
+    "metadataVerified": true,
+    "verifiedAt": "2026-08-27",
+    "verificationMethod": "Official Caterpillar product page and manufacturer description inspected",
+    "fixedPageCount": null,
+    "sha256": null
+  },
+  "relevantChapters": ["Product description"],
+  "relevantSections": [
+    "Boom cylinder function",
+    "Hydraulic pressure converted to mechanical force",
+    "Excavator boom extension and retraction"
+  ],
+  "relevantPages": [],
+  "limitations": [
+    "The page describes one product application and is not a general excavator design authority.",
+    "Industrial Learn does not import the listed bore diameter, compatibility, rating, capacity, or selection data into the lesson model.",
+    "The source supports only the simplified real-world context that a hydraulic cylinder converts fluid pressure into mechanical force to move an excavator boom.",
+    "The original product image and page content are not reproduced.",
+    "Independent human source, educational, engineering, and safety review remain required before student-use approval."
+  ],
+  "notes": "The lesson uses an original simplified SVG and does not represent the geometry or performance of the referenced product.",
+  "createdAt": "2026-08-27",
+  "updatedAt": "2026-08-27"
+}

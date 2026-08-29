@@ -4,13 +4,13 @@
   "title": "Basic Fluid Pressure",
   "description": "A draft pilot lesson for introductory pressure reasoning using source-linked structured content blocks.",
   "publicationStatus": "draft",
-  "reviewStatus": "Source required",
+  "reviewStatus": "Engineering review required",
   "version": "0.2.0",
   "estimatedCompletionTime": "25 minutes",
   "difficulty": "Introductory",
   "prerequisites": ["Basic algebra", "SI base and derived units"],
   "knowledgeFileIds": ["KF-FLUID-PRESSURE-001"],
-  "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
+  "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
   "learningOutcomes": [
     "Describe pressure as force distributed over area.",
     "Identify the SI units used for pressure, force, and area.",
@@ -44,7 +44,7 @@
           "id": "BLK-FP-HEADER-001",
           "type": "paragraph",
           "text": "This pilot lesson introduces pressure as a relationship between normal force and area for an introductory static-fluid context.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -55,7 +55,7 @@
           "id": "BLK-FP-TIME-001",
           "type": "paragraph",
           "text": "Estimated completion time: 25 minutes.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -66,7 +66,7 @@
           "id": "BLK-FP-DIFFICULTY-001",
           "type": "paragraph",
           "text": "Difficulty: introductory first-year engineering foundation.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -77,7 +77,7 @@
           "id": "BLK-FP-PREREQ-001",
           "type": "paragraph",
           "text": "Students should be comfortable with basic algebra and SI units before attempting this lesson.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -88,7 +88,7 @@
           "id": "BLK-FP-OUTCOME-001",
           "type": "paragraph",
           "text": "By the end of the lesson, students should be able to describe pressure, identify the units Pa, N, and m^2, and interpret a simple result within the stated limitations.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -99,7 +99,7 @@
           "id": "BLK-FP-MATTERS-001",
           "type": "engineeringInterpretation",
           "text": "Pressure reasoning is used when engineers compare loads distributed over surfaces, interpret gauge readings, and recognise abnormal pressure conditions in supervised systems.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -111,7 +111,7 @@
           "type": "definition",
           "term": "Pressure",
           "definition": "Force distributed over an area in a fluid or on a surface.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -125,7 +125,7 @@
           "altText": "A downward force arrow spreads over a rectangular area, indicating pressure as force divided by area.",
           "description": "Force F acts normally on a surface area A. The larger the area for the same force, the lower the pressure.",
           "caption": "Concept diagram for introductory pressure reasoning.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -136,13 +136,13 @@
           "id": "BLK-FP-THEORY-001",
           "type": "paragraph",
           "text": "For this introductory lesson, pressure is treated as normal force distributed across a stated area. The calculation is only meaningful when the quantities use consistent SI units.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         },
         {
           "id": "BLK-FP-ASSUMPTION-001",
           "type": "assumption",
           "text": "The force is applied normally over the stated area, and the example is not a pressure-vessel design case.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -159,7 +159,7 @@
             { "symbol": "F", "name": "force", "unit": "N" },
             { "symbol": "A", "name": "area", "unit": "m^2" }
           ],
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         },
         {
           "id": "BLK-FP-SYMBOLS-001",
@@ -169,7 +169,7 @@
             { "symbol": "F", "name": "force", "unit": "N" },
             { "symbol": "A", "name": "area", "unit": "m^2" }
           ],
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         },
         {
           "id": "BLK-FP-UNIT-001",
@@ -177,7 +177,7 @@
           "quantity": "pressure",
           "siUnit": "Pa",
           "note": "Industrial Learn calculations store force in newtons, area in square metres, and pressure in pascals internally.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -208,7 +208,7 @@
           ],
           "result": "400 Pa",
           "interpretation": "A pressure of 400 Pa is the result for this educational example under the stated assumptions.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -219,7 +219,7 @@
           "id": "BLK-FP-ACTIVITY-001",
           "type": "paragraph",
           "text": "Simulation placeholder: adjust force and area in a future activity to observe pressure changes. No simulation state is implemented in this pilot lesson.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -237,7 +237,7 @@
             "Sensor or gauge issue in a real system"
           ],
           "safeResponse": "Treat real-system abnormal pressure as a safety concern and follow supervised laboratory or site procedures.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -250,7 +250,7 @@
           "severity": "warning",
           "title": "Stored pressure",
           "text": "Real pressurised systems can be hazardous. This lesson does not authorise students to inspect, open, adjust, or operate pressurised equipment.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -271,7 +271,7 @@
             { "id": "C", "text": "watts, metres, and volts", "isCorrect": false }
           ],
           "answerExplanation": "The pilot lesson keeps force in N, area in m^2, and pressure in Pa.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -282,7 +282,7 @@
           "id": "BLK-FP-SUMMARY-001",
           "type": "paragraph",
           "text": "Pressure is introduced here as force distributed over area. The pilot lesson keeps calculations in SI units and remains draft content until source and engineering review are complete.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     },
@@ -292,8 +292,8 @@
         {
           "id": "BLK-FP-SOURCE-001",
           "type": "sourceCitation",
-          "sourceId": "SRC-FLUID-PRESSURE-PLACEHOLDER-001",
-          "note": "Placeholder source record for the pilot content system. This lesson must not be approved until evidence and review records exist."
+          "sourceId": "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+          "note": "OpenStax College Physics, section 11.3, supports the pressure definition, equation, and SI-unit relationship used in this draft. Independent educational, safety, and engineering review remain required before publication."
         }
       ]
     },
@@ -304,7 +304,7 @@
           "id": "BLK-FP-NEXT-001",
           "type": "paragraph",
           "text": "Next recommended lesson: flow rate and pressure in pump systems after this lesson has a reviewed source trail.",
-          "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
     }

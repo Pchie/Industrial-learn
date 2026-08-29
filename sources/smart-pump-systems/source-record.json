@@ -33,7 +33,8 @@
     "It is not an approved engineering reference.",
     "No manufacturer data, equipment ratings, standards clauses, pump curves, diagnostic thresholds, or IoT requirements may be inferred from this placeholder."
   ],
-  "notes": "The actual source documents are absent from sources/. Content that cites this ID must remain Source required.",
+  "supersededBy": ["SRC-NIST-SP330-2019", "SRC-DOE-PUMP-SOURCEBOOK-2006"],
+  "notes": "Superseded on 2026-08-26. This ID remains an unapproved audit record and must not support new content.",
   "createdAt": "2026-07-21",
-  "updatedAt": "2026-07-22"
+  "updatedAt": "2026-08-26"
 }

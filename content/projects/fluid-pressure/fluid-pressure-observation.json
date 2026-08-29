@@ -7,6 +7,6 @@
     "State the SI unit for each quantity.",
     "Describe one limitation of the training example."
   ],
-  "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
-  "reviewStatus": "Source required"
+  "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+  "reviewStatus": "Engineering review required"
 }

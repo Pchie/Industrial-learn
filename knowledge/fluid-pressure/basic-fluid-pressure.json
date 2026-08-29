@@ -4,15 +4,15 @@
     "slug": "basic-fluid-pressure",
     "title": "Basic Fluid Pressure",
     "topic": "Fluid pressure in static fluids",
-    "version": "0.1.0",
-    "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+    "version": "0.2.0",
+    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
   },
   "learningPurpose": "Prepare students to recognise pressure as force distributed over area and to use consistent SI units in introductory fluid-pressure reasoning.",
   "definitions": [
     {
       "term": "Pressure",
       "meaning": "Force distributed over an area in a fluid or on a surface.",
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
     }
   ],
   "governingPrinciples": [
@@ -30,8 +30,14 @@
         "F": "N",
         "A": "m^2"
       },
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
-      "reviewStatus": "Source required"
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+      "sourceReferences": [
+        {
+          "sourceId": "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+          "section": "11.3 Pressure"
+        }
+      ],
+      "reviewStatus": "Equation checked"
     }
   ],
   "symbolDefinitions": [
@@ -50,7 +56,7 @@
   ],
   "limitations": [
     "Does not cover dynamic pressure, compressibility, pipe losses, pressure-vessel design, or equipment ratings.",
-    "Requires an approved source before publication."
+    "The cited web edition has no fixed page numbering."
   ],
   "workedExample": {
     "id": "WE-FLUID-PRESSURE-001",
@@ -62,12 +68,17 @@
       "Divide force by area to obtain pressure in pascals."
     ],
     "answer": "The result is expressed in pascals.",
-    "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
-    "reviewStatus": "Source required"
+    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+    "reviewStatus": "Engineering review required"
   },
   "components": ["fluid", "surface area", "normal force", "pressure reading"],
   "normalOperation": [
     "Pressure readings are interpreted only within the stated educational assumptions."
+  ],
+  "commonMisconceptions": [
+    "Treating pressure and force as the same quantity.",
+    "Entering an area in cm^2 or mm^2 as if it were m^2.",
+    "Treating an ideal classroom result as an equipment rating."
   ],
   "faultConditions": [
     {
@@ -80,8 +91,8 @@
         "Sensor or gauge issue in a real system"
       ],
       "safeResponse": "Treat real-system abnormal pressure as a safety concern and follow supervised laboratory or site procedures.",
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
-      "reviewStatus": "Source required"
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+      "reviewStatus": "Engineering review required"
     }
   ],
   "safety": [
@@ -90,11 +101,18 @@
       "hazard": "Stored pressure",
       "warning": "Real pressurised systems can be hazardous and must not be treated as simple classroom examples.",
       "studentBoundary": "Students must not use this lesson as permission to inspect, open, adjust, or operate pressurised equipment.",
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
-      "reviewStatus": "Source required"
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+      "reviewStatus": "Engineering review required"
     }
   ],
   "relatedSimulations": ["SIM-FLUID-PRESSURE-TRAINING-001"],
-  "sourceCitations": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
-  "reviewStatus": "Source required"
+  "relatedLessons": ["LES-FLUID-PRESSURE-001"],
+  "sourceCitations": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+  "sourceReferences": [
+    {
+      "sourceId": "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+      "section": "11.3 Pressure"
+    }
+  ],
+  "reviewStatus": "Engineering review required"
 }

@@ -1,0 +1,67 @@
+{
+  "id": "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+  "title": "College Physics 2e: Flow Rate, Continuity, and Bernoulli's Equation",
+  "fullTitle": "College Physics 2e",
+  "author": "Paul Peter Urone and Roger Hinrichs",
+  "organisation": "OpenStax, Rice University",
+  "edition": "Second edition, official web edition",
+  "version": "Published 2022-07-13",
+  "publicationDate": "2022-07-13",
+  "accessDate": "2026-08-27",
+  "documentType": "open educational textbook",
+  "discipline": "Physics and fluid mechanics",
+  "topics": [
+    "volumetric flow rate",
+    "average velocity",
+    "incompressible continuity",
+    "Bernoulli equation",
+    "pressure, velocity, and elevation terms"
+  ],
+  "url": "https://openstax.org/books/college-physics-2e/pages/12-1-flow-rate-and-its-relation-to-velocity",
+  "accessUrls": [
+    "https://openstax.org/books/college-physics-2e/pages/12-1-flow-rate-and-its-relation-to-velocity",
+    "https://openstax.org/books/college-physics-2e/pages/12-2-bernoullis-equation"
+  ],
+  "filePath": null,
+  "accessMode": "metadata-only",
+  "copyrightStatus": "OpenStax College Physics 2e textbook content is licensed under CC BY-NC-SA 4.0 except where otherwise noted; only metadata, short equation identifiers, and original Industrial Learn explanations are stored.",
+  "rights": {
+    "licence": "CC BY-NC-SA 4.0 for textbook content, except where otherwise noted",
+    "permittedInternalUse": "Citation, factual verification, and original Industrial Learn explanations with attribution",
+    "mayDistribute": false,
+    "metadataOnly": true,
+    "studentMayOpenDirectly": true
+  },
+  "reliabilityLevel": 3,
+  "citation": "Urone, P. P. and Hinrichs, R. (2022), College Physics 2e, OpenStax, sections 12.1 and 12.2, accessed 2026-08-27.",
+  "approvalStatus": "Source checked",
+  "reviewStatus": "Source checked",
+  "evidenceStatus": "approved",
+  "reviewer": "Codex source-verification agent",
+  "reviewerType": "automated-assisted technical librarian review",
+  "reviewDate": "2026-08-27",
+  "independentHumanReviewRequired": true,
+  "verification": {
+    "documentOpened": true,
+    "metadataVerified": true,
+    "verifiedAt": "2026-08-27",
+    "verificationMethod": "Official OpenStax web edition, section pages, citation metadata, and licensing notice inspected",
+    "fixedPageCount": null,
+    "sha256": null
+  },
+  "relevantChapters": ["12 Fluid Dynamics and Its Biological and Medical Applications"],
+  "relevantSections": [
+    "12.1 Flow Rate and Its Relation to Velocity",
+    "12.2 Bernoulli's Equation"
+  ],
+  "relevantPages": [],
+  "limitations": [
+    "The web edition has no stable page numbering; citations use section identifiers.",
+    "No OpenStax figures, branding, worked examples, or long excerpts are copied into Industrial Learn.",
+    "The source does not provide equipment ratings, pipe-loss coefficients, cavitation limits, or professional design approval.",
+    "Independent human source review remains required before student-use approval."
+  ],
+  "notes": "The repository stores metadata and original explanations only; students may open the official source directly.",
+  "createdAt": "2026-08-27",
+  "updatedAt": "2026-08-27"
+}

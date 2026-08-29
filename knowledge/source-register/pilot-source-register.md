@@ -22,3 +22,23 @@ No source has been marked approved. No page range, clause, chapter, edition, equ
 ## Approval Boundary
 
 These records exist only to preserve explicit traceability while the real source documents are missing. Content, equations and simulations citing these records must remain `Source required`.
+
+## Supersession Update: 2026-08-26
+
+The original placeholder records remain for audit history and now identify their replacements. The active pilot evidence records are:
+
+| Source ID                                  | Topic                                       | Evidence Status   | Review Status  | Access                              |
+| ------------------------------------------ | ------------------------------------------- | ----------------- | -------------- | ----------------------------------- |
+| `SRC-OPENSTAX-COLLEGE-PHYSICS-2012`        | Fluid pressure and cycle definition         | Approved evidence | Source checked | Metadata-only official HTTPS source |
+| `SRC-PARKER-140H8-CYLINDER-2024`           | Hydraulic cylinder force and effective area | Approved evidence | Source checked | Metadata-only official HTTPS source |
+| `SRC-NIST-SP330-2019`                      | SI units and conversions                    | Approved evidence | Source checked | Metadata-only official HTTPS source |
+| `SRC-DOE-PUMP-SOURCEBOOK-2006`             | Pump-system measurements                    | Approved evidence | Source checked | Metadata-only official HTTPS source |
+| `SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021` | Thermodynamic systems and boundaries        | Approved evidence | Source checked | Metadata-only official HTTPS source |
+| `SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022`     | Flow rate, continuity, and Bernoulli terms  | Approved evidence | Source checked | Metadata-only official HTTPS source |
+| `SRC-NASA-GLENN-BERNOULLI`                 | Bernoulli model assumptions and limitations | Approved evidence | Source checked | Metadata-only official HTTPS source |
+
+`Approved evidence` means the source document and metadata were verified. It is not `Approved for student use`. See `docs/content/pilot-approved-source-register.md` for rights, limitations, and reviewer details.
+
+The Bernoulli records were added on 2026-08-27 for the internal visual pilot. They
+are `Source checked`, require independent human review, and do not authorise a
+loss model, a cavitation model, component ratings, or publication approval.

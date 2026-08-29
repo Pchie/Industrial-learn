@@ -1,0 +1,65 @@
+{
+  "id": "SRC-PARKER-140H8-CYLINDER-2024",
+  "title": "Heavy Duty Metric Hydraulic Cylinder 140H-8",
+  "fullTitle": "Heavy Duty Metric Hydraulic Cylinder 140H-8: 14 MPa Double Acting Hydraulic Cylinder",
+  "author": "Taiyo America",
+  "organisation": "Taiyo America, a Parker Hannifin company",
+  "edition": "2024 catalog",
+  "version": "Catalog HY08-T1151-1/NA",
+  "publicationDate": "2024",
+  "accessDate": "2026-08-26",
+  "documentType": "official manufacturer technical catalog",
+  "discipline": "Hydraulics",
+  "topics": [
+    "theoretical hydraulic cylinder force",
+    "cap-end effective piston area",
+    "rod-end annular area",
+    "difference between theoretical and actual cylinder output"
+  ],
+  "url": "https://www.parker.com/content/dam/Parker-com/Literature/Industrial-Cylinder/Taiyo/Heavy_Duty_Metric_Hydraulic_Cylinders_Series_140H-8_CAT_HY08-T-1151-1NA.pdf",
+  "filePath": null,
+  "accessMode": "metadata-only",
+  "copyrightStatus": "Copyright 2024 Taiyo America. All rights reserved.",
+  "rights": {
+    "licence": "All rights reserved; public manufacturer download",
+    "permittedInternalUse": "Citation and factual verification only; no catalog reproduction",
+    "mayDistribute": false,
+    "metadataOnly": true,
+    "studentMayOpenDirectly": true
+  },
+  "reliabilityLevel": 2,
+  "citation": "Taiyo America (2024), Heavy Duty Metric Hydraulic Cylinder 140H-8, Catalog HY08-T1151-1/NA, p. 26, accessed 2026-08-26.",
+  "approvalStatus": "Source checked",
+  "reviewStatus": "Source checked",
+  "evidenceStatus": "approved",
+  "reviewer": "Codex source-verification agent",
+  "reviewerType": "automated-assisted technical librarian review",
+  "reviewDate": "2026-08-26",
+  "independentHumanReviewRequired": true,
+  "verification": {
+    "documentOpened": true,
+    "metadataVerified": true,
+    "verifiedAt": "2026-08-26",
+    "verificationMethod": "Official Parker-hosted PDF opened and cover, formula page, copyright, and warnings inspected",
+    "fixedPageCount": 42,
+    "sha256": null
+  },
+  "relevantChapters": ["Theoretical Push and Pull Forces"],
+  "relevantSections": [
+    "Push-side and pull-side theoretical force equations",
+    "Pressurised cap-end and rod-end area definitions",
+    "Actual-output limitations"
+  ],
+  "relevantPages": ["Catalog p. 1 (PDF p. 2)", "Catalog p. 26 (PDF p. 28)"],
+  "limitations": [
+    "The catalog is product-specific and may change; it is not a general equipment-selection authority.",
+    "Industrial Learn uses only the source-backed theoretical area and force relationships, not catalog ratings or selection tables.",
+    "The source states that friction and piping losses must be considered for actual output; the pilot returns ideal theoretical force.",
+    "The PDF is not redistributed because no redistribution licence was identified.",
+    "Independent human source and engineering review remain required before student-use approval."
+  ],
+  "supersedesSourceIds": ["SRC-HYDRAULIC-CYLINDER-PLACEHOLDER-001"],
+  "notes": "The manufacturer catalog is retained as a metadata-only reference. No equipment rating is imported into the simulation.",
+  "createdAt": "2026-08-26",
+  "updatedAt": "2026-08-26"
+}

@@ -27,7 +27,11 @@
     "No actual thermodynamics source document is present in sources/.",
     "No property data, steam tables, refrigerant data, or material data may be inferred from this placeholder."
   ],
-  "notes": "Use this ID only to keep traceability explicit while the real source remains missing.",
+  "supersededBy": [
+    "SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021",
+    "SRC-OPENSTAX-COLLEGE-PHYSICS-2012"
+  ],
+  "notes": "Superseded on 2026-08-26. This ID remains an unapproved audit record and must not support new content.",
   "createdAt": "2026-07-22",
-  "updatedAt": "2026-07-22"
+  "updatedAt": "2026-08-26"
 }

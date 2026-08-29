@@ -4,21 +4,21 @@
     "slug": "pressure-fundamentals",
     "title": "Pressure Fundamentals",
     "topic": "Pressure as force distributed over area",
-    "version": "0.1.0",
-    "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+    "version": "0.2.0",
+    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
   },
-  "learningPurpose": "Give students a focused, source-gated reference for the pressure relationship used in the first fluid-pressure lesson.",
+  "learningPurpose": "Give students a focused, source-linked reference for pressure as normal force per area in the first fluid-pressure lesson.",
   "definitions": [
     {
       "term": "Pressure",
       "meaning": "Force distributed normally over a stated area for the introductory training case.",
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
     }
   ],
   "governingPrinciples": [
     "Use SI units internally: pascal for pressure, newton for force, and square metre for area.",
     "The introductory relationship applies only when the force and area are stated and the force is normal to the area.",
-    "This file is blocked from approval until a real fluid-mechanics source is onboarded."
+    "The relationship is an introductory static-pressure model and not an equipment-rating calculation."
   ],
   "equations": [
     {
@@ -31,9 +31,14 @@
         "F": "N",
         "A": "m^2"
       },
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
-      "sourceReferences": [],
-      "reviewStatus": "Source required"
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+      "sourceReferences": [
+        {
+          "sourceId": "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+          "section": "11.3 Pressure"
+        }
+      ],
+      "reviewStatus": "Equation checked"
     }
   ],
   "symbolDefinitions": [
@@ -53,7 +58,7 @@
   ],
   "limitations": [
     "Does not cover compressibility, dynamic flow, pressure-vessel rules, pressure ratings, or safety procedures.",
-    "No approved source section or page range is available yet."
+    "The cited OpenStax web section has no fixed page numbering."
   ],
   "workedExample": {
     "id": "WE-FLUID-PRESSURE-FUNDAMENTALS-001",
@@ -62,8 +67,8 @@
     "given": ["Force is 100 N.", "Area is 0.5 m^2."],
     "steps": ["Confirm SI units.", "Apply p = F / A.", "Calculate 100 / 0.5."],
     "answer": "200 Pa",
-    "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
-    "reviewStatus": "Source required"
+    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+    "reviewStatus": "Engineering review required"
   },
   "components": ["force input", "area input", "pressure result"],
   "normalOperation": [
@@ -81,8 +86,8 @@
       "symptoms": ["The calculated pressure is off by orders of magnitude."],
       "likelyCauses": ["Area was entered in cm^2 or mm^2 as if it were m^2."],
       "safeResponse": "Stop the calculation, identify the unit, and perform only an explicit reviewed conversion.",
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
-      "reviewStatus": "Source required"
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+      "reviewStatus": "Engineering review required"
     }
   ],
   "safety": [
@@ -91,12 +96,18 @@
       "hazard": "Stored pressure",
       "warning": "Introductory pressure calculations do not authorise work on real pressurised systems.",
       "studentBoundary": "Students must use approved training examples or supervised laboratory procedures.",
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
-      "reviewStatus": "Source required"
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+      "reviewStatus": "Engineering review required"
     }
   ],
   "relatedSimulations": ["SIM-HYD-CYL-FORCE-001"],
-  "sourceCitations": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
-  "sourceReferences": [],
-  "reviewStatus": "Source required"
+  "relatedLessons": ["LES-FLUID-PRESSURE-001"],
+  "sourceCitations": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+  "sourceReferences": [
+    {
+      "sourceId": "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+      "section": "11.3 Pressure"
+    }
+  ],
+  "reviewStatus": "Engineering review required"
 }
