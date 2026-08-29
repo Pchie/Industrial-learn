@@ -27,6 +27,12 @@ export const CONTENT_AUDIENCES = [
 
 export const SOURCE_EVIDENCE_STATUSES = ["missing", "partial", "approved"] as const;
 
+export const STUDENT_PUBLICATION_REQUIREMENTS = Object.freeze({
+  publicationStatus: "published" as const,
+  reviewStatus: "Approved for student use" as const,
+  evidenceStatus: "approved" as const
+});
+
 export type ContentReviewStatus = (typeof CONTENT_REVIEW_STATUSES)[number];
 export type PublicationStatus = (typeof PUBLICATION_STATUSES)[number];
 export type ContentAudience = (typeof CONTENT_AUDIENCES)[number];
@@ -149,7 +155,7 @@ function evaluatePublicVisibility(
   if (metadata.publicationStatus === "archived" || hasIdentity(metadata.archivedAt)) {
     return denied("archived");
   }
-  if (metadata.publicationStatus !== "published") {
+  if (metadata.publicationStatus !== STUDENT_PUBLICATION_REQUIREMENTS.publicationStatus) {
     return denied("not-published");
   }
 
@@ -159,7 +165,7 @@ function evaluatePublicVisibility(
   if (!isContentReviewStatus(metadata.reviewStatus)) {
     return denied("invalid-review-status");
   }
-  if (metadata.reviewStatus !== "Approved for student use") {
+  if (metadata.reviewStatus !== STUDENT_PUBLICATION_REQUIREMENTS.reviewStatus) {
     return denied("review-not-approved");
   }
 
@@ -169,7 +175,7 @@ function evaluatePublicVisibility(
   if (!isSourceEvidenceStatus(metadata.evidenceStatus)) {
     return denied("invalid-evidence-status");
   }
-  if (metadata.evidenceStatus !== "approved") {
+  if (metadata.evidenceStatus !== STUDENT_PUBLICATION_REQUIREMENTS.evidenceStatus) {
     return denied("evidence-not-approved");
   }
 

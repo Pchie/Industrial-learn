@@ -8,18 +8,24 @@ export default defineConfig({
   workers: 1,
   reporter: [["html", { open: "never" }], ["list"]],
   use: {
-    baseURL: "http://127.0.0.1:3000",
+    baseURL: "http://127.0.0.1:3100",
     trace: "on-first-retry"
   },
   webServer: {
-    command: "npm run start --workspace @industrial-learn/web -- --hostname 127.0.0.1",
+    command:
+      "npm run build --workspace @industrial-learn/web && npm run start --workspace @industrial-learn/web -- --hostname 127.0.0.1 --port 3100",
     env: {
-      APP_BASE_URL: "http://127.0.0.1:3000",
+      APP_BASE_URL: "http://127.0.0.1:3100",
       INDUSTRIAL_LEARN_E2E: "true",
       INDUSTRIAL_LEARN_AUTH_MODE: "local",
-      NEXT_PUBLIC_APP_ENV: "test"
+      NEXT_PUBLIC_APP_ENV: "test",
+      NEXT_PUBLIC_SUPABASE_URL: "",
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "",
+      SUPABASE_SERVICE_ROLE_KEY: "",
+      SUPABASE_PROJECT_REF: "",
+      SUPABASE_DB_URL: ""
     },
-    url: "http://127.0.0.1:3000",
+    url: "http://127.0.0.1:3100",
     reuseExistingServer: !process.env.CI,
     timeout: 120000
   },

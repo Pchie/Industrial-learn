@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { requireStudentProfile } from "@/features/auth/server";
-import { SimulationAttemptView } from "@/features/simulations/components";
+import { SimulationAttemptView } from "@/features/simulations/attempt-components";
 import { loadSimulationAttemptPage } from "@/features/simulations/server";
 
 export default async function SimulationAttemptPage({

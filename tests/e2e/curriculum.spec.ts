@@ -13,40 +13,37 @@ test("browses the main curriculum catalogue", async ({ page }) => {
   await expect(page.getByText("Progress appears after sign in")).toBeVisible();
 });
 
-test("shows real programme year and module data", async ({ page }) => {
+test("keeps unpublished modules out of programme-year listings", async ({ page }) => {
   await page.goto("/programmes/mechanical-foundations/year/1");
 
   await expect(page.getByRole("heading", { name: "Academic Year 1" })).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Strength of Materials Foundations" })
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Fluid Mechanics Foundations" })
-  ).toBeVisible();
+    page.getByText("No modules are available for this semester yet.")
+  ).toHaveCount(2);
+  await expect(page.getByText("Strength of Materials Foundations")).toHaveCount(0);
+  await expect(page.getByText("Fluid Mechanics Foundations")).toHaveCount(0);
 });
 
-test("shows locked prerequisites on future modules", async ({ page }) => {
+test("denies a guessed unpublished module URL", async ({ page }) => {
   await page.goto("/modules/robotics-foundations");
 
-  await expect(page.getByRole("heading", { name: "Robotics Foundations" })).toBeVisible();
-  await expect(page.getByText("Control Systems Foundations")).toBeVisible();
-  await expect(page.getByText("Programming For Engineers Foundations")).toBeVisible();
-  await expect(page.getByText("Locked lesson", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: "This part of Industrial Learn is not available yet"
+    })
+  ).toBeVisible();
+  await expect(page.getByText("Robotics Foundations", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Control Systems Foundations")).toHaveCount(0);
 });
 
-test("shows career pathway module sequence", async ({ page }) => {
+test("denies a guessed unpublished pathway URL", async ({ page }) => {
   await page.goto("/pathways/industrial-monitoring");
 
   await expect(
-    page.getByRole("heading", { name: "Industrial Monitoring" })
+    page.getByRole("heading", {
+      name: "This part of Industrial Learn is not available yet"
+    })
   ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Core Engineering foundations" })
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Future Engineering modules" })
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Smart Pump Monitoring" })
-  ).toBeVisible();
+  await expect(page.getByText("Industrial Monitoring", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Smart Pump Monitoring", { exact: true })).toHaveCount(0);
 });

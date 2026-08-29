@@ -190,6 +190,7 @@ export type DeliveredQuestion = Omit<
   | "diagnosticEvidenceIds"
   | "rubric"
   | "explanation"
+  | "simulationId"
   | "assessmentModeHiddenHints"
 > & {
   assessmentModeHiddenHints?: never;
@@ -300,6 +301,7 @@ function sanitizeQuestion(
   delete safeQuestion.diagnosticEvidenceIds;
   delete safeQuestion.rubric;
   delete safeQuestion.explanation;
+  delete safeQuestion.simulationId;
 
   if (mode === "assessment") {
     delete safeQuestion.assessmentModeHiddenHints;

@@ -2,10 +2,10 @@ import Link from "next/link";
 import type { PersistedSimulationAttempt } from "@industrial-learn/database";
 
 import { startSimulationAction } from "./actions";
-import { SimulationAttemptClient } from "./interactive-client";
 import { awardsLabel } from "./local-store";
+import { SimulationPreview } from "./simulation-preview";
+import labStyles from "./simulation-lab.module.css";
 import type {
-  SimulationAttemptPageModel,
   SimulationOverview,
   SimulationSummary,
   SimulationReviewPageModel
@@ -64,24 +64,108 @@ export function SimulationList({ simulations }: { simulations: SimulationSummary
 
 export function SimulationOverviewView({
   overview,
-  message
+  message,
+  authenticated
 }: {
   overview: SimulationOverview;
   message?: string | undefined;
+  authenticated: boolean;
 }) {
+  const available = overview.availability === "available";
+
   return (
-    <div className="simulation-shell">
-      <SimulationHeader summary={overview} />
+    <div className={`${labStyles.labPage} ${labStyles.detailPage}`}>
+      <nav aria-label="Breadcrumb" className={labStyles.detailBreadcrumb}>
+        <Link href="/simulations">Simulation Lab</Link>
+        <span aria-hidden="true">/</span>
+        <span>{overview.title}</span>
+      </nav>
       {message ? (
         <div className="simulation-alert" role="alert">
           {message}
         </div>
       ) : null}
-      <section className="simulation-layout">
-        <div className="simulation-card">
-          <h2>Select operating mode</h2>
-          <div className="simulation-mode-grid">
-            {overview.modes.map((mode) => (
+
+      <header className={labStyles.detailHeader}>
+        <div className={labStyles.detailCopy}>
+          <div className={labStyles.statusRow}>
+            <span
+              className={`${labStyles.detailStatus} ${
+                available
+                  ? labStyles.detailStatusAvailable
+                  : labStyles.detailStatusUnavailable
+              }`}
+            >
+              {simulationAvailabilityLabel(overview.availability)}
+            </span>
+            <span className={labStyles.detailReview}>{overview.reviewStatus}</span>
+          </div>
+          <p className={labStyles.kicker}>
+            {overview.discipline} · {overview.types.join(" · ")}
+          </p>
+          <h1>{overview.title}</h1>
+          <p>{overview.mainConcept}</p>
+          <dl className={labStyles.detailFacts}>
+            <div>
+              <dt>Difficulty</dt>
+              <dd>{overview.difficulty}</dd>
+            </div>
+            <div>
+              <dt>Activity time</dt>
+              <dd>{overview.estimatedMinutes} minutes</dd>
+            </div>
+            <div>
+              <dt>Related module</dt>
+              <dd>{overview.moduleTitle}</dd>
+            </div>
+          </dl>
+          {available ? (
+            <form action={startSimulationAction} className={labStyles.quickStart}>
+              <input name="simulationSlug" type="hidden" value={overview.slug} />
+              <input name="mode" type="hidden" value={overview.recommendedMode} />
+              <button className="button button--primary" type="submit">
+                Start simulation
+              </button>
+              <span>Quick start: {formatMode(overview.recommendedMode)}</span>
+            </form>
+          ) : (
+            <p role="status">This simulation cannot be started in its current state.</p>
+          )}
+        </div>
+        <SimulationPreview preview={overview.preview} size="detail" />
+      </header>
+
+      <section aria-labelledby="operate-heading" className={labStyles.detailBand}>
+        <div>
+          <p className={labStyles.kicker}>Operate</p>
+          <h2 id="operate-heading">What you can change</h2>
+        </div>
+        <ul>
+          {overview.whatStudentsOperate.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+        <div>
+          <p className={labStyles.kicker}>Learn</p>
+          <h2>What you will establish</h2>
+        </div>
+        <ul>
+          {overview.learningOutcomes.map((outcome) => (
+            <li key={outcome}>{outcome}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section aria-labelledby="mode-heading" className={labStyles.modeSection}>
+        <div className={labStyles.sectionHeading}>
+          <div>
+            <p className={labStyles.kicker}>Operating modes</p>
+            <h2 id="mode-heading">Choose how to work</h2>
+          </div>
+        </div>
+        <div className="simulation-mode-grid">
+          {available ? (
+            overview.modes.map((mode) => (
               <form action={startSimulationAction} key={mode}>
                 <input name="simulationSlug" type="hidden" value={overview.slug} />
                 <input name="mode" type="hidden" value={mode} />
@@ -90,23 +174,36 @@ export function SimulationOverviewView({
                   <small>{modeDescription(mode)}</small>
                 </button>
               </form>
-            ))}
-          </div>
+            ))
+          ) : (
+            <p role="status">
+              Operating modes remain unavailable until the declared review gate is
+              completed.
+            </p>
+          )}
         </div>
+      </section>
 
-        <aside className="simulation-card" aria-labelledby="simulation-history-title">
-          <h2 id="simulation-history-title">Attempt history</h2>
+      {authenticated ? (
+        <section
+          aria-labelledby="simulation-history-title"
+          className={labStyles.historyBand}
+        >
+          <div>
+            <p className={labStyles.kicker}>Private learning evidence</p>
+            <h2 id="simulation-history-title">Your attempts</h2>
+          </div>
           {overview.attempts.length > 0 ? (
             <SimulationAttemptList attempts={overview.attempts} slug={overview.slug} />
           ) : (
             <p>No attempts have been recorded for your account.</p>
           )}
           <Link href="/simulations/history">View full simulation history</Link>
-        </aside>
-      </section>
+        </section>
+      ) : null}
 
-      <section className="simulation-card">
-        <h2>Technical boundaries</h2>
+      <details className={labStyles.technicalDetails}>
+        <summary>Technical boundaries and traceability</summary>
         <dl className="simulation-facts simulation-facts--wide">
           <div>
             <dt>Simulation ID</dt>
@@ -129,45 +226,8 @@ export function SimulationOverviewView({
           This pilot is marked {overview.reviewStatus}. It is a learning simulation and
           must not be treated as engineering approval for real hydraulic equipment.
         </p>
-      </section>
-    </div>
-  );
-}
-
-export function SimulationAttemptView({
-  model,
-  message
-}: {
-  model: SimulationAttemptPageModel;
-  message?: string | undefined;
-}) {
-  if (model.attempt.status === "submitted" || model.attempt.status === "graded") {
-    return (
-      <div className="simulation-shell">
-        <SimulationHeader summary={model.overview} />
-        <section className="simulation-card">
-          <h2>This attempt has already been completed</h2>
-          <p>Completed simulation attempts cannot be changed or submitted again.</p>
-          <Link
-            className="button button--primary"
-            href={`/simulations/${model.overview.slug}/attempt/${model.attempt.id}/review`}
-          >
-            Review completed attempt
-          </Link>
-        </section>
-      </div>
-    );
-  }
-
-  return (
-    <div className="simulation-shell">
-      <SimulationHeader summary={model.overview} />
-      {message ? (
-        <div className="simulation-alert" role="alert">
-          {message}
-        </div>
-      ) : null}
-      <SimulationAttemptClient model={model} />
+        <Link href={`/lessons/${overview.lessonSlug}`}>Open related lesson</Link>
+      </details>
     </div>
   );
 }
@@ -257,7 +317,7 @@ export function SimulationHistoryView({
   );
 }
 
-function SimulationHeader({ summary }: { summary: SimulationSummary }) {
+export function SimulationHeader({ summary }: { summary: SimulationSummary }) {
   return (
     <header className="simulation-hero">
       <p className="eyebrow">{summary.moduleTitle}</p>
@@ -344,15 +404,15 @@ function slugForAttempt(attempt: PersistedSimulationAttempt) {
 function modeDescription(mode: string) {
   switch (mode) {
     case "learn":
-      return "Component explanation and equation assistance.";
+      return "Show me what everything does.";
     case "guided":
-      return "Step-by-step operation with hints.";
+      return "Walk me through an engineering task.";
     case "explore":
-      return "Free permitted input adjustment.";
+      return "Let me experiment.";
     case "fault-diagnosis":
-      return "Observe, measure, diagnose, and submit.";
+      return "Give me a fault.";
     case "assessment":
-      return "Restricted hints with server scoring.";
+      return "Test what I know.";
     default:
       return "Simulation mode.";
   }
@@ -363,6 +423,16 @@ function formatMode(mode: string) {
     .split("-")
     .map((part) => part[0]?.toUpperCase() + part.slice(1))
     .join(" ");
+}
+
+function simulationAvailabilityLabel(availability: SimulationSummary["availability"]) {
+  if (availability === "locked-by-prerequisite") {
+    return "Locked by prerequisite";
+  }
+  if (availability === "coming-later") {
+    return "Coming later";
+  }
+  return "Available";
 }
 
 function formatNumber(value: number) {

@@ -17,6 +17,8 @@ This file documents why each initial application dependency is required before d
 | `@industrial-learn/content-review-workflow` | `packages/database`                 | Allows content governance persistence to reuse the existing review workflow types and status model.       | Keeps persistence aligned with domain governance rules.                                              |
 | `@industrial-learn/engineering-core`        | `packages/database`                 | Allows explicit supported SI normalisation before scoring numeric engineering answers.                    | Conversions remain explicit and validated.                                                           |
 | `@industrial-learn/simulation-engine`       | `packages/database`                 | Allows registered simulation validation and server-side assessment-mode simulation scoring.               | Stores attempt summaries rather than animation frames.                                               |
+| `@industrial-learn/engineering-core`        | `apps/web`                          | Provides the existing structured calculation-result type consumed by the visual Live Equation boundary.   | Type-level integration only; visual components do not execute or duplicate engineering formulas.     |
+| `@industrial-learn/content-review-workflow` | `apps/web`                          | Provides the shared fail-closed publication visibility policy to server loaders and delivery adapters.    | Internal workspace dependency only; it centralises status decisions and adds no external package.    |
 
 ## Security Overrides
 

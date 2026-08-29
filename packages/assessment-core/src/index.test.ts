@@ -25,6 +25,8 @@ describe("assessment delivery access control", () => {
     expect(serialized).not.toContain("diagnosticEvidenceIds");
     expect(serialized).not.toContain("rubric");
     expect(serialized).not.toContain("explanation");
+    expect(serialized).not.toContain("SIM-HYD-CYL-FORCE-001");
+    expect(serialized).not.toContain("simulationId");
     expect(serialized).not.toContain("The expected result is 10000 N.");
   });
 

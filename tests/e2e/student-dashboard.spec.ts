@@ -24,7 +24,7 @@ test("shows honest empty states for a new authenticated student", async ({ page 
   ).toBeVisible();
 });
 
-test("shows active student modules, assessments, simulations, projects, and recommendations", async ({
+test("shows active private records without linking to unpublished lessons or simulations", async ({
   page
 }) => {
   await signIn(page, "active.student@example.test");
@@ -34,24 +34,23 @@ test("shows active student modules, assessments, simulations, projects, and reco
   ).toBeVisible();
   await expect(page.getByText("Mechanical Engineering Foundations")).toBeVisible();
   await expect(page.getByText("Year 1, Semester 1")).toBeVisible();
-  await expect(page.getByText("Fluid Mechanics Foundations")).toBeVisible();
+  await expect(page.getByText("Fluid Mechanics Foundations")).toHaveCount(0);
   await expect(
     page
       .getByLabel("Recent assessment results")
       .getByRole("heading", { name: "Fluid pressure knowledge check" })
   ).toBeVisible();
-  await expect(
-    page
-      .getByLabel("Simulation activity")
-      .getByRole("heading", { name: "Hydraulic cylinder force simulation" })
-  ).toBeVisible();
+  await expect(page.getByLabel("Simulation activity")).toContainText(
+    "Simulation runs will appear after a student submits activity evidence."
+  );
+  await expect(page.getByText("Hydraulic cylinder force simulation")).toHaveCount(0);
   await expect(
     page
       .getByLabel("Active projects")
       .getByRole("heading", { name: "Fluid pressure observation project" })
   ).toBeVisible();
-  await expect(page.getByText("Pressure from force and area")).toBeVisible();
-  await expect(page.getByText("SI unit handling")).toBeVisible();
+  await expect(page.getByText("Pressure from force and area")).toHaveCount(0);
+  await expect(page.getByText("SI unit handling")).toHaveCount(0);
 });
 
 test("dashboard URL query parameter cannot impersonate another student", async ({
@@ -96,21 +95,16 @@ test("shows no recent activity without leaking another student's data", async ({
   await expect(page.getByText("Active Industrial Student")).not.toBeVisible();
 });
 
-test("recommendation dismissal is recorded for the authenticated student", async ({
-  page
-}) => {
+test("recommendations targeting unpublished modules are excluded", async ({ page }) => {
   await signIn(page, "recommendation.student@example.test");
-
-  await expect(
-    page
-      .getByLabel("Weak-topic recommendations")
-      .getByRole("heading", { name: "Fluid pressure knowledge check" })
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Dismiss" }).first().click();
 
   await expect(
     page.getByText("No weak-topic recommendations are available yet")
   ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Dismiss" })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Open recommended activity" })).toHaveCount(
+    0
+  );
 });
 
 test("database failure shows a safe dashboard error", async ({ page }) => {

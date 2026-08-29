@@ -22,7 +22,7 @@
     "test:unit:watch": "vitest",
     "test:a11y": "playwright test tests/e2e/accessibility.spec.ts",
     "test:smoke": "playwright test tests/e2e/staging-smoke.spec.ts",
-    "test:e2e": "npm run build && playwright test",
+    "test:e2e": "playwright test",
     "ci": "npm run scan:secrets && npm run format:check && npm run typecheck && npm run lint && npm run validate:content && npm run validate:migrations && npm run test:unit && npm run build"
   },
   "dependencies": {

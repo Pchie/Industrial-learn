@@ -1,7 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
 
 test.describe("staging smoke checks", () => {
-  test("homepage, curriculum, and published lesson routes render", async ({ page }) => {
+  test("homepage and curriculum render while unpublished lessons fail closed", async ({
+    page
+  }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { name: "Industrial Learn" })).toBeVisible();
 
@@ -12,10 +14,11 @@ test.describe("staging smoke checks", () => {
 
     await page.goto("/lessons/basic-fluid-pressure");
     await expect(
-      page.getByRole("heading", { name: "Basic Fluid Pressure" })
+      page.getByRole("heading", {
+        name: "This part of Industrial Learn is not available yet"
+      })
     ).toBeVisible();
-    await expect(page.getByText("Source required").first()).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Source records" })).toBeVisible();
+    await expect(page.getByText("Basic Fluid Pressure", { exact: true })).toHaveCount(0);
   });
 
   test("protected dashboard requires authentication and protects student ownership", async ({
@@ -45,10 +48,13 @@ test.describe("staging smoke checks", () => {
     ).toBeVisible();
 
     await page.goto("/simulations");
-    await expect(page.getByRole("heading", { name: "Simulations" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "View simulation" })).toBeVisible();
-    await page.getByRole("link", { name: "View simulation" }).click();
-    await expect(page.getByText("Source required", { exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Simulation Lab" })).toBeVisible();
+    await expect(
+      page.getByText("Reviewed simulations are being prepared.")
+    ).toBeVisible();
+    await expect(
+      page.locator('a[href="/simulations/hydraulic-cylinder-force"]')
+    ).toHaveCount(0);
   });
 
   test("reviewer can access review workspace and student cannot access draft tools", async ({

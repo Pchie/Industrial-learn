@@ -1,8 +1,11 @@
 import { notFound } from "next/navigation";
 
-import { requireStudentProfile } from "@/features/auth/server";
+import { resolveAuthenticatedSession } from "@/features/auth/server";
 import { SimulationOverviewView } from "@/features/simulations/components";
-import { loadSimulationOverview } from "@/features/simulations/server";
+import {
+  loadPublicSimulationOverview,
+  loadSimulationOverview
+} from "@/features/simulations/server";
 
 export default async function SimulationOverviewPage({
   params,
@@ -12,8 +15,13 @@ export default async function SimulationOverviewPage({
   searchParams: Promise<{ error?: string | string[] }>;
 }) {
   const { simulationSlug } = await params;
-  const session = await requireStudentProfile(`/simulations/${simulationSlug}`);
-  const overview = await loadSimulationOverview(session, simulationSlug);
+  const auth = await resolveAuthenticatedSession();
+  const session = auth.ok && auth.value.roles.includes("student") ? auth.value : null;
+  const publicOverview = loadPublicSimulationOverview(simulationSlug);
+  const overview =
+    session && publicOverview?.availability === "available"
+      ? await loadSimulationOverview(session, simulationSlug)
+      : publicOverview;
 
   if (!overview) {
     notFound();
@@ -24,6 +32,7 @@ export default async function SimulationOverviewPage({
 
   return (
     <SimulationOverviewView
+      authenticated={Boolean(session)}
       message={error ? "The simulation request could not be completed." : undefined}
       overview={overview}
     />

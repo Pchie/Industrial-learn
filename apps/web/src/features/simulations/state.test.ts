@@ -50,6 +50,69 @@ describe("simulation browser state parsing", () => {
     ).toThrow(/pressure must be between/);
   });
 
+  it("reconstructs a valid thermodynamic boundary classification", () => {
+    const parsed = parseSimulationCompletionPayload(
+      JSON.stringify({
+        definitionId: "sim-core-thermal-system-001",
+        mode: "guided",
+        status: "running",
+        elapsedTimeSeconds: 20,
+        speedMultiplier: 1,
+        inputs: {
+          massCrossing: 1,
+          energyCrossing: 1
+        },
+        activeFaultIds: []
+      }),
+      "{}",
+      ""
+    );
+
+    expect(parsed.finalState.outputs.classificationCode).toBe(1);
+    expect(parsed.finalState.elapsedTimeSeconds).toBe(0);
+    expect(parsed.finalState.validity.status).toBe("valid");
+  });
+
+  it("reconstructs the inconsistent-boundary diagnostic state", () => {
+    const parsed = parseSimulationCompletionPayload(
+      JSON.stringify({
+        definitionId: "sim-core-thermal-system-001",
+        mode: "fault-diagnosis",
+        status: "faulted",
+        inputs: {
+          massCrossing: 0,
+          energyCrossing: 1
+        },
+        activeFaultIds: ["boundary-shift"]
+      }),
+      JSON.stringify({ selectedDiagnosis: "boundary-shift" }),
+      ""
+    );
+
+    expect(parsed.finalState.status).toBe("faulted");
+    expect(parsed.finalState.outputs.classificationCode).toBe(0);
+    expect(parsed.finalState.alarms[0]).toContain("Boundary consistency fault");
+  });
+
+  it("rejects undeclared thermodynamic crossing selections before persistence", () => {
+    expect(() =>
+      parseSimulationCompletionPayload(
+        JSON.stringify({
+          definitionId: "sim-core-thermal-system-001",
+          mode: "guided",
+          status: "running",
+          inputs: {
+            massCrossing: 0.5,
+            energyCrossing: 1
+          },
+          activeFaultIds: []
+        }),
+        "{}",
+        ""
+      )
+    ).toThrow(/declared selection/);
+  });
+
   it("rejects non-finite assessment answers", () => {
     expect(() =>
       parseSimulationCompletionPayload(

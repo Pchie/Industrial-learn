@@ -3,8 +3,10 @@ import {
   buildStudentDashboardModel,
   buildWeakTopicRecommendations,
   calculateCompetencyProfile,
+  calculateModuleProgress,
   type StudentDashboardData
 } from "./data";
+import { getInternalCurriculum } from "../curriculum/data";
 
 const baseData: StudentDashboardData = {
   profile: {
@@ -35,7 +37,7 @@ const baseData: StudentDashboardData = {
 
 describe("student dashboard model", () => {
   it("does not award progress for merely opening a lesson", () => {
-    const model = buildStudentDashboardModel({
+    const data = {
       ...baseData,
       lessonProgress: [
         {
@@ -48,12 +50,18 @@ describe("student dashboard model", () => {
           lastActivityAt: "2026-07-21T00:00:00.000Z"
         }
       ]
-    });
-
-    expect(model.moduleCards[0]?.progress.completedEvidence).toBe(0);
-    expect(model.moduleCards[0]?.progress.explanation).toContain(
-      "Opening a lesson does not award progress"
+    } satisfies StudentDashboardData;
+    const internalModule = getInternalCurriculum().modules.find(
+      (module) => module.slug === "fluid-mechanics-foundations"
     );
+    expect(internalModule).toBeDefined();
+
+    const progress = calculateModuleProgress(internalModule!, data).progress;
+    const publicModel = buildStudentDashboardModel(data);
+
+    expect(progress.completedEvidence).toBe(0);
+    expect(progress.explanation).toContain("Opening a lesson does not award progress");
+    expect(publicModel.moduleCards).toEqual([]);
   });
 
   it("calculates competency evidence from assessments, simulations, and projects", () => {
