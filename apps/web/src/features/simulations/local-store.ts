@@ -9,7 +9,7 @@ import {
 import type { CompetencyLevel } from "@industrial-learn/assessment-core";
 
 import { recordLocalSimulationDashboardAttempt } from "../student-dashboard/local-dashboard-store";
-import { getSimulationCatalogBySlug } from "./catalog";
+import { getSimulationCatalogBySlugForInternalUse } from "./catalog";
 
 const attempts = new Map<string, PersistedSimulationAttempt>();
 
@@ -99,7 +99,7 @@ export function createLocalSimulationPersistence() {
 }
 
 function recordDashboardAttempt(attempt: PersistedSimulationAttempt) {
-  const entry = getSimulationCatalogBySlug("hydraulic-cylinder-force");
+  const entry = getSimulationCatalogBySlugForInternalUse("hydraulic-cylinder-force");
   recordLocalSimulationDashboardAttempt(attempt.studentProfileId, {
     id: attempt.id,
     simulationSlug: entry?.slug ?? attempt.simulationId,

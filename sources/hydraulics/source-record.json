@@ -31,7 +31,8 @@
     "No actual hydraulics source document is present in sources/.",
     "No manufacturer cylinder rating, seal behaviour, safety instruction, or pressure limit may be inferred from this placeholder."
   ],
-  "notes": "Use this ID only to keep traceability explicit while the real source remains missing.",
+  "supersededBy": ["SRC-PARKER-140H8-CYLINDER-2024"],
+  "notes": "Superseded on 2026-08-26. This ID remains an unapproved audit record and must not support new content.",
   "createdAt": "2026-07-22",
-  "updatedAt": "2026-07-22"
+  "updatedAt": "2026-08-26"
 }

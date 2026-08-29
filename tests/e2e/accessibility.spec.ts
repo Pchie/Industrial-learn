@@ -12,6 +12,12 @@ const publicRoutes = [
   "/programmes/mechanical-foundations/year/1",
   "/modules/fluid-mechanics-foundations",
   "/lessons/basic-fluid-pressure",
+  "/lessons/hydraulic-cylinder-force",
+  "/lessons/bernoulli-flow-lab",
+  "/simulations",
+  "/simulations/hydraulic-cylinder-force",
+  "/simulations/bernoulli-flow-lab",
+  "/simulations/thermal-system-boundary-simulation",
   "/internal/design-system"
 ];
 
@@ -20,6 +26,12 @@ const overflowRoutes = [
   "/learn",
   "/modules/robotics-foundations",
   "/lessons/basic-fluid-pressure",
+  "/lessons/hydraulic-cylinder-force",
+  "/lessons/bernoulli-flow-lab",
+  "/simulations",
+  "/simulations/hydraulic-cylinder-force",
+  "/simulations/bernoulli-flow-lab",
+  "/simulations/thermal-system-boundary-simulation",
   "/internal/design-system"
 ];
 
@@ -50,6 +62,11 @@ const authenticatedRoutes = [
     email: "active.student@example.test",
     path: "/simulations/history",
     label: "simulation history"
+  },
+  {
+    email: "reviewer@example.test",
+    path: "/internal/visual-simulation-lab",
+    label: "authorised visual simulation review lab"
   }
 ];
 
@@ -141,15 +158,18 @@ test("reduced-motion preference disables smooth scrolling", async ({ page }) => 
   await expect(page.locator("html")).toHaveCSS("scroll-behavior", "auto");
 });
 
-test("lesson equations and simulation controls have accessible labels", async ({
+test("hidden lessons expose no equation metadata and internal controls remain labelled", async ({
   page
 }) => {
   await page.goto("/lessons/basic-fluid-pressure");
 
-  await expect(page.getByLabel(/Equation:/).first()).toBeVisible();
   await expect(
-    page.getByRole("table", { name: "Symbols and SI units" }).first()
+    page.getByRole("heading", {
+      name: "This part of Industrial Learn is not available yet"
+    })
   ).toBeVisible();
+  await expect(page.getByLabel(/Equation:/)).toHaveCount(0);
+  await expect(page.getByRole("table", { name: "Symbols and SI units" })).toHaveCount(0);
 
   await page.goto("/internal/design-system");
   await expect(page.getByRole("slider", { name: "Valve position" })).toBeVisible();

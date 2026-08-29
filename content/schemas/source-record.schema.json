@@ -17,9 +17,50 @@
   "properties": {
     "id": { "type": "string", "pattern": "^SRC-[A-Z0-9-]+$" },
     "title": { "type": "string", "minLength": 1 },
+    "fullTitle": { "type": "string", "minLength": 1 },
+    "author": { "type": "string", "minLength": 1 },
+    "organisation": { "type": "string", "minLength": 1 },
+    "edition": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "publicationDate": { "type": "string", "minLength": 1 },
+    "accessDate": { "type": "string", "minLength": 1 },
     "documentType": { "type": "string", "minLength": 1 },
     "citation": { "type": "string", "minLength": 1 },
-    "url": { "type": "string" },
+    "url": { "type": "string", "format": "uri" },
+    "filePath": { "type": ["string", "null"] },
+    "accessMode": {
+      "type": "string",
+      "enum": ["local-file", "metadata-only"]
+    },
+    "copyrightStatus": { "type": "string", "minLength": 1 },
+    "reliabilityLevel": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "reviewer": { "type": ["string", "null"] },
+    "reviewDate": { "type": ["string", "null"] },
+    "relevantChapters": { "type": "array", "items": { "type": "string" } },
+    "relevantSections": { "type": "array", "items": { "type": "string" } },
+    "relevantPages": { "type": "array", "items": { "type": "string" } },
+    "rights": {
+      "type": "object",
+      "properties": {
+        "licence": { "type": "string" },
+        "permittedInternalUse": { "type": "string" },
+        "mayDistribute": { "type": "boolean" },
+        "metadataOnly": { "type": "boolean" },
+        "studentMayOpenDirectly": { "type": "boolean" }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "properties": {
+        "documentOpened": { "type": "boolean" },
+        "metadataVerified": { "type": "boolean" },
+        "verifiedAt": { "type": "string" },
+        "verificationMethod": { "type": "string" },
+        "fixedPageCount": { "type": ["integer", "null"] },
+        "sha256": { "type": ["string", "null"] },
+        "containsEmbeddedJavaScript": { "type": "boolean" }
+      }
+    },
     "approvalStatus": { "$ref": "#/$defs/reviewStatus" },
     "reviewStatus": { "$ref": "#/$defs/reviewStatus" },
     "evidenceStatus": {

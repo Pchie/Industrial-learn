@@ -1,9 +1,10 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { COMPETENCY_LEVELS } from "@industrial-learn/assessment-core";
 import { Alert, Badge, ProgressIndicator } from "@industrial-learn/design-system";
 
 import { dismissRecommendationAction } from "./actions";
-import { competencyLevels, type StudentDashboardModel } from "./data";
+import type { StudentDashboardModel } from "./data";
 
 export function StudentDashboard({
   hideRecommendations,
@@ -118,9 +119,9 @@ export function StudentDashboard({
       </DashboardSection>
 
       <DashboardSection title="Competency profile">
-        {competencyLevels.some((level) => (model.competencyProfile[level] ?? 0) > 0) ? (
+        {COMPETENCY_LEVELS.some((level) => (model.competencyProfile[level] ?? 0) > 0) ? (
           <div className="competency-grid">
-            {competencyLevels.map((level) => (
+            {COMPETENCY_LEVELS.map((level) => (
               <article className="dashboard-card" key={level}>
                 <h3>{level}</h3>
                 <p>{model.competencyProfile[level] ?? 0} assessed evidence points</p>

@@ -73,7 +73,7 @@ const localGovernanceItems: GovernanceInterfaceItem[] = [
     publicationStatus: "draft",
     currentVersion: 2,
     publishedVersion: 1,
-    sourceIds: ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
+    sourceIds: ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
     requiredReviews: ["source", "equation", "safety", "engineering_approval"],
     completedReviews: ["source", "equation"],
     reviewerComments: ["Clarify the SI unit assumption before final approval."]

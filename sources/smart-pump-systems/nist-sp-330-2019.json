@@ -1,0 +1,71 @@
+{
+  "id": "SRC-NIST-SP330-2019",
+  "title": "The International System of Units (SI), 2019 Edition",
+  "fullTitle": "The International System of Units (SI), 2019 Edition",
+  "author": "David B. Newell and Eite Tiesinga, editors",
+  "organisation": "National Institute of Standards and Technology",
+  "edition": "2019 Edition; United States version of the ninth SI Brochure",
+  "version": "NIST Special Publication 330-2019",
+  "publicationDate": "2019-08-20",
+  "accessDate": "2026-08-26",
+  "documentType": "official government metrology publication",
+  "discipline": "Metrology and SI units",
+  "topics": [
+    "SI coherent units",
+    "pascal",
+    "newton",
+    "watt",
+    "area and volume units",
+    "SI prefixes"
+  ],
+  "url": "https://doi.org/10.6028/NIST.SP.330-2019",
+  "downloadUrl": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.330-2019.pdf",
+  "filePath": null,
+  "accessMode": "metadata-only",
+  "copyrightStatus": "BIPM works are internationally protected by copyright; NIST SP 330 is available free of charge and is retained as metadata-only evidence.",
+  "rights": {
+    "licence": "No repository redistribution licence asserted",
+    "permittedInternalUse": "Citation and factual verification of SI names, symbols, dimensions, and prefixes",
+    "mayDistribute": false,
+    "metadataOnly": true,
+    "studentMayOpenDirectly": true
+  },
+  "reliabilityLevel": 1,
+  "citation": "Newell, D. B. and Tiesinga, E., eds. (2019), The International System of Units (SI), 2019 Edition, NIST SP 330-2019, doi:10.6028/NIST.SP.330-2019, accessed 2026-08-26.",
+  "approvalStatus": "Source checked",
+  "reviewStatus": "Source checked",
+  "evidenceStatus": "approved",
+  "reviewer": "Codex source-verification agent",
+  "reviewerType": "automated-assisted technical librarian review",
+  "reviewDate": "2026-08-26",
+  "independentHumanReviewRequired": true,
+  "verification": {
+    "documentOpened": true,
+    "metadataVerified": true,
+    "verifiedAt": "2026-08-26",
+    "verificationMethod": "Official NIST publication page and 138-page PDF inspected with PDF metadata and text extraction",
+    "fixedPageCount": 138,
+    "sha256": "57fadf9d4d086bd167634afc02ed9cb71278d16a676f36bc89f7148cbe64bf78"
+  },
+  "relevantChapters": [
+    "2 The International System of Units",
+    "3 Decimal multiples and sub-multiples of SI units"
+  ],
+  "relevantSections": [
+    "2.3.4 Derived units",
+    "Table 4: SI units with special names and symbols",
+    "Table 5: coherent derived units",
+    "Table 7: SI prefixes",
+    "Table 8: Non-SI units accepted for use with SI units"
+  ],
+  "relevantPages": ["15", "17", "23", "25"],
+  "limitations": [
+    "This source defines units and notation; it does not define pump diagnostic thresholds or equipment ratings.",
+    "The PDF is not copied into the repository because the BIPM copyright notice does not establish repository redistribution permission.",
+    "Independent human source review remains required before student-use approval."
+  ],
+  "supersedesSourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
+  "notes": "The SHA-256 records the official PDF inspected on the access date; the repository stores metadata only.",
+  "createdAt": "2026-08-26",
+  "updatedAt": "2026-08-26"
+}

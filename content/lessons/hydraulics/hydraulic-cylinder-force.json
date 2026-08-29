@@ -1,0 +1,727 @@
+{
+  "id": "LES-HYD-CYL-FORCE-VISUAL-001",
+  "slug": "hydraulic-cylinder-force",
+  "title": "Hydraulic Cylinder Force",
+  "description": "Explore how cap-end pressure and circular piston diameter determine ideal theoretical extension force in an internal visual pilot.",
+  "schemaVersion": "3.0.0",
+  "experienceModel": "visual-v2",
+  "visualLessonType": "flagship-simulation",
+  "lessonType": "phenomenon",
+  "visualStandardVersion": "1.0.0",
+  "visualMetadata": {
+    "firstScreen": {
+      "purpose": "Change pressure or piston diameter and see the ideal theoretical extension force respond.",
+      "primaryVisualBlockId": "VIS-HYD-CYL-HERO-001",
+      "primaryControlIds": ["pressureMPa", "pistonDiameterMm"]
+    },
+    "progression": ["see", "play", "calculate", "challenge", "apply", "check"],
+    "inputs": [
+      {
+        "id": "pressureMPa",
+        "label": "Pressure",
+        "quantity": "pressure",
+        "unit": "MPa",
+        "internalUnit": "Pa",
+        "default": 5,
+        "minimum": 0,
+        "maximum": 20,
+        "step": 0.5,
+        "validation": "Reject non-finite values and constrain values to the reviewed educational interaction range.",
+        "modelValidityRange": { "minimum": 0, "maximum": 20 },
+        "accessibilityLabel": "Cap-end pressure in megapascals",
+        "educationalDescription": "Controls the uniform cap-end pressure used by the ideal force model."
+      },
+      {
+        "id": "pistonDiameterMm",
+        "label": "Piston diameter",
+        "quantity": "length",
+        "unit": "mm",
+        "internalUnit": "m",
+        "default": 50,
+        "minimum": 25,
+        "maximum": 100,
+        "step": 1,
+        "validation": "Reject non-finite values and constrain values to the reviewed educational interaction range.",
+        "modelValidityRange": { "minimum": 25, "maximum": 100 },
+        "accessibilityLabel": "Piston diameter in millimetres",
+        "educationalDescription": "Controls the circular cap-end piston area used by the ideal force model."
+      }
+    ],
+    "outputs": [
+      {
+        "id": "capEndPressure",
+        "label": "Cap-end pressure",
+        "quantity": "pressure",
+        "unit": "MPa",
+        "internalUnit": "Pa",
+        "interpretation": "The applied uniform pressure state at the cylinder cap end.",
+        "validityState": "valid",
+        "measurementSource": "SIM-HYD-CYL-FORCE-001 pressure measurement"
+      },
+      {
+        "id": "pistonArea",
+        "label": "Cap-end piston area",
+        "quantity": "area",
+        "unit": "m^2",
+        "internalUnit": "m^2",
+        "interpretation": "The circular area calculated from the current piston diameter.",
+        "validityState": "valid",
+        "measurementSource": "EQ-HYD-PISTON-AREA-DIAMETER-001 result"
+      },
+      {
+        "id": "cylinderForce",
+        "label": "Theoretical extension force",
+        "quantity": "force",
+        "unit": "kN",
+        "internalUnit": "N",
+        "interpretation": "The ideal theoretical cap-end extension force, not a rated available force.",
+        "validityState": "valid",
+        "warning": "The model excludes losses, dynamics, component ratings and machine geometry.",
+        "measurementSource": "EQ-FLUID-FORCE-PRESSURE-AREA-001 result"
+      }
+    ]
+  },
+  "simulationIds": ["SIM-HYD-CYL-FORCE-001"],
+  "equationIds": ["EQ-HYD-PISTON-AREA-DIAMETER-001", "EQ-FLUID-FORCE-PRESSURE-AREA-001"],
+  "publicationStatus": "internal",
+  "reviewStatus": "Engineering review required",
+  "version": "0.1.0",
+  "estimatedCompletionTime": "30 minutes",
+  "estimatedInteractionTime": "20 minutes",
+  "difficulty": "Foundational",
+  "prerequisites": ["LES-FLUID-PRESSURE-001"],
+  "knowledgeFileIds": ["KF-HYD-CYL-FORCE-001", "KF-FLUID-PRESSURE-FUNDAMENTALS-001"],
+  "sourceIds": [
+    "SRC-PARKER-140H8-CYLINDER-2024",
+    "SRC-NIST-SP330-2019",
+    "SRC-CAT-BOOM-CYLINDER-6040431-2026"
+  ],
+  "learningOutcomes": [
+    "Explain how cap-end pressure acting over piston area produces ideal theoretical extension force.",
+    "Use piston diameter to calculate circular cap-end area in SI units.",
+    "Predict how pressure and piston diameter affect theoretical force.",
+    "Configure an idealised pressure-and-diameter state that meets a stated opposing-force target.",
+    "State why this ideal relationship is not a complete cylinder or machine design model."
+  ],
+  "relatedApplications": ["excavator boom cylinder"],
+  "relatedAssessmentIds": ["ASM-FLUID-PRESSURE-001"],
+  "requiredSections": [
+    "lessonHeader",
+    "estimatedCompletionTime",
+    "difficulty",
+    "prerequisites",
+    "learningOutcomes",
+    "whyTopicMatters",
+    "keyTerminology",
+    "visualExplanation",
+    "theory",
+    "equations",
+    "workedExamples",
+    "interactiveActivity",
+    "faultFindingExercise",
+    "safetyConsiderations",
+    "knowledgeCheck",
+    "summary",
+    "sources",
+    "nextRecommendedLesson"
+  ],
+  "sections": {
+    "lessonHeader": {
+      "title": "Lesson header",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-HEADER-001",
+          "type": "paragraph",
+          "text": "This internal pilot models ideal theoretical cap-end extension force and remains Engineering review required.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
+        }
+      ]
+    },
+    "estimatedCompletionTime": {
+      "title": "Estimated completion time",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-TIME-001",
+          "type": "paragraph",
+          "text": "Allow about 20 minutes for interaction and 10 minutes for the check and optional deeper explanation."
+        }
+      ]
+    },
+    "difficulty": {
+      "title": "Difficulty",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-DIFFICULTY-001",
+          "type": "paragraph",
+          "text": "Foundational: introductory fluid pressure, circular area and explicit SI conversion."
+        }
+      ]
+    },
+    "prerequisites": {
+      "title": "Prerequisites",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-PREREQ-001",
+          "type": "paragraph",
+          "text": "Complete the basic fluid-pressure lesson before this visual pilot."
+        }
+      ]
+    },
+    "learningOutcomes": {
+      "title": "Learning outcomes",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-OUTCOMES-001",
+          "type": "paragraph",
+          "text": "Connect pressure and cap-end piston area to ideal theoretical extension force, calculate the circular area from diameter, and state the model limitations.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
+        }
+      ]
+    },
+    "whyTopicMatters": {
+      "title": "Why this topic matters",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-WHY-001",
+          "type": "paragraph",
+          "text": "Hydraulic cylinders convert fluid pressure into mechanical force, but real actuator and machine performance requires more than the ideal pressure-area relationship.",
+          "sourceIds": [
+            "SRC-PARKER-140H8-CYLINDER-2024",
+            "SRC-CAT-BOOM-CYLINDER-6040431-2026"
+          ]
+        }
+      ]
+    },
+    "keyTerminology": {
+      "title": "Key terminology",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-TERM-001",
+          "type": "definition",
+          "term": "Cap-end effective area",
+          "definition": "For this extension-only pilot, the full circular piston face exposed to cap-end pressure.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
+        }
+      ]
+    },
+    "visualExplanation": {
+      "title": "Visual explanation",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-VISUAL-001",
+          "type": "paragraph",
+          "text": "The visual binds one normal-state pressure, circular cap-end area and ideal theoretical force result across the gauge, cutaway, vector, schematic and text summary.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
+        }
+      ]
+    },
+    "theory": {
+      "title": "Theory",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-THEORY-001",
+          "type": "paragraph",
+          "text": "Pressure alone does not define cylinder force; the effective pressurised area is also required. Detailed assumptions and exclusions are retained in Deep Dive.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
+        }
+      ]
+    },
+    "equations": {
+      "title": "Equations",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-EQ-AREA-001",
+          "type": "equation",
+          "name": "Circular cap-end piston area",
+          "expression": "A = πD² / 4",
+          "symbols": [
+            { "symbol": "A", "name": "cap-end piston area", "unit": "m^2" },
+            { "symbol": "D", "name": "piston diameter", "unit": "m" }
+          ],
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
+        },
+        {
+          "id": "BLK-HYD-CYL-EQ-FORCE-001",
+          "type": "equation",
+          "name": "Ideal theoretical extension force",
+          "expression": "F = p × A",
+          "symbols": [
+            { "symbol": "F", "name": "theoretical extension force", "unit": "N" },
+            { "symbol": "p", "name": "cap-end pressure", "unit": "Pa" },
+            { "symbol": "A", "name": "cap-end piston area", "unit": "m^2" }
+          ],
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
+        }
+      ]
+    },
+    "workedExamples": {
+      "title": "Worked example",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-WORKED-001",
+          "type": "workedCalculation",
+          "title": "50 mm piston at 10 MPa",
+          "given": ["p = 10 MPa", "D = 50 mm"],
+          "steps": [
+            {
+              "label": "Convert pressure",
+              "expression": "10 MPa = 10,000,000 Pa",
+              "explanation": "Convert the pressure explicitly to the internal SI unit."
+            },
+            {
+              "label": "Convert diameter",
+              "expression": "50 mm = 0.05 m",
+              "explanation": "Convert the piston diameter explicitly to metres."
+            },
+            {
+              "label": "Calculate area",
+              "expression": "A = π(0.05)² / 4 = 0.0019635 m²",
+              "explanation": "Calculate the full circular cap-end piston area."
+            },
+            {
+              "label": "Calculate force",
+              "expression": "F = 10,000,000 × 0.0019635 = 19,635 N",
+              "explanation": "Apply the ideal theoretical pressure-area relationship."
+            }
+          ],
+          "result": "Approximately 19.63 kN ideal theoretical extension force.",
+          "interpretation": "This is not a rated available force or proof that a real load can be raised safely.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024", "SRC-NIST-SP330-2019"]
+        }
+      ]
+    },
+    "interactiveActivity": {
+      "title": "Interactive activity",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-ACTIVITY-001",
+          "type": "paragraph",
+          "text": "Change pressure and piston diameter, compare the synchronized state, then meet the idealised 15 kN opposing-force condition."
+        }
+      ]
+    },
+    "faultFindingExercise": {
+      "title": "Fault finding",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-FAULT-DEFERRED-001",
+          "type": "paragraph",
+          "text": "Fault diagnosis is introduced in a later hydraulic system lesson because no reviewed fault model is enabled here."
+        }
+      ]
+    },
+    "safetyConsiderations": {
+      "title": "Safety considerations",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-SAFETY-001",
+          "type": "warning",
+          "severity": "warning",
+          "title": "Training model only",
+          "text": "This lesson does not establish equipment ratings, inspection procedures, operating permission or professional design sufficiency. Pressurised hydraulic equipment requires authorised procedures and supervision.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
+        }
+      ]
+    },
+    "knowledgeCheck": {
+      "title": "Knowledge check",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-CHECK-INTRO-001",
+          "type": "paragraph",
+          "text": "Complete the six concise questions after the visual experience. The separate formal assessment remains authenticated and server scored."
+        }
+      ]
+    },
+    "summary": {
+      "title": "Summary",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-SUMMARY-001",
+          "type": "paragraph",
+          "text": "For the ideal cap-end extension case, pressure acts over the full circular piston area to produce theoretical force. Real available force and machine capacity require additional reviewed models.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
+        }
+      ]
+    },
+    "sources": {
+      "title": "Sources",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-SOURCE-001",
+          "type": "sourceCitation",
+          "sourceId": "SRC-PARKER-140H8-CYLINDER-2024",
+          "note": "Supports ideal cylinder force, cap-end piston area and actual-output limitations."
+        }
+      ]
+    },
+    "nextRecommendedLesson": {
+      "title": "Next recommended lesson",
+      "blocks": [
+        {
+          "id": "BLK-HYD-CYL-NEXT-001",
+          "type": "paragraph",
+          "text": "Continue to flow and cylinder-speed fundamentals only after a reviewed kinematic model is available."
+        }
+      ]
+    }
+  },
+  "experienceSequence": [
+    {
+      "stage": "heroExperience",
+      "title": "See, interact, observe, explain, calculate, challenge and apply",
+      "blocks": [
+        {
+          "id": "VIS-HYD-CYL-HERO-001",
+          "type": "heroSimulation",
+          "title": "Hydraulic cylinder force visual model",
+          "description": "Pressure acting over piston area produces force.",
+          "simulationId": "SIM-HYD-CYL-FORCE-001",
+          "mode": "learn",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Interactive cap-end hydraulic cylinder force model",
+            "textAlternative": "A pressure source connects to a cylinder cap-end chamber. The visual reports pressure, piston diameter, area and ideal theoretical extension force.",
+            "keyboardInstructions": "Use the labelled range or number inputs and view controls.",
+            "reducedMotionFallback": "The model is static while all pressure, area and force results remain available."
+          }
+        },
+        {
+          "id": "VIS-HYD-CYL-CUTAWAY-001",
+          "type": "componentCutaway",
+          "title": "Cylinder representations",
+          "description": "External, cutaway and schematic views share one component state.",
+          "componentId": "COMP-HYD-CYL-PISTON-001",
+          "representations": ["external", "cutaway", "schematic"],
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "External, cutaway and schematic cylinder views",
+            "textAlternative": "The cutaway identifies the cap-end chamber, circular piston and rod without asserting construction dimensions.",
+            "keyboardInstructions": "Choose a labelled representation control; component selections support Enter and Space.",
+            "reducedMotionFallback": "View switching is immediate and contains no required animation."
+          }
+        },
+        {
+          "id": "VIS-HYD-CYL-SCHEMATIC-001",
+          "type": "linkedSchematic",
+          "title": "Linked hydraulic schematic",
+          "description": "Pressure source, line and cylinder use shared component identifiers.",
+          "simulationId": "SIM-HYD-CYL-FORCE-001",
+          "componentIds": [
+            "COMP-HYD-SOURCE-001",
+            "COMP-HYD-CYL-PISTON-001",
+            "COMP-HYD-LOAD-001"
+          ],
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Linked pressure source and cylinder schematic",
+            "textAlternative": "A simplified pressure source connects directly to the cap end of a cylinder; no valve, relief device or flow model is shown.",
+            "keyboardInstructions": "Select a component in either representation and switch views to inspect the shared highlight.",
+            "reducedMotionFallback": "Selection is shown using border pattern, text and component ID."
+          }
+        },
+        {
+          "id": "VIS-HYD-CYL-OBS-PRESSURE-001",
+          "type": "observationQuestion",
+          "title": "Pressure observation",
+          "description": "Compare force while holding diameter constant.",
+          "prompt": "What happens to theoretical cylinder force when pressure increases but piston diameter stays the same?",
+          "hint": "Watch the gauge, force value and force arrow while changing only pressure.",
+          "explanation": "With cap-end area fixed, the ideal theoretical force increases in direct proportion to pressure.",
+          "graded": false,
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Non-graded pressure observation",
+            "textAlternative": "A text question asks the student to compare supplied pressure and force values.",
+            "keyboardInstructions": "Open the hint or explanation with Enter or Space.",
+            "reducedMotionFallback": "Numeric values and the state summary provide the comparison."
+          }
+        },
+        {
+          "id": "VIS-HYD-CYL-OBS-DIAMETER-001",
+          "type": "observationQuestion",
+          "title": "Diameter observation",
+          "description": "Compare area and force while holding pressure constant.",
+          "prompt": "What happens when piston diameter increases while pressure stays constant?",
+          "hint": "Compare the piston face, area reading and force value.",
+          "explanation": "A larger circular piston diameter produces a larger cap-end area, so the ideal theoretical force increases at the same pressure.",
+          "graded": false,
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Non-graded piston diameter observation",
+            "textAlternative": "A text question asks the student to compare diameter, area and force values.",
+            "keyboardInstructions": "Open the hint or explanation with Enter or Space.",
+            "reducedMotionFallback": "Numeric values and the state summary provide the comparison."
+          }
+        },
+        {
+          "id": "VIS-HYD-CYL-OBS-AREA-001",
+          "type": "observationQuestion",
+          "title": "Circular area observation",
+          "description": "Relate diameter to circular area.",
+          "prompt": "Why can a modest diameter increase produce a noticeable force increase?",
+          "hint": "Look at the squared diameter term in the area equation.",
+          "explanation": "Circular area depends on diameter squared, and that area then multiplies pressure in the ideal force equation.",
+          "graded": false,
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Non-graded circular area observation",
+            "textAlternative": "A text question connects the squared diameter term to piston area and theoretical force.",
+            "keyboardInstructions": "Open the hint or explanation with Enter or Space.",
+            "reducedMotionFallback": "The equations and numeric readings remain available."
+          }
+        },
+        {
+          "id": "VIS-HYD-CYL-MICRO-001",
+          "type": "microTheory",
+          "title": "Pressure, area and force",
+          "description": "A concise sourced explanation of the ideal extension relationship.",
+          "principle": "Cap-end pressure acts over the full circular piston area. A larger pressure or area produces a larger ideal theoretical extension force; pressure alone is not enough to determine force.",
+          "expandedExplanation": "Starting from pressure as force per area, rearranging gives force as pressure multiplied by area. This lesson derives the circular cap-end area from piston diameter, converts all inputs explicitly to SI units, and excludes rod-side area and real losses.",
+          "safetyInformation": "The result is not an equipment rating, certified lifting capacity or operating instruction.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024", "SRC-NIST-SP330-2019"],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Concise hydraulic cylinder theory",
+            "textAlternative": "Text explains the pressure-area-force relationship and ideal model boundary.",
+            "keyboardInstructions": "Use the explanation-depth controls and expandable details with the keyboard.",
+            "reducedMotionFallback": "Theory is text and does not depend on animation."
+          }
+        },
+        {
+          "id": "VIS-HYD-CYL-LIVE-AREA-001",
+          "type": "liveEquation",
+          "title": "Live cap-end area",
+          "description": "The engineering-core area result updates from the current diameter.",
+          "equationId": "EQ-HYD-PISTON-AREA-DIAMETER-001",
+          "inputBindings": { "D": "pistonDiameterM" },
+          "outputBinding": "pistonAreaM2",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"],
+          "reviewStatus": "Equation checked",
+          "accessibility": {
+            "label": "Live circular piston area equation",
+            "textAlternative": "The current diameter in metres is substituted into A equals pi D squared over four.",
+            "keyboardInstructions": "Change the labelled diameter controls and read the updated result.",
+            "reducedMotionFallback": "The numerical substitution updates without animation."
+          }
+        },
+        {
+          "id": "VIS-HYD-CYL-LIVE-FORCE-001",
+          "type": "liveEquation",
+          "title": "Live theoretical extension force",
+          "description": "The engineering-core force result updates from current SI pressure and area.",
+          "equationId": "EQ-FLUID-FORCE-PRESSURE-AREA-001",
+          "inputBindings": { "p": "pressurePa", "A": "pistonAreaM2" },
+          "outputBinding": "cylinderForceN",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"],
+          "reviewStatus": "Equation checked",
+          "accessibility": {
+            "label": "Live ideal cylinder force equation",
+            "textAlternative": "The current pressure in pascals and area in square metres are substituted into F equals p times A.",
+            "keyboardInstructions": "Change the labelled controls and read the updated result and assumptions.",
+            "reducedMotionFallback": "The numerical substitution updates without animation."
+          }
+        },
+        {
+          "id": "VIS-HYD-CYL-CHALLENGE-001",
+          "type": "engineeringChallenge",
+          "title": "Lift the load",
+          "description": "Select pressure and piston diameter so ideal theoretical extension force meets a 15 kN educational opposing-force target.",
+          "challengeId": "CH-HYD-CYL-LIFT-001",
+          "objective": "Lift the load",
+          "pattern": "target",
+          "goal": "Generate at least 15 kN of ideal theoretical extension force.",
+          "allowedActions": ["Change pressure", "Change piston diameter"],
+          "successCondition": "Calculated ideal theoretical extension force is greater than or equal to 15,000 N.",
+          "feedback": {
+            "beforeCheck": "Adjust the two inputs, then check the current theoretical force.",
+            "onSuccess": "The cylinder now produces sufficient theoretical force for this idealised load.",
+            "onIncomplete": "Not enough theoretical force."
+          },
+          "modelAssumptions": [
+            "Uniform cap-end pressure acts over the full circular piston area.",
+            "Friction, leakage, dynamics, equipment ratings and machine geometry are excluded."
+          ],
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Idealised 15 kilonewton load challenge",
+            "textAlternative": "Required force, calculated force and signed margin are reported in text.",
+            "keyboardInstructions": "Start the challenge, change pressure or diameter with labelled controls, and read the announced status.",
+            "reducedMotionFallback": "Challenge success is shown with text, values and a status message."
+          }
+        },
+        {
+          "id": "VIS-HYD-CYL-APPLICATION-001",
+          "type": "realWorldApplication",
+          "title": "Excavator boom cylinder",
+          "description": "An original simplified visual connects the pressure-area concept to an excavator boom cylinder without importing product dimensions or ratings.",
+          "applicationId": "APP-HYD-CYL-EXCAVATOR-001",
+          "systemType": "Hydraulic excavator application",
+          "principle": "The hydraulic system supplies pressurised fluid to a boom cylinder. Pressure acting on the piston contributes linear force that moves the boom through its mounting and linkage; the ideal pressure-area result alone does not predict lifting capacity.",
+          "relatedSimulationId": "SIM-HYD-CYL-FORCE-001",
+          "sourceIds": [
+            "SRC-PARKER-140H8-CYLINDER-2024",
+            "SRC-CAT-BOOM-CYLINDER-6040431-2026"
+          ],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Simplified excavator boom and hydraulic cylinder",
+            "textAlternative": "A side-view line drawing identifies a hydraulic cylinder between an excavator body and boom. It does not show real dimensions or capacity.",
+            "keyboardInstructions": "No interaction is required for this explanatory visual.",
+            "reducedMotionFallback": "The application is a static SVG."
+          }
+        }
+      ]
+    },
+    {
+      "stage": "knowledgeCheck",
+      "title": "Check your understanding",
+      "blocks": [
+        {
+          "id": "Q-HYD-CYL-CONCEPT-001",
+          "type": "question",
+          "prompt": "At fixed piston area, what happens to ideal theoretical extension force when pressure doubles?",
+          "options": [
+            { "id": "A", "text": "It doubles.", "isCorrect": true },
+            { "id": "B", "text": "It halves.", "isCorrect": false },
+            { "id": "C", "text": "It stays unchanged.", "isCorrect": false }
+          ],
+          "answerExplanation": "For F = p × A with area fixed, force changes in direct proportion to pressure.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
+        },
+        {
+          "id": "Q-HYD-CYL-EQUATION-001",
+          "type": "question",
+          "prompt": "Which quantity must be known with pressure to calculate ideal cylinder force?",
+          "options": [
+            { "id": "A", "text": "Effective pressurised area.", "isCorrect": true },
+            { "id": "B", "text": "Fluid colour.", "isCorrect": false },
+            { "id": "C", "text": "Elapsed lesson time.", "isCorrect": false }
+          ],
+          "answerExplanation": "The ideal relationship requires pressure and effective pressurised area.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
+        },
+        {
+          "id": "Q-HYD-CYL-UNIT-001",
+          "type": "question",
+          "prompt": "Which pair uses the internal SI units required by the force calculation?",
+          "options": [
+            { "id": "A", "text": "Pressure in Pa and area in m².", "isCorrect": true },
+            {
+              "id": "B",
+              "text": "Pressure in MPa and diameter in mm without conversion.",
+              "isCorrect": false
+            },
+            { "id": "C", "text": "Force in kW and area in litres.", "isCorrect": false }
+          ],
+          "answerExplanation": "The engineering calculation receives pressure in pascals and area in square metres after explicit conversion.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024", "SRC-NIST-SP330-2019"]
+        },
+        {
+          "id": "Q-HYD-CYL-VISUAL-001",
+          "type": "question",
+          "prompt": "At fixed pressure, which visual reading changes when piston diameter increases?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Piston area and theoretical force both increase.",
+              "isCorrect": true
+            },
+            {
+              "id": "B",
+              "text": "Pressure automatically increases.",
+              "isCorrect": false
+            },
+            { "id": "C", "text": "The source becomes a flow meter.", "isCorrect": false }
+          ],
+          "answerExplanation": "Diameter changes circular area, and at fixed pressure that changes the ideal theoretical force.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
+        },
+        {
+          "id": "Q-HYD-CYL-CALC-001",
+          "type": "question",
+          "prompt": "What ideal theoretical force results from 5,000,000 Pa acting on 0.002 m²?",
+          "options": [
+            { "id": "A", "text": "10,000 N", "isCorrect": true },
+            { "id": "B", "text": "2,500 N", "isCorrect": false },
+            { "id": "C", "text": "7,000,000 N", "isCorrect": false }
+          ],
+          "answerExplanation": "F = p × A = 5,000,000 × 0.002 = 10,000 N.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
+        },
+        {
+          "id": "Q-HYD-CYL-APPLICATION-001",
+          "type": "question",
+          "prompt": "Why does the ideal cylinder-force result not establish an excavator's boom lifting capacity?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Machine performance also depends on linkage geometry, load position, losses, mounting and system conditions.",
+              "isCorrect": true
+            },
+            {
+              "id": "B",
+              "text": "Hydraulic cylinders never act on excavator booms.",
+              "isCorrect": false
+            },
+            {
+              "id": "C",
+              "text": "Pressure and area have no relationship to force.",
+              "isCorrect": false
+            }
+          ],
+          "answerExplanation": "The ideal pressure-area result describes cylinder force only. A machine-level capacity calculation needs additional reviewed geometry, load, loss and structural models.",
+          "sourceIds": [
+            "SRC-PARKER-140H8-CYLINDER-2024",
+            "SRC-CAT-BOOM-CYLINDER-6040431-2026"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "deepDive",
+      "title": "Deep Dive",
+      "blocks": [
+        {
+          "id": "VIS-HYD-CYL-DEEP-001",
+          "type": "deepDive",
+          "title": "Derivation, units and model limits",
+          "description": "Optional detail preserves the derivation, SI reasoning and excluded real-world effects.",
+          "content": "Pressure is force per area, so rearranging p = F/A gives F = pA. For a circular cap-end piston, A = πD²/4. Pa × m² reduces to N because Pa is N/m². This pilot excludes rod-side annular area, friction, leakage, acceleration, buckling, mounting geometry, component ratings and machine lifting capacity.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024", "SRC-NIST-SP330-2019"],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Optional hydraulic force derivation and limitations",
+            "textAlternative": "Expandable text derives the ideal relationship and lists excluded effects.",
+            "keyboardInstructions": "Open or close the details control with Enter or Space.",
+            "reducedMotionFallback": "Deep Dive is text and contains no required motion."
+          }
+        },
+        {
+          "id": "BLK-HYD-CYL-DEEP-ASSUMPTION-001",
+          "type": "assumption",
+          "text": "Pressure is treated as uniform over the circular cap-end piston area, with explicit SI inputs and no rod-side or loss model.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
+        },
+        {
+          "id": "BLK-HYD-CYL-DEEP-INTERPRETATION-001",
+          "type": "engineeringInterpretation",
+          "text": "An ideal theoretical cylinder-force result is an educational relationship, not a certified available force, cylinder selection or machine capacity.",
+          "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
+        }
+      ]
+    }
+  ],
+  "workedExampleIds": ["WE-HYD-CYL-FORCE-001"],
+  "faultScenarioIds": [],
+  "safetyWarningIds": ["SAFE-HYD-CYL-FORCE-001"],
+  "quizIds": ["ASM-FLUID-PRESSURE-001"],
+  "projectIds": []
+}

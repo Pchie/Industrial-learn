@@ -22,6 +22,7 @@ import type {
   QuestionResult,
   StudentAnswer
 } from "@industrial-learn/assessment-core";
+import { STUDENT_PUBLICATION_REQUIREMENTS } from "@industrial-learn/content-review-workflow/publication-visibility";
 
 import type { AuthenticatedSession } from "../auth/session-core";
 import { createAssessmentFromCatalog, getAssessmentCatalogBySlug } from "./catalog";
@@ -368,8 +369,8 @@ function createSupabaseAttemptRepositories(): AttemptPersistenceRepositories {
     async getAssessment(assessmentId) {
       const rows = await client.get<AssessmentRow>("assessments", {
         id: `eq.${assessmentId}`,
-        publication_status: "eq.published",
-        technical_review_status: "eq.Approved for student use",
+        publication_status: `eq.${STUDENT_PUBLICATION_REQUIREMENTS.publicationStatus}`,
+        technical_review_status: `eq.${STUDENT_PUBLICATION_REQUIREMENTS.reviewStatus}`,
         limit: "1"
       });
       const row = rows[0];
@@ -549,8 +550,8 @@ async function getSupabaseAssessmentRowBySlug(slug: string) {
   const client = createServiceRestClient(env);
   const rows = await client.get<AssessmentRow>("assessments", {
     slug: `eq.${slug}`,
-    publication_status: "eq.published",
-    technical_review_status: "eq.Approved for student use",
+    publication_status: `eq.${STUDENT_PUBLICATION_REQUIREMENTS.publicationStatus}`,
+    technical_review_status: `eq.${STUDENT_PUBLICATION_REQUIREMENTS.reviewStatus}`,
     limit: "1"
   });
 

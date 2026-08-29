@@ -1,0 +1,60 @@
+{
+  "id": "SRC-NASA-GLENN-BERNOULLI",
+  "title": "Bernoulli's Equation",
+  "fullTitle": "Bernoulli's Equation",
+  "author": "Nancy Hall",
+  "organisation": "NASA Glenn Research Center",
+  "edition": "Official NASA educational web page",
+  "version": "Last updated 2021-05-13",
+  "publicationDate": "2021-05-13",
+  "accessDate": "2026-08-27",
+  "documentType": "government engineering education reference",
+  "discipline": "Fluid mechanics",
+  "topics": [
+    "Bernoulli equation",
+    "steady flow",
+    "incompressible flow",
+    "inviscid model assumptions",
+    "pressure and velocity relationship"
+  ],
+  "url": "https://www.grc.nasa.gov/www/k-12/airplane/bern.html",
+  "accessUrls": ["https://www.grc.nasa.gov/www/k-12/airplane/bern.html"],
+  "filePath": null,
+  "accessMode": "metadata-only",
+  "copyrightStatus": "United States government educational web resource; repository use is limited to citation metadata and original Industrial Learn explanations.",
+  "rights": {
+    "licence": "United States government work; third-party material may have separate rights",
+    "permittedInternalUse": "Citation and factual verification",
+    "mayDistribute": false,
+    "metadataOnly": true,
+    "studentMayOpenDirectly": true
+  },
+  "reliabilityLevel": 4,
+  "citation": "Hall, N. (2021), Bernoulli's Equation, NASA Glenn Research Center, updated 2021-05-13, accessed 2026-08-27.",
+  "approvalStatus": "Source checked",
+  "reviewStatus": "Source checked",
+  "evidenceStatus": "approved",
+  "reviewer": "Codex source-verification agent",
+  "reviewerType": "automated-assisted technical librarian review",
+  "reviewDate": "2026-08-27",
+  "independentHumanReviewRequired": true,
+  "verification": {
+    "documentOpened": true,
+    "metadataVerified": true,
+    "verifiedAt": "2026-08-27",
+    "verificationMethod": "Official NASA Glenn page inspected for the equation scope and assumptions",
+    "fixedPageCount": null,
+    "sha256": null
+  },
+  "relevantChapters": [],
+  "relevantSections": ["Bernoulli's Equation", "Assumptions and limitations"],
+  "relevantPages": [],
+  "limitations": [
+    "The page is an educational overview rather than an equipment or system design standard.",
+    "It does not provide component ratings, pipe-loss coefficients, cavitation limits, or fluid property tables.",
+    "Independent human source review remains required before student-use approval."
+  ],
+  "notes": "Used as an independent official reference for model limitations; no NASA visual asset is copied.",
+  "createdAt": "2026-08-27",
+  "updatedAt": "2026-08-27"
+}

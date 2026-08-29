@@ -35,6 +35,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
               <Link href="/learn">Learn</Link>
               <Link href="/learn/core-engineering">Core Engineering</Link>
               <Link href="/learn/future-engineering">Future Engineering</Link>
+              <Link href="/simulations">Simulations</Link>
               <Link href="/dashboard">Dashboard</Link>
             </nav>
           </header>

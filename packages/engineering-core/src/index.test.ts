@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  bernoulliPressureAtPoint2,
+  circularAreaFromDiameter,
   closedSystemEnergyBalance,
   continuityEquation,
+  convertFromSi,
   convertToSi,
   electricalPower,
   fluidVelocity,
@@ -13,9 +16,13 @@ import {
   idealGasRelation,
   ohmsLaw,
   parallelResistance,
+  pistonAreaFromDiameter,
   pressureFromForceAndArea,
   sensibleHeat,
   seriesResistance,
+  totalBernoulliHead,
+  pressureHead,
+  velocityHead,
   volumetricFlowRate
 } from "./index";
 
@@ -49,6 +56,200 @@ describe("general SI units", () => {
       convertToSi({ quantity: "pressure", value: 1, fromUnit: "bar", toUnit: "Pa" })
     );
   });
+
+  it("converts SI values to explicit learner display units", () => {
+    expectValidValue(
+      convertFromSi({
+        quantity: "pressure",
+        value: 5_000_000,
+        fromUnit: "Pa",
+        toUnit: "MPa"
+      }),
+      5
+    );
+    expectValidValue(
+      convertFromSi({ quantity: "force", value: 19_635, fromUnit: "N", toUnit: "kN" }),
+      19.635
+    );
+  });
+
+  it("rejects unsupported SI display conversions", () => {
+    expectInvalid(
+      convertFromSi({
+        quantity: "pressure",
+        value: 100_000,
+        fromUnit: "N",
+        toUnit: "MPa"
+      })
+    );
+  });
+});
+
+describe("ideal Bernoulli flow calculations", () => {
+  const density = { value: 1_000, unit: "kg/m^3" as const };
+  const gravitationalAcceleration = { value: 9.81, unit: "m/s^2" as const };
+
+  it("calculates circular area, section velocity, and downstream pressure", () => {
+    const area1 = circularAreaFromDiameter({
+      diameter: { value: 0.06, unit: "m" }
+    });
+    const area2 = circularAreaFromDiameter({
+      diameter: { value: 0.03, unit: "m" }
+    });
+    const velocity1 = fluidVelocity({
+      flowRate: { value: 0.003, unit: "m^3/s" },
+      area: { value: area1.calculatedValue!, unit: "m^2" }
+    });
+    const velocity2 = fluidVelocity({
+      flowRate: { value: 0.003, unit: "m^3/s" },
+      area: { value: area2.calculatedValue!, unit: "m^2" }
+    });
+    const pressure2 = bernoulliPressureAtPoint2({
+      pressure1: { value: 250_000, unit: "Pa" },
+      density,
+      velocity1: { value: velocity1.calculatedValue!, unit: "m/s" },
+      velocity2: { value: velocity2.calculatedValue!, unit: "m/s" },
+      elevation1: { value: 0, unit: "m" },
+      elevation2: { value: 0, unit: "m" },
+      gravitationalAcceleration
+    });
+
+    expectValidValue(area1, (Math.PI * 0.06 ** 2) / 4);
+    expectValidValue(velocity1, 0.003 / ((Math.PI * 0.06 ** 2) / 4));
+    expectValidValue(velocity2, 0.003 / ((Math.PI * 0.03 ** 2) / 4));
+    expectValidValue(pressure2, 241_556.56840384024);
+  });
+
+  it("preserves total ideal head between the two horizontal sections", () => {
+    const velocity1 = 1.0610329539459689;
+    const velocity2 = 4.244131815783875;
+    const pressure2 = 241_556.56840384024;
+    const head1 = totalBernoulliHead({
+      pressure: { value: 250_000, unit: "Pa" },
+      density,
+      velocity: { value: velocity1, unit: "m/s" },
+      elevation: { value: 0, unit: "m" },
+      gravitationalAcceleration
+    });
+    const head2 = totalBernoulliHead({
+      pressure: { value: pressure2, unit: "Pa" },
+      density,
+      velocity: { value: velocity2, unit: "m/s" },
+      elevation: { value: 0, unit: "m" },
+      gravitationalAcceleration
+    });
+
+    expect(head1.validity.status).toBe("valid");
+    expect(head2.validity.status).toBe("valid");
+    expect(head2.calculatedValue).toBeCloseTo(head1.calculatedValue!);
+  });
+
+  it("calculates pressure and velocity head as separate reviewed terms", () => {
+    expectValidValue(
+      pressureHead({
+        pressure: { value: 98_100, unit: "Pa" },
+        density,
+        gravitationalAcceleration
+      }),
+      10
+    );
+    expectValidValue(
+      velocityHead({
+        velocity: { value: 9.81, unit: "m/s" },
+        gravitationalAcceleration
+      }),
+      4.905
+    );
+  });
+
+  it("converts display flow units explicitly without silent conversion", () => {
+    const litresPerSecond = convertToSi({
+      quantity: "volumetricFlowRate",
+      value: 3,
+      fromUnit: "L/s",
+      toUnit: "m^3/s"
+    });
+    const litresPerMinute = convertToSi({
+      quantity: "volumetricFlowRate",
+      value: 180,
+      fromUnit: "L/min",
+      toUnit: "m^3/s"
+    });
+
+    expectValidValue(litresPerSecond, 0.003);
+    expectValidValue(litresPerMinute, 0.003);
+    expectInvalid(
+      convertToSi({
+        quantity: "volumetricFlowRate",
+        value: 3,
+        fromUnit: "L",
+        toUnit: "m^3/s"
+      })
+    );
+  });
+
+  it("accepts zero flow while rejecting zero diameter and impossible units", () => {
+    const area = circularAreaFromDiameter({
+      diameter: { value: 0.06, unit: "m" }
+    });
+    expectValidValue(
+      fluidVelocity({
+        flowRate: { value: 0, unit: "m^3/s" },
+        area: { value: area.calculatedValue!, unit: "m^2" }
+      }),
+      0
+    );
+    expectInvalid(circularAreaFromDiameter({ diameter: { value: 0, unit: "m" } }));
+    expectInvalid(
+      bernoulliPressureAtPoint2({
+        pressure1: { value: 250, unit: "kPa" as "Pa" },
+        density,
+        velocity1: { value: 1, unit: "m/s" },
+        velocity2: { value: 2, unit: "m/s" },
+        elevation1: { value: 0, unit: "m" },
+        elevation2: { value: 0, unit: "m" },
+        gravitationalAcceleration
+      })
+    );
+  });
+
+  it("rejects nonphysical density, gravity, velocity, and absolute pressure results", () => {
+    expectInvalid(
+      pressureHead({
+        pressure: { value: 100_000, unit: "Pa" },
+        density: { value: 0, unit: "kg/m^3" },
+        gravitationalAcceleration
+      })
+    );
+    expectInvalid(
+      velocityHead({
+        velocity: { value: -1, unit: "m/s" },
+        gravitationalAcceleration
+      })
+    );
+    const impossible = bernoulliPressureAtPoint2({
+      pressure1: { value: 1_000, unit: "Pa" },
+      density,
+      velocity1: { value: 0, unit: "m/s" },
+      velocity2: { value: 10, unit: "m/s" },
+      elevation1: { value: 0, unit: "m" },
+      elevation2: { value: 0, unit: "m" },
+      gravitationalAcceleration
+    });
+
+    expectInvalid(impossible);
+    expect(impossible.validity.errors[0]).toContain("absolute pressure");
+  });
+
+  it("registers traceable metadata without claiming final approval", () => {
+    const metadata = getEngineeringEquationMetadata("EQ-FLUID-BERNOULLI-TWO-POINT-001");
+
+    expect(metadata?.sourceIds).toEqual([
+      "SRC-OPENSTAX-COLLEGE-PHYSICS-2E-2022",
+      "SRC-NASA-GLENN-BERNOULLI"
+    ]);
+    expect(metadata?.engineeringReviewStatus).toBe("Engineering review required");
+  });
 });
 
 describe("fluid mechanics calculations", () => {
@@ -57,14 +258,29 @@ describe("fluid mechanics calculations", () => {
     const cylinderForceMetadata = getEngineeringEquationMetadata(
       "EQ-FLUID-FORCE-PRESSURE-AREA-001"
     );
+    const pistonAreaMetadata = getEngineeringEquationMetadata(
+      "EQ-HYD-PISTON-AREA-DIAMETER-001"
+    );
 
-    expect(pressureMetadata?.sourceIds).toEqual(["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]);
-    expect(pressureMetadata?.engineeringReviewStatus).toBe("Source required");
-    expect(cylinderForceMetadata?.sourceIds).toEqual([
-      "SRC-HYDRAULIC-CYLINDER-PLACEHOLDER-001"
-    ]);
+    expect(pressureMetadata?.sourceIds).toEqual(["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]);
+    expect(pressureMetadata?.engineeringReviewStatus).toBe("Equation checked");
+    expect(pressureMetadata?.sourceReferences).toContainEqual({
+      sourceId: "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+      section: "11.3 Pressure"
+    });
+    expect(cylinderForceMetadata?.sourceIds).toEqual(["SRC-PARKER-140H8-CYLINDER-2024"]);
+    expect(cylinderForceMetadata?.engineeringReviewStatus).toBe("Equation checked");
+    expect(
+      getEngineeringEquationMetadata("EQ-SI-CONVERSION-EXPLICIT-001")
+        ?.engineeringReviewStatus
+    ).toBe("Equation checked");
     expect(cylinderForceMetadata?.validityLimits).toContain(
       "Does not include cylinder friction, seal leakage, dynamics, or equipment ratings."
+    );
+    expect(pistonAreaMetadata?.sourceIds).toEqual(["SRC-PARKER-140H8-CYLINDER-2024"]);
+    expect(pistonAreaMetadata?.engineeringReviewStatus).toBe("Equation checked");
+    expect(pistonAreaMetadata?.validityLimits).toContain(
+      "Cap-end full piston area only."
     );
   });
 
@@ -161,6 +377,34 @@ describe("fluid mechanics calculations", () => {
       forceFromPressureAndArea({
         pressure: { value: 1, unit: "kPa" as "Pa" },
         area: { value: 2, unit: "m^2" }
+      })
+    );
+  });
+
+  it("calculates cap-end piston area from an explicitly converted diameter", () => {
+    const diameter = convertToSi({
+      quantity: "length",
+      value: 50,
+      fromUnit: "mm",
+      toUnit: "m"
+    });
+    const area = pistonAreaFromDiameter({
+      diameter: { value: diameter.calculatedValue!, unit: "m" }
+    });
+
+    expectValidValue(area, 0.001963495408493621);
+    expect(area.equationId).toBe("EQ-HYD-PISTON-AREA-DIAMETER-001");
+    expect(area.calculationSteps).toContain("A = pi * (0.05)^2 / 4");
+  });
+
+  it("rejects zero, negative, non-finite, and non-SI piston diameters", () => {
+    for (const diameter of [0, -0.05, Number.NaN]) {
+      expectInvalid(pistonAreaFromDiameter({ diameter: { value: diameter, unit: "m" } }));
+    }
+
+    expectInvalid(
+      pistonAreaFromDiameter({
+        diameter: { value: 50, unit: "mm" as "m" }
       })
     );
   });

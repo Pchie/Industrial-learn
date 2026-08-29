@@ -18,7 +18,7 @@
       ],
       "correctChoiceId": "A",
       "explanation": "Pressure is treated as normal force distributed across a stated area.",
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
     },
     {
       "id": "Q-FP-NUM-001",
@@ -31,7 +31,7 @@
       "tolerance": { "absolute": 0.5 },
       "equationId": "EQ-FLUID-PRESSURE-001",
       "explanation": "Using p = F / A gives 200 N divided by 0.50 m^2, which is 400 Pa.",
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
     },
     {
       "id": "Q-FP-COMP-001",
@@ -47,7 +47,7 @@
       ],
       "correctComponentIds": ["force", "area"],
       "explanation": "The pressure calculation uses force and area.",
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
     },
     {
       "id": "Q-FP-DIAGRAM-001",
@@ -60,7 +60,7 @@
       "altText": "A downward force arrow acts on a rectangular area.",
       "correctLabelIds": ["F", "A"],
       "explanation": "The diagram shows force F acting over area A.",
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
     },
     {
       "id": "Q-FP-SEQ-001",
@@ -79,7 +79,7 @@
       ],
       "correctStepOrder": ["check-units", "substitute", "interpret"],
       "explanation": "The workflow is unit check, substitution, then interpretation.",
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
     },
     {
       "id": "Q-FP-SIM-001",
@@ -98,12 +98,12 @@
       },
       "tolerance": { "absolute": 1 },
       "explanation": "The assessment-mode simulation task checks the measured force result without exposing hints before submission.",
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PARKER-140H8-CYLINDER-2024"]
     },
     {
       "id": "Q-FP-FAULT-001",
       "type": "fault-diagnosis",
-      "prompt": "A force result is lower than expected while pressure appears available. Select the most likely pilot fault.",
+      "prompt": "In the pilot simulation, a force result is lower than its pressure-area prediction while pressure appears available. Select the injected training fault.",
       "learningOutcomeIds": ["LO-FP-003"],
       "competencyLevel": "Diagnosed",
       "points": 2,
@@ -114,8 +114,8 @@
       ],
       "correctFaultId": "seal-leak",
       "diagnosticEvidenceIds": ["force-below-pressure-area-prediction"],
-      "explanation": "The pilot seal-leak fault reduces output force below the pressure-area prediction.",
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+      "explanation": "The pilot labels this pedagogical state as seal leak. Its fixed force reduction is not manufacturer diagnostic data and requires further simulation review.",
+      "sourceIds": ["SRC-PARKER-140H8-CYLINDER-2024"]
     },
     {
       "id": "Q-FP-DESIGN-001",
@@ -137,9 +137,9 @@
         }
       ],
       "explanation": "A safe design response keeps the lesson inside supervised educational boundaries and review requirements.",
-      "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"]
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
     }
   ],
-  "sourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
-  "reviewStatus": "Source required"
+  "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PARKER-140H8-CYLINDER-2024"],
+  "reviewStatus": "Engineering review required"
 }

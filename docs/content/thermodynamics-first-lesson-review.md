@@ -1,125 +1,68 @@
 # Thermodynamics First Lesson Review
 
+Review date: 2026-08-26
+
 ## Lesson
 
-Planned lesson: `LES-THERMO-SYSTEMS-SURROUNDINGS-001`
+- Lesson ID: `LES-THERMO-SYSTEMS-SURROUNDINGS-001`
+- Title: Thermodynamic Systems, Surroundings And Boundaries
+- Version: `0.1.0`
+- Publication status: `draft`
+- Review status: `Engineering review required`
 
-Working title: Systems, Surroundings, Boundaries And Properties
+## Source Gate Result
 
-## Approval Gate Result
+Status: Unblocked for draft review
 
-Status: Blocked
+The former placeholder-only block is resolved by two checked evidence records:
 
-The required source evidence for the first thermodynamics lesson is not available. The repository currently contains only the source-needed placeholder record:
+- `SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021`, printed pp. 6-7, supports system, surroundings, boundary, closed/control-mass, open/control-volume, isolated, property, state, process, and intensive/extensive definitions.
+- `SRC-OPENSTAX-COLLEGE-PHYSICS-2012`, section 15.2, supports the cycle definition.
 
-- `SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001`
+Both records are metadata-only, retain rights limitations, and require independent human review.
 
-Source record evidence:
+## Implemented Scope
 
-- File path: not available
-- Evidence status: `missing`
-- Review status: `Source required`
-- Reviewer: not recorded
-- Review date: not recorded
-- Relevant chapters: not recorded
-- Relevant sections: not recorded
-- Relevant pages: not recorded
+The draft lesson and `KF-THERMO-SYSTEMS-SURROUNDINGS-001` cover:
 
-Because the actual source document is absent, Industrial Learn cannot verify definitions, classifications, examples, or system-boundary statements for student-facing publication.
-
-## Required Topic
-
-Thermodynamic systems, surroundings, boundaries and properties.
-
-The requested lesson scope includes:
-
-- What thermodynamics studies
-- Thermodynamic system
+- System
 - Surroundings
 - Boundary
-- Universe
-- Closed system
-- Open system
+- Closed system and control mass
+- Open system and control volume
 - Isolated system
-- Control mass
-- Control volume
 - Property
 - State
 - Process
 - Cycle
 - Intensive property
 - Extensive property
-- Equilibrium introduction
 
-No lesson content was implemented from general knowledge because this would violate the source-onboarding process and repository rules.
+The lesson renders through the existing structured lesson contract and includes all required lesson sections. Prompt 39G adds a separate, internal simulation candidate for classifying stated system boundaries. The candidate is linked by ID but remains unavailable for student attempts. No separate assessment was added.
 
-## Existing Knowledge File
+## Excluded Technical Scope
 
-Existing file:
-
-- `knowledge/thermodynamics/systems-surroundings-boundaries.json`
-
-Current review status:
-
-- `Source required`
-
-The file is a source-gated preparation artifact only. It must not be treated as approved student-facing thermodynamics content until a real source record and review evidence exist.
-
-## Blocked Deliverables
-
-The following requested deliverables remain blocked:
-
-- Structured lesson under `content/lessons/thermodynamics/`
-- Accessible interactive system-classification activity
-- Thermodynamics assessment
-- Route rendering test
-- Classification logic test
-- Keyboard activity test
-- Accessibility scan for the new lesson
-- Draft-versus-approved visibility test for the new lesson
-- Next-lesson link test
-
-## Required Source Evidence Before Implementation
-
-At least one legally obtained, technically credible thermodynamics source must be added and reviewed. Suitable sources may include:
-
-- Open educational thermodynamics textbook
-- University thermodynamics course material with clear authorship
-- Legally licensed engineering thermodynamics textbook
-
-The source record must include:
-
-- Stable `SRC-*` ID
-- Actual file path or permitted metadata reference
-- Title
-- Author or organisation
-- Edition or version where available
-- Publication date where available
-- Access date
-- Copyright status
-- Reliability level
-- Relevant chapter or section metadata
-- Relevant page metadata where cited
-- Evidence status
-- Review status
-- Named reviewer
-- Review date
+No steam tables, refrigerant tables, material-property tables, property values, process equations, equilibrium criteria, equipment ratings, or operating limits were added. The lesson contains no engineering equation.
 
 ## Review Boundary
 
-Do not mark the lesson, assessment, activity, or knowledge file as:
+The source and equation preparation was performed by the same automated-assisted agent. The following independent roles remain unassigned:
 
-- `Source checked`
-- `Equation checked`
-- `Engineering review required`
-- `Approved for student use`
+- Educational reviewer
+- Thermodynamics engineering reviewer
+- Safety reviewer
 
-until source evidence has been onboarded and reviewed through the content-governance workflow.
-
-## No Property Data
-
-No steam tables, refrigerant tables, material property values, air-property values, or detailed property databases were added.
+The lesson must remain draft and must not be labelled `Approved for student use` until named reviewers, dates, review records, and the accepted content version are recorded through the content-review workflow.
 
 ## Decision
 
-Implementation is blocked. The next valid step is source acquisition and source review, not lesson construction.
+The lesson is correctly implemented as a technically reviewable draft. Source acquisition is no longer the blocker; independent human review and publication workflow evidence are the remaining gates.
+
+## Prompt 39G Replication Gate
+
+`sim-core-thermal-system-001` is now registered and tested against the same source-linked
+definitions. It contains no property values or thermodynamic equation. The catalogue may
+show its read-only preview and honest status, but it must remain `Coming later` until named
+independent engineering, education, and safety reviewers accept the lesson, knowledge file,
+simulation rule, fault framing, and exact content version. Implementation by the same
+automated-assisted agent is not independent review evidence.

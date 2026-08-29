@@ -13,7 +13,7 @@ import {
   SourceReference,
   Tabs
 } from "./components";
-import { designTokens } from "./tokens";
+import { designTokens, VISUAL_STATE_SEMANTICS, visualStateSemantics } from "./tokens";
 
 describe("design system components", () => {
   it("renders accessible labelled form controls", () => {
@@ -96,6 +96,27 @@ describe("design system components", () => {
       automationSignal: "var(--il-color-domain-automation)",
       temperatureIndication: "var(--il-color-domain-temperature)"
     });
+  });
+
+  it("defines every visual state with a text label and non-colour cue", () => {
+    expect(VISUAL_STATE_SEMANTICS).toEqual([
+      "normal",
+      "active",
+      "selected",
+      "warning",
+      "fault",
+      "disabled",
+      "measurement",
+      "target"
+    ]);
+
+    for (const state of VISUAL_STATE_SEMANTICS) {
+      expect(visualStateSemantics[state].label).toEqual(expect.any(String));
+      expect(visualStateSemantics[state].nonColorCue).toEqual(expect.any(String));
+      expect(designTokens.states[visualStateSemantics[state].token]).toEqual(
+        expect.any(String)
+      );
+    }
   });
 
   it("renders regular buttons with button semantics", () => {

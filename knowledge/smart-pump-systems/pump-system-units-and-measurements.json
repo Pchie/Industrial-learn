@@ -4,20 +4,20 @@
     "slug": "pump-system-units-and-measurements",
     "title": "Pump System Units And Measurements",
     "topic": "SI measurement language for smart pump systems",
-    "version": "0.1.0",
-    "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+    "version": "0.2.0",
+    "sourceIds": ["SRC-NIST-SP330-2019", "SRC-DOE-PUMP-SOURCEBOOK-2006"]
   },
   "learningPurpose": "Prepare learners to read pump-system pressure, flow, temperature, power, and status measurements using explicit SI-unit expectations before moving into hydraulic calculations or monitoring data.",
   "definitions": [
     {
       "term": "Measurement channel",
       "meaning": "A named signal or reading used to represent one measured quantity in the pump-system learning context.",
-      "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+      "sourceIds": ["SRC-NIST-SP330-2019", "SRC-DOE-PUMP-SOURCEBOOK-2006"]
     },
     {
       "term": "SI unit",
       "meaning": "The unit expected internally by Industrial Learn calculation and simulation functions for the relevant quantity.",
-      "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+      "sourceIds": ["SRC-NIST-SP330-2019", "SRC-DOE-PUMP-SOURCEBOOK-2006"]
     }
   ],
   "governingPrinciples": [
@@ -50,7 +50,8 @@
   ],
   "limitations": [
     "Does not teach pressure, flow, continuity, Bernoulli, pipe losses, pump selection, cavitation, or predictive diagnosis.",
-    "Requires approved sources before publication."
+    "The DOE sourcebook is guidance rather than a current pump test standard.",
+    "No equipment-specific range, alarm threshold, or live-work procedure is authorised."
   ],
   "workedExample": {
     "id": "WE-SMART-PUMP-UNITS-001",
@@ -67,8 +68,8 @@
       "Record whether the reading is ready for calculation or needs source-supported conversion."
     ],
     "answer": "The measurement is usable only when the quantity, value, unit, and context are explicit.",
-    "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
-    "reviewStatus": "Source required"
+    "sourceIds": ["SRC-NIST-SP330-2019", "SRC-DOE-PUMP-SOURCEBOOK-2006"],
+    "reviewStatus": "Engineering review required"
   },
   "components": [
     "pressure measurement",
@@ -79,6 +80,11 @@
   ],
   "normalOperation": [
     "Measurement channels are interpreted only after their quantity, unit, and context are known."
+  ],
+  "commonMisconceptions": [
+    "Treating a number without a unit as a usable measurement.",
+    "Treating kW and kWh as the same quantity.",
+    "Treating L/s and L/min as interchangeable without an explicit conversion."
   ],
   "faultConditions": [
     {
@@ -93,8 +99,8 @@
         "Instrument display mismatch"
       ],
       "safeResponse": "Do not use the reading for diagnosis until the unit and conversion evidence are confirmed.",
-      "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
-      "reviewStatus": "Source required"
+      "sourceIds": ["SRC-NIST-SP330-2019", "SRC-DOE-PUMP-SOURCEBOOK-2006"],
+      "reviewStatus": "Engineering review required"
     }
   ],
   "safety": [
@@ -103,11 +109,24 @@
       "hazard": "Real pump-system measurements",
       "warning": "A training measurement exercise does not authorise students to inspect, operate, adjust, or troubleshoot real pump equipment.",
       "studentBoundary": "Students must use supervised laboratory or approved simulated data unless an authorised instructor provides real-system access.",
-      "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
-      "reviewStatus": "Source required"
+      "sourceIds": ["SRC-NIST-SP330-2019", "SRC-DOE-PUMP-SOURCEBOOK-2006"],
+      "reviewStatus": "Engineering review required"
     }
   ],
   "relatedSimulations": ["SIM-SMART-PUMP-UNITS-001"],
-  "sourceCitations": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
-  "reviewStatus": "Source required"
+  "relatedLessons": ["LES-SMART-PUMP-UNITS-001"],
+  "sourceCitations": ["SRC-NIST-SP330-2019", "SRC-DOE-PUMP-SOURCEBOOK-2006"],
+  "sourceReferences": [
+    {
+      "sourceId": "SRC-NIST-SP330-2019",
+      "section": "Tables 4, 5, and 7",
+      "pages": "15"
+    },
+    {
+      "sourceId": "SRC-DOE-PUMP-SOURCEBOOK-2006",
+      "section": "Field Measurements of Fluid and Electrical Parameters",
+      "pages": "56-60"
+    }
+  ],
+  "reviewStatus": "Engineering review required"
 }

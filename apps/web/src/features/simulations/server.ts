@@ -20,28 +20,31 @@ import {
   type SimulationState
 } from "@industrial-learn/simulation-engine";
 import type { CompetencyLevel } from "@industrial-learn/assessment-core";
+import { STUDENT_PUBLICATION_REQUIREMENTS } from "@industrial-learn/content-review-workflow/publication-visibility";
 
 import type { AuthenticatedSession } from "../auth/session-core";
-import { getSimulationCatalogBySlug, simulationCatalog } from "./catalog";
+import { loadStudentDashboardData } from "../student-dashboard/server-data";
+import {
+  getPublicSimulationCatalog,
+  getPublicSimulationCatalogById,
+  getPublicSimulationCatalogBySlug,
+  getPublicSimulationCollections
+} from "./catalog";
+import { buildSimulationRecommendations, catalogueEntryToLabCard } from "./discovery";
+import type {
+  SimulationLabAttemptSummary,
+  SimulationLabCard,
+  SimulationLabModel
+} from "./lab-types";
 import {
   createLocalSimulationPersistence,
   listLocalSimulationAttempts
 } from "./local-store";
 
-export type SimulationSummary = {
-  slug: string;
-  title: string;
-  description: string;
-  moduleTitle: string;
-  lessonTitle: string;
-  estimatedMinutes: number;
-  simulationId: string;
+export type SimulationSummary = SimulationLabCard & {
   version: number;
-  reviewStatus: string;
-  publicationStatus: string;
   sourceIds: string[];
   equationIds: string[];
-  latestAttempt?: PersistedSimulationAttempt | undefined;
 };
 
 export type SimulationOverview = SimulationSummary & {
@@ -100,10 +103,107 @@ export async function listSimulationsForStudent(
   session: AuthenticatedSession
 ): Promise<SimulationSummary[]> {
   noStore();
+  const publicCatalog = getPublicSimulationCatalog();
   const records = await Promise.all(
-    simulationCatalog.map((entry) => loadSimulationOverview(session, entry.slug))
+    publicCatalog.map((entry) => loadSimulationOverview(session, entry.slug))
   );
   return records.filter((record): record is SimulationOverview => Boolean(record));
+}
+
+export async function loadSimulationLabModel(
+  session: AuthenticatedSession | null
+): Promise<SimulationLabModel> {
+  noStore();
+  const publicCatalog = getPublicSimulationCatalog();
+  const publicCollections = getPublicSimulationCollections(publicCatalog);
+
+  if (!session) {
+    return {
+      simulations: publicCatalog.map((entry) => catalogueEntryToLabCard(entry)),
+      collections: publicCollections,
+      authenticated: false,
+      recentAttempts: [],
+      recommendations: [],
+      historyAvailable: true
+    };
+  }
+
+  const [dashboardResult, historyResult] = await Promise.allSettled([
+    loadStudentDashboardData(session),
+    listSimulationHistory(session)
+  ]);
+  const dashboard = dashboardResult.status === "fulfilled" ? dashboardResult.value : null;
+  const persistedHistory =
+    historyResult.status === "fulfilled" ? historyResult.value : [];
+  const completedLessonSlugs =
+    dashboard?.lessonProgress
+      .filter(
+        (progress) => progress.status === "submitted" || progress.status === "graded"
+      )
+      .map((progress) => progress.lessonSlug) ?? [];
+  const simulations = publicCatalog.map((entry) =>
+    catalogueEntryToLabCard(
+      entry,
+      persistedHistory.find(
+        (attempt) => attempt.simulationId === entry.definition.simulationId
+      ),
+      completedLessonSlugs
+    )
+  );
+  const recentAttempts = dashboard
+    ? dashboard.simulationAttempts
+        .filter((attempt) =>
+          Boolean(getPublicSimulationCatalogBySlug(attempt.simulationSlug))
+        )
+        .slice(0, 6)
+        .map<SimulationLabAttemptSummary>((attempt) => ({
+          id: attempt.id,
+          simulationSlug: attempt.simulationSlug,
+          title:
+            getPublicSimulationCatalogBySlug(attempt.simulationSlug)?.definition.title ??
+            attempt.title,
+          mode: attempt.mode,
+          status: attempt.status,
+          completedAt: attempt.completedAt
+        }))
+    : persistedHistory.slice(0, 6).map(mapPersistedAttemptForLab);
+  const currentModuleSlugs =
+    dashboard?.enrolments.flatMap((enrolment) => enrolment.moduleSlugs) ?? [];
+  return {
+    simulations,
+    collections: publicCollections,
+    authenticated: true,
+    recentAttempts,
+    recommendations: dashboard
+      ? buildSimulationRecommendations({
+          simulations,
+          currentModuleSlugs,
+          completedLessonSlugs,
+          recentAttempts
+        })
+      : [],
+    historyAvailable:
+      dashboardResult.status === "fulfilled" && historyResult.status === "fulfilled"
+  };
+}
+
+export function loadPublicSimulationOverview(slug: string): SimulationOverview | null {
+  const entry = getPublicSimulationCatalogBySlug(slug);
+  if (!entry) {
+    return null;
+  }
+  const runtime = getSimulation(entry.definition.simulationId);
+  if (!runtime) {
+    return null;
+  }
+
+  return {
+    ...summaryFromDefinition(slug, entry),
+    modes: runtime.definition.modes,
+    inputRanges: runtime.definition.inputRanges,
+    faultModes: runtime.definition.faultModes,
+    attempts: []
+  };
 }
 
 export async function loadSimulationOverview(
@@ -111,7 +211,7 @@ export async function loadSimulationOverview(
   slug: string
 ): Promise<SimulationOverview | null> {
   noStore();
-  const entry = getSimulationCatalogBySlug(slug);
+  const entry = getPublicSimulationCatalogBySlug(slug);
   if (!entry) {
     return null;
   }
@@ -163,8 +263,8 @@ export async function startSimulationForStudent(
 ) {
   noStore();
   const overview = await loadSimulationOverview(session, slug);
-  if (!overview) {
-    throw new Error("Simulation was not found or is not published.");
+  if (!overview || overview.availability !== "available") {
+    throw new Error("Simulation was not found or is not currently available.");
   }
 
   const activeAttempt = overview.attempts.find(
@@ -177,7 +277,7 @@ export async function startSimulationForStudent(
   const { services } = createPersistenceForSession();
   return services.startSimulationAttempt(callerContext(session), {
     simulationId: overview.simulationId,
-    lessonId: getSimulationCatalogBySlug(slug)?.definition.lessonIds[0] ?? "",
+    lessonId: getPublicSimulationCatalogBySlug(slug)?.definition.lessonIds[0] ?? "",
     mode,
     simulationVersion: overview.version
   });
@@ -226,6 +326,11 @@ export async function completeSimulationForStudent(input: {
   submittedAssessmentValue?: number | undefined;
   idempotencyKey: string;
 }) {
+  const overview = await loadSimulationOverview(input.session, input.slug);
+  if (!overview || input.finalState.definition.simulationId !== overview.simulationId) {
+    throw new Error("Simulation was not found or is not currently available.");
+  }
+
   const { services } = createPersistenceForSession();
   return services.completeSimulationAttempt(callerContext(input.session), {
     attemptId: input.attemptId,
@@ -268,12 +373,14 @@ export async function loadCompletedSimulationReview(
 export async function listSimulationHistory(session: AuthenticatedSession) {
   noStore();
   if (isLocalSimulationMode()) {
-    return listLocalSimulationAttempts({ studentProfileId: session.profile.id });
+    return listLocalSimulationAttempts({ studentProfileId: session.profile.id }).filter(
+      (attempt) => Boolean(getPublicSimulationCatalogById(attempt.simulationId))
+    );
   }
 
   const repositories = createSupabaseSimulationRepositories();
   const attempts: PersistedSimulationAttempt[] = [];
-  for (const entry of simulationCatalog) {
+  for (const entry of getPublicSimulationCatalog()) {
     const row = await getSupabaseSimulationRowBySlug(entry.slug);
     if (row) {
       attempts.push(
@@ -331,29 +438,21 @@ function isLocalSimulationMode() {
 
 function summaryFromDefinition(
   slug: string,
-  entry: NonNullable<ReturnType<typeof getSimulationCatalogBySlug>>,
+  entry: NonNullable<ReturnType<typeof getPublicSimulationCatalogBySlug>>,
   latestAttempt?: PersistedSimulationAttempt
 ): SimulationSummary {
   return {
+    ...catalogueEntryToLabCard(entry, latestAttempt),
     slug,
-    title: entry.definition.title,
-    description: entry.definition.visualRepresentation.description,
-    moduleTitle: entry.moduleTitle,
-    lessonTitle: entry.lessonTitle,
-    estimatedMinutes: entry.estimatedMinutes,
-    simulationId: entry.definition.simulationId,
     version: 1,
-    reviewStatus: entry.definition.reviewStatus,
-    publicationStatus: "published",
     sourceIds: entry.definition.sourceIds,
-    equationIds: entry.definition.equations.map((equation) => equation.equationId),
-    latestAttempt
+    equationIds: entry.definition.equations.map((equation) => equation.equationId)
   };
 }
 
 function summaryFromRow(
   slug: string,
-  entry: NonNullable<ReturnType<typeof getSimulationCatalogBySlug>>,
+  entry: NonNullable<ReturnType<typeof getPublicSimulationCatalogBySlug>>,
   row: SimulationRow,
   latestAttempt?: PersistedSimulationAttempt
 ): SimulationSummary {
@@ -362,8 +461,21 @@ function summaryFromRow(
     title: row.title || entry.definition.title,
     description: row.description || entry.definition.visualRepresentation.description,
     version: row.version,
-    publicationStatus: row.publication_status,
-    reviewStatus: entry.definition.reviewStatus
+    publicationStatus: row.publication_status
+  };
+}
+
+function mapPersistedAttemptForLab(
+  attempt: PersistedSimulationAttempt
+): SimulationLabAttemptSummary {
+  const entry = getPublicSimulationCatalogById(attempt.simulationId);
+  return {
+    id: attempt.id,
+    simulationSlug: entry?.slug ?? attempt.simulationId,
+    title: entry?.definition.title ?? "Simulation attempt",
+    mode: attempt.mode,
+    status: attempt.status,
+    completedAt: attempt.completedAt
   };
 }
 
@@ -493,7 +605,7 @@ async function listSupabaseSimulationAttempts(input: {
     order: "started_at.desc",
     limit: "20"
   });
-  const entry = getSimulationCatalogBySlug(input.simulationRow.slug);
+  const entry = getPublicSimulationCatalogBySlug(input.simulationRow.slug);
   const simulationId = entry?.definition.simulationId ?? "";
   return rows.map((row) => mapSimulationAttemptRow(row, simulationId));
 }
@@ -503,7 +615,8 @@ async function getSupabaseSimulationRowBySlug(slug: string) {
   const client = createServiceRestClient(env);
   const rows = await client.get<SimulationRow>("simulations", {
     slug: `eq.${slug}`,
-    publication_status: "eq.published",
+    publication_status: `eq.${STUDENT_PUBLICATION_REQUIREMENTS.publicationStatus}`,
+    technical_review_status: `eq.${STUDENT_PUBLICATION_REQUIREMENTS.reviewStatus}`,
     limit: "1"
   });
   return rows[0] ?? null;
@@ -513,15 +626,14 @@ async function getSupabaseSimulationRowForDefinition(
   client: ReturnType<typeof createServiceRestClient>,
   simulationId: string
 ) {
-  const entry = simulationCatalog.find(
-    (catalogEntry) => catalogEntry.definition.simulationId === simulationId
-  );
+  const entry = getPublicSimulationCatalogById(simulationId);
   if (!entry) {
     return null;
   }
   const rows = await client.get<SimulationRow>("simulations", {
     slug: `eq.${entry.slug}`,
-    publication_status: "eq.published",
+    publication_status: `eq.${STUDENT_PUBLICATION_REQUIREMENTS.publicationStatus}`,
+    technical_review_status: `eq.${STUDENT_PUBLICATION_REQUIREMENTS.reviewStatus}`,
     limit: "1"
   });
   return rows[0] ?? null;
@@ -535,7 +647,7 @@ async function engineIdForSimulationRow(
     id: `eq.${row.simulation_id}`,
     limit: "1"
   });
-  const entry = rows[0] ? getSimulationCatalogBySlug(rows[0].slug) : undefined;
+  const entry = rows[0] ? getPublicSimulationCatalogBySlug(rows[0].slug) : undefined;
   return entry?.definition.simulationId ?? row.simulation_id;
 }
 

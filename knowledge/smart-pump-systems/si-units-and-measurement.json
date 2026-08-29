@@ -4,33 +4,71 @@
     "slug": "si-units-and-measurement",
     "title": "SI Units And Measurement",
     "topic": "Measurement language for smart pump systems",
-    "version": "0.1.0",
-    "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+    "version": "0.2.0",
+    "sourceIds": ["SRC-NIST-SP330-2019", "SRC-DOE-PUMP-SOURCEBOOK-2006"]
   },
-  "learningPurpose": "Give students a focused source-gated reference for pump-system quantities, SI units and measurement-context checks.",
+  "learningPurpose": "Give students a focused, source-linked reference for pump-system quantities, SI units and measurement-context checks.",
   "definitions": [
     {
       "term": "Measurement channel",
       "meaning": "A named reading or signal that carries one stated measured quantity with a value, unit and context.",
-      "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+      "sourceIds": ["SRC-NIST-SP330-2019", "SRC-DOE-PUMP-SOURCEBOOK-2006"]
     },
     {
       "term": "Measurement context",
       "meaning": "The location, instrument, operating condition and timestamp needed before a reading can be interpreted.",
-      "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"]
+      "sourceIds": ["SRC-NIST-SP330-2019", "SRC-DOE-PUMP-SOURCEBOOK-2006"]
     }
   ],
   "governingPrinciples": [
     "A measurement is not diagnosis until quantity, value, unit and context are known.",
     "Industrial Learn calculation functions require explicit SI units internally.",
-    "No pump curves, equipment ratings or diagnostic thresholds are available from the current placeholder source."
+    "Measurement location, instrument condition, operating state, and timing affect interpretation.",
+    "The reviewed sources do not establish pump diagnostic thresholds or equipment ratings for this lesson."
   ],
-  "equations": [],
+  "equations": [
+    {
+      "id": "EQ-SI-CONVERSION-EXPLICIT-001",
+      "name": "Explicit conversion to an SI value",
+      "expression": "valueSI = value * conversionFactor",
+      "symbols": ["valueSI", "value", "conversionFactor"],
+      "siUnits": {
+        "valueSI": "declared SI target unit",
+        "value": "declared source unit",
+        "conversionFactor": "SI target unit/source unit"
+      },
+      "sourceIds": ["SRC-NIST-SP330-2019"],
+      "sourceReferences": [
+        {
+          "sourceId": "SRC-NIST-SP330-2019",
+          "section": "Table 7: SI prefixes",
+          "pages": "23"
+        },
+        {
+          "sourceId": "SRC-NIST-SP330-2019",
+          "section": "Table 8: Non-SI units accepted for use with SI units",
+          "pages": "25"
+        }
+      ],
+      "reviewStatus": "Equation checked"
+    }
+  ],
   "symbolDefinitions": [
     { "symbol": "p", "name": "pressure", "unit": "Pa" },
     { "symbol": "Q", "name": "volumetric flow rate", "unit": "m^3/s" },
     { "symbol": "T", "name": "temperature", "unit": "K" },
-    { "symbol": "P", "name": "power", "unit": "W" }
+    { "symbol": "P", "name": "power", "unit": "W" },
+    {
+      "symbol": "valueSI",
+      "name": "converted SI value",
+      "unit": "declared SI target unit"
+    },
+    { "symbol": "value", "name": "source value", "unit": "declared source unit" },
+    {
+      "symbol": "conversionFactor",
+      "name": "explicit conversion factor",
+      "unit": "SI target unit/source unit"
+    }
   ],
   "siUnits": [
     { "quantity": "pressure", "unit": "pascal", "symbol": "Pa" },
@@ -50,7 +88,8 @@
   ],
   "limitations": [
     "Does not teach pump selection, cavitation, pump curves, predictive maintenance or AI diagnosis.",
-    "Does not cite manufacturer documentation or standards because no source document is present."
+    "The DOE sourcebook is guidance rather than a current pump test standard.",
+    "No equipment-specific measurement range, alarm threshold, or live-work procedure is authorised."
   ],
   "workedExample": {
     "id": "WE-SMART-PUMP-SI-MEASUREMENT-001",
@@ -67,8 +106,8 @@
       "Record missing context before calculation."
     ],
     "answer": "The reading is usable only when quantity, value, unit and context are explicit.",
-    "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
-    "reviewStatus": "Source required"
+    "sourceIds": ["SRC-NIST-SP330-2019", "SRC-DOE-PUMP-SOURCEBOOK-2006"],
+    "reviewStatus": "Engineering review required"
   },
   "components": [
     "pressure channel",
@@ -96,8 +135,8 @@
         "Instrument display mismatch"
       ],
       "safeResponse": "Do not use the reading for diagnosis until the unit and conversion evidence are confirmed.",
-      "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
-      "reviewStatus": "Source required"
+      "sourceIds": ["SRC-NIST-SP330-2019", "SRC-DOE-PUMP-SOURCEBOOK-2006"],
+      "reviewStatus": "Engineering review required"
     }
   ],
   "safety": [
@@ -106,12 +145,39 @@
       "hazard": "Unverified pump-system measurements",
       "warning": "A training measurement exercise does not authorise operation, adjustment or troubleshooting of real pump equipment.",
       "studentBoundary": "Students must use approved simulated data unless an authorised instructor provides controlled access.",
-      "sourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
-      "reviewStatus": "Source required"
+      "sourceIds": ["SRC-NIST-SP330-2019", "SRC-DOE-PUMP-SOURCEBOOK-2006"],
+      "reviewStatus": "Engineering review required"
     }
   ],
   "relatedSimulations": ["SIM-SMART-PUMP-UNITS-001"],
-  "sourceCitations": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
-  "sourceReferences": [],
-  "reviewStatus": "Source required"
+  "relatedLessons": ["LES-SMART-PUMP-UNITS-001"],
+  "sourceCitations": ["SRC-NIST-SP330-2019", "SRC-DOE-PUMP-SOURCEBOOK-2006"],
+  "sourceReferences": [
+    {
+      "sourceId": "SRC-NIST-SP330-2019",
+      "section": "Table 4: SI units with special names and symbols",
+      "pages": "15"
+    },
+    {
+      "sourceId": "SRC-NIST-SP330-2019",
+      "section": "Table 5: coherent derived units",
+      "pages": "17"
+    },
+    {
+      "sourceId": "SRC-NIST-SP330-2019",
+      "section": "Table 7: SI prefixes",
+      "pages": "23"
+    },
+    {
+      "sourceId": "SRC-NIST-SP330-2019",
+      "section": "Table 8: Non-SI units accepted for use with SI units",
+      "pages": "25"
+    },
+    {
+      "sourceId": "SRC-DOE-PUMP-SOURCEBOOK-2006",
+      "section": "Field Measurements of Fluid and Electrical Parameters",
+      "pages": "56-60"
+    }
+  ],
+  "reviewStatus": "Engineering review required"
 }

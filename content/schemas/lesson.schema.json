@@ -27,6 +27,16 @@
     "slug": { "type": "string" },
     "title": { "type": "string" },
     "description": { "type": "string" },
+    "schemaVersion": { "type": "string" },
+    "experienceModel": { "enum": ["linear-v1", "visual-v2"] },
+    "visualLessonType": { "type": "string" },
+    "lessonType": { "$ref": "#/$defs/lessonType" },
+    "visualStandardVersion": { "const": "1.0.0" },
+    "visualMetadata": { "$ref": "#/$defs/visualMetadata" },
+    "simulationIds": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^SIM-[A-Z0-9-]+$" }
+    },
     "publicationStatus": {
       "enum": ["draft", "internal", "scheduled", "published", "archived"]
     },
@@ -36,6 +46,7 @@
     "sourceIds": { "type": "array", "items": { "type": "string" } },
     "learningOutcomes": { "type": "array", "items": { "type": "string" } },
     "estimatedCompletionTime": { "type": "string" },
+    "estimatedInteractionTime": { "type": "string" },
     "difficulty": { "type": "string" },
     "prerequisites": { "type": "array", "items": { "type": "string" } },
     "requiredSections": {
@@ -77,14 +88,164 @@
         }
       }
     },
+    "experienceSequence": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/visualStage" }
+    },
     "equationIds": { "type": "array", "items": { "type": "string" } },
     "workedExampleIds": { "type": "array", "items": { "type": "string" } },
     "faultScenarioIds": { "type": "array", "items": { "type": "string" } },
     "safetyWarningIds": { "type": "array", "items": { "type": "string" } },
     "quizIds": { "type": "array", "items": { "type": "string" } },
+    "relatedApplications": { "type": "array", "items": { "type": "string" } },
+    "relatedAssessmentIds": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^ASM-[A-Z0-9-]+$" }
+    },
     "projectIds": { "type": "array", "items": { "type": "string" } }
   },
   "$defs": {
+    "lessonType": {
+      "enum": [
+        "phenomenon",
+        "component",
+        "system",
+        "calculation",
+        "diagnostic",
+        "design",
+        "theory"
+      ]
+    },
+    "visualMetadata": {
+      "type": "object",
+      "required": ["firstScreen", "progression", "inputs", "outputs"],
+      "properties": {
+        "firstScreen": {
+          "type": "object",
+          "required": ["purpose", "primaryVisualBlockId", "primaryControlIds"],
+          "properties": {
+            "purpose": { "type": "string", "minLength": 1 },
+            "primaryVisualBlockId": { "type": "string", "minLength": 1 },
+            "primaryControlIds": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string", "minLength": 1 },
+              "uniqueItems": true
+            }
+          }
+        },
+        "progression": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["see", "play", "calculate", "challenge", "apply", "check"]
+          }
+        },
+        "inputs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/simulationInput" }
+        },
+        "outputs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/simulationOutput" }
+        }
+      }
+    },
+    "simulationInput": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "quantity",
+        "unit",
+        "internalUnit",
+        "default",
+        "minimum",
+        "maximum",
+        "step",
+        "validation",
+        "modelValidityRange",
+        "accessibilityLabel",
+        "educationalDescription"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "quantity": { "type": "string", "minLength": 1 },
+        "unit": { "type": "string", "minLength": 1 },
+        "internalUnit": { "type": "string", "minLength": 1 },
+        "default": { "type": "number" },
+        "minimum": { "type": "number" },
+        "maximum": { "type": "number" },
+        "step": { "type": "number", "exclusiveMinimum": 0 },
+        "validation": { "type": "string", "minLength": 1 },
+        "modelValidityRange": {
+          "type": "object",
+          "required": ["minimum", "maximum"],
+          "properties": {
+            "minimum": { "type": "number" },
+            "maximum": { "type": "number" }
+          }
+        },
+        "accessibilityLabel": { "type": "string", "minLength": 1 },
+        "educationalDescription": { "type": "string", "minLength": 1 }
+      }
+    },
+    "simulationOutput": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "quantity",
+        "unit",
+        "internalUnit",
+        "interpretation",
+        "validityState",
+        "measurementSource"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "quantity": { "type": "string", "minLength": 1 },
+        "unit": { "type": "string", "minLength": 1 },
+        "internalUnit": { "type": "string", "minLength": 1 },
+        "interpretation": { "type": "string", "minLength": 1 },
+        "validityState": { "enum": ["valid", "warning", "invalid", "unavailable"] },
+        "warning": { "type": "string" },
+        "measurementSource": { "type": "string", "minLength": 1 }
+      }
+    },
+    "visualStage": {
+      "type": "object",
+      "required": ["stage", "title", "blocks"],
+      "properties": {
+        "stage": {
+          "enum": [
+            "heroExperience",
+            "explore",
+            "observe",
+            "microTheory",
+            "liveEquation",
+            "engineeringChallenge",
+            "faultMode",
+            "realWorldApplication",
+            "knowledgeCheck",
+            "deepDive",
+            "sources"
+          ]
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "blocks": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "content-block.schema.json" }
+        }
+      }
+    },
     "requiredSectionId": {
       "type": "string",
       "enum": [
@@ -120,5 +281,34 @@
         "Approved for student use"
       ]
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "experienceModel": { "const": "visual-v2" } },
+        "required": ["experienceModel"]
+      },
+      "then": {
+        "required": [
+          "schemaVersion",
+          "experienceSequence",
+          "lessonType",
+          "visualStandardVersion",
+          "visualMetadata"
+        ],
+        "properties": {
+          "lessonType": {
+            "enum": [
+              "phenomenon",
+              "component",
+              "system",
+              "calculation",
+              "diagnostic",
+              "design"
+            ]
+          }
+        }
+      }
+    }
+  ]
 }

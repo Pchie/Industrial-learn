@@ -110,3 +110,31 @@ Live staging checks after the migration confirmed:
 - Reviewer access to private student attempts remains denied by default.
 
 Prompt 33b final verdict: GO FOR PROMPT 34.
+
+## 2026-08-29 Prompt 44 Live Re-Verification
+
+Staging project `lgjujyaclrpaopdabyzg` was restored and verified `ACTIVE_HEALTHY`.
+
+Final invariants:
+
+- 36 of 36 public application tables have RLS enabled.
+- 80 public policies are present.
+- No `PUBLIC` table grants exist.
+- Five required roles are seeded.
+- Assessment and simulation completion functions are owned by `postgres`, use
+  `security definer`, and are executable only by `service_role` among Supabase API roles.
+- Authenticated question prompts remain selectable through a safe column allow-list;
+  private `questions.explanation` is denied.
+- No unapproved simulation remains operationally `published`.
+
+A rollback-only live matrix passed **55/55** checks across student ownership, lecturer
+cohort scope, author/reviewer separation, publication states, hidden answers, atomic
+completion, idempotency, rollback, audit uniqueness, and version/competency integrity.
+
+Temporary Auth accounts proved sign-in, profile/default-role resolution, session refresh,
+expiry rejection, recovery-token password update, verification-token handling, sign-out,
+and revoked-session denial. Public signup and reset-email delivery were blocked by the
+Supabase `over_email_send_rate_limit` window and remain pending rerun.
+
+Live RLS verdict: **PASS**. This does not override the separate deployed-application
+failure recorded in `docs/audits/prompt-44-live-staging-security-report.md`.

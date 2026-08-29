@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import fluidPressureAssessment from "../../../content/assessments/fluid-pressure/basic-fluid-pressure-assessment.json";
-import { hydraulicCylinderForceSimulation } from "@industrial-learn/simulation-engine";
+import {
+  hydraulicCylinderForceSimulation,
+  thermodynamicSystemBoundarySimulation
+} from "@industrial-learn/simulation-engine";
 import {
   createAttemptPersistenceServices,
   type AssessmentAttemptRepository,
@@ -500,6 +503,49 @@ describe("simulation attempt persistence", () => {
     expect(completed.measurementsTaken.length).toBeGreaterThan(0);
     expect(completed.measurementsTaken.length).toBeLessThanOrEqual(20);
     expect(completed.competencyAwards.Diagnosed).toBe(1);
+  });
+
+  it("persists a bounded thermodynamic classification summary", async () => {
+    const { repositories, competencyEvents } = createTestRepositories();
+    const services = createAttemptPersistenceServices(repositories);
+    const started = await services.startSimulationAttempt(
+      { caller: caller() },
+      {
+        simulationId: "sim-core-thermal-system-001",
+        lessonId: "LES-THERMO-SYSTEMS-SURROUNDINGS-001",
+        mode: "guided",
+        simulationVersion: 1
+      }
+    );
+    const finalState = thermodynamicSystemBoundarySimulation.start(
+      thermodynamicSystemBoundarySimulation.updateInput(
+        thermodynamicSystemBoundarySimulation.createInitialState("guided"),
+        "massCrossing",
+        1
+      )
+    );
+
+    const completed = await services.completeSimulationAttempt(
+      { caller: caller() },
+      {
+        attemptId: started.id,
+        studentProfileId: studentA,
+        finalState,
+        idempotencyKey: "thermal-boundary-complete"
+      }
+    );
+
+    expect(completed.status).toBe("submitted");
+    expect(completed.outputSummary.classificationCode).toBe(1);
+    expect(completed.measurementsTaken).toEqual([
+      expect.objectContaining({
+        id: "classificationCode",
+        value: 1,
+        unit: "classification"
+      })
+    ]);
+    expect(completed.competencyAwards.Operated).toBe(1);
+    expect(competencyEvents[0]?.awards.Operated).toBe(1);
   });
 
   it("rejects invalid simulation IDs, duplicate completion, and cross-student access", async () => {

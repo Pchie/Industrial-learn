@@ -4,99 +4,168 @@
     "slug": "systems-surroundings-boundaries",
     "title": "Systems, Surroundings And Boundaries",
     "topic": "Thermodynamic system definitions for the first foundation lesson",
-    "version": "0.1.0",
-    "sourceIds": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"]
+    "version": "0.2.0",
+    "sourceIds": [
+      "SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021",
+      "SRC-OPENSTAX-COLLEGE-PHYSICS-2012"
+    ]
   },
-  "learningPurpose": "Prepare the first thermodynamics foundation lesson with source-gated definitions before any property data or process equations are introduced.",
+  "learningPurpose": "Give students a focused, source-linked vocabulary for selecting and classifying a thermodynamic system before equations or property data are introduced.",
   "definitions": [
     {
       "term": "System",
-      "meaning": "The selected matter, region or device considered for a thermodynamics analysis.",
-      "sourceIds": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"]
+      "meaning": "The selected matter or region chosen for a thermodynamic analysis.",
+      "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
     },
     {
       "term": "Surroundings",
-      "meaning": "Everything outside the selected system boundary for the stated analysis.",
-      "sourceIds": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"]
+      "meaning": "Everything outside the selected system for the stated analysis.",
+      "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
     },
     {
       "term": "Boundary",
       "meaning": "The real or imagined surface that separates the system from its surroundings.",
-      "sourceIds": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"]
+      "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+    },
+    {
+      "term": "Closed system or control mass",
+      "meaning": "A fixed quantity of matter selected for analysis; mass does not cross its boundary.",
+      "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+    },
+    {
+      "term": "Open system or control volume",
+      "meaning": "A selected region in space whose boundary may be crossed by mass.",
+      "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+    },
+    {
+      "term": "Isolated system",
+      "meaning": "A system that does not exchange matter or energy with its surroundings.",
+      "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+    },
+    {
+      "term": "Property",
+      "meaning": "A measurable characteristic used to describe a system.",
+      "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+    },
+    {
+      "term": "State",
+      "meaning": "The condition of a system described by its properties at an instant.",
+      "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+    },
+    {
+      "term": "Process",
+      "meaning": "A change by which a system moves from one state to another.",
+      "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+    },
+    {
+      "term": "Cycle",
+      "meaning": "A sequence of processes that returns a system to its initial state.",
+      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+    },
+    {
+      "term": "Intensive property",
+      "meaning": "A property whose value does not depend on the amount of matter selected.",
+      "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
+    },
+    {
+      "term": "Extensive property",
+      "meaning": "A property whose value depends on the amount of matter selected.",
+      "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"]
     }
   ],
   "governingPrinciples": [
-    "Thermodynamic analysis starts by declaring the system and boundary.",
-    "Boundary choice affects what may cross the boundary and what interactions must be tracked.",
-    "Definitions require an approved thermodynamics source before student-use approval."
+    "Declare the selected system and boundary before deciding which interactions must be tracked.",
+    "Classify a system from what may cross the selected boundary, not from the name of the device alone.",
+    "Treat property and state vocabulary as preparation for later reviewed equations and property-data lessons."
   ],
   "equations": [],
   "symbolDefinitions": [],
-  "siUnits": [
-    { "quantity": "temperature", "unit": "kelvin", "symbol": "K" },
-    { "quantity": "pressure", "unit": "pascal", "symbol": "Pa" },
-    { "quantity": "energy", "unit": "joule", "symbol": "J" }
-  ],
+  "siUnits": [],
+  "siUnitNote": "This classification topic introduces no numerical calculation or property value; SI units are added only in later source-reviewed lessons.",
   "assumptions": [
-    "This file introduces vocabulary only.",
-    "No steam, refrigerant, material or property data is provided.",
-    "No thermodynamic process equation is approved by this file."
+    "The analysis boundary is selected for the stated learning question.",
+    "A sealed classroom container is treated as a closed system only for the stated classification exercise.",
+    "No property values, equilibrium criteria, or process equations are inferred."
   ],
   "limitations": [
-    "Does not define property data, state equations, heat-transfer coefficients, cycles or equipment ratings.",
-    "No chapter, section or page reference is available until a real source is onboarded."
+    "Does not introduce steam, refrigerant, material, or other property data.",
+    "Does not establish heat, work, mass-flow, or energy-balance equations.",
+    "Does not teach equilibrium criteria, equipment ratings, operating limits, or design rules.",
+    "The Purdue notes are concise course material rather than a complete property-data authority."
   ],
   "workedExample": {
     "id": "WE-THERMO-SYSTEMS-SURROUNDINGS-001",
-    "title": "Choose a system boundary",
-    "purpose": "Practise declaring what is inside and outside the analysis boundary.",
+    "title": "Classify a sealed classroom container",
+    "purpose": "Practise declaring a system boundary and classifying whether mass may cross it.",
     "given": [
-      "A sealed rigid container is used as a classroom example.",
-      "The learner must identify the selected system boundary."
+      "A sealed rigid container is selected as the system.",
+      "The container wall is selected as the boundary."
     ],
     "steps": [
-      "Name the selected system.",
-      "State what is outside it.",
-      "Describe the boundary without assigning property data."
+      "Name the matter inside the selected system.",
+      "Identify everything outside the boundary as surroundings.",
+      "Decide whether mass may cross the sealed boundary."
     ],
-    "answer": "The answer is complete only when the system, surroundings and boundary are all stated.",
-    "sourceIds": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"],
-    "reviewStatus": "Source required"
+    "answer": "For this exercise, the sealed contents form a closed system because mass does not cross the selected boundary.",
+    "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"],
+    "reviewStatus": "Engineering review required"
   },
-  "components": ["system", "surroundings", "boundary", "interaction"],
+  "components": [
+    "selected system",
+    "surroundings",
+    "boundary",
+    "mass-crossing classification",
+    "property vocabulary"
+  ],
   "normalOperation": [
-    "Learners define the boundary before interpreting heat, work or mass transfer."
+    "Learners declare the system and boundary before classifying the system or discussing interactions."
   ],
   "commonMisconceptions": [
-    "Starting calculations before the system is defined.",
-    "Assuming the same boundary works for every question.",
-    "Introducing property data without a verified source."
+    "Treating the physical device name as the system definition without stating a boundary.",
+    "Assuming every sealed system is isolated.",
+    "Calling a property intensive or extensive without considering whether it depends on the amount of matter.",
+    "Starting a calculation before the system and boundary are declared."
   ],
   "faultConditions": [
     {
       "id": "FAULT-THERMO-BOUNDARY-001",
-      "title": "Unstated boundary",
+      "title": "Unstated or inconsistent boundary",
       "symptoms": [
-        "The learner cannot decide whether mass or energy crosses the boundary."
+        "The learner cannot decide whether mass crosses the boundary.",
+        "The selected system changes partway through the explanation."
       ],
-      "likelyCauses": ["The system boundary was not declared before analysis."],
-      "safeResponse": "Return to the definition step and state the selected system and boundary.",
-      "sourceIds": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"],
-      "reviewStatus": "Source required"
+      "likelyCauses": ["The system boundary was not declared before classification."],
+      "safeResponse": "Return to the definition step, state the selected system and boundary, and then repeat the classification.",
+      "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"],
+      "reviewStatus": "Engineering review required"
     }
   ],
   "safety": [
     {
       "id": "SAFE-THERMO-SYSTEMS-001",
-      "hazard": "Misuse of classroom thermodynamics examples",
-      "warning": "Introductory thermodynamics definitions do not authorise equipment operation, pressure testing or thermal-system design.",
-      "studentBoundary": "Students must use reviewed learning examples and must not infer real equipment limits.",
-      "sourceIds": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"],
-      "reviewStatus": "Source required"
+      "hazard": "Misuse of a classroom classification",
+      "warning": "System classification alone does not establish equipment operating limits, pressure limits, or thermal safety controls.",
+      "studentBoundary": "Students must not infer permission to operate, open, heat, pressurise, or design real equipment from this introductory lesson.",
+      "sourceIds": ["SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021"],
+      "reviewStatus": "Engineering review required"
     }
   ],
-  "relatedSimulations": [],
-  "sourceCitations": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"],
-  "sourceReferences": [],
-  "reviewStatus": "Source required"
+  "relatedSimulations": ["sim-core-thermal-system-001"],
+  "relatedLessons": ["LES-THERMO-SYSTEMS-SURROUNDINGS-001"],
+  "sourceCitations": [
+    "SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021",
+    "SRC-OPENSTAX-COLLEGE-PHYSICS-2012"
+  ],
+  "sourceReferences": [
+    {
+      "sourceId": "SRC-PURDUE-ME200-THERMO-DEFINITIONS-2021",
+      "section": "Some Definitions; Properties; State and Process",
+      "pages": "6-7"
+    },
+    {
+      "sourceId": "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+      "section": "15.2 The First Law of Thermodynamics and Some Simple Processes"
+    }
+  ],
+  "reviewStatus": "Engineering review required"
 }

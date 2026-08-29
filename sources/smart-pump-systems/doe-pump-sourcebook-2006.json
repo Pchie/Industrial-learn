@@ -1,0 +1,67 @@
+{
+  "id": "SRC-DOE-PUMP-SOURCEBOOK-2006",
+  "title": "Improving Pumping System Performance: A Sourcebook for Industry",
+  "fullTitle": "Improving Pumping System Performance: A Sourcebook for Industry, Second Edition",
+  "author": "Lawrence Berkeley National Laboratory, Resource Dynamics Corporation, and Alliance to Save Energy",
+  "organisation": "U.S. Department of Energy Industrial Technologies Program, in cooperation with the Hydraulic Institute",
+  "edition": "Second Edition",
+  "version": "DOE/GO-102006-2079; NREL/BK-840-37637",
+  "publicationDate": "2006-05",
+  "accessDate": "2026-08-26",
+  "documentType": "official government and industry sourcebook",
+  "discipline": "Pumping systems",
+  "topics": [
+    "pump-system pressure measurement",
+    "flow measurement",
+    "temperature context",
+    "motor power measurement",
+    "measurement accuracy and calibration limitations"
+  ],
+  "url": "https://www.energy.gov/sites/prod/files/2014/05/f16/pump.pdf",
+  "filePath": null,
+  "accessMode": "metadata-only",
+  "copyrightStatus": "Publicly distributed U.S. Department of Energy sourcebook; no explicit repository redistribution licence was identified during review.",
+  "rights": {
+    "licence": "No explicit redistribution licence verified",
+    "permittedInternalUse": "Citation and factual verification only",
+    "mayDistribute": false,
+    "metadataOnly": true,
+    "studentMayOpenDirectly": true
+  },
+  "reliabilityLevel": 1,
+  "citation": "U.S. Department of Energy (2006), Improving Pumping System Performance: A Sourcebook for Industry, Second Edition, DOE/GO-102006-2079, pp. 56-60, accessed 2026-08-26.",
+  "approvalStatus": "Source checked",
+  "reviewStatus": "Source checked",
+  "evidenceStatus": "approved",
+  "reviewer": "Codex source-verification agent",
+  "reviewerType": "automated-assisted technical librarian review",
+  "reviewDate": "2026-08-26",
+  "independentHumanReviewRequired": true,
+  "verification": {
+    "documentOpened": true,
+    "metadataVerified": true,
+    "verifiedAt": "2026-08-26",
+    "verificationMethod": "Official DOE-hosted 122-page PDF inspected with PDF metadata and text extraction",
+    "fixedPageCount": 122,
+    "sha256": "e8975ae00a5d74bfb9f1512f8b2cd85a56359f61d8109bbb18bfdc6d3eb52eb4",
+    "containsEmbeddedJavaScript": true
+  },
+  "relevantChapters": ["Section 3: The Economics of Improving Pumping Systems"],
+  "relevantSections": [
+    "Field Measurements of Fluid and Electrical Parameters",
+    "Direct Measurement Method",
+    "Using Pump Curves"
+  ],
+  "relevantPages": ["56-60"],
+  "limitations": [
+    "The sourcebook is practical guidance rather than a current pump test standard.",
+    "The inspected PDF reports embedded JavaScript and is therefore not stored or executed by Industrial Learn.",
+    "No pump curve, diagnostic threshold, equipment rating, or live-work procedure is imported from this source.",
+    "Electrical measurements described by the source can be hazardous and are not authorised by the lesson.",
+    "Independent human source review remains required before student-use approval."
+  ],
+  "supersedesSourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
+  "notes": "The SHA-256 records the official PDF inspected on the access date; only metadata and original educational explanations are retained.",
+  "createdAt": "2026-08-26",
+  "updatedAt": "2026-08-26"
+}

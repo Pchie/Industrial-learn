@@ -5,18 +5,11 @@ import {
   type Module,
   type Programme
 } from "../curriculum/data";
+import { getPublicLessons } from "../lesson-engine/data";
+import { getPublicSimulationCatalog } from "../simulations/catalog";
 
 export type CompetencyLevel =
   "Introduced" | "Understood" | "Calculated" | "Operated" | "Diagnosed" | "Designed";
-
-export const competencyLevels: CompetencyLevel[] = [
-  "Introduced",
-  "Understood",
-  "Calculated",
-  "Operated",
-  "Diagnosed",
-  "Designed"
-];
 
 export type DashboardProfile = {
   id: string;
@@ -221,10 +214,25 @@ export function buildStudentDashboardModel(
     calculateModuleProgress(module, data)
   );
   const competencyProfile = calculateCompetencyProfile(data);
-  const recommendations = buildWeakTopicRecommendations(data).filter(
-    (recommendation) => !data.dismissedRecommendationIds.includes(recommendation.id)
+  const visibleLessonSlugs = new Set([
+    ...getPublicLessons().map((lesson) => lesson.slug),
+    ...currentModules.flatMap((module) =>
+      module.units.flatMap((unit) => unit.lessons.map((lesson) => lesson.slug))
+    )
+  ]);
+  const visibleSimulationIds = new Set(
+    getPublicSimulationCatalog().map((simulation) => simulation.slug)
   );
-  const continueLessonSlug = findContinueLessonSlug(currentModules, data.lessonProgress);
+  const recommendations = buildWeakTopicRecommendations(data).filter(
+    (recommendation) =>
+      !data.dismissedRecommendationIds.includes(recommendation.id) &&
+      recommendationTargetsPublicModule(recommendation)
+  );
+  const continueLessonSlug = findContinueLessonSlug(
+    currentModules,
+    data.lessonProgress,
+    visibleLessonSlugs
+  );
   const activeProjects = data.projectSubmissions
     .filter(
       (project) => project.status === "in_progress" || project.status === "submitted"
@@ -237,7 +245,11 @@ export function buildStudentDashboardModel(
       portfolioEvidenceCount: project.portfolioEvidenceCount,
       requiredEvidenceCount: project.requiredEvidenceCount
     }));
-  const recentActivity = buildRecentActivity(data);
+  const recentActivity = buildRecentActivity(
+    data,
+    visibleLessonSlugs,
+    visibleSimulationIds
+  );
   const partialDataWarnings = [
     ...data.partialDataWarnings,
     ...(currentEnrolment && !programmeRecord
@@ -274,7 +286,11 @@ export function buildStudentDashboardModel(
         competencyLevel: attempt.competencyLevel ?? competencyFromAssessmentScore(attempt)
       })),
     simulationActivity: data.simulationAttempts
-      .filter((attempt) => attempt.status !== "not_started")
+      .filter(
+        (attempt) =>
+          attempt.status !== "not_started" &&
+          visibleSimulationIds.has(attempt.simulationSlug)
+      )
       .sort(descendingByDate((attempt) => attempt.completedAt))
       .slice(0, 5)
       .map((attempt) => ({
@@ -288,11 +304,14 @@ export function buildStudentDashboardModel(
             : `Incomplete ${attempt.scenarioState} scenario`
       })),
     weakTopicRecommendations: recommendations,
-    savedLessons: data.savedLessons.slice(0, 6).map((lesson) => ({
-      slug: lesson.lessonSlug,
-      title: lessonTitleBySlug(lesson.lessonSlug),
-      savedAt: lesson.savedAt
-    })),
+    savedLessons: data.savedLessons
+      .filter((lesson) => visibleLessonSlugs.has(lesson.lessonSlug))
+      .slice(0, 6)
+      .map((lesson) => ({
+        slug: lesson.lessonSlug,
+        title: lessonTitleBySlug(lesson.lessonSlug),
+        savedAt: lesson.savedAt
+      })),
     activeProjects,
     recentActivity,
     moduleProgress: combineProgress(moduleCards.map((module) => module.progress)),
@@ -540,10 +559,14 @@ function buildWeeklyPlan(modules: Module[], lessonProgress: LessonProgressRecord
 
 function findContinueLessonSlug(
   modules: Module[],
-  lessonProgress: LessonProgressRecord[]
+  lessonProgress: LessonProgressRecord[],
+  visibleLessonSlugs: ReadonlySet<string>
 ) {
   const inProgress = lessonProgress
-    .filter((progress) => progress.status === "in_progress")
+    .filter(
+      (progress) =>
+        progress.status === "in_progress" && visibleLessonSlugs.has(progress.lessonSlug)
+    )
     .sort(descendingByDate((progress) => progress.lastActivityAt))[0];
 
   if (inProgress) {
@@ -561,10 +584,18 @@ function findContinueLessonSlug(
     .find((lesson) => !completed.has(lesson.slug))?.slug;
 }
 
-function buildRecentActivity(data: StudentDashboardData): RecentActivity[] {
+function buildRecentActivity(
+  data: StudentDashboardData,
+  visibleLessonSlugs: ReadonlySet<string>,
+  visibleSimulationIds: ReadonlySet<string>
+): RecentActivity[] {
   return [
     ...data.lessonProgress
-      .filter((progress) => progress.lastActivityAt || progress.completedAt)
+      .filter(
+        (progress) =>
+          visibleLessonSlugs.has(progress.lessonSlug) &&
+          (progress.lastActivityAt || progress.completedAt)
+      )
       .map((progress) => ({
         id: progress.id,
         title: lessonTitleBySlug(progress.lessonSlug),
@@ -580,7 +611,10 @@ function buildRecentActivity(data: StudentDashboardData): RecentActivity[] {
         summary: `Assessment ${attempt.status.replaceAll("_", " ")}`
       })),
     ...data.simulationAttempts
-      .filter((attempt) => attempt.completedAt)
+      .filter(
+        (attempt) =>
+          visibleSimulationIds.has(attempt.simulationSlug) && attempt.completedAt
+      )
       .map((attempt) => ({
         id: attempt.id,
         title: attempt.title,
@@ -746,6 +780,11 @@ function lessonTitleBySlug(slug: string) {
     .split("-")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
+}
+
+function recommendationTargetsPublicModule(recommendation: WeakTopicRecommendation) {
+  const moduleSlug = recommendation.href.match(/^\/modules\/([^/?#]+)/)?.[1];
+  return Boolean(moduleSlug && getModule(moduleSlug));
 }
 
 function descendingByDate<T>(date: (item: T) => string | undefined) {

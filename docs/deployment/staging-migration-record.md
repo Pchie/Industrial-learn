@@ -126,3 +126,28 @@ STAGING_ENV_FILE=.env.staging.local npm run validate:staging-env
 
 Migrations and policies were applied with `psql` using the staging database URL.
 The database URL and service-role key were never printed.
+
+## 2026-08-29 Prompt 44 Reconciliation
+
+The restored staging project was confirmed `ACTIVE_HEALTHY`. Live object markers showed
+`0001` through `0009` applied even though Supabase migration history was empty.
+
+Two additive migrations were reviewed, validated, and applied in single transactions with
+`ON_ERROR_STOP`:
+
+| Migration                                            | Result                    | Changed objects                                                                                                              |
+| ---------------------------------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `0011_restrict_assessment_question_delivery.sql`     | Applied                   | Revoked broad question SELECT from `anon`/`authenticated`; granted safe authenticated question columns without `explanation` |
+| `0012_demote_unapproved_simulation_publications.sql` | Applied; two rows updated | Changed only unapproved `published` simulations to `internal`                                                                |
+
+Working-tree migration `0010_bernoulli_flow_simulation_registration.sql` was absent live,
+not independently approved, and intentionally not applied.
+
+After catalog reconciliation, the supported Supabase CLI migration-repair command recorded
+`0001`-`0009`, `0011`, and `0012` as applied. A temporary non-repository Supabase work
+directory was required because canonical files live in `database/migrations/`; no canonical
+file was moved or edited. The first repair attempt failed before mutation because the CLI
+could not find `supabase/migrations/0001_*.sql`.
+
+Final history comparison matched all verified versions and left `0010` absent. No
+production database was contacted or changed.

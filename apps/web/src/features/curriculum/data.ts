@@ -2,6 +2,11 @@ import coreCurriculum from "../../../../../content/curriculum/core-engineering.j
 import futureCurriculum from "../../../../../content/curriculum/future-engineering.json";
 import careerPathways from "../../../../../content/curriculum/career-pathways.json";
 import prerequisiteGraph from "../../../../../content/curriculum/prerequisite-graph.json";
+import { getStaticSourceRecordsById } from "../publication/source-records";
+import {
+  evaluateStaticPublicationVisibility,
+  type StaticPublicationAuthority
+} from "../publication/static-publication";
 
 export type Lesson = {
   id: string;
@@ -133,6 +138,32 @@ export type CurriculumModel = {
 };
 
 export function getCurriculum(): CurriculumModel {
+  const internal = getInternalCurriculum();
+  const schools = internal.schools.map(projectSchoolForPublic);
+  const modules = schools.flatMap((school) =>
+    school.disciplines.flatMap((discipline) =>
+      discipline.programmes.flatMap((programme) =>
+        programme.academicYears.flatMap((year) =>
+          year.semesters.flatMap((semester) => semester.modules)
+        )
+      )
+    )
+  );
+  const visibleModuleIds = new Set(modules.map((module) => module.id));
+
+  return {
+    schools,
+    pathways: internal.pathways.filter(
+      (pathway) => evaluateCurriculumPublication(pathway).visible
+    ),
+    prerequisiteEdges: internal.prerequisiteEdges.filter(
+      (edge) => visibleModuleIds.has(edge.from) && visibleModuleIds.has(edge.to)
+    ),
+    modules
+  };
+}
+
+export function getInternalCurriculum(): CurriculumModel {
   const core = (coreCurriculum as CurriculumFile).school;
   const future = (futureCurriculum as CurriculumFile).school;
   const pathways = (careerPathways as CareerPathwaysFile).pathways;
@@ -153,6 +184,20 @@ export function getCurriculum(): CurriculumModel {
       )
     )
   };
+}
+
+export function evaluateCurriculumPublication(
+  record: Module | Lesson | Pathway,
+  authority?: StaticPublicationAuthority
+) {
+  return evaluateStaticPublicationVisibility({
+    audience: "public",
+    record,
+    sourceRecords: getStaticSourceRecordsById(
+      "sourceIds" in record ? record.sourceIds : []
+    ),
+    ...(authority ? { authority } : {})
+  });
 }
 
 export function getSchool(slug: School["slug"]) {
@@ -214,4 +259,42 @@ export function getPathway(pathwaySlug: string) {
 
 export function prerequisiteTitles(ids: string[], modules: Module[]) {
   return ids.map((id) => modules.find((module) => module.id === id)?.title ?? id);
+}
+
+function projectSchoolForPublic(school: School): School {
+  return {
+    ...school,
+    disciplines: school.disciplines.map((discipline) => ({
+      ...discipline,
+      programmes: discipline.programmes.map((programme) => ({
+        ...programme,
+        academicYears: programme.academicYears.map((academicYear) => ({
+          ...academicYear,
+          semesters: academicYear.semesters.map((semester) => ({
+            ...semester,
+            modules: semester.modules.flatMap((module) => {
+              const projected = projectModuleForPublic(module);
+              return projected ? [projected] : [];
+            })
+          }))
+        }))
+      }))
+    }))
+  };
+}
+
+function projectModuleForPublic(module: Module): Module | null {
+  if (!evaluateCurriculumPublication(module).visible) {
+    return null;
+  }
+
+  return {
+    ...module,
+    units: module.units.map((unit) => ({
+      ...unit,
+      lessons: unit.lessons.filter(
+        (lesson) => evaluateCurriculumPublication(lesson).visible
+      )
+    }))
+  };
 }
