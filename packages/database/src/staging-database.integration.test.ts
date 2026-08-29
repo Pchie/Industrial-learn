@@ -71,6 +71,16 @@ describeIfConfigured("staging database RLS integration", () => {
       expect(await response.json()).toEqual([]);
     }
   });
+
+  it("does not allow direct authenticated reads of private question explanations", async () => {
+    const response = await restSelect(
+      "questions",
+      process.env.STAGING_STUDENT_A_ACCESS_TOKEN,
+      "select=id,explanation&limit=1"
+    );
+
+    expect([401, 403]).toContain(response.status);
+  });
 });
 
 async function restSelect(

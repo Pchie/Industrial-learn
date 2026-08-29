@@ -93,3 +93,31 @@ was also restricted.
 Before production promotion, repeat these checks against the production database
 only inside an approved production change window. Do not copy staging synthetic
 users or staging verification records into production.
+
+## 2026-08-29 Prompt 44 Drift Reconciliation
+
+| Drift area                        | Before                                                | Final state                                                  |
+| --------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------ |
+| Project availability              | `INACTIVE`                                            | `ACTIVE_HEALTHY`                                             |
+| Supabase migration history        | Empty                                                 | Repaired for verified `0001`-`0009`, `0011`, and `0012`      |
+| Live required tables              | Historical evidence only                              | 36 present; all 36 RLS-enabled                               |
+| Public policy inventory           | Historical evidence only                              | 80 present                                                   |
+| Hidden question explanations      | Authenticated table-wide SELECT exposed `explanation` | Corrected by `0011`; authenticated explanation SELECT denied |
+| Unapproved simulation publication | Two unapproved simulations stored as `published`      | Corrected by `0012`; zero remain                             |
+| Held Bernoulli registration       | Working-tree-only `0010`                              | Still unapplied and explicitly held                          |
+
+No unexplained table, RLS-enable, sensitive policy, completion-function privilege, or
+attempt-index drift was found on the checked contract surface.
+
+Remaining operational drift:
+
+1. Canonical migrations live under `database/migrations/`, not the Supabase CLI default
+   `supabase/migrations/`; linked CLI output therefore shows remote-only versions unless a
+   mapped work directory is used.
+2. Working-tree migration `0010` is not in the repaired live ledger and must remain held.
+3. The deployed Vercel staging bundle is older than local Prompt 43 enforcement and still
+   serves one source-incomplete lesson route.
+4. Reviewer assignment is not a first-class persisted relation.
+5. Public auth email operations require a rerun after the provider rate-limit window.
+
+No production database was queried through the migration connection or changed.

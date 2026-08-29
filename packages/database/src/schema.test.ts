@@ -143,6 +143,19 @@ describe("database schema", () => {
     expect(policies).toContain("public.is_content_staff()");
   });
 
+  it("keeps private question explanations off the direct authenticated boundary", () => {
+    const safeQuestionGrant = migrationSql.match(
+      /grant select \([\s\S]*?\) on table public\.questions to authenticated;/i
+    )?.[0];
+
+    expect(migrationSql).toContain(
+      "revoke select on table public.questions from anon, authenticated;"
+    );
+    expect(safeQuestionGrant).toBeDefined();
+    expect(safeQuestionGrant).toContain("prompt");
+    expect(safeQuestionGrant).not.toContain("explanation");
+  });
+
   it("restricts student-visible technical content to published and approved records", () => {
     expect(migrationSql).toContain(
       "create or replace function public.is_student_visible_content"
@@ -244,6 +257,15 @@ describe("database schema", () => {
       expect(policies).toContain(`${table}_student_self_select`);
       expect(policies).toContain("for insert with check (\n    false\n  )");
     }
+  });
+
+  it("demotes operational publication for every unapproved simulation", () => {
+    expect(migrationSql).toContain("update public.simulations");
+    expect(migrationSql).toContain("publication_status = 'internal'");
+    expect(migrationSql).toContain("where publication_status = 'published'");
+    expect(migrationSql).toContain(
+      "technical_review_status <> 'Approved for student use'"
+    );
   });
 
   it("defines atomic assessment completion as a service-role-only database function", () => {
