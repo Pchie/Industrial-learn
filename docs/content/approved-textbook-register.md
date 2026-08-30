@@ -14,7 +14,7 @@ replace governing standards and manufacturer documentation.
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | Discipline                | Fluid mechanics                                                                                                   |
 | Module                    | Fluid Mechanics Foundations                                                                                       |
-| Lesson supported          | `LES-FLUID-PRESSURE-001`, Basic Fluid Pressure, version `0.3.0`                                                   |
+| Lesson supported          | `LES-FLUID-PRESSURE-001`, Basic Fluid Pressure, version `0.4.0`                                                   |
 | Principal academic source | _College Physics_                                                                                                 |
 | Publisher                 | OpenStax, Rice University                                                                                         |
 | Authors                   | Paul Peter Urone and Roger Hinrichs                                                                               |
@@ -64,6 +64,10 @@ This title is **not an approved Industrial Learn source**. The project has not r
 lawful access to the exact content, inspected the relevant chapter, or created a source
 ID. It therefore remains `Source required` and must not be cited as evidence for the
 lesson.
+
+Acquisition status: **ACQUISITION REQUIRED**. McGraw Hill remains the preferred
+commercial textbook benchmark to onboard after lawful access to the exact edition and
+chapter is documented.
 
 Official catalogue evidence:
 

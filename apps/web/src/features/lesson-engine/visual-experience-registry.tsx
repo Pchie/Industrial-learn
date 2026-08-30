@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import type { ReactNode } from "react";
 
+import { getBasicPressureExperienceContent } from "../basic-fluid-pressure-lesson/content";
 import { getBernoulliFlowExperienceContent } from "../bernoulli-flow-lab/content";
 import { getHydraulicCylinderExperienceContent } from "../hydraulic-cylinder-lesson/content";
 import { getPublicSimulationCatalogById } from "../simulations/catalog";
@@ -19,9 +20,18 @@ const BernoulliFlowVisualLesson = dynamic(() =>
   )
 );
 
+const BasicFluidPressureVisualLesson = dynamic(() =>
+  import("../basic-fluid-pressure-lesson/basic-fluid-pressure-visual-lesson").then(
+    (module) => module.BasicFluidPressureVisualLesson
+  )
+);
+
 type VisualExperienceRenderer = (lesson: StructuredLesson) => ReactNode;
 
 const visualExperienceRegistry: Record<string, VisualExperienceRenderer> = {
+  "VIS-FLUID-PRESSURE-HERO-001": (lesson) => (
+    <BasicFluidPressureVisualLesson content={getBasicPressureExperienceContent(lesson)} />
+  ),
   "SIM-HYD-CYL-FORCE-001": (lesson) => (
     <HydraulicCylinderVisualLesson
       content={getHydraulicCylinderExperienceContent(lesson)}
@@ -39,25 +49,33 @@ export const REGISTERED_VISUAL_EXPERIENCE_IDS = Object.freeze(
 export function getPublicVisualExperienceOverrides(
   lesson: StructuredLesson
 ): Partial<Record<VisualLessonStageId, ReactNode>> | undefined {
-  const simulationId = lesson.simulationIds?.find(
-    (candidate) =>
-      visualExperienceRegistry[candidate] && getPublicSimulationCatalogById(candidate)
-  );
-  const renderExperience = simulationId
-    ? visualExperienceRegistry[simulationId]
+  const experienceId = resolveVisualExperienceId(lesson, false);
+  const renderExperience = experienceId
+    ? visualExperienceRegistry[experienceId]
     : undefined;
 
   return renderExperience ? { heroExperience: renderExperience(lesson) } : undefined;
 }
 
+function resolveVisualExperienceId(lesson: StructuredLesson, internal: boolean) {
+  const primaryVisualBlockId = lesson.visualMetadata?.firstScreen.primaryVisualBlockId;
+  if (primaryVisualBlockId && visualExperienceRegistry[primaryVisualBlockId]) {
+    return primaryVisualBlockId;
+  }
+
+  return lesson.simulationIds?.find(
+    (candidate) =>
+      visualExperienceRegistry[candidate] &&
+      (internal || getPublicSimulationCatalogById(candidate))
+  );
+}
+
 export function getInternalVisualExperienceOverrides(
   lesson: StructuredLesson
 ): Partial<Record<VisualLessonStageId, ReactNode>> | undefined {
-  const simulationId = lesson.simulationIds?.find(
-    (candidate) => visualExperienceRegistry[candidate]
-  );
-  const renderExperience = simulationId
-    ? visualExperienceRegistry[simulationId]
+  const experienceId = resolveVisualExperienceId(lesson, true);
+  const renderExperience = experienceId
+    ? visualExperienceRegistry[experienceId]
     : undefined;
 
   return renderExperience ? { heroExperience: renderExperience(lesson) } : undefined;

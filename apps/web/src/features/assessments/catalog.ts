@@ -22,17 +22,17 @@ export const assessmentCatalog: AssessmentCatalogEntry[] = [
     slug: "staging-pressure-check",
     aliases: ["fluid-pressure-basic-check", "basic-fluid-pressure-competency-check"],
     localAssessmentId: "ASM-FLUID-PRESSURE-001",
-    title: "Basic Fluid Pressure Competency Check",
+    title: "Basic Fluid Pressure Check",
     description:
-      "A short graded check covering pressure meaning, SI units, a pressure calculation, a pilot simulation reading, and a safety boundary.",
+      "A short graded check covering pressure meaning, SI units, pressure calculation, visual comparison, and simple application reasoning.",
     moduleSlug: "fluid-mechanics-foundations",
     moduleTitle: "Fluid Mechanics Foundations",
     lessonSlug: "basic-fluid-pressure",
     lessonTitle: "Basic Fluid Pressure",
     lessonId: "LES-FLUID-PRESSURE-001",
     estimatedMinutes: 15,
-    contentVersion: 1,
-    sourceIds: ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PARKER-140H8-CYLINDER-2024"]
+    contentVersion: 2,
+    sourceIds: ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PSU-CIMBALA-PRESSURE-BASICS"]
   }
 ];
 
@@ -63,6 +63,6 @@ export function createAssessmentFromCatalog(
     lessonId: overrides.lessonId ?? entry.lessonId,
     title: overrides.title ?? entry.title,
     sourceIds: entry.sourceIds,
-    reviewStatus: overrides.reviewStatus ?? "Approved for student use"
+    reviewStatus: overrides.reviewStatus ?? assessment.reviewStatus
   };
 }

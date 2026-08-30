@@ -14,33 +14,19 @@ test.describe("authenticated assessment browser journey", () => {
     await page.getByRole("button", { name: "Start assessment" }).click();
 
     await expect(
-      page.getByRole("heading", { name: "Basic Fluid Pressure Competency Check" })
+      page.getByRole("heading", { name: "Basic Fluid Pressure Check" })
     ).toBeVisible();
-    await expect(page.getByText("The expected result is 10000 N.")).not.toBeVisible();
     await expect(page.getByText("Using p = F / A")).not.toBeVisible();
 
-    await page.getByLabel("Force distributed over an area.").check();
+    await page.getByLabel("Normal force distributed over an area.").check();
     await page.getByLabel("Value").first().fill("0.4");
     await page.getByLabel("Unit").first().fill("kPa");
     await page.getByRole("button", { name: "Save progress" }).click();
     await expect(page.getByText("Progress saved.")).toBeVisible();
 
-    await page.getByRole("checkbox", { name: "Force", exact: true }).check();
-    await page.getByRole("checkbox", { name: "Area", exact: true }).check();
-    await page.getByRole("checkbox", { name: "F", exact: true }).check();
-    await page.getByRole("checkbox", { name: "A", exact: true }).check();
-    await page.getByLabel("Step 1").selectOption("check-units");
-    await page.getByLabel("Step 2").selectOption("substitute");
-    await page.getByLabel("Step 3").selectOption("interpret");
-    await page.getByLabel("Cylinder force").fill("10000");
-    await page
-      .locator('input[name="answer-Q-FP-SIM-001-measurement-cylinderForce-unit"]')
-      .fill("N");
-    await page.getByLabel("Seal leak").check();
-    await page.getByLabel("Force is below the pressure-area prediction").check();
-    await page
-      .getByLabel("Response")
-      .fill("Do not inspect or operate pressurised equipment from this lesson alone.");
+    await page.getByLabel("Smaller area (surface A)").check();
+    await page.getByLabel("1 Pa = 1 N/m^2").check();
+    await page.getByLabel("Pressure increases.").last().check();
     await page.getByRole("button", { name: "Submit final answers" }).click();
 
     await expect(page).toHaveURL(/\/review$/);
@@ -52,7 +38,7 @@ test.describe("authenticated assessment browser journey", () => {
     await expect(
       page
         .getByLabel("Recent assessment results")
-        .getByRole("heading", { name: "Basic Fluid Pressure Competency Check" })
+        .getByRole("heading", { name: "Basic Fluid Pressure Check" })
     ).toBeVisible();
   });
 
@@ -85,25 +71,12 @@ async function completeMinimalAttempt(page: Page) {
   await expect(page).toHaveURL(/\/assessments\/staging-pressure-check\/attempt\//);
   const attemptUrl = page.url();
 
-  await page.getByLabel("Force distributed over an area.").check();
+  await page.getByLabel("Normal force distributed over an area.").check();
   await page.getByLabel("Value").first().fill("400");
   await page.getByLabel("Unit").first().fill("Pa");
-  await page.getByRole("checkbox", { name: "Force", exact: true }).check();
-  await page.getByRole("checkbox", { name: "Area", exact: true }).check();
-  await page.getByRole("checkbox", { name: "F", exact: true }).check();
-  await page.getByRole("checkbox", { name: "A", exact: true }).check();
-  await page.getByLabel("Step 1").selectOption("check-units");
-  await page.getByLabel("Step 2").selectOption("substitute");
-  await page.getByLabel("Step 3").selectOption("interpret");
-  await page.getByLabel("Cylinder force").fill("10000");
-  await page
-    .locator('input[name="answer-Q-FP-SIM-001-measurement-cylinderForce-unit"]')
-    .fill("N");
-  await page.getByLabel("Seal leak").check();
-  await page.getByLabel("Force is below the pressure-area prediction").check();
-  await page
-    .getByLabel("Response")
-    .fill("Do not use the lesson alone as approval to work on equipment.");
+  await page.getByLabel("Smaller area (surface A)").check();
+  await page.getByLabel("1 Pa = 1 N/m^2").check();
+  await page.getByLabel("Pressure increases.").last().check();
   await page.getByRole("button", { name: "Submit final answers" }).click();
   await expect(page).toHaveURL(/\/review$/);
 

@@ -15,6 +15,31 @@ import {
 const assessment = fluidPressureAssessment as Assessment;
 
 describe("assessment delivery access control", () => {
+  it("keeps every item within the taught outcomes and foundational competency scope", () => {
+    expect(assessment.learningOutcomeIds).toEqual([
+      "LO-FP-001",
+      "LO-FP-002",
+      "LO-FP-003"
+    ]);
+    expect(
+      assessment.questions.every((question) =>
+        question.learningOutcomeIds.every((outcomeId) =>
+          assessment.learningOutcomeIds.includes(outcomeId)
+        )
+      )
+    ).toBe(true);
+    expect(
+      assessment.questions.some((question) =>
+        ["simulation-task", "fault-diagnosis", "design-challenge"].includes(question.type)
+      )
+    ).toBe(false);
+    expect(
+      assessment.questions.some((question) =>
+        ["Operated", "Diagnosed", "Designed"].includes(question.competencyLevel)
+      )
+    ).toBe(false);
+  });
+
   it("does not expose answers, explanations, rubrics, or simulation hints before submission", () => {
     const delivered = deliverAssessment(assessment, "assessment");
     const serialized = JSON.stringify(delivered);
@@ -36,7 +61,7 @@ describe("assessment delivery access control", () => {
 });
 
 describe("assessment scoring", () => {
-  it("scores correct mixed assessment answers and records competency progress", () => {
+  it("scores the scope-aligned assessment and records only taught competency", () => {
     const attempt = submitAssessment({
       assessment,
       studentId: "student-001",
@@ -50,45 +75,30 @@ describe("assessment scoring", () => {
           answer: { value: 400.2, unit: "Pa" }
         },
         {
-          questionId: "Q-FP-COMP-001",
-          type: "component-identification",
-          componentIds: ["area", "force"]
-        },
-        {
           questionId: "Q-FP-DIAGRAM-001",
           type: "diagram-question",
-          labelIds: ["F", "A"]
+          labelIds: ["surface-a"]
         },
         {
-          questionId: "Q-FP-SEQ-001",
-          type: "sequence-question",
-          stepOrder: ["check-units", "substitute", "interpret"]
+          questionId: "Q-FP-UNIT-001",
+          type: "multiple-choice",
+          choiceId: "A"
         },
         {
-          questionId: "Q-FP-SIM-001",
-          type: "simulation-task",
-          measurements: { cylinderForce: { value: 10_000.5, unit: "N" } }
-        },
-        {
-          questionId: "Q-FP-FAULT-001",
-          type: "fault-diagnosis",
-          faultId: "seal-leak",
-          evidenceIds: ["force-below-pressure-area-prediction"]
-        },
-        {
-          questionId: "Q-FP-DESIGN-001",
-          type: "design-challenge",
-          rubricAwardedPoints: { "safety-boundary": 1, "review-boundary": 1 }
+          questionId: "Q-FP-APPLICATION-001",
+          type: "multiple-choice",
+          choiceId: "A"
         }
       ]
     });
 
-    expect(attempt.earnedPoints).toBe(12);
-    expect(attempt.maxPoints).toBe(12);
-    expect(attempt.competencyProgress.Calculated).toBe(3);
-    expect(attempt.competencyProgress.Operated).toBe(2);
-    expect(attempt.competencyProgress.Diagnosed).toBe(2);
-    expect(attempt.competencyProgress.Designed).toBe(2);
+    expect(attempt.earnedPoints).toBe(6);
+    expect(attempt.maxPoints).toBe(6);
+    expect(attempt.competencyProgress.Understood).toBe(4);
+    expect(attempt.competencyProgress.Calculated).toBe(2);
+    expect(attempt.competencyProgress.Operated).toBeUndefined();
+    expect(attempt.competencyProgress.Diagnosed).toBeUndefined();
+    expect(attempt.competencyProgress.Designed).toBeUndefined();
   });
 
   it("applies numeric tolerances", () => {
@@ -125,7 +135,7 @@ describe("assessment scoring", () => {
     ).toBe(0);
   });
 
-  it("validates units for numeric and simulation answers", () => {
+  it("validates units for numeric answers", () => {
     const attempt = submitAssessment({
       assessment,
       studentId: "student-001",
@@ -134,25 +144,15 @@ describe("assessment scoring", () => {
           questionId: "Q-FP-NUM-001",
           type: "numeric-engineering-calculation",
           answer: { value: 400, unit: "kPa" }
-        },
-        {
-          questionId: "Q-FP-SIM-001",
-          type: "simulation-task",
-          measurements: { cylinderForce: { value: 10_000, unit: "kN" } }
         }
       ]
     });
     const numericResult = attempt.questionResults.find(
       (result) => result.questionId === "Q-FP-NUM-001"
     );
-    const simulationResult = attempt.questionResults.find(
-      (result) => result.questionId === "Q-FP-SIM-001"
-    );
 
     expect(numericResult?.earnedPoints).toBe(0);
     expect(numericResult?.errors[0]).toContain("Unit must be Pa");
-    expect(simulationResult?.earnedPoints).toBe(0);
-    expect(simulationResult?.errors[0]).toContain("Unit must be N");
   });
 });
 
@@ -175,9 +175,7 @@ describe("assessment attempt review", () => {
       "ATT-FP-REVIEW-001"
     );
 
-    expect(ownerReview?.questionResults[0]?.explanation).toContain(
-      "Pressure is treated as normal force"
-    );
+    expect(ownerReview?.questionResults[0]?.explanation).toContain("foundational model");
     expect(otherStudentReview).toBeUndefined();
   });
 });

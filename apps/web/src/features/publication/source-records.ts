@@ -1,4 +1,5 @@
 import fluidPressureSource from "../../../../../sources/fluid-pressure/openstax-college-physics.json";
+import pennStatePressureSource from "../../../../../sources/fluid-pressure/penn-state-pressure-basics.json";
 import nasaBernoulliSource from "../../../../../sources/fluid-mechanics/nasa-glenn-bernoulli.json";
 import openStaxFluidDynamicsSource from "../../../../../sources/fluid-mechanics/openstax-college-physics-2e.json";
 import excavatorBoomCylinderSource from "../../../../../sources/hydraulics/caterpillar-boom-cylinder-6040431.json";
@@ -14,6 +15,7 @@ export type StaticSourceRecord = {
 
 const sourceRecords = Object.freeze([
   fluidPressureSource,
+  pennStatePressureSource,
   openStaxFluidDynamicsSource,
   nasaBernoulliSource,
   hydraulicCylinderSource,

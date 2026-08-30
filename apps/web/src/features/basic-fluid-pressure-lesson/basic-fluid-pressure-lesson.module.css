@@ -1,0 +1,222 @@
+.experience,
+.stage,
+.sceneRegion,
+.inputControls,
+.pairedInput,
+.challengeReadings {
+  display: grid;
+  min-width: 0;
+}
+
+.experience {
+  gap: var(--il-space-7);
+}
+
+.stage {
+  gap: var(--il-space-4);
+}
+
+.stage + .stage {
+  border-top: var(--il-border-subtle);
+  padding-top: var(--il-space-7);
+}
+
+.sceneRegion,
+.inputControls,
+.pairedInput,
+.challengeReadings {
+  gap: var(--il-space-3);
+}
+
+.stageHeading {
+  display: grid;
+  gap: var(--il-space-1);
+}
+
+.stageHeading p {
+  color: var(--il-color-brand-accent-strong);
+  font-size: var(--il-font-size-sm);
+  font-weight: var(--il-font-weight-heavy);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.stageHeading h2 {
+  font-size: var(--il-font-size-2xl);
+  margin: 0;
+}
+
+.scene {
+  background: var(--il-color-bg-surface);
+  border: var(--il-border-subtle);
+  border-radius: var(--il-radius-card);
+  display: block;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+.sceneBackground {
+  fill: var(--il-color-bg-surface);
+}
+
+.sceneTitle,
+.forceLabel,
+.areaLabel,
+.pressureLabel,
+.pressText {
+  fill: var(--il-color-text-primary);
+  font-family: var(--il-font-family-sans);
+  letter-spacing: 0;
+}
+
+.sceneTitle {
+  font-size: 22px;
+  font-weight: var(--il-font-weight-heavy);
+}
+
+.forceLabel,
+.areaLabel,
+.pressureLabel {
+  font-family: var(--il-font-family-mono);
+  font-size: 17px;
+  font-weight: var(--il-font-weight-bold);
+}
+
+.forceArrow {
+  stroke: var(--il-color-state-warning);
+  stroke-linecap: round;
+  stroke-width: 9;
+  transition: y1 180ms ease;
+}
+
+.forceArrowHead {
+  fill: var(--il-color-state-warning);
+}
+
+.contactSurface {
+  fill: var(--il-color-bg-muted);
+  stroke: var(--il-color-border-strong);
+  stroke-width: 4;
+  transition:
+    width 180ms ease,
+    x 180ms ease;
+}
+
+.pressureField {
+  transition:
+    opacity 180ms ease,
+    width 180ms ease,
+    x 180ms ease;
+}
+
+.pressurePattern {
+  stroke: var(--il-color-domain-hydraulic);
+  stroke-width: 4;
+}
+
+.foundation {
+  stroke: var(--il-color-border-strong);
+  stroke-width: 8;
+}
+
+.visualBoundary {
+  color: var(--il-color-text-secondary);
+  font-size: var(--il-font-size-sm);
+  margin: 0;
+}
+
+.observationGrid {
+  display: grid;
+  gap: var(--il-space-3);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.depthPanel {
+  background: var(--il-color-bg-muted);
+  border-left: 4px solid var(--il-color-state-info);
+  display: grid;
+  gap: var(--il-space-2);
+  padding: var(--il-space-4);
+}
+
+.depthPanel h3,
+.depthPanel p,
+.depthPanel ol {
+  margin-block: 0;
+}
+
+.challengeGrid {
+  display: grid;
+  gap: var(--il-space-4);
+  grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.5fr);
+}
+
+.challengeReadings div {
+  border-bottom: var(--il-border-subtle);
+  display: grid;
+  gap: var(--il-space-1);
+  padding-block: var(--il-space-2);
+}
+
+.challengeReadings dt {
+  color: var(--il-color-text-secondary);
+  font-size: var(--il-font-size-sm);
+}
+
+.challengeReadings dd {
+  font-family: var(--il-font-family-mono);
+  font-weight: var(--il-font-weight-bold);
+  margin: 0;
+}
+
+.pressVisual {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+.pressFrame,
+.pressBase {
+  fill: none;
+  stroke: var(--il-color-border-strong);
+  stroke-width: 10;
+}
+
+.pressRam {
+  fill: var(--il-color-bg-muted);
+  stroke: var(--il-color-border-strong);
+  stroke-width: 4;
+}
+
+.pressArrow {
+  fill: none;
+  stroke: var(--il-color-state-warning);
+  stroke-width: 8;
+}
+
+.pressWork {
+  fill: var(--il-color-domain-hydraulic);
+  stroke: var(--il-color-border-strong);
+  stroke-width: 4;
+}
+
+.pressText {
+  font-size: 14px;
+}
+
+@media (max-width: 760px) {
+  .observationGrid,
+  .challengeGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .forceArrow,
+  .contactSurface,
+  .pressureField {
+    transition: none;
+  }
+}

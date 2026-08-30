@@ -2,20 +2,83 @@
   "id": "LES-FLUID-PRESSURE-001",
   "slug": "basic-fluid-pressure",
   "title": "Basic Fluid Pressure",
-  "description": "A draft pilot lesson for introductory pressure reasoning using source-linked structured content blocks.",
+  "description": "Explore how normal force and contact area determine pressure in a bounded introductory model.",
+  "schemaVersion": "3.0.0",
+  "experienceModel": "visual-v2",
+  "visualLessonType": "visual-foundation",
+  "lessonType": "calculation",
+  "visualStandardVersion": "1.0.0",
+  "visualMetadata": {
+    "firstScreen": {
+      "purpose": "Change normal force or contact area and see the calculated pressure respond.",
+      "primaryVisualBlockId": "VIS-FLUID-PRESSURE-HERO-001",
+      "primaryControlIds": ["forceN", "areaM2"]
+    },
+    "progression": ["see", "play", "calculate", "challenge", "apply", "check"],
+    "inputs": [
+      {
+        "id": "forceN",
+        "label": "Normal force",
+        "quantity": "force",
+        "unit": "N",
+        "internalUnit": "N",
+        "default": 1000,
+        "minimum": 0,
+        "maximum": 5000,
+        "step": 50,
+        "validation": "Reject non-finite values and constrain values to the educational interaction range.",
+        "modelValidityRange": { "minimum": 0, "maximum": 5000 },
+        "accessibilityLabel": "Normal force in newtons",
+        "educationalDescription": "The magnitude of force acting normally on the surface."
+      },
+      {
+        "id": "areaM2",
+        "label": "Contact area",
+        "quantity": "area",
+        "unit": "m^2",
+        "internalUnit": "m^2",
+        "default": 0.01,
+        "minimum": 0.005,
+        "maximum": 0.05,
+        "step": 0.001,
+        "validation": "Reject non-finite or zero values and constrain values to the educational interaction range.",
+        "modelValidityRange": { "minimum": 0.005, "maximum": 0.05 },
+        "accessibilityLabel": "Contact area in square metres",
+        "educationalDescription": "The surface area over which the normal force is distributed."
+      }
+    ],
+    "outputs": [
+      {
+        "id": "pressureKPa",
+        "label": "Calculated pressure",
+        "quantity": "pressure",
+        "unit": "kPa",
+        "internalUnit": "Pa",
+        "interpretation": "A larger force or a smaller area produces a larger pressure in this model.",
+        "validityState": "valid",
+        "measurementSource": "EQ-FLUID-PRESSURE-001 through engineering-core"
+      }
+    ]
+  },
   "publicationStatus": "draft",
   "reviewStatus": "Engineering review required",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "estimatedCompletionTime": "25 minutes",
+  "estimatedInteractionTime": "10 minutes",
   "difficulty": "Introductory",
   "prerequisites": ["Basic algebra", "SI base and derived units"],
   "knowledgeFileIds": ["KF-FLUID-PRESSURE-001"],
   "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PSU-CIMBALA-PRESSURE-BASICS"],
+  "learningOutcomeIds": ["LO-FP-001", "LO-FP-002", "LO-FP-003"],
   "learningOutcomes": [
-    "Describe pressure as force distributed over area.",
-    "Identify the SI units used for pressure, force, and area.",
-    "Interpret a simple pressure result within stated educational assumptions."
+    "Describe pressure as normal force distributed over an area.",
+    "Identify the SI units Pa, N, and m^2 and predict how force or area changes pressure.",
+    "Calculate and interpret pressure from force and area within the stated model limits."
   ],
+  "equationIds": ["EQ-FLUID-PRESSURE-001"],
+  "simulationIds": [],
+  "relatedApplications": ["Hydraulic press concept"],
+  "relatedAssessmentIds": ["ASM-FLUID-PRESSURE-001"],
   "requiredSections": [
     "lessonHeader",
     "estimatedCompletionTime",
@@ -43,7 +106,7 @@
         {
           "id": "BLK-FP-HEADER-001",
           "type": "paragraph",
-          "text": "This pilot lesson introduces pressure as a relationship between normal force and area for an introductory static-fluid context.",
+          "text": "This visual foundation introduces pressure as the magnitude of normal force divided by the area over which it acts.",
           "sourceIds": [
             "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
             "SRC-PSU-CIMBALA-PRESSURE-BASICS"
@@ -57,8 +120,7 @@
         {
           "id": "BLK-FP-TIME-001",
           "type": "paragraph",
-          "text": "Estimated completion time: 25 minutes.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "text": "Estimated completion time: 25 minutes, including approximately 10 minutes of interaction."
         }
       ]
     },
@@ -68,8 +130,7 @@
         {
           "id": "BLK-FP-DIFFICULTY-001",
           "type": "paragraph",
-          "text": "Difficulty: introductory first-year engineering foundation.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "text": "Difficulty: introductory first-year engineering foundation."
         }
       ]
     },
@@ -79,8 +140,7 @@
         {
           "id": "BLK-FP-PREREQ-001",
           "type": "paragraph",
-          "text": "Students should be comfortable with basic algebra and SI units before attempting this lesson.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "text": "Use basic division and recognise newtons and square metres before starting."
         }
       ]
     },
@@ -90,8 +150,7 @@
         {
           "id": "BLK-FP-OUTCOME-001",
           "type": "paragraph",
-          "text": "By the end of the lesson, students should be able to describe pressure, identify the units Pa, N, and m^2, and interpret a simple result within the stated limitations.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "text": "LO-FP-001: describe pressure; LO-FP-002: identify units and predict changes; LO-FP-003: calculate and interpret a pressure result."
         }
       ]
     },
@@ -101,8 +160,11 @@
         {
           "id": "BLK-FP-MATTERS-001",
           "type": "engineeringInterpretation",
-          "text": "Pressure reasoning is used when engineers compare loads distributed over surfaces, interpret gauge readings, and recognise abnormal pressure conditions in supervised systems.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "text": "The relationship helps engineers reason about how a normal force is distributed across a contact surface before later lessons introduce complete fluid-power systems.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ]
         }
       ]
     },
@@ -113,7 +175,7 @@
           "id": "BLK-FP-TERM-001",
           "type": "definition",
           "term": "Pressure",
-          "definition": "Force distributed over an area in a fluid or on a surface.",
+          "definition": "The magnitude of normal force divided by the area over which it acts in this introductory model.",
           "sourceIds": [
             "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
             "SRC-PSU-CIMBALA-PRESSURE-BASICS"
@@ -127,11 +189,14 @@
         {
           "id": "BLK-FP-DIAGRAM-001",
           "type": "diagram",
-          "title": "Force distributed over area",
-          "altText": "A downward force arrow spreads over a rectangular area, indicating pressure as force divided by area.",
-          "description": "Force F acts normally on a surface area A. The larger the area for the same force, the lower the pressure.",
-          "caption": "Concept diagram for introductory pressure reasoning.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "title": "Normal force distributed over contact area",
+          "altText": "A downward normal force arrow acts on a rectangular contact surface; labels report force, area, and calculated pressure.",
+          "description": "The force arrow and contact surface are representational. Their documented visual scales do not represent physical distance.",
+          "caption": "Original Industrial Learn pressure concept diagram.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ]
         }
       ]
     },
@@ -141,13 +206,16 @@
         {
           "id": "BLK-FP-THEORY-001",
           "type": "paragraph",
-          "text": "For this introductory lesson, pressure is treated as normal force distributed across a stated area. The calculation is only meaningful when the quantities use consistent SI units.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "text": "Pressure describes how normal force is distributed over an area. The same force produces greater pressure when it acts over a smaller area.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ]
         },
         {
           "id": "BLK-FP-ASSUMPTION-001",
           "type": "assumption",
-          "text": "The force is applied normally over the stated area, and the example is not a pressure-vessel design case.",
+          "text": "The force acts normally over the stated area, inputs are consistent SI values, and the result is not an equipment rating or complete design conclusion.",
           "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
         }
       ]
@@ -158,11 +226,11 @@
         {
           "id": "EQ-FLUID-PRESSURE-001",
           "type": "equation",
-          "name": "Pressure from force and area",
+          "name": "Pressure from normal force and area",
           "expression": "p = F / A",
           "symbols": [
             { "symbol": "p", "name": "pressure", "unit": "Pa" },
-            { "symbol": "F", "name": "force", "unit": "N" },
+            { "symbol": "F", "name": "normal force", "unit": "N" },
             { "symbol": "A", "name": "area", "unit": "m^2" }
           ],
           "sourceIds": [
@@ -171,21 +239,11 @@
           ]
         },
         {
-          "id": "BLK-FP-SYMBOLS-001",
-          "type": "symbolTable",
-          "symbols": [
-            { "symbol": "p", "name": "pressure", "unit": "Pa" },
-            { "symbol": "F", "name": "force", "unit": "N" },
-            { "symbol": "A", "name": "area", "unit": "m^2" }
-          ],
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
-        },
-        {
           "id": "BLK-FP-UNIT-001",
           "type": "unitNote",
           "quantity": "pressure",
           "siUnit": "Pa",
-          "note": "Industrial Learn calculations store force in newtons, area in square metres, and pressure in pascals internally.",
+          "note": "One pascal is one newton per square metre. Industrial Learn supplies force in N and area in m^2 to the calculation.",
           "sourceIds": [
             "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
             "SRC-PSU-CIMBALA-PRESSURE-BASICS"
@@ -200,27 +258,30 @@
           "id": "WE-FLUID-PRESSURE-001",
           "type": "workedCalculation",
           "title": "Pressure from a known force and area",
-          "given": ["Force F = 200 N", "Area A = 0.50 m^2"],
+          "given": ["Normal force F = 1,000 N", "Area A = 0.010 m^2"],
           "steps": [
             {
               "label": "Check units",
               "expression": "F in N, A in m^2",
-              "explanation": "Both quantities are already in the SI units used internally."
+              "explanation": "Both quantities are in the SI units expected by the governing calculation."
             },
             {
               "label": "Substitute values",
-              "expression": "p = 200 / 0.50",
-              "explanation": "Use the source-linked pressure relationship from the equation block."
+              "expression": "p = 1,000 / 0.010",
+              "explanation": "Divide normal force by area."
             },
             {
               "label": "Calculate pressure",
-              "expression": "p = 400 Pa",
-              "explanation": "The pressure is expressed in pascals."
+              "expression": "p = 100,000 Pa = 100 kPa",
+              "explanation": "The pressure is 100,000 pascals, displayed as 100 kilopascals."
             }
           ],
-          "result": "400 Pa",
-          "interpretation": "A pressure of 400 Pa is the result for this educational example under the stated assumptions.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "result": "100,000 Pa (100 kPa)",
+          "interpretation": "This result applies only to the stated force-over-area educational model.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ]
         }
       ]
     },
@@ -230,8 +291,7 @@
         {
           "id": "BLK-FP-ACTIVITY-001",
           "type": "paragraph",
-          "text": "Simulation placeholder: adjust force and area in a future activity to observe pressure changes. No simulation state is implemented in this pilot lesson.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "text": "The first-screen visual changes normal force and contact area, while engineering-core supplies the pressure result. It has no time progression or fault state."
         }
       ]
     },
@@ -239,17 +299,9 @@
       "title": "Fault-finding exercise",
       "blocks": [
         {
-          "id": "FAULT-FLUID-PRESSURE-001",
-          "type": "faultCase",
-          "title": "Unexpected pressure reading",
-          "symptoms": ["The reading is outside the expected training range."],
-          "likelyCauses": [
-            "Incorrect area input",
-            "Incorrect unit conversion",
-            "Sensor or gauge issue in a real system"
-          ],
-          "safeResponse": "Treat real-system abnormal pressure as a safety concern and follow supervised laboratory or site procedures.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "id": "BLK-FP-FAULT-DEFERRED-001",
+          "type": "paragraph",
+          "text": "Fault diagnosis is outside this foundational lesson and is introduced only after measurement systems and supported fault models are taught."
         }
       ]
     },
@@ -257,12 +309,9 @@
       "title": "Safety considerations",
       "blocks": [
         {
-          "id": "SAFE-FLUID-PRESSURE-001",
-          "type": "warning",
-          "severity": "warning",
-          "title": "Stored pressure",
-          "text": "Real pressurised systems can be hazardous. This lesson does not authorise students to inspect, open, adjust, or operate pressurised equipment.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "id": "BLK-FP-SCOPE-BOUNDARY-001",
+          "type": "paragraph",
+          "text": "This educational calculation does not provide equipment operating instructions, component ratings, or professional design approval."
         }
       ]
     },
@@ -270,20 +319,19 @@
       "title": "Knowledge check",
       "blocks": [
         {
-          "id": "QUIZ-FLUID-PRESSURE-001",
+          "id": "Q-FLUID-PRESSURE-001",
           "type": "question",
-          "prompt": "Which SI units should be used internally for the introductory pressure calculation in this lesson?",
+          "prompt": "For the same normal force, what happens when the contact area becomes smaller?",
           "options": [
-            {
-              "id": "A",
-              "text": "newtons, square metres, and pascals",
-              "isCorrect": true
-            },
-            { "id": "B", "text": "kilograms, litres, and bar", "isCorrect": false },
-            { "id": "C", "text": "watts, metres, and volts", "isCorrect": false }
+            { "id": "A", "text": "Pressure increases.", "isCorrect": true },
+            { "id": "B", "text": "Pressure decreases.", "isCorrect": false },
+            { "id": "C", "text": "Pressure stays unchanged.", "isCorrect": false }
           ],
-          "answerExplanation": "The pilot lesson keeps force in N, area in m^2, and pressure in Pa.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "answerExplanation": "Because p = F / A, reducing area while keeping force fixed increases pressure.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ]
         }
       ]
     },
@@ -293,8 +341,11 @@
         {
           "id": "BLK-FP-SUMMARY-001",
           "type": "paragraph",
-          "text": "Pressure is introduced here as force distributed over area. The pilot lesson keeps calculations in SI units and remains draft content until source and engineering review are complete.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "text": "Pressure is normal force per unit area. Increase force at fixed area to increase pressure; decrease area at fixed force to increase pressure.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ]
         }
       ]
     },
@@ -302,16 +353,16 @@
       "title": "Sources",
       "blocks": [
         {
-          "id": "BLK-FP-SOURCE-001",
+          "id": "SRC-CITE-FP-001",
           "type": "sourceCitation",
           "sourceId": "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
-          "note": "OpenStax College Physics, section 11.3, supports the pressure definition, equation, and SI-unit relationship used in this draft. Independent educational, safety, and engineering review remain required before publication."
+          "note": "Section 11.3, Pressure."
         },
         {
-          "id": "BLK-FP-SOURCE-002",
+          "id": "SRC-CITE-FP-002",
           "type": "sourceCitation",
           "sourceId": "SRC-PSU-CIMBALA-PRESSURE-BASICS",
-          "note": "Penn State's Introduction to Pressure in Fluid Mechanics independently corroborates pressure as normal force per unit area and the pascal as N/m^2. Independent human review remains required."
+          "note": "Introduction to Pressure in Fluid Mechanics."
         }
       ]
     },
@@ -321,16 +372,255 @@
         {
           "id": "BLK-FP-NEXT-001",
           "type": "paragraph",
-          "text": "Next recommended lesson: flow rate and pressure in pump systems after this lesson has a reviewed source trail.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "text": "Continue to pressure measurement and hydraulic applications after those lessons complete source and engineering review."
         }
       ]
     }
   },
-  "equationIds": ["EQ-FLUID-PRESSURE-001"],
+  "experienceSequence": [
+    {
+      "stage": "heroExperience",
+      "title": "See, interact, observe, explain, calculate, challenge and apply",
+      "blocks": [
+        {
+          "id": "VIS-FLUID-PRESSURE-HERO-001",
+          "type": "interactiveDiagram",
+          "title": "Force over area pressure visual",
+          "description": "Change normal force and contact area to see the pressure relationship.",
+          "diagramId": "DIAG-FLUID-PRESSURE-FORCE-AREA-001",
+          "componentIds": ["COMP-NORMAL-FORCE-001", "COMP-CONTACT-AREA-001"],
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Interactive normal force and contact area pressure model",
+            "textAlternative": "A downward normal-force arrow acts on a contact surface. Text reports the current force, area, and calculated pressure.",
+            "keyboardInstructions": "Use the labelled sliders or number inputs, then read the announced pressure state.",
+            "reducedMotionFallback": "Values and geometry update without required animation."
+          }
+        },
+        {
+          "id": "VIS-FP-OBS-AREA-001",
+          "type": "observationQuestion",
+          "title": "Area observation",
+          "description": "Compare pressure while holding force constant.",
+          "prompt": "What happens when the same normal force acts on a smaller area?",
+          "hint": "Hold force steady and move only the area control.",
+          "explanation": "Pressure increases because the same force is distributed over less area.",
+          "graded": false,
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Non-graded contact-area observation",
+            "textAlternative": "A text question asks the student to compare area and pressure values.",
+            "keyboardInstructions": "Open the hint or explanation with Enter or Space.",
+            "reducedMotionFallback": "Numeric values and the state summary provide the comparison."
+          }
+        },
+        {
+          "id": "VIS-FP-OBS-FORCE-001",
+          "type": "observationQuestion",
+          "title": "Force observation",
+          "description": "Compare pressure while holding area constant.",
+          "prompt": "What happens when normal force increases but area stays constant?",
+          "hint": "Hold area steady and move only the force control.",
+          "explanation": "Pressure increases in direct proportion to force when area is fixed.",
+          "graded": false,
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Non-graded normal-force observation",
+            "textAlternative": "A text question asks the student to compare force and pressure values.",
+            "keyboardInstructions": "Open the hint or explanation with Enter or Space.",
+            "reducedMotionFallback": "Numeric values and the state summary provide the comparison."
+          }
+        },
+        {
+          "id": "VIS-FP-OBS-COMBINATION-001",
+          "type": "observationQuestion",
+          "title": "Combination observation",
+          "description": "Compare combinations of force and area.",
+          "prompt": "Which combination creates the highest pressure?",
+          "hint": "Compare a large force over a small area with the other combinations.",
+          "explanation": "Within this model, the largest force divided by the smallest area creates the highest pressure.",
+          "graded": false,
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Non-graded force-and-area combination observation",
+            "textAlternative": "A text question asks the student to compare several force and area combinations.",
+            "keyboardInstructions": "Open the hint or explanation with Enter or Space.",
+            "reducedMotionFallback": "Numeric values and the state summary provide the comparison."
+          }
+        },
+        {
+          "id": "VIS-FP-MICRO-001",
+          "type": "microTheory",
+          "title": "Pressure distributes force over area",
+          "description": "A concise explanation of the governing relationship.",
+          "principle": "Pressure describes how normal force is distributed over an area.",
+          "expandedExplanation": "For p = F/A, pressure increases when normal force increases at fixed area, and pressure increases when area decreases at fixed force.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Concise pressure theory",
+            "textAlternative": "Text explains normal force divided by area.",
+            "keyboardInstructions": "Use the explanation-depth controls and expandable details with the keyboard.",
+            "reducedMotionFallback": "Theory is text and does not depend on motion."
+          }
+        },
+        {
+          "id": "VIS-FP-LIVE-001",
+          "type": "liveEquation",
+          "title": "Live pressure equation",
+          "description": "The engineering-core pressure result updates from current SI inputs.",
+          "equationId": "EQ-FLUID-PRESSURE-001",
+          "inputBindings": { "F": "forceN", "A": "areaM2" },
+          "outputBinding": "pressurePa",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ],
+          "reviewStatus": "Equation checked",
+          "accessibility": {
+            "label": "Live pressure equation",
+            "textAlternative": "Current force in newtons and area in square metres are substituted into p equals F divided by A.",
+            "keyboardInstructions": "Change the labelled inputs and read the updated result and calculation steps.",
+            "reducedMotionFallback": "The numerical substitution updates without animation."
+          }
+        },
+        {
+          "id": "VIS-FP-CHALLENGE-001",
+          "type": "engineeringChallenge",
+          "title": "Create 200 kPa",
+          "description": "Choose a normal force and contact area that produce the target pressure.",
+          "challengeId": "CH-FLUID-PRESSURE-200KPA-001",
+          "objective": "Create 200 kPa of pressure",
+          "pattern": "target",
+          "goal": "Produce 200 kPa within the stated educational tolerance.",
+          "allowedActions": ["Change normal force", "Change contact area"],
+          "successCondition": "Calculated pressure is within 1 kPa of 200 kPa.",
+          "feedback": {
+            "beforeCheck": "Adjust force and area, then check the current pressure.",
+            "onSuccess": "The selected force and area produce the 200 kPa educational target.",
+            "onIncomplete": "The calculated pressure is not yet within 1 kPa of the target."
+          },
+          "modelAssumptions": [
+            "Normal force is distributed over the stated area.",
+            "The challenge is an ideal educational calculation, not equipment design."
+          ],
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Two hundred kilopascal pressure challenge",
+            "textAlternative": "Target pressure, current pressure, and signed difference are reported in text.",
+            "keyboardInstructions": "Start the challenge, adjust labelled controls, and activate Check current result.",
+            "reducedMotionFallback": "Success is communicated with text, numeric values, and an announced status."
+          }
+        },
+        {
+          "id": "VIS-FP-APPLICATION-001",
+          "type": "realWorldApplication",
+          "title": "Hydraulic press concept",
+          "description": "An original simplified visual connects normal force, contact area, and pressure without modelling a full hydraulic system.",
+          "applicationId": "APP-FLUID-PRESSURE-PRESS-001",
+          "systemType": "Foundational pressure application",
+          "principle": "A press contact can be discussed using force and contact area, while real equipment performance requires additional reviewed component, structural, loss, and control models.",
+          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Simplified press contact application",
+            "textAlternative": "A static line diagram shows a press face applying normal force to a work surface over a contact area.",
+            "keyboardInstructions": "No interaction is required for this explanatory visual.",
+            "reducedMotionFallback": "The application is a static SVG."
+          }
+        }
+      ]
+    },
+    {
+      "stage": "knowledgeCheck",
+      "title": "Check your understanding",
+      "blocks": [
+        {
+          "id": "Q-FP-VISUAL-CHECK-001",
+          "type": "question",
+          "prompt": "At fixed force, which change increases pressure?",
+          "options": [
+            { "id": "A", "text": "Decrease the area.", "isCorrect": true },
+            { "id": "B", "text": "Increase the area.", "isCorrect": false },
+            { "id": "C", "text": "Keep the area unchanged.", "isCorrect": false }
+          ],
+          "answerExplanation": "For p = F/A with fixed force, a smaller area gives a larger pressure.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "deepDive",
+      "title": "Deep Dive",
+      "blocks": [
+        {
+          "id": "VIS-FP-DEEP-001",
+          "type": "deepDive",
+          "title": "Units, rearrangement, and model limits",
+          "description": "Optional detail preserves SI reasoning and excluded physical effects.",
+          "content": "Pressure is defined as normal force per area: p = F/A. Algebraically, this can be rearranged to F = pA when pressure and area are known. Since 1 Pa = 1 N/m^2, dividing newtons by square metres produces pascals. This visual calculates only the force-area relationship. It does not calculate flow, leakage, compressibility, losses, transients, component ratings, or structural capacity.",
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ],
+          "reviewStatus": "Engineering review required",
+          "accessibility": {
+            "label": "Optional pressure derivation and limitations",
+            "textAlternative": "Expandable text explains units, algebraic rearrangement, and excluded effects.",
+            "keyboardInstructions": "Open or close the details control with Enter or Space.",
+            "reducedMotionFallback": "Deep Dive is text and contains no required motion."
+          }
+        }
+      ]
+    },
+    {
+      "stage": "sources",
+      "title": "Source records",
+      "blocks": [
+        {
+          "id": "VIS-FP-SOURCE-001",
+          "type": "sourceCitation",
+          "sourceId": "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+          "note": "Section 11.3, Pressure."
+        },
+        {
+          "id": "VIS-FP-SOURCE-002",
+          "type": "sourceCitation",
+          "sourceId": "SRC-PSU-CIMBALA-PRESSURE-BASICS",
+          "note": "Introduction to Pressure in Fluid Mechanics."
+        }
+      ]
+    }
+  ],
   "workedExampleIds": ["WE-FLUID-PRESSURE-001"],
-  "faultScenarioIds": ["FAULT-FLUID-PRESSURE-001"],
-  "safetyWarningIds": ["SAFE-FLUID-PRESSURE-001"],
+  "faultScenarioIds": [],
+  "safetyWarningIds": [],
   "quizIds": ["ASM-FLUID-PRESSURE-001"],
-  "projectIds": ["PRJ-FLUID-PRESSURE-OBSERVATION-001"]
+  "projectIds": []
 }

@@ -51,6 +51,19 @@ describe("application publication enforcement", () => {
     ).toBe("partial");
   });
 
+  it("registers both academic sources used by Basic Fluid Pressure", () => {
+    const records = getStaticSourceRecordsById([
+      "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+      "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+    ]);
+
+    expect(records.map((record) => record.id).sort()).toEqual([
+      "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+      "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+    ]);
+    expect(records.every((record) => record.evidenceStatus === "approved")).toBe(true);
+  });
+
   it("allows a synthetic current, approved and published lesson", () => {
     const lesson = approvedLesson();
 

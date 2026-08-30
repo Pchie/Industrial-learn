@@ -121,10 +121,10 @@ export const VISUAL_PROGRESSION_STEPS = [
 ] as const;
 
 export const VISUAL_LESSON_TYPE_REQUIREMENTS = {
-  phenomenon: ["heroSimulation", "observationQuestion", "microTheory"],
+  phenomenon: ["observationQuestion", "microTheory"],
   component: ["componentCutaway", "observationQuestion", "microTheory"],
   system: ["linkedSchematic", "observationQuestion", "microTheory"],
-  calculation: ["heroSimulation", "liveEquation", "engineeringChallenge"],
+  calculation: ["liveEquation", "engineeringChallenge"],
   diagnostic: ["heroSimulation", "faultChallenge"],
   design: ["engineeringChallenge", "realWorldApplication"]
 } as const satisfies Record<VisualLessonType, readonly LessonContentBlockType[]>;
@@ -255,6 +255,7 @@ type Lesson = {
   reviewStatus: ReviewStatus;
   knowledgeFileIds: string[];
   sourceIds: string[];
+  learningOutcomeIds?: string[];
   equationIds?: string[];
   simulationIds?: string[];
   multipleSourceVerification?: {
@@ -1266,6 +1267,7 @@ export function validateContentSystem(
   const sourcesById = new Map(sourceRecords.map(({ data }) => [data.id, data]));
   const knowledgeIds = new Set(knowledgeFiles.map(({ data }) => data.metadata.id));
   const lessonIds = new Set(lessonFiles.map(({ data }) => data.id));
+  const lessonsById = new Map(lessonFiles.map(({ data }) => [data.id, data]));
   const reviewRecordIds = new Set<string>();
 
   for (const { data, file } of reviewFiles) {
@@ -1594,7 +1596,35 @@ export function validateContentSystem(
   }
 
   for (const { data, file } of assessmentFiles) {
-    validateAssessment(data as Assessment, file, sourceIds, errors);
+    const assessment = data as Assessment;
+    validateAssessment(assessment, file, sourceIds, errors);
+
+    const lesson = lessonsById.get(assessment.lessonId);
+    if (!lesson) {
+      errors.push(
+        `${file}: assessment references unknown lesson ${assessment.lessonId}.`
+      );
+      continue;
+    }
+
+    const taughtOutcomeIds = new Set(lesson.learningOutcomeIds ?? []);
+    if (taughtOutcomeIds.size === 0) {
+      errors.push(
+        `${file}: lesson ${assessment.lessonId} must declare stable learningOutcomeIds for its assessment.`
+      );
+      continue;
+    }
+
+    for (const outcomeId of [
+      ...assessment.learningOutcomeIds,
+      ...assessment.questions.flatMap((question) => question.learningOutcomeIds)
+    ]) {
+      if (!taughtOutcomeIds.has(outcomeId)) {
+        errors.push(
+          `${file}: learning outcome ${outcomeId} is not taught by lesson ${assessment.lessonId}.`
+        );
+      }
+    }
   }
 
   for (const { data, file } of projectFiles) {

@@ -113,7 +113,9 @@ export async function loadAssessmentOverview(
   }
 
   if (isLocalAssessmentMode()) {
-    const assessment = createAssessmentFromCatalog(entry);
+    const assessment = createAssessmentFromCatalog(entry, {
+      reviewStatus: "Approved for student use"
+    });
     const attempts = listLocalAssessmentAttempts({
       studentProfileId: session.profile.id,
       assessmentId: assessment.id
@@ -127,7 +129,7 @@ export async function loadAssessmentOverview(
   }
 
   const row = await getSupabaseAssessmentRowBySlug(slug);
-  if (!row) {
+  if (!row || row.version !== entry.contentVersion) {
     return null;
   }
 
@@ -378,7 +380,7 @@ function createSupabaseAttemptRepositories(): AttemptPersistenceRepositories {
         return null;
       }
       const entry = getAssessmentCatalogBySlug(row.slug);
-      if (!entry) {
+      if (!entry || row.version !== entry.contentVersion) {
         return null;
       }
 

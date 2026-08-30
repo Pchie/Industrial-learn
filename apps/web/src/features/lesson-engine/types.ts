@@ -354,6 +354,7 @@ export type StructuredLesson = {
   prerequisites: string[];
   knowledgeFileIds: string[];
   sourceIds: string[];
+  learningOutcomeIds?: string[];
   learningOutcomes: string[];
   requiredSections: LessonSectionId[];
   sections: Record<LessonSectionId, LessonSection>;

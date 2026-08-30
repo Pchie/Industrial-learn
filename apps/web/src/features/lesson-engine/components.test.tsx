@@ -2,6 +2,9 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
+import { BasicFluidPressureVisualLesson } from "../basic-fluid-pressure-lesson/basic-fluid-pressure-visual-lesson";
+import { getBasicPressureExperienceContent } from "../basic-fluid-pressure-lesson/content";
+
 import { LessonRenderer } from "./components";
 import { getInternalLessonBySlug, getSourceRecordsById } from "./data";
 import type { StructuredLesson } from "./types";
@@ -18,6 +21,14 @@ function getLessonBySlug(slug: string) {
   });
 }
 
+function getBasicPressureVisualOverride(lesson: StructuredLesson) {
+  return {
+    heroExperience: createElement(BasicFluidPressureVisualLesson, {
+      content: getBasicPressureExperienceContent(lesson)
+    })
+  };
+}
+
 describe("lesson engine renderer", () => {
   it("renders the pilot lesson from structured content blocks", () => {
     const lesson = getLessonBySlug("basic-fluid-pressure");
@@ -27,13 +38,14 @@ describe("lesson engine renderer", () => {
     const markup = renderToStaticMarkup(
       createElement(LessonRenderer, {
         lesson: lesson!,
-        sources: getSourceRecordsById(lesson!.sourceIds)
+        sources: getSourceRecordsById(lesson!.sourceIds),
+        visualStageOverrides: getBasicPressureVisualOverride(lesson!)
       })
     );
 
     expect(markup).toContain("Basic Fluid Pressure");
     expect(markup).toContain("Engineering review required");
-    expect(markup).toContain("Show calculation steps");
+    expect(markup).toContain("Calculation steps");
     expect(markup).toContain("p = F / A");
     expect(markup).toContain("Source ID:");
     expect(markup).toContain("SRC-OPENSTAX-COLLEGE-PHYSICS-2012");
@@ -44,13 +56,15 @@ describe("lesson engine renderer", () => {
     const markup = renderToStaticMarkup(
       createElement(LessonRenderer, {
         lesson: lesson!,
-        sources: getSourceRecordsById(lesson!.sourceIds)
+        sources: getSourceRecordsById(lesson!.sourceIds),
+        visualStageOverrides: getBasicPressureVisualOverride(lesson!)
       })
     );
 
-    expect(markup).toContain('aria-label="Lesson sections"');
+    expect(markup).toContain('aria-label="Visual lesson progression"');
     expect(markup).toContain('role="img"');
-    expect(markup).toContain("A downward force arrow spreads over a rectangular area");
+    expect(markup).toContain("Force over area pressure visual");
+    expect(markup).toContain('aria-label="Normal force slider"');
     expect(markup).toContain("<fieldset");
     expect(markup).toContain('type="radio"');
   });
@@ -192,6 +206,7 @@ describe("lesson engine renderer", () => {
     expect(lesson).toBeDefined();
     expect(REGISTERED_VISUAL_EXPERIENCE_IDS).toContain("SIM-HYD-CYL-FORCE-001");
     expect(REGISTERED_VISUAL_EXPERIENCE_IDS).toContain("SIM-FLUID-BERNOULLI-FLOW-001");
+    expect(REGISTERED_VISUAL_EXPERIENCE_IDS).toContain("VIS-FLUID-PRESSURE-HERO-001");
     expect(getInternalVisualExperienceOverrides(lesson!)?.heroExperience).toBeDefined();
     expect(
       getInternalVisualExperienceOverrides({

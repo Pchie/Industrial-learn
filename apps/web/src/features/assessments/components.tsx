@@ -23,7 +23,10 @@ import {
 
 type VisibleMultipleChoiceQuestion = DeliveredQuestion & { choices: Choice[] };
 type VisibleComponentQuestion = DeliveredQuestion & { components: Choice[] };
-type VisibleDiagramQuestion = DeliveredQuestion & { altText: string };
+type VisibleDiagramQuestion = DeliveredQuestion & {
+  altText: string;
+  labels: Array<{ id: string; text: string }>;
+};
 type VisibleSequenceQuestion = DeliveredQuestion & { steps: Choice[] };
 type VisibleFaultQuestion = DeliveredQuestion & { faultOptions: Choice[] };
 
@@ -420,15 +423,15 @@ function renderQuestionInput(question: DeliveredQuestion, answer?: StudentAnswer
             <span>T</span>
           </div>
           <div className="assessment-option-list">
-            {["F", "A", "T"].map((label) => (
-              <label key={label}>
+            {diagramQuestion.labels.map((label) => (
+              <label key={label.id}>
                 <input
-                  defaultChecked={selected.includes(label)}
+                  defaultChecked={selected.includes(label.id)}
                   name={field(question.id)}
                   type="checkbox"
-                  value={label}
+                  value={label.id}
                 />
-                <span>{label}</span>
+                <span>{label.text}</span>
               </label>
             ))}
           </div>

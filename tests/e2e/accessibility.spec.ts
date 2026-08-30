@@ -54,6 +54,11 @@ const authenticatedRoutes = [
     label: "review workspace"
   },
   {
+    email: "reviewer@example.test",
+    path: "/review/basic-fluid-pressure",
+    label: "Basic Fluid Pressure human review"
+  },
+  {
     email: "active.student@example.test",
     path: "/assessments",
     label: "assessment workspace"
@@ -156,6 +161,31 @@ test("reduced-motion preference disables smooth scrolling", async ({ page }) => 
   await page.goto("/lessons/basic-fluid-pressure");
 
   await expect(page.locator("html")).toHaveCSS("scroll-behavior", "auto");
+});
+
+test("Basic Fluid Pressure visual supports keyboard input, text state, reduced motion, and mobile width", async ({
+  page
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.setViewportSize({ width: 320, height: 900 });
+  await signIn(page, "reviewer@example.test", "/review/basic-fluid-pressure");
+
+  const forceSlider = page.getByLabel("Normal force slider");
+  await forceSlider.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(page.getByLabel("Normal force numeric input")).toHaveValue("1050");
+  await expect(page.getByText(/1,050 N acts normally/)).toBeVisible();
+
+  const forceArrow = page.locator('line[marker-end^="url(#normal-force-"]');
+  const transitionDurationSeconds = await forceArrow.evaluate((element) =>
+    Number.parseFloat(getComputedStyle(element).transitionDuration)
+  );
+  expect(transitionDurationSeconds).toBeLessThanOrEqual(0.00001);
+
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - window.innerWidth
+  );
+  expect(overflow).toBeLessThanOrEqual(1);
 });
 
 test("hidden lessons expose no equation metadata and internal controls remain labelled", async ({
