@@ -118,3 +118,20 @@ Quality-gate results are recorded below after final verification.
 ## Staging Recommendation
 
 Proceed to staging after review and commit of this dependency triage change set. The production vulnerability audit is clean, all existing local quality gates passed, and no product features, engineering content, database schemas, or migrations were changed.
+
+## Release-Candidate Follow-up — 2026-08-30
+
+A later full dependency audit found four newly published findings: two high-severity
+transitive findings in brace-expansion and Nano ID, plus moderate PostCSS exposure
+reported through Next.js. The release candidate applied only compatible targeted
+updates:
+
+- Next.js `16.2.12` to `16.3.3`
+- PostCSS `8.5.18` and `8.5.21` to `8.5.23`
+- Nano ID `3.3.16` to `3.3.18`
+- brace-expansion `5.0.7` to `5.0.9`
+- Sharp `0.35.0` override to Next.js-resolved `0.35.4`
+
+The obsolete Next.js PostCSS and Sharp overrides were removed. No force fix, major
+framework update, feature change, engineering-content change, or production deployment
+was used. `npm audit --json` reports zero vulnerabilities after the remediation.

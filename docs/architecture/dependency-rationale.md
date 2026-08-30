@@ -20,12 +20,17 @@ This file documents why each initial application dependency is required before d
 | `@industrial-learn/engineering-core`        | `apps/web`                          | Provides the existing structured calculation-result type consumed by the visual Live Equation boundary.   | Type-level integration only; visual components do not execute or duplicate engineering formulas.     |
 | `@industrial-learn/content-review-workflow` | `apps/web`                          | Provides the shared fail-closed publication visibility policy to server loaders and delivery adapters.    | Internal workspace dependency only; it centralises status decisions and adds no external package.    |
 
-## Security Overrides
+## Security Override Status
 
-| Override         | Owning module | Why it is required                                                                                                      | Review note                                                                                               |
-| ---------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `next > postcss` | `apps/web`    | Keeps Next.js on a patched PostCSS release while Next.js still declares an older vulnerable transitive PostCSS version. | Added during prompt 31 dependency triage after npm audit reported PostCSS source-map and stringify risks. |
-| `next > sharp`   | `apps/web`    | Keeps Next.js image optimization on a Sharp release patched for inherited libvips vulnerabilities.                      | Added during prompt 31 dependency triage; compatibility is constrained by the repository Node >=22 rule.  |
+No npm dependency override is currently required. Next.js `16.3.3` declares patched
+PostCSS `8.5.23` and Sharp `^0.35.3` dependencies directly. The earlier scoped
+overrides were removed on 2026-08-30 after that framework patch was installed and
+validated.
+
+Transitive Nano ID `3.3.18` and brace-expansion `5.0.9` are locked within the ranges
+already declared by their parent packages. They were updated directly in the lock
+file to remediate the applicable denial-of-service advisories without changing
+application features or adding a dependency.
 
 ## Development Dependencies
 
