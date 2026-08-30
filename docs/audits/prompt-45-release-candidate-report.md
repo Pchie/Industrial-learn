@@ -2,6 +2,12 @@
 
 Date: 2026-08-30
 
+Release identifier: `student-pilot-rc2`
+
+This report supersedes the earlier Prompt 45 RC1 report for current release-candidate
+status. Immutable RC1 evidence remains in `docs/releases/student-pilot-rc1.md` and
+`docs/releases/student-pilot-rc1-evidence.md`.
+
 ## Executive Verdict
 
 | Decision                     | Verdict                                                       |
@@ -10,107 +16,118 @@ Date: 2026-08-30
 | Protected staging deployment | **PASS**                                                      |
 | Prompt 46 readiness          | **NO-GO until one reviewed lesson is published and verified** |
 
-Industrial Learn now has a clean, reproducible application payload on protected staging.
-The exact deployed commit passes local and remote quality gates, the dependency audit is
-clean, publication controls fail closed, authenticated ownership and role boundaries pass,
-and all temporary accounts have been removed.
+The exact current `development` payload is clean, reproducible, quality-gated, remotely
+verified, and deployed to protected staging. Publication controls fail closed and focused
+live RLS checks pass. The candidate is conditional only because Industrial Learn has no
+genuinely approved and published lesson for the mandatory positive student-delivery test.
 
-The only Prompt 45 definition-of-done item that cannot honestly pass is the visible
-published-lesson smoke test. No lesson has the required approved review record. The system
-correctly refuses to invent or bypass that approval.
+## Git Classification And Release Structure
 
-## Working Tree And Commit Structure
+The original working tree was clean on `development` at
+`343f14f92f60bbc20a57dec1bb4d8266513fdd2c`, exactly matching
+`origin/development`. There were no modified, staged, or untracked Prompt 39-44 files.
 
-Prompt 39 through Prompt 44 work was separated into reviewable commits covering source
-evidence, visual foundations, product delivery, publication enforcement, and database
-security. Prompt 45 added two isolated technical commits:
+The three commits after RC1 were already reviewed and merged:
 
-- `cf0cfa8` — internal-only, review-gated Bernoulli registration migration and test.
-- `c7f03b0` — targeted dependency and CI runtime security remediation.
+- `9394cb6` - RC1 release evidence.
+- `937cae8` - versioned static technical-review-record enforcement.
+- `343f14f` - academic source-quality policy enforcement.
 
-The release branch was reconciled with the earlier squash-merged development history
-without rewriting shared history. PR `#24` contains only the nine intended release-fix
-files and merged as commit `78aee56e522c8c300364704c2e6edeb730ce61a8`.
-
-The two stale untracked Prompt 44 files ending in ` 2.md` were removed with explicit
-operator approval. No unrelated proposal, environment file, generated output, or secret
-was included.
-
-## Security Remediation
-
-The full dependency audit originally reported two high and two moderate findings. The
-smallest compatible updates produced this final tree:
-
-| Package         |        Original |                     Final |
-| --------------- | --------------: | ------------------------: |
-| Next.js         |         16.2.12 |                    16.3.3 |
-| PostCSS         | 8.5.18 / 8.5.21 |                    8.5.23 |
-| Nano ID         |          3.3.16 |                    3.3.18 |
-| brace-expansion |           5.0.7 |                     5.0.9 |
-| Sharp           | override 0.35.0 | framework-resolved 0.35.4 |
-
-No force fix or major application dependency upgrade was used. Obsolete PostCSS and Sharp
-overrides were removed. Official checkout and setup-node actions moved from v4 to v6 to
-remove the GitHub Actions Node 20 runtime warning.
+RC2 uses `release/student-pilot-rc2` for release evidence and
+`student-pilot-rc2` as an immutable tag on the application payload. RC1 was not moved or
+overwritten. `main` and production were not changed.
 
 ## Quality Results
 
-All required local checks passed. GitHub PR CI passed, both PR preview deployments passed,
-and post-merge development CI run `33304055692` passed every configured gate. The exact
-staging readiness probe reports `configuration`, `authProvider`, and `database` as `ok`.
+Every required local gate passed:
 
-Detailed counts and deployment identifiers are in
-`docs/releases/student-pilot-rc1-evidence.md`.
+- secret scan;
+- formatting;
+- strict type checking;
+- linting;
+- 29 content-validation tests;
+- 16 migration-validation tests;
+- 340 unit/integration tests, with 5 intentional staging-dependent skips;
+- production build with 33 routes;
+- 36 accessibility checks;
+- 5 smoke tests; and
+- 94 end-to-end tests.
 
-## Live Staging Results
+The dependency audit reported zero vulnerabilities. GitHub CI run `33310980671` passed on
+the exact payload commit. Both Vercel projects reported successful deployment status, but
+only `industrial-learn-staging` was used as protected staging evidence.
 
-- Draft and source-required lesson content remains hidden.
-- Published-looking but unapproved simulations remain hidden.
-- The public Simulation Lab truthfully reports no reviewed simulation.
-- Student A cannot read or impersonate Student B.
-- Student B receives only their own empty dashboard.
-- Content authors cannot access review or student-dashboard routes.
-- Engineering reviewers can access review tools but not author or student-dashboard routes.
-- Hidden assessment answers and explanations are not exposed.
-- Sign-out clears the session and protected routes redirect to sign-in.
-- Password-reset requests use a non-disclosing response and were not rate-limited.
-- Four synthetic accounts were deleted; follow-up auth and profile counts are zero.
+## Branch Protection Review
 
-## Migration Decision
+Active GitHub repository rulesets protect both integration and production branches.
+`development` requires the strict repository verification check and blocks deletion and
+force pushes. `main` additionally requires pull requests, one approval, review-thread
+resolution, and linear history. Neither ruleset has a bypass actor.
 
-Migration `0010` is now version-controlled, tested, internal-only, and incapable of
-publishing Bernoulli content. It remains deliberately unapplied in staging because its
-canonical database parent is absent and the content remains under engineering review.
-Applying and recording a no-op would prevent correct future registration and create drift.
+## Protected Staging Verification
 
-This is an explicit governance hold, not a required migration missing from the current
-public release surface.
+GitHub deployment `6166509559` ties Vercel staging deployment
+`DgGdoxfu7tGiNnUEVysWdFyVNgZ8` to payload commit `343f14f`. The homepage, curriculum,
+Simulation Lab, and sign-in route load. Draft and review-required lessons return the
+generic not-found view. The unapproved hydraulic simulation is absent from the catalogue
+and denied by direct URL.
+
+The Simulation Lab reports zero approved simulations rather than presenting unfinished
+material as available. There is likewise no positive published lesson to display.
+
+Four temporary staging-only browser identities verified the current deployed payload.
+Both students resolved to separate server-owned dashboards; a dashboard query parameter
+could not change Student A's identity. The content author could access only the author
+workspace, and the engineering reviewer could access only the review workspace. The
+approved staging assessment started without exposing private answer evidence. Explicit
+sign-out cleared the session. No scored answer or false competency was submitted.
+
+The release-evidence branch preview correctly rejected authentication because arbitrary
+branch previews do not receive trusted staging secrets. The authenticated matrix therefore
+ran against the tagged `development` payload identified by this release.
+
+## Supabase And RLS Verification
+
+The confirmed staging project is `lgjujyaclrpaopdabyzg`; production was excluded. The
+local staging environment passes repository validation and remains ignored by Git.
+
+Read-only live checks confirm the expected migration ledger, complete RLS coverage,
+80 policies, no `PUBLIC` table grants, and service-role-only completion functions. A fresh
+5-case RLS integration run passed with two temporary students. The focused RLS run and
+browser matrix used six temporary identities in total; all auth users and profiles were
+removed afterward.
+
+The comprehensive 55-case Prompt 44 matrix remains applicable for role separation,
+content-state visibility, assessment/simulation transaction atomicity, idempotency, and
+rollback because RC2 changed no database code or authentication code.
 
 ## Remaining Risks And Limitations
 
-1. No approved published structured lesson exists, so controlled student pilot remains
-   blocked.
-2. Actual recovery-email receipt is unverified because no controlled inbox was supplied;
-   provider request acceptance passed.
-3. Reviewer assignment remains role-based rather than assignment-scoped.
+1. No approved published lesson exists. The positive publication smoke gate is blocked,
+   so controlled student pilot and Prompt 46 remain NO-GO.
+2. No approved simulation exists; the public Simulation Lab is intentionally empty.
+3. Vercel deployment protection prevented unauthenticated command-line access to the exact
+   readiness endpoint. Current authenticated UI behavior, Supabase sessions, role
+   separation, sign-out, and GitHub deployment identity were verified instead.
+4. Reviewer assignment is role-based rather than assignment-scoped.
 
 ## Required Next Action
 
-Complete a genuine engineering review for one source-complete lesson. The reviewer must be
-named, independent under policy, and record the decision, date, content version, source
-evidence, equation review, and safety review where applicable. Only then may publication
-status change to `published`. Redeploy and rerun the positive and negative publication
-matrix before changing Prompt 46 readiness.
+Complete a real, independent engineering review for one source-complete lesson. The review
+record must name the reviewer, match the exact content version, record the decision and
+date, and include equation and safety outcomes where applicable. Only then may publication
+be authorised and the positive/negative deployed publication matrix rerun.
 
 ## Change Summary
 
-- Established and remotely verified the protected staging release payload.
-- Closed all known dependency advisories and CI runtime warnings.
-- Preserved fail-closed lesson, assessment, and simulation delivery.
-- Verified live student ownership, role separation, recovery request, and sign-out.
-- Removed all Prompt 45 synthetic identities.
+- Established `student-pilot-rc2` from the clean current integration payload.
+- Preserved RC1 history and kept production unchanged.
+- Reverified all local gates, dependency state, GitHub protection, exact staging delivery,
+  migration state, completion-function privilege boundaries, and focused live RLS.
+- Recorded the missing genuine content approval as a release condition rather than
+  bypassing it.
 
 ## Known Limitation
 
-Prompt 45 is a **CONDITIONAL PASS** until a real engineering reviewer approves one lesson
-for student publication. No content was automatically approved during this task.
+Prompt 45 is a **CONDITIONAL PASS** and Prompt 46 is **NO-GO** until a real reviewer
+approves one lesson and its deployed positive publication test passes.
