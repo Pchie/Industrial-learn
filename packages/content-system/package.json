@@ -6,6 +6,9 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "dependencies": {
+    "@industrial-learn/content-review-workflow": "0.1.0"
+  },
   "scripts": {
     "typecheck": "tsc --noEmit"
   }

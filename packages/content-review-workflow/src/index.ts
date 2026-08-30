@@ -1,6 +1,7 @@
 import type { ContentReviewStatus, PublicationStatus } from "./publication-visibility";
 
 export * from "./publication-visibility";
+export * from "./static-review-record";
 
 export type WorkflowRole =
   "content_author" | "lecturer" | "engineering_reviewer" | "administrator";

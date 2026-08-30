@@ -42,6 +42,7 @@
     },
     "reviewStatus": { "$ref": "#/$defs/reviewStatus" },
     "version": { "type": "string" },
+    "authorProfileId": { "type": "string", "minLength": 1 },
     "knowledgeFileIds": { "type": "array", "items": { "type": "string" } },
     "sourceIds": { "type": "array", "items": { "type": "string" } },
     "learningOutcomes": { "type": "array", "items": { "type": "string" } },
@@ -105,6 +106,25 @@
     },
     "projectIds": { "type": "array", "items": { "type": "string" } }
   },
+  "allOf": [
+    {
+      "if": {
+        "anyOf": [
+          {
+            "properties": {
+              "reviewStatus": { "const": "Approved for student use" }
+            },
+            "required": ["reviewStatus"]
+          },
+          {
+            "properties": { "publicationStatus": { "const": "published" } },
+            "required": ["publicationStatus"]
+          }
+        ]
+      },
+      "then": { "required": ["authorProfileId"] }
+    }
+  ],
   "$defs": {
     "lessonType": {
       "enum": [

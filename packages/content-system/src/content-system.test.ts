@@ -571,6 +571,75 @@ describe("engineering content system validation", () => {
     );
   });
 
+  it("requires a complete independent review package for the exact published lesson version", () => {
+    const workspace = createContentFixture();
+    writeJson(
+      join(workspace, "sources/test/source-record.json"),
+      approvedSourceRecord({ id: "SRC-TEST-MISSING-001" })
+    );
+    writeJson(join(workspace, "knowledge/test/topic.json"), minimalKnowledgeFile());
+    const lesson = {
+      ...minimalLesson(),
+      equationIds: ["EQ-TEST-001"]
+    };
+    writeJson(join(workspace, "content/lessons/test/published.json"), lesson);
+    for (const [index, review] of approvedLessonReviewRecords(lesson).entries()) {
+      writeJson(join(workspace, `content/reviews/review-${index + 1}.json`), review);
+    }
+
+    const result = validateContentSystem(workspace);
+
+    expect(result.errors).toEqual([]);
+  });
+
+  it("rejects status-only publication, self-review, and reviews for an old version", () => {
+    const workspace = createContentFixture();
+    writeJson(
+      join(workspace, "sources/test/source-record.json"),
+      approvedSourceRecord({ id: "SRC-TEST-MISSING-001" })
+    );
+    writeJson(join(workspace, "knowledge/test/topic.json"), minimalKnowledgeFile());
+    const lesson = minimalLesson();
+    writeJson(join(workspace, "content/lessons/test/published.json"), lesson);
+
+    let result = validateContentSystem(workspace);
+    expect(result.errors).toContainEqual(
+      expect.stringContaining("matching named independent engineering approval")
+    );
+
+    for (const [index, review] of approvedLessonReviewRecords(lesson).entries()) {
+      writeJson(join(workspace, `content/reviews/review-${index + 1}.json`), {
+        ...review,
+        reviewerId: lesson.authorProfileId,
+        entityVersion: "0.9.0"
+      });
+    }
+
+    result = validateContentSystem(workspace);
+    expect(result.errors).toContainEqual(
+      expect.stringContaining("matching independent source review")
+    );
+    expect(result.errors).toContainEqual(
+      expect.stringContaining("matching named independent engineering approval")
+    );
+  });
+
+  it("rejects malformed and orphaned static review records", () => {
+    const workspace = createContentFixture();
+    writeJson(join(workspace, "content/reviews/malformed.json"), {
+      schemaVersion: "0.1.0",
+      id: "REV-MALFORMED",
+      entityId: "LES-NOT-FOUND",
+      entityType: "lesson"
+    });
+
+    const result = validateContentSystem(workspace);
+
+    expect(result.errors).toContainEqual(
+      expect.stringContaining("invalid technical review record")
+    );
+  });
+
   it("rejects approved equations without source IDs and unverified page references", () => {
     const workspace = createContentFixture();
     writeJson(join(workspace, "sources/test/source-record.json"), {
@@ -642,6 +711,7 @@ function createContentFixture() {
     "sources/test",
     "knowledge/test",
     "content/lessons/test",
+    "content/reviews",
     "content/assessments",
     "content/projects"
   ]) {
@@ -751,8 +821,13 @@ function minimalLesson() {
     id: "LES-TEST-001",
     slug: "test",
     title: "Test",
+    description: "Test lesson.",
     publicationStatus: "published",
     reviewStatus: "Approved for student use",
+    version: "1.0.0",
+    authorProfileId: "author-test-001",
+    equationIds: [],
+    simulationIds: [],
     knowledgeFileIds: ["KF-TEST-001"],
     sourceIds: ["SRC-TEST-MISSING-001"],
     requiredSections: [...LESSON_ENGINE_REQUIRED_SECTIONS],
@@ -763,6 +838,55 @@ function minimalLesson() {
       ])
     )
   };
+}
+
+function approvedLessonReviewRecords(lesson: {
+  id: string;
+  version: string;
+  authorProfileId: string;
+  sourceIds: string[];
+  equationIds: string[];
+  simulationIds: string[];
+}) {
+  const reviewTypes = [
+    "source",
+    "educational_structure",
+    ...(lesson.equationIds.length > 0 ? ["equation"] : []),
+    ...(lesson.simulationIds.length > 0 ? ["simulation"] : []),
+    "safety",
+    "engineering_approval",
+    "publication_authorization"
+  ] as const;
+
+  return reviewTypes.map((reviewType, index) => ({
+    schemaVersion: "1.0.0",
+    id: `REV-TEST-${index + 1}`,
+    entityId: lesson.id,
+    entityType: "lesson",
+    entityVersion: lesson.version,
+    authorId: lesson.authorProfileId,
+    reviewerId: `reviewer-${reviewType}`,
+    reviewerName: `Reviewer ${reviewType}`,
+    reviewerRole:
+      reviewType === "educational_structure"
+        ? "lecturer"
+        : reviewType === "publication_authorization"
+          ? "administrator"
+          : "engineering_reviewer",
+    reviewType,
+    decision: "approved",
+    reviewStatus:
+      reviewType === "engineering_approval" || reviewType === "publication_authorization"
+        ? "Approved for student use"
+        : "Engineering review required",
+    notes: `Test approval for ${reviewType}.`,
+    evidenceChecked: { reviewComplete: true },
+    sourceIdsChecked: reviewType === "source" ? [...lesson.sourceIds] : [],
+    equationIdsChecked: reviewType === "equation" ? [...lesson.equationIds] : [],
+    simulationTestIdsChecked: reviewType === "simulation" ? ["SIM-TEST-CASE-001"] : [],
+    safetyReviewOutcome: reviewType === "safety" ? "passed" : "not_applicable",
+    reviewedAt: "2026-08-30T12:00:00.000Z"
+  }));
 }
 
 function missingEvidenceSourceRecord() {
