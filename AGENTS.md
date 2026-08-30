@@ -78,6 +78,19 @@ Keep these concerns separate:
 - Every important technical statement must reference an approved source ID.
 - Do not invent standards, clauses, equipment ratings, or manufacturer data.
 - Do not label content as approved unless a review record exists.
+- Apply the authority hierarchy in `docs/content/academic-source-quality-policy.md`.
+- Use governing requirements for compliance and safety, official manufacturer material for
+  equipment-specific claims, and university engineering textbooks for academic foundations.
+- Treat McGraw Hill engineering textbooks as a preferred academic benchmark only when the
+  title is appropriate and legally available to the project; document the reason for any
+  equivalent alternative.
+- Where practical, corroborate significant equations, simulations, design principles, safety
+  limits, fault behaviour, and operating limits with an additional credible source.
+- Never copy or redistribute copyrighted textbook chapters, diagrams, or licensed source files
+  without explicit permission. Create original explanations, visuals, worked examples, and
+  simulations from source-supported principles.
+- Record source conflicts instead of silently choosing a convenient source. Unresolved conflicts
+  require engineering review and block student-use approval.
 
 ## Content Status
 

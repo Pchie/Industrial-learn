@@ -1,0 +1,81 @@
+{
+  "id": "SRC-PSU-CIMBALA-PRESSURE-BASICS",
+  "title": "Introduction to Pressure in Fluid Mechanics",
+  "fullTitle": "Introduction to Pressure in Fluid Mechanics",
+  "author": "John M. Cimbala",
+  "organisation": "Penn State Department of Mechanical Engineering",
+  "edition": "Official self-paced fluid-mechanics learning module",
+  "version": "Page accessed 2026-08-30",
+  "publicationDate": "Undated",
+  "accessDate": "2026-08-30",
+  "documentType": "university engineering course material",
+  "discipline": "Fluid mechanics",
+  "topics": [
+    "pressure as normal stress",
+    "force per unit area",
+    "pascal as newton per square metre",
+    "pressure acting normal to a surface"
+  ],
+  "url": "https://www.me.psu.edu/cimbala/Learning/Fluid/Pressure/pressure_basics.htm",
+  "courseUrl": "https://www.me.psu.edu/cimbala/Learning/Fluid/fluid.htm",
+  "filePath": null,
+  "accessMode": "metadata-only",
+  "copyrightStatus": "Publicly accessible Penn State university course material; no explicit redistribution licence was identified.",
+  "rights": {
+    "licence": "No explicit redistribution licence verified",
+    "permittedInternalUse": "Citation and factual verification only; no source diagrams or page reproduction",
+    "mayDistribute": false,
+    "metadataOnly": true,
+    "studentMayOpenDirectly": true
+  },
+  "authorityLevel": 4,
+  "authorityCategory": "university-peer-reviewed-educational",
+  "sourceSelection": {
+    "role": "corroborating",
+    "rationale": "Selected as official university mechanical-engineering material that independently corroborates the pressure definition, normal direction, dimensions, and SI unit used by the introductory lesson.",
+    "preferredAcademicPublisherAssessment": {
+      "applicable": false,
+      "outcome": "not-applicable-to-source-role",
+      "rationale": "This source provides independent corroboration and does not replace the preferred university-textbook acquisition requirement for the academic foundation."
+    }
+  },
+  "traceability": {
+    "knowledgeFileIds": ["KF-FLUID-PRESSURE-001", "KF-FLUID-PRESSURE-FUNDAMENTALS-001"],
+    "equationIds": ["EQ-FLUID-PRESSURE-001"],
+    "simulationIds": []
+  },
+  "conflicts": {
+    "status": "none-recorded",
+    "notes": [
+      "No conflict is recorded between this source and the OpenStax evidence for the lesson's introductory pressure relationship."
+    ]
+  },
+  "citation": "Cimbala, J. M. (undated), Introduction to Pressure in Fluid Mechanics, Penn State Department of Mechanical Engineering, accessed 2026-08-30.",
+  "approvalStatus": "Source checked",
+  "reviewStatus": "Source checked",
+  "evidenceStatus": "approved",
+  "reviewer": "Codex source-verification agent",
+  "reviewerType": "automated-assisted technical librarian review",
+  "reviewDate": "2026-08-30",
+  "independentHumanReviewRequired": true,
+  "verification": {
+    "documentOpened": true,
+    "metadataVerified": true,
+    "verifiedAt": "2026-08-30",
+    "verificationMethod": "Official Penn State module and parent course index inspected for title, author context, pressure definition, normal direction, dimensions, and SI unit",
+    "fixedPageCount": null,
+    "sha256": null
+  },
+  "relevantChapters": ["Fluid Mechanics Learning Modules"],
+  "relevantSections": ["Introduction to Pressure in Fluid Mechanics"],
+  "relevantPages": [],
+  "limitations": [
+    "The source is a concise university learning module, not a complete engineering textbook, standard, or equipment design authority.",
+    "No source images, examples, pressure values, or page content are reproduced.",
+    "The source does not provide equipment ratings, operating limits, pressure-vessel rules, or permission to work on pressurised systems.",
+    "Independent human source review remains required before student-use approval."
+  ],
+  "notes": "The repository stores citation metadata and original explanations only; students may open the official source directly.",
+  "createdAt": "2026-08-30",
+  "updatedAt": "2026-08-30"
+}

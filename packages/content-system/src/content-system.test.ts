@@ -4,9 +4,12 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 
 import {
+  ACADEMIC_PUBLISHER_ASSESSMENT_OUTCOMES,
   LESSON_CONTENT_BLOCK_TYPES,
   LESSON_ENGINE_REQUIRED_SECTIONS,
   REVIEW_STATUSES,
+  SOURCE_AUTHORITY_CATEGORIES,
+  SOURCE_SELECTION_ROLES,
   VISUAL_LESSON_TYPES,
   VISUAL_LESSON_TYPE_REQUIREMENTS,
   VISUAL_LESSON_STAGE_IDS,
@@ -29,6 +32,18 @@ type VerifiedSourceFixture = {
   accessMode: string;
   url: string;
   rights?: { metadataOnly?: boolean };
+  authorityLevel: number;
+  authorityCategory: string;
+  sourceSelection: {
+    role: string;
+    rationale: string;
+  };
+  traceability: {
+    knowledgeFileIds: string[];
+    equationIds: string[];
+    simulationIds: string[];
+  };
+  conflicts: { status: string; notes: string[] };
 };
 
 type KnowledgeFixture = {
@@ -53,6 +68,25 @@ describe("engineering content system validation", () => {
     expect(REVIEW_STATUSES).toContain("Source required");
     expect(REVIEW_STATUSES).toContain("Approved for student use");
     expect(REVIEW_STATUSES).not.toContain("Looks fine");
+  });
+
+  it("defines the permanent academic source authority and selection vocabulary", () => {
+    expect(SOURCE_AUTHORITY_CATEGORIES).toEqual([
+      "governing-authoritative",
+      "official-technical-documentation",
+      "university-engineering-textbook",
+      "university-peer-reviewed-educational",
+      "supporting"
+    ]);
+    expect(SOURCE_SELECTION_ROLES).toEqual([
+      "governing",
+      "primary",
+      "corroborating",
+      "supporting"
+    ]);
+    expect(ACADEMIC_PUBLISHER_ASSESSMENT_OUTCOMES).toContain(
+      "preferred-source-not-legally-available"
+    );
   });
 
   it("validates source IDs, required lesson sections, review statuses, and equation units", () => {
@@ -80,6 +114,9 @@ describe("engineering content system validation", () => {
       ),
       readWorkspaceJson<VerifiedSourceFixture>(
         "sources/thermodynamics/purdue-me200-definitions-2021.json"
+      ),
+      readWorkspaceJson<VerifiedSourceFixture>(
+        "sources/fluid-pressure/penn-state-pressure-basics.json"
       )
     ];
 
@@ -93,6 +130,14 @@ describe("engineering content system validation", () => {
       expect(source.independentHumanReviewRequired).toBe(true);
       expect(source.relevantSections.length).toBeGreaterThan(0);
       expect(source.limitations.length).toBeGreaterThan(0);
+      expect(source.authorityLevel).toBeGreaterThanOrEqual(1);
+      expect(source.authorityLevel).toBeLessThanOrEqual(4);
+      expect(SOURCE_AUTHORITY_CATEGORIES).toContain(source.authorityCategory);
+      expect(source.sourceSelection.rationale.length).toBeGreaterThan(0);
+      expect(source.traceability.knowledgeFileIds).toEqual(expect.any(Array));
+      expect(source.traceability.equationIds).toEqual(expect.any(Array));
+      expect(source.traceability.simulationIds).toEqual(expect.any(Array));
+      expect(source.conflicts.notes.length).toBeGreaterThan(0);
     }
 
     expect(sources[0]).toMatchObject({
@@ -125,7 +170,8 @@ describe("engineering content system validation", () => {
       "sources/hydraulics/caterpillar-boom-cylinder-6040431.json",
       "sources/smart-pump-systems/nist-sp-330-2019.json",
       "sources/smart-pump-systems/doe-pump-sourcebook-2006.json",
-      "sources/thermodynamics/purdue-me200-definitions-2021.json"
+      "sources/thermodynamics/purdue-me200-definitions-2021.json",
+      "sources/fluid-pressure/penn-state-pressure-basics.json"
     ];
 
     for (const sourceFile of sourceFiles) {
@@ -548,6 +594,113 @@ describe("engineering content system validation", () => {
     );
   });
 
+  it("rejects legacy or mismatched source authority metadata", () => {
+    const legacyWorkspace = createContentFixture();
+    writeJson(
+      join(legacyWorkspace, "sources/test/source-record.json"),
+      approvedSourceRecord({ reliabilityLevel: 3 })
+    );
+
+    expect(validateContentSystem(legacyWorkspace).errors).toContainEqual(
+      expect.stringContaining("uses legacy reliabilityLevel")
+    );
+
+    const mismatchWorkspace = createContentFixture();
+    writeJson(
+      join(mismatchWorkspace, "sources/test/source-record.json"),
+      approvedSourceRecord({
+        authorityLevel: 2,
+        authorityCategory: "university-engineering-textbook"
+      })
+    );
+
+    expect(validateContentSystem(mismatchWorkspace).errors).toContainEqual(
+      expect.stringContaining(
+        "authority level 2 must use category official-technical-documentation"
+      )
+    );
+  });
+
+  it("requires preferred-publisher assessment for primary academic evidence", () => {
+    const workspace = createContentFixture();
+    writeJson(
+      join(workspace, "sources/test/source-record.json"),
+      approvedSourceRecord({
+        sourceSelection: {
+          role: "primary",
+          rationale: "Primary academic source."
+        }
+      })
+    );
+
+    expect(validateContentSystem(workspace).errors).toContainEqual(
+      expect.stringContaining("requires a documented preferred-publisher assessment")
+    );
+  });
+
+  it("allows checked Level 5 evidence only in a supporting role", () => {
+    const supportingWorkspace = createContentFixture();
+    writeJson(
+      join(supportingWorkspace, "sources/test/source-record.json"),
+      approvedSourceRecord({
+        authorityLevel: 5,
+        authorityCategory: "supporting",
+        sourceSelection: {
+          role: "supporting",
+          rationale: "Supplementary explanation only."
+        }
+      })
+    );
+
+    expect(validateContentSystem(supportingWorkspace).errors).toEqual([]);
+
+    const primaryWorkspace = createContentFixture();
+    writeJson(
+      join(primaryWorkspace, "sources/test/source-record.json"),
+      approvedSourceRecord({
+        authorityLevel: 5,
+        authorityCategory: "supporting",
+        sourceSelection: {
+          role: "primary",
+          rationale: "Invalid primary use."
+        }
+      })
+    );
+
+    expect(validateContentSystem(primaryWorkspace).errors).toContainEqual(
+      expect.stringContaining("must have a supporting role")
+    );
+  });
+
+  it("blocks unresolved source conflicts from approved lesson delivery", () => {
+    const workspace = createContentFixture();
+    writeJson(
+      join(workspace, "sources/test/source-record.json"),
+      approvedSourceRecord({
+        id: "SRC-TEST-MISSING-001",
+        conflicts: {
+          status: "unresolved",
+          notes: ["Two credible sources use incompatible assumptions."]
+        }
+      })
+    );
+    writeJson(join(workspace, "knowledge/test/topic.json"), minimalKnowledgeFile());
+    const lesson = minimalLesson();
+    writeJson(join(workspace, "content/lessons/test/published.json"), lesson);
+    for (const [index, review] of approvedLessonReviewRecords(lesson).entries()) {
+      writeJson(join(workspace, `content/reviews/review-${index + 1}.json`), review);
+    }
+
+    const result = validateContentSystem(workspace);
+
+    expect(result.warnings).toContainEqual(
+      expect.stringContaining("has an unresolved source conflict")
+    );
+    expect(result.errors).toContainEqual(
+      expect.stringContaining("cannot use unresolved source conflicts")
+    );
+  });
+
   it("requires approved source evidence before a published lesson can cite it", () => {
     const workspace = createContentFixture();
     writeJson(join(workspace, "sources/test/source-record.json"), {
@@ -580,7 +733,15 @@ describe("engineering content system validation", () => {
     writeJson(join(workspace, "knowledge/test/topic.json"), minimalKnowledgeFile());
     const lesson = {
       ...minimalLesson(),
-      equationIds: ["EQ-TEST-001"]
+      equationIds: ["EQ-TEST-001"],
+      multipleSourceVerification: {
+        status: "exception-approved",
+        sourceIds: ["SRC-TEST-MISSING-001"],
+        rationale:
+          "A test-only independent exception records why corroboration is unavailable.",
+        reviewerId: "reviewer-source-independence",
+        reviewedAt: "2026-08-30T12:00:00.000Z"
+      }
     };
     writeJson(join(workspace, "content/lessons/test/published.json"), lesson);
     for (const [index, review] of approvedLessonReviewRecords(lesson).entries()) {
@@ -590,6 +751,68 @@ describe("engineering content system validation", () => {
     const result = validateContentSystem(workspace);
 
     expect(result.errors).toEqual([]);
+  });
+
+  it("requires corroboration or an independent exception for approved technical models", () => {
+    const workspace = createContentFixture();
+    writeJson(
+      join(workspace, "sources/test/source-record.json"),
+      approvedSourceRecord({ id: "SRC-TEST-MISSING-001" })
+    );
+    writeJson(join(workspace, "knowledge/test/topic.json"), minimalKnowledgeFile());
+    const lesson = {
+      ...minimalLesson(),
+      equationIds: ["EQ-TEST-001"]
+    };
+    writeJson(join(workspace, "content/lessons/test/published.json"), lesson);
+    for (const [index, review] of approvedLessonReviewRecords(lesson).entries()) {
+      writeJson(join(workspace, `content/reviews/review-${index + 1}.json`), review);
+    }
+
+    expect(validateContentSystem(workspace).errors).toContainEqual(
+      expect.stringContaining("requires named independent multiple-source verification")
+    );
+  });
+
+  it("does not count Level 5 supporting material as technical corroboration", () => {
+    const workspace = createContentFixture();
+    writeJson(
+      join(workspace, "sources/test/primary.json"),
+      approvedSourceRecord({ id: "SRC-TEST-MISSING-001" })
+    );
+    writeJson(
+      join(workspace, "sources/test/supporting.json"),
+      approvedSourceRecord({
+        id: "SRC-TEST-SUPPORTING-001",
+        authorityLevel: 5,
+        authorityCategory: "supporting",
+        sourceSelection: {
+          role: "supporting",
+          rationale: "Supplementary explanation only."
+        }
+      })
+    );
+    writeJson(join(workspace, "knowledge/test/topic.json"), minimalKnowledgeFile());
+    const lesson = {
+      ...minimalLesson(),
+      sourceIds: ["SRC-TEST-MISSING-001", "SRC-TEST-SUPPORTING-001"],
+      equationIds: ["EQ-TEST-001"],
+      multipleSourceVerification: {
+        status: "verified",
+        sourceIds: ["SRC-TEST-MISSING-001", "SRC-TEST-SUPPORTING-001"],
+        rationale: "Invalid attempt to count supplementary material as corroboration.",
+        reviewerId: "reviewer-source-independence",
+        reviewedAt: "2026-08-30T12:00:00.000Z"
+      }
+    };
+    writeJson(join(workspace, "content/lessons/test/published.json"), lesson);
+    for (const [index, review] of approvedLessonReviewRecords(lesson).entries()) {
+      writeJson(join(workspace, `content/reviews/review-${index + 1}.json`), review);
+    }
+
+    expect(validateContentSystem(workspace).errors).toContainEqual(
+      expect.stringContaining("requires at least two Level 1-4 corroborating source IDs")
+    );
   });
 
   it("rejects status-only publication, self-review, and reviews for an old version", () => {
@@ -740,7 +963,26 @@ function approvedSourceRecord(overrides: Record<string, unknown> = {}) {
     accessDate: "2026-08-26",
     documentType: "verified technical source",
     copyrightStatus: "Test-only fixture",
-    reliabilityLevel: 3,
+    authorityLevel: 4,
+    authorityCategory: "university-peer-reviewed-educational",
+    sourceSelection: {
+      role: "primary",
+      rationale: "Recognised test-only academic evidence.",
+      preferredAcademicPublisherAssessment: {
+        applicable: true,
+        outcome: "equivalent-source-selected",
+        rationale: "Test fixture records an equivalent academic-source decision."
+      }
+    },
+    traceability: {
+      knowledgeFileIds: [],
+      equationIds: [],
+      simulationIds: []
+    },
+    conflicts: {
+      status: "none-recorded",
+      notes: ["No conflict recorded in this test fixture."]
+    },
     citation: "Test citation.",
     approvalStatus: "Source checked",
     reviewStatus: "Source checked",
@@ -749,8 +991,11 @@ function approvedSourceRecord(overrides: Record<string, unknown> = {}) {
     filePath: null,
     url: "https://example.com/source",
     rights: {
+      licence: "Test-only fixture licence",
       permittedInternalUse: "Internal validation only.",
-      metadataOnly: true
+      mayDistribute: false,
+      metadataOnly: true,
+      studentMayOpenDirectly: false
     },
     reviewer: "Test Reviewer",
     reviewDate: "2026-08-26",

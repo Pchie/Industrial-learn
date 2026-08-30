@@ -4,15 +4,18 @@
     "slug": "pressure-fundamentals",
     "title": "Pressure Fundamentals",
     "topic": "Pressure as force distributed over area",
-    "version": "0.2.0",
-    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+    "version": "0.3.0",
+    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PSU-CIMBALA-PRESSURE-BASICS"]
   },
   "learningPurpose": "Give students a focused, source-linked reference for pressure as normal force per area in the first fluid-pressure lesson.",
   "definitions": [
     {
       "term": "Pressure",
       "meaning": "Force distributed normally over a stated area for the introductory training case.",
-      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+      "sourceIds": [
+        "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+        "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+      ]
     }
   ],
   "governingPrinciples": [
@@ -31,11 +34,18 @@
         "F": "N",
         "A": "m^2"
       },
-      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+      "sourceIds": [
+        "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+        "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+      ],
       "sourceReferences": [
         {
           "sourceId": "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
           "section": "11.3 Pressure"
+        },
+        {
+          "sourceId": "SRC-PSU-CIMBALA-PRESSURE-BASICS",
+          "section": "Introduction to Pressure in Fluid Mechanics"
         }
       ],
       "reviewStatus": "Equation checked"
@@ -67,7 +77,7 @@
     "given": ["Force is 100 N.", "Area is 0.5 m^2."],
     "steps": ["Confirm SI units.", "Apply p = F / A.", "Calculate 100 / 0.5."],
     "answer": "200 Pa",
-    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PSU-CIMBALA-PRESSURE-BASICS"],
     "reviewStatus": "Engineering review required"
   },
   "components": ["force input", "area input", "pressure result"],
@@ -102,11 +112,18 @@
   ],
   "relatedSimulations": ["SIM-HYD-CYL-FORCE-001"],
   "relatedLessons": ["LES-FLUID-PRESSURE-001"],
-  "sourceCitations": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+  "sourceCitations": [
+    "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+    "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+  ],
   "sourceReferences": [
     {
       "sourceId": "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
       "section": "11.3 Pressure"
+    },
+    {
+      "sourceId": "SRC-PSU-CIMBALA-PRESSURE-BASICS",
+      "section": "Introduction to Pressure in Fluid Mechanics"
     }
   ],
   "reviewStatus": "Engineering review required"

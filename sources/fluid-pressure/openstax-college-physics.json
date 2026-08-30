@@ -33,7 +33,32 @@
     "metadataOnly": true,
     "studentMayOpenDirectly": true
   },
-  "reliabilityLevel": 3,
+  "authorityLevel": 4,
+  "authorityCategory": "university-peer-reviewed-educational",
+  "sourceSelection": {
+    "role": "primary",
+    "rationale": "Selected as a recognised university open textbook with traceable sections for introductory pressure and Pascal-principle concepts.",
+    "preferredAcademicPublisherAssessment": {
+      "applicable": true,
+      "outcome": "preferred-source-not-legally-available",
+      "rationale": "A relevant McGraw Hill fluid-mechanics title exists, but no lawfully obtained edition is registered for project use; this Level 4 source does not satisfy the separate corroboration requirement by itself."
+    }
+  },
+  "traceability": {
+    "knowledgeFileIds": [
+      "KF-FLUID-PRESSURE-001",
+      "KF-FLUID-PRESSURE-FUNDAMENTALS-001",
+      "KF-THERMO-SYSTEMS-SURROUNDINGS-001"
+    ],
+    "equationIds": ["EQ-FLUID-PRESSURE-001"],
+    "simulationIds": ["SIM-HYD-CYL-FORCE-001", "sim-core-thermal-system-001"]
+  },
+  "conflicts": {
+    "status": "none-recorded",
+    "notes": [
+      "No source conflict is recorded for the cited pressure definition and SI relationship."
+    ]
+  },
   "citation": "Urone, P. P. and Hinrichs, R. (2012), College Physics, OpenStax, sections 11.3, 11.5, and 15.2, accessed 2026-08-26.",
   "approvalStatus": "Source checked",
   "reviewStatus": "Source checked",
@@ -66,5 +91,5 @@
   "supersedesSourceIds": ["SRC-FLUID-PRESSURE-PLACEHOLDER-001"],
   "notes": "The repository stores metadata and original explanations only; students may open the official source directly.",
   "createdAt": "2026-08-26",
-  "updatedAt": "2026-08-26"
+  "updatedAt": "2026-08-30"
 }

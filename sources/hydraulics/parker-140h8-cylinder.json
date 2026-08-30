@@ -27,7 +27,26 @@
     "metadataOnly": true,
     "studentMayOpenDirectly": true
   },
-  "reliabilityLevel": 2,
+  "authorityLevel": 2,
+  "authorityCategory": "official-technical-documentation",
+  "sourceSelection": {
+    "role": "primary",
+    "rationale": "Selected as official manufacturer technical documentation for theoretical cap-end cylinder area and force relationships and their equipment-specific limitations."
+  },
+  "traceability": {
+    "knowledgeFileIds": ["KF-HYD-CYL-FORCE-001"],
+    "equationIds": [
+      "EQ-HYD-PISTON-AREA-DIAMETER-001",
+      "EQ-FLUID-FORCE-PRESSURE-AREA-001"
+    ],
+    "simulationIds": ["SIM-HYD-CYL-FORCE-001"]
+  },
+  "conflicts": {
+    "status": "none-recorded",
+    "notes": [
+      "No source conflict is recorded for the cited theoretical cap-end relationships."
+    ]
+  },
   "citation": "Taiyo America (2024), Heavy Duty Metric Hydraulic Cylinder 140H-8, Catalog HY08-T1151-1/NA, p. 26, accessed 2026-08-26.",
   "approvalStatus": "Source checked",
   "reviewStatus": "Source checked",
@@ -61,5 +80,5 @@
   "supersedesSourceIds": ["SRC-HYDRAULIC-CYLINDER-PLACEHOLDER-001"],
   "notes": "The manufacturer catalog is retained as a metadata-only reference. No equipment rating is imported into the simulation.",
   "createdAt": "2026-08-26",
-  "updatedAt": "2026-08-26"
+  "updatedAt": "2026-08-30"
 }
