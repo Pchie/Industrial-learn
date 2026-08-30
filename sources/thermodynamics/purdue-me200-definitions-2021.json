@@ -32,7 +32,28 @@
     "metadataOnly": true,
     "studentMayOpenDirectly": true
   },
-  "reliabilityLevel": 3,
+  "authorityLevel": 4,
+  "authorityCategory": "university-peer-reviewed-educational",
+  "sourceSelection": {
+    "role": "primary",
+    "rationale": "Selected as traceable university mechanical-engineering course material for introductory thermodynamic system definitions.",
+    "preferredAcademicPublisherAssessment": {
+      "applicable": true,
+      "outcome": "preferred-source-not-legally-available",
+      "rationale": "No lawfully obtained McGraw Hill thermodynamics edition is registered for project use; the official Purdue course material is used as Level 4 evidence pending textbook acquisition."
+    }
+  },
+  "traceability": {
+    "knowledgeFileIds": ["KF-THERMO-SYSTEMS-SURROUNDINGS-001"],
+    "equationIds": [],
+    "simulationIds": ["sim-core-thermal-system-001"]
+  },
+  "conflicts": {
+    "status": "none-recorded",
+    "notes": [
+      "No source conflict is recorded for the cited system, surroundings, boundary, property, and state definitions."
+    ]
+  },
   "citation": "Wassgren, C. (2021), Introduction to Thermodynamics: Definitions, ME 20000 Thermodynamics I Lecture 1, Purdue University, pp. 6-7, accessed 2026-08-26.",
   "approvalStatus": "Source checked",
   "reviewStatus": "Source checked",
@@ -61,5 +82,5 @@
   "supersedesSourceIds": ["SRC-THERMO-FOUNDATIONS-PLACEHOLDER-001"],
   "notes": "The repository retains metadata only and uses original, source-linked educational explanations.",
   "createdAt": "2026-08-26",
-  "updatedAt": "2026-08-26"
+  "updatedAt": "2026-08-30"
 }

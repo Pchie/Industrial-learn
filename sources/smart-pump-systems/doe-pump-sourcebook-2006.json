@@ -28,7 +28,21 @@
     "metadataOnly": true,
     "studentMayOpenDirectly": true
   },
-  "reliabilityLevel": 1,
+  "authorityLevel": 2,
+  "authorityCategory": "official-technical-documentation",
+  "sourceSelection": {
+    "role": "primary",
+    "rationale": "Selected as official government and industry technical guidance for practical pumping-system measurement context; it is not treated as a regulation or current test standard."
+  },
+  "traceability": {
+    "knowledgeFileIds": ["KF-SMART-PUMP-SI-MEASUREMENT-001"],
+    "equationIds": [],
+    "simulationIds": []
+  },
+  "conflicts": {
+    "status": "none-recorded",
+    "notes": ["No source conflict is recorded for the cited measurement context."]
+  },
   "citation": "U.S. Department of Energy (2006), Improving Pumping System Performance: A Sourcebook for Industry, Second Edition, DOE/GO-102006-2079, pp. 56-60, accessed 2026-08-26.",
   "approvalStatus": "Source checked",
   "reviewStatus": "Source checked",
@@ -63,5 +77,5 @@
   "supersedesSourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
   "notes": "The SHA-256 records the official PDF inspected on the access date; only metadata and original educational explanations are retained.",
   "createdAt": "2026-08-26",
-  "updatedAt": "2026-08-26"
+  "updatedAt": "2026-08-30"
 }

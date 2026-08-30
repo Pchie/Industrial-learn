@@ -32,7 +32,33 @@
     "metadataOnly": true,
     "studentMayOpenDirectly": true
   },
-  "reliabilityLevel": 3,
+  "authorityLevel": 4,
+  "authorityCategory": "university-peer-reviewed-educational",
+  "sourceSelection": {
+    "role": "primary",
+    "rationale": "Selected as a recognised university open textbook with traceable sections for continuity and Bernoulli fundamentals.",
+    "preferredAcademicPublisherAssessment": {
+      "applicable": true,
+      "outcome": "preferred-source-not-legally-available",
+      "rationale": "A relevant McGraw Hill title exists, but no lawfully obtained edition is registered for project use; the official OpenStax edition is used as Level 4 evidence pending textbook acquisition."
+    }
+  },
+  "traceability": {
+    "knowledgeFileIds": ["KF-FLUID-BERNOULLI-001"],
+    "equationIds": [
+      "EQ-GEOMETRY-CIRCULAR-AREA-DIAMETER-001",
+      "EQ-FLUID-VELOCITY-FLOW-AREA-001",
+      "EQ-FLUID-CONTINUITY-INCOMPRESSIBLE-001",
+      "EQ-FLUID-BERNOULLI-TWO-POINT-001"
+    ],
+    "simulationIds": ["SIM-FLUID-BERNOULLI-FLOW-001"]
+  },
+  "conflicts": {
+    "status": "none-recorded",
+    "notes": [
+      "No source conflict is recorded for the cited continuity and Bernoulli relationships."
+    ]
+  },
   "citation": "Urone, P. P. and Hinrichs, R. (2022), College Physics 2e, OpenStax, sections 12.1 and 12.2, accessed 2026-08-27.",
   "approvalStatus": "Source checked",
   "reviewStatus": "Source checked",
@@ -63,5 +89,5 @@
   ],
   "notes": "The repository stores metadata and original explanations only; students may open the official source directly.",
   "createdAt": "2026-08-27",
-  "updatedAt": "2026-08-27"
+  "updatedAt": "2026-08-30"
 }

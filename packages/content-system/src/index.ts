@@ -16,6 +16,29 @@ export const REVIEW_STATUSES = [
   "Approved for student use"
 ] as const;
 
+export const SOURCE_AUTHORITY_CATEGORIES = [
+  "governing-authoritative",
+  "official-technical-documentation",
+  "university-engineering-textbook",
+  "university-peer-reviewed-educational",
+  "supporting"
+] as const;
+
+export const SOURCE_SELECTION_ROLES = [
+  "governing",
+  "primary",
+  "corroborating",
+  "supporting"
+] as const;
+
+export const ACADEMIC_PUBLISHER_ASSESSMENT_OUTCOMES = [
+  "mcgraw-hill-selected",
+  "equivalent-source-selected",
+  "preferred-source-not-legally-available",
+  "preferred-source-insufficient",
+  "not-applicable-to-source-role"
+] as const;
+
 export const LESSON_ENGINE_REQUIRED_SECTIONS = [
   "lessonHeader",
   "estimatedCompletionTime",
@@ -134,18 +157,45 @@ type VisualLessonType = (typeof VISUAL_LESSON_TYPES)[number];
 type VisualProgressionStep = (typeof VISUAL_PROGRESSION_STEPS)[number];
 type AssessmentQuestionType = (typeof ASSESSMENT_QUESTION_TYPES)[number];
 type CompetencyLevel = (typeof COMPETENCY_LEVELS)[number];
+type SourceAuthorityCategory = (typeof SOURCE_AUTHORITY_CATEGORIES)[number];
+type SourceSelectionRole = (typeof SOURCE_SELECTION_ROLES)[number];
+type AcademicPublisherAssessmentOutcome =
+  (typeof ACADEMIC_PUBLISHER_ASSESSMENT_OUTCOMES)[number];
 
 type SourceRecord = {
   id: string;
   title?: string;
   author?: string;
   organisation?: string;
+  edition?: string;
   version?: string;
   publicationDate?: string;
   accessDate?: string;
   documentType?: string;
   copyrightStatus?: string;
-  reliabilityLevel?: number;
+  authorityLevel?: number;
+  authorityCategory?: SourceAuthorityCategory;
+  reliabilityLevel?: unknown;
+  publisher?: string;
+  isbn?: string;
+  sourceSelection?: {
+    role?: SourceSelectionRole;
+    rationale?: string;
+    preferredAcademicPublisherAssessment?: {
+      applicable?: boolean;
+      outcome?: AcademicPublisherAssessmentOutcome;
+      rationale?: string;
+    };
+  };
+  traceability?: {
+    knowledgeFileIds?: string[];
+    equationIds?: string[];
+    simulationIds?: string[];
+  };
+  conflicts?: {
+    status?: "none-recorded" | "documented" | "unresolved";
+    notes?: string[];
+  };
   citation?: string;
   approvalStatus?: ReviewStatus;
   evidenceStatus: "missing" | "partial" | "approved";
@@ -154,6 +204,7 @@ type SourceRecord = {
   accessMode?: "local-file" | "metadata-only";
   url?: string;
   rights?: {
+    licence?: string;
     permittedInternalUse?: string;
     mayDistribute?: boolean;
     metadataOnly?: boolean;
@@ -206,6 +257,13 @@ type Lesson = {
   sourceIds: string[];
   equationIds?: string[];
   simulationIds?: string[];
+  multipleSourceVerification?: {
+    status?: "verified" | "exception-approved" | "required";
+    sourceIds?: string[];
+    rationale?: string;
+    reviewerId?: string;
+    reviewedAt?: string;
+  };
   requiredSections: LessonSectionId[];
   sections: Record<string, { title?: string; blocks?: unknown[] }>;
   schemaVersion?: string;
@@ -281,6 +339,31 @@ function readJsonFiles(root: string) {
 
 function isReviewStatus(value: unknown): value is ReviewStatus {
   return typeof value === "string" && REVIEW_STATUSES.includes(value as ReviewStatus);
+}
+
+function isSourceAuthorityCategory(value: unknown): value is SourceAuthorityCategory {
+  return (
+    typeof value === "string" &&
+    SOURCE_AUTHORITY_CATEGORIES.includes(value as SourceAuthorityCategory)
+  );
+}
+
+function isSourceSelectionRole(value: unknown): value is SourceSelectionRole {
+  return (
+    typeof value === "string" &&
+    SOURCE_SELECTION_ROLES.includes(value as SourceSelectionRole)
+  );
+}
+
+function isAcademicPublisherAssessmentOutcome(
+  value: unknown
+): value is AcademicPublisherAssessmentOutcome {
+  return (
+    typeof value === "string" &&
+    ACADEMIC_PUBLISHER_ASSESSMENT_OUTCOMES.includes(
+      value as AcademicPublisherAssessmentOutcome
+    )
+  );
 }
 
 function unknownArray(value: unknown): unknown[] {
@@ -916,11 +999,98 @@ function validateApprovedSourceEvidence(
   }
 
   if (
-    !Number.isInteger(source.reliabilityLevel) ||
-    (source.reliabilityLevel ?? 0) < 1 ||
-    (source.reliabilityLevel ?? 0) > 4
+    !Number.isInteger(source.authorityLevel) ||
+    (source.authorityLevel ?? 0) < 1 ||
+    (source.authorityLevel ?? 0) > 5
   ) {
-    errors.push(`${file}: approved source ${source.id} requires reliability level 1-4.`);
+    errors.push(`${file}: approved source ${source.id} requires authority level 1-5.`);
+  }
+
+  const expectedCategoryByLevel: Partial<Record<number, SourceAuthorityCategory>> = {
+    1: "governing-authoritative",
+    2: "official-technical-documentation",
+    3: "university-engineering-textbook",
+    4: "university-peer-reviewed-educational",
+    5: "supporting"
+  };
+  const expectedCategory = expectedCategoryByLevel[source.authorityLevel ?? 0];
+
+  if (!isSourceAuthorityCategory(source.authorityCategory)) {
+    errors.push(`${file}: approved source ${source.id} requires an authority category.`);
+  } else if (expectedCategory && source.authorityCategory !== expectedCategory) {
+    errors.push(
+      `${file}: source ${source.id} authority level ${source.authorityLevel} must use category ${expectedCategory}.`
+    );
+  }
+
+  if (!isSourceSelectionRole(source.sourceSelection?.role)) {
+    errors.push(
+      `${file}: approved source ${source.id} requires a source-selection role.`
+    );
+  }
+  if (!hasText(source.sourceSelection?.rationale)) {
+    errors.push(`${file}: approved source ${source.id} requires a selection rationale.`);
+  }
+  if (source.authorityLevel === 5 && source.sourceSelection?.role !== "supporting") {
+    errors.push(`${file}: Level 5 source ${source.id} must have a supporting role.`);
+  }
+
+  const academicAssessment = source.sourceSelection?.preferredAcademicPublisherAssessment;
+  const needsAcademicAssessment =
+    source.authorityLevel === 3 ||
+    (source.authorityLevel === 4 && source.sourceSelection?.role === "primary");
+
+  if (needsAcademicAssessment) {
+    if (
+      academicAssessment?.applicable !== true ||
+      !isAcademicPublisherAssessmentOutcome(academicAssessment.outcome) ||
+      academicAssessment.outcome === "not-applicable-to-source-role" ||
+      !hasText(academicAssessment.rationale)
+    ) {
+      errors.push(
+        `${file}: primary academic source ${source.id} requires a documented preferred-publisher assessment.`
+      );
+    }
+  } else if (
+    academicAssessment &&
+    (!isAcademicPublisherAssessmentOutcome(academicAssessment.outcome) ||
+      !hasText(academicAssessment.rationale))
+  ) {
+    errors.push(
+      `${file}: source ${source.id} has an incomplete preferred-publisher assessment.`
+    );
+  }
+
+  if (
+    source.authorityLevel === 3 &&
+    (!hasText(source.publisher) ||
+      !hasText(source.edition) ||
+      !hasText(source.publicationDate))
+  ) {
+    errors.push(
+      `${file}: university textbook source ${source.id} requires publisher, edition, and publication date.`
+    );
+  }
+
+  const traceability = source.traceability;
+  if (
+    !Array.isArray(traceability?.knowledgeFileIds) ||
+    !Array.isArray(traceability?.equationIds) ||
+    !Array.isArray(traceability?.simulationIds)
+  ) {
+    errors.push(
+      `${file}: approved source ${source.id} requires knowledge, equation, and simulation traceability arrays.`
+    );
+  }
+
+  if (
+    !source.conflicts ||
+    !["none-recorded", "documented", "unresolved"].includes(
+      source.conflicts.status ?? ""
+    ) ||
+    !source.conflicts.notes?.some(hasText)
+  ) {
+    errors.push(`${file}: approved source ${source.id} requires conflict metadata.`);
   }
 
   if (!source.verification?.documentOpened || !source.verification.metadataVerified) {
@@ -935,8 +1105,16 @@ function validateApprovedSourceEvidence(
     errors.push(`${file}: approved source ${source.id} requires limitations.`);
   }
 
-  if (!hasText(source.rights?.permittedInternalUse)) {
-    errors.push(`${file}: approved source ${source.id} requires permitted-use metadata.`);
+  if (
+    !hasText(source.rights?.licence) ||
+    !hasText(source.rights?.permittedInternalUse) ||
+    typeof source.rights?.mayDistribute !== "boolean" ||
+    typeof source.rights?.metadataOnly !== "boolean" ||
+    typeof source.rights?.studentMayOpenDirectly !== "boolean"
+  ) {
+    errors.push(
+      `${file}: approved source ${source.id} requires complete rights metadata.`
+    );
   }
 
   if (source.filePath) {
@@ -955,6 +1133,71 @@ function validateApprovedSourceEvidence(
     errors.push(
       `${file}: approved metadata-only source ${source.id} requires an HTTPS source URL and rights metadata.`
     );
+  }
+}
+
+function validateMultipleSourceVerification(
+  lesson: Lesson,
+  file: string,
+  sourcesById: Map<string, SourceRecord>,
+  errors: string[]
+) {
+  if (
+    (lesson.equationIds?.length ?? 0) === 0 &&
+    (lesson.simulationIds?.length ?? 0) === 0
+  ) {
+    return;
+  }
+
+  const verification = lesson.multipleSourceVerification;
+  const verificationSourceIds = [...new Set(verification?.sourceIds ?? [])];
+  const credibleVerificationSourceIds = verificationSourceIds.filter((sourceId) => {
+    const level = sourcesById.get(sourceId)?.authorityLevel;
+    return typeof level === "number" && level >= 1 && level <= 4;
+  });
+  const hasNamedIndependentReviewer =
+    hasText(verification?.reviewerId) &&
+    verification?.reviewerId !== lesson.authorProfileId;
+
+  if (
+    !verification ||
+    !["verified", "exception-approved"].includes(verification.status ?? "") ||
+    !hasText(verification.rationale) ||
+    !hasNamedIndependentReviewer ||
+    !hasText(verification.reviewedAt)
+  ) {
+    errors.push(
+      `${file}: approved or published lesson ${lesson.id} requires named independent multiple-source verification.`
+    );
+    return;
+  }
+
+  if (verification.status === "verified" && credibleVerificationSourceIds.length < 2) {
+    errors.push(
+      `${file}: verified lesson ${lesson.id} requires at least two Level 1-4 corroborating source IDs.`
+    );
+  }
+
+  if (
+    verification.status === "exception-approved" &&
+    credibleVerificationSourceIds.length < 1
+  ) {
+    errors.push(
+      `${file}: multiple-source exception for lesson ${lesson.id} requires its available Level 1-4 source ID.`
+    );
+  }
+
+  for (const sourceId of verificationSourceIds) {
+    if (!lesson.sourceIds.includes(sourceId)) {
+      errors.push(
+        `${file}: multiple-source verification for ${lesson.id} references source ${sourceId} outside the lesson source list.`
+      );
+    }
+    if (sourcesById.get(sourceId)?.evidenceStatus !== "approved") {
+      errors.push(
+        `${file}: multiple-source verification for ${lesson.id} requires approved evidence for ${sourceId}.`
+      );
+    }
   }
 }
 
@@ -1047,6 +1290,11 @@ export function validateContentSystem(
   }
 
   for (const { data, file } of sourceRecords) {
+    if (data.reliabilityLevel !== undefined) {
+      errors.push(
+        `${file}: source ${data.id} uses legacy reliabilityLevel; use authorityLevel and authorityCategory.`
+      );
+    }
     if (!isReviewStatus(data.reviewStatus)) {
       errors.push(
         `${file}: invalid source review status '${String(data.reviewStatus)}'.`
@@ -1074,6 +1322,17 @@ export function validateContentSystem(
         data.evidenceStatus === "approved")
     ) {
       errors.push(`${file}: placeholder source ${data.id} cannot be approved.`);
+    }
+    if (data.conflicts?.status === "unresolved") {
+      warnings.push(`${file}: source ${data.id} has an unresolved source conflict.`);
+      if (
+        data.reviewStatus === "Approved for student use" ||
+        data.approvalStatus === "Approved for student use"
+      ) {
+        errors.push(
+          `${file}: source ${data.id} cannot be approved with unresolved conflicts.`
+        );
+      }
     }
   }
 
@@ -1157,6 +1416,8 @@ export function validateContentSystem(
       data.publicationStatus === "published" ||
       data.reviewStatus === "Approved for student use"
     ) {
+      validateMultipleSourceVerification(data, file, sourcesById, errors);
+
       const reviewGate = evaluateStaticLessonReviewGate({
         subject: {
           id: data.id,
@@ -1184,6 +1445,18 @@ export function validateContentSystem(
       )
     ) {
       errors.push(`${file}: published lessons cannot use missing source evidence.`);
+    }
+
+    if (
+      (data.publicationStatus === "published" ||
+        data.reviewStatus === "Approved for student use") &&
+      data.sourceIds.some(
+        (sourceId) => sourcesById.get(sourceId)?.conflicts?.status === "unresolved"
+      )
+    ) {
+      errors.push(
+        `${file}: approved or published lessons cannot use unresolved source conflicts.`
+      );
     }
 
     if (

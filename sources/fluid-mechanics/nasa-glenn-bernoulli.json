@@ -29,7 +29,26 @@
     "metadataOnly": true,
     "studentMayOpenDirectly": true
   },
-  "reliabilityLevel": 4,
+  "authorityLevel": 4,
+  "authorityCategory": "university-peer-reviewed-educational",
+  "sourceSelection": {
+    "role": "corroborating",
+    "rationale": "Selected as an official government engineering-education reference that independently states the Bernoulli model scope and assumptions.",
+    "preferredAcademicPublisherAssessment": {
+      "applicable": false,
+      "outcome": "not-applicable-to-source-role",
+      "rationale": "This source corroborates the primary academic evidence; it is not used as the lesson's university-textbook foundation."
+    }
+  },
+  "traceability": {
+    "knowledgeFileIds": ["KF-FLUID-BERNOULLI-001"],
+    "equationIds": ["EQ-FLUID-BERNOULLI-TWO-POINT-001"],
+    "simulationIds": ["SIM-FLUID-BERNOULLI-FLOW-001"]
+  },
+  "conflicts": {
+    "status": "none-recorded",
+    "notes": ["No source conflict is recorded for the cited model scope and assumptions."]
+  },
   "citation": "Hall, N. (2021), Bernoulli's Equation, NASA Glenn Research Center, updated 2021-05-13, accessed 2026-08-27.",
   "approvalStatus": "Source checked",
   "reviewStatus": "Source checked",
@@ -56,5 +75,5 @@
   ],
   "notes": "Used as an independent official reference for model limitations; no NASA visual asset is copied.",
   "createdAt": "2026-08-27",
-  "updatedAt": "2026-08-27"
+  "updatedAt": "2026-08-30"
 }

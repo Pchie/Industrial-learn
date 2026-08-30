@@ -4,15 +4,18 @@
     "slug": "basic-fluid-pressure",
     "title": "Basic Fluid Pressure",
     "topic": "Fluid pressure in static fluids",
-    "version": "0.2.0",
-    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+    "version": "0.3.0",
+    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PSU-CIMBALA-PRESSURE-BASICS"]
   },
   "learningPurpose": "Prepare students to recognise pressure as force distributed over area and to use consistent SI units in introductory fluid-pressure reasoning.",
   "definitions": [
     {
       "term": "Pressure",
       "meaning": "Force distributed over an area in a fluid or on a surface.",
-      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+      "sourceIds": [
+        "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+        "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+      ]
     }
   ],
   "governingPrinciples": [
@@ -30,11 +33,18 @@
         "F": "N",
         "A": "m^2"
       },
-      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+      "sourceIds": [
+        "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+        "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+      ],
       "sourceReferences": [
         {
           "sourceId": "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
           "section": "11.3 Pressure"
+        },
+        {
+          "sourceId": "SRC-PSU-CIMBALA-PRESSURE-BASICS",
+          "section": "Introduction to Pressure in Fluid Mechanics"
         }
       ],
       "reviewStatus": "Equation checked"
@@ -68,7 +78,7 @@
       "Divide force by area to obtain pressure in pascals."
     ],
     "answer": "The result is expressed in pascals.",
-    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PSU-CIMBALA-PRESSURE-BASICS"],
     "reviewStatus": "Engineering review required"
   },
   "components": ["fluid", "surface area", "normal force", "pressure reading"],
@@ -107,11 +117,18 @@
   ],
   "relatedSimulations": ["SIM-FLUID-PRESSURE-TRAINING-001"],
   "relatedLessons": ["LES-FLUID-PRESSURE-001"],
-  "sourceCitations": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+  "sourceCitations": [
+    "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+    "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+  ],
   "sourceReferences": [
     {
       "sourceId": "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
       "section": "11.3 Pressure"
+    },
+    {
+      "sourceId": "SRC-PSU-CIMBALA-PRESSURE-BASICS",
+      "section": "Introduction to Pressure in Fluid Mechanics"
     }
   ],
   "reviewStatus": "Engineering review required"

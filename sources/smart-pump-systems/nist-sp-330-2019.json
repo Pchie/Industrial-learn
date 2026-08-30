@@ -30,7 +30,23 @@
     "metadataOnly": true,
     "studentMayOpenDirectly": true
   },
-  "reliabilityLevel": 1,
+  "authorityLevel": 1,
+  "authorityCategory": "governing-authoritative",
+  "sourceSelection": {
+    "role": "governing",
+    "rationale": "Selected as the official United States publication of the SI Brochure for SI unit names, symbols, coherence, and prefixes."
+  },
+  "traceability": {
+    "knowledgeFileIds": ["KF-SMART-PUMP-SI-MEASUREMENT-001"],
+    "equationIds": ["EQ-SI-CONVERSION-EXPLICIT-001"],
+    "simulationIds": []
+  },
+  "conflicts": {
+    "status": "none-recorded",
+    "notes": [
+      "No source conflict is recorded for the cited SI names, symbols, and prefixes."
+    ]
+  },
   "citation": "Newell, D. B. and Tiesinga, E., eds. (2019), The International System of Units (SI), 2019 Edition, NIST SP 330-2019, doi:10.6028/NIST.SP.330-2019, accessed 2026-08-26.",
   "approvalStatus": "Source checked",
   "reviewStatus": "Source checked",
@@ -67,5 +83,5 @@
   "supersedesSourceIds": ["SRC-SMART-PUMP-PLACEHOLDER-001"],
   "notes": "The SHA-256 records the official PDF inspected on the access date; the repository stores metadata only.",
   "createdAt": "2026-08-26",
-  "updatedAt": "2026-08-26"
+  "updatedAt": "2026-08-30"
 }

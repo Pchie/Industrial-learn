@@ -13,7 +13,21 @@
   "topics": ["system", "surroundings", "boundary", "open system", "closed system"],
   "filePath": null,
   "copyrightStatus": "Source required",
-  "reliabilityLevel": 5,
+  "authorityLevel": 5,
+  "authorityCategory": "supporting",
+  "sourceSelection": {
+    "role": "supporting",
+    "rationale": "Retained only as a historical source-needed audit record; it cannot support technical claims."
+  },
+  "traceability": {
+    "knowledgeFileIds": [],
+    "equationIds": [],
+    "simulationIds": []
+  },
+  "conflicts": {
+    "status": "none-recorded",
+    "notes": ["This placeholder contains no technical evidence to compare."]
+  },
   "citation": "Source required before student-use approval. This placeholder must be replaced with an approved thermodynamics source record.",
   "approvalStatus": "Source required",
   "reviewStatus": "Source required",
@@ -33,5 +47,5 @@
   ],
   "notes": "Superseded on 2026-08-26. This ID remains an unapproved audit record and must not support new content.",
   "createdAt": "2026-07-22",
-  "updatedAt": "2026-08-26"
+  "updatedAt": "2026-08-30"
 }

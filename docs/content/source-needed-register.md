@@ -36,3 +36,26 @@ the declared ideal assumptions. They do not support friction factors, cavitation
 limits, turbulence models, equipment ratings, or professional design approval.
 Independent human source, equation, educational, and simulation review remains
 required before student-use approval.
+
+## Academic Source Policy Update: 2026-08-30
+
+The source register now uses the Level 1-5 authority hierarchy in
+`docs/content/academic-source-quality-policy.md`. The earlier term `reliabilityLevel`
+has been retired because its numbering conflicted with the permanent policy.
+
+Basic Fluid Pressure now has two checked Level 4 university educational sources:
+
+- `SRC-OPENSTAX-COLLEGE-PHYSICS-2012` as the primary open-textbook source.
+- `SRC-PSU-CIMBALA-PRESSURE-BASICS` as independent university corroboration.
+
+The official McGraw Hill listing for _Fluid Mechanics: Fundamentals and Applications_
+by Yunus A. Cengel and John M. Cimbala identifies a current 2024 release and a chapter
+on pressure and fluid statics. It is an acquisition candidate, not an approved source:
+the project has not recorded lawful access to a specific edition, and no unseen chapter,
+page, diagram, worked example, or equation may be cited. Official product listing:
+https://www.mheducation.com/highered/product/fluid-mechanics-fundamentals-and-applications-cengel.html
+
+The new source evidence satisfies the practical corroboration requirement for the
+introductory pressure definition and `p = F / A`. It does not approve the lesson.
+Independent human source, educational, equation, safety, engineering, and publication
+decisions remain required for the exact candidate version.

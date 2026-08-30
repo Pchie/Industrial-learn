@@ -33,7 +33,68 @@
       "enum": ["local-file", "metadata-only"]
     },
     "copyrightStatus": { "type": "string", "minLength": 1 },
-    "reliabilityLevel": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "authorityLevel": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "authorityCategory": {
+      "type": "string",
+      "enum": [
+        "governing-authoritative",
+        "official-technical-documentation",
+        "university-engineering-textbook",
+        "university-peer-reviewed-educational",
+        "supporting"
+      ]
+    },
+    "sourceSelection": {
+      "type": "object",
+      "required": ["role", "rationale"],
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": ["governing", "primary", "corroborating", "supporting"]
+        },
+        "rationale": { "type": "string", "minLength": 1 },
+        "preferredAcademicPublisherAssessment": {
+          "type": "object",
+          "required": ["applicable", "outcome", "rationale"],
+          "properties": {
+            "applicable": { "type": "boolean" },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "mcgraw-hill-selected",
+                "equivalent-source-selected",
+                "preferred-source-not-legally-available",
+                "preferred-source-insufficient",
+                "not-applicable-to-source-role"
+              ]
+            },
+            "rationale": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "traceability": {
+      "type": "object",
+      "required": ["knowledgeFileIds", "equationIds", "simulationIds"],
+      "properties": {
+        "knowledgeFileIds": { "type": "array", "items": { "type": "string" } },
+        "equationIds": { "type": "array", "items": { "type": "string" } },
+        "simulationIds": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "conflicts": {
+      "type": "object",
+      "required": ["status", "notes"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["none-recorded", "documented", "unresolved"]
+        },
+        "notes": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      }
+    },
+    "publisher": { "type": "string", "minLength": 1 },
+    "isbn": { "type": "string", "minLength": 1 },
     "reviewer": { "type": ["string", "null"] },
     "reviewDate": { "type": ["string", "null"] },
     "relevantChapters": { "type": "array", "items": { "type": "string" } },
@@ -71,6 +132,85 @@
     "createdAt": { "type": "string" },
     "updatedAt": { "type": "string" }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "evidenceStatus": { "const": "approved" } },
+        "required": ["evidenceStatus"]
+      },
+      "then": {
+        "required": [
+          "author",
+          "organisation",
+          "version",
+          "publicationDate",
+          "accessDate",
+          "copyrightStatus",
+          "authorityLevel",
+          "authorityCategory",
+          "sourceSelection",
+          "traceability",
+          "conflicts",
+          "rights",
+          "reviewer",
+          "reviewDate",
+          "verification",
+          "relevantSections",
+          "limitations"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": { "authorityLevel": { "const": 1 } },
+        "required": ["authorityLevel"]
+      },
+      "then": {
+        "properties": { "authorityCategory": { "const": "governing-authoritative" } }
+      }
+    },
+    {
+      "if": {
+        "properties": { "authorityLevel": { "const": 2 } },
+        "required": ["authorityLevel"]
+      },
+      "then": {
+        "properties": {
+          "authorityCategory": { "const": "official-technical-documentation" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "authorityLevel": { "const": 3 } },
+        "required": ["authorityLevel"]
+      },
+      "then": {
+        "required": ["publisher", "edition", "publicationDate"],
+        "properties": {
+          "authorityCategory": { "const": "university-engineering-textbook" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "authorityLevel": { "const": 4 } },
+        "required": ["authorityLevel"]
+      },
+      "then": {
+        "properties": {
+          "authorityCategory": { "const": "university-peer-reviewed-educational" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "authorityLevel": { "const": 5 } },
+        "required": ["authorityLevel"]
+      },
+      "then": { "properties": { "authorityCategory": { "const": "supporting" } } }
+    }
+  ],
   "$defs": {
     "reviewStatus": {
       "type": "string",

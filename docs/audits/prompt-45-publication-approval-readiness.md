@@ -4,11 +4,21 @@ Date: 2026-08-30
 
 Branch: `codex/static-review-record-gate`
 
+> Superseded candidate notice, 2026-08-30: the static review-gate implementation and
+> test verdict remain valid, but the version `0.2.0` candidate below is no longer the
+> review target. The academic source policy migration added corroborating source evidence
+> and created Basic Fluid Pressure version `0.3.0`. Use
+> `docs/content/basic-fluid-pressure-publication-review-packet.md` for the current candidate.
+
 ## Executive Verdict
 
 **PASS** for the static review-record governance remediation.
 
-**GO** to begin independent human review of Basic Fluid Pressure version `0.2.0`.
+**SUPERSEDED** for Basic Fluid Pressure version `0.2.0`; do not create new review
+records for that candidate.
+
+**GO** to begin independent human review of version `0.3.0` using the current review
+packet after stable author and reviewer identifiers are supplied.
 
 **NO-GO** for lesson publication until the accountable author, required human review
 records, named independent engineering approval, and administrator publication
@@ -41,13 +51,14 @@ assessment, or authentication behavior was changed.
 
 ## Candidate Prepared for Review
 
-Candidate: `LES-FLUID-PRESSURE-001`, Basic Fluid Pressure, version `0.2.0`.
+Candidate: `LES-FLUID-PRESSURE-001`, Basic Fluid Pressure, version `0.3.0`.
 
 Current state remains:
 
 - Publication: `draft`.
 - Technical review: `Engineering review required`.
-- Source: `SRC-OPENSTAX-COLLEGE-PHYSICS-2012`.
+- Sources: `SRC-OPENSTAX-COLLEGE-PHYSICS-2012` and
+  `SRC-PSU-CIMBALA-PRESSURE-BASICS`.
 - Knowledge file: `KF-FLUID-PRESSURE-001`.
 - Equation: `EQ-FLUID-PRESSURE-001`.
 - Simulations: none.
@@ -108,7 +119,7 @@ Automated tests prove that:
 
 ## Remaining Human Actions
 
-1. Identify the accountable author for Basic Fluid Pressure version `0.2.0`.
+1. Identify the accountable author for Basic Fluid Pressure version `0.3.0`.
 2. Assign named, authorised source, educational, equation, and safety reviewers.
 3. Complete the reviews against the frozen candidate and record decisions.
 4. Resolve any requested changes; if content changes, increment the version and repeat

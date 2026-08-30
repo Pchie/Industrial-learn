@@ -5,12 +5,12 @@
   "description": "A draft pilot lesson for introductory pressure reasoning using source-linked structured content blocks.",
   "publicationStatus": "draft",
   "reviewStatus": "Engineering review required",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "estimatedCompletionTime": "25 minutes",
   "difficulty": "Introductory",
   "prerequisites": ["Basic algebra", "SI base and derived units"],
   "knowledgeFileIds": ["KF-FLUID-PRESSURE-001"],
-  "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
+  "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PSU-CIMBALA-PRESSURE-BASICS"],
   "learningOutcomes": [
     "Describe pressure as force distributed over area.",
     "Identify the SI units used for pressure, force, and area.",
@@ -44,7 +44,10 @@
           "id": "BLK-FP-HEADER-001",
           "type": "paragraph",
           "text": "This pilot lesson introduces pressure as a relationship between normal force and area for an introductory static-fluid context.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ]
         }
       ]
     },
@@ -111,7 +114,10 @@
           "type": "definition",
           "term": "Pressure",
           "definition": "Force distributed over an area in a fluid or on a surface.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ]
         }
       ]
     },
@@ -159,7 +165,10 @@
             { "symbol": "F", "name": "force", "unit": "N" },
             { "symbol": "A", "name": "area", "unit": "m^2" }
           ],
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ]
         },
         {
           "id": "BLK-FP-SYMBOLS-001",
@@ -177,7 +186,10 @@
           "quantity": "pressure",
           "siUnit": "Pa",
           "note": "Industrial Learn calculations store force in newtons, area in square metres, and pressure in pascals internally.",
-          "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"]
+          "sourceIds": [
+            "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+            "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+          ]
         }
       ]
     },
@@ -294,6 +306,12 @@
           "type": "sourceCitation",
           "sourceId": "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
           "note": "OpenStax College Physics, section 11.3, supports the pressure definition, equation, and SI-unit relationship used in this draft. Independent educational, safety, and engineering review remain required before publication."
+        },
+        {
+          "id": "BLK-FP-SOURCE-002",
+          "type": "sourceCitation",
+          "sourceId": "SRC-PSU-CIMBALA-PRESSURE-BASICS",
+          "note": "Penn State's Introduction to Pressure in Fluid Mechanics independently corroborates pressure as normal force per unit area and the pascal as N/m^2. Independent human review remains required."
         }
       ]
     },
