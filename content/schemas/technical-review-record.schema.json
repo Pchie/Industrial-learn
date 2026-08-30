@@ -4,29 +4,78 @@
   "title": "Industrial Learn Technical Review Record",
   "type": "object",
   "required": [
+    "schemaVersion",
     "id",
     "entityId",
     "entityType",
-    "reviewer",
+    "entityVersion",
+    "authorId",
+    "reviewerId",
+    "reviewerName",
+    "reviewerRole",
+    "reviewType",
     "decision",
     "reviewStatus",
-    "sourceCheckPassed",
-    "equationCheckPassed",
-    "simulationCheckPassed",
+    "evidenceChecked",
+    "sourceIdsChecked",
+    "equationIdsChecked",
+    "simulationTestIdsChecked",
+    "safetyReviewOutcome",
     "notes",
     "reviewedAt"
   ],
+  "additionalProperties": false,
   "properties": {
+    "schemaVersion": { "const": "1.0.0" },
     "id": { "type": "string", "pattern": "^REV-[A-Z0-9-]+$" },
-    "entityId": { "type": "string" },
-    "entityType": { "type": "string" },
-    "reviewer": { "type": "string" },
+    "entityId": { "type": "string", "minLength": 1 },
+    "entityType": { "const": "lesson" },
+    "entityVersion": {
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        { "type": "integer", "minimum": 1 }
+      ]
+    },
+    "authorId": { "type": "string", "minLength": 1 },
+    "reviewerId": { "type": "string", "minLength": 1 },
+    "reviewerName": { "type": "string", "minLength": 1 },
+    "reviewerRole": {
+      "enum": ["lecturer", "engineering_reviewer", "administrator"]
+    },
+    "reviewType": {
+      "enum": [
+        "source",
+        "educational_structure",
+        "equation",
+        "simulation",
+        "safety",
+        "engineering_approval",
+        "publication_authorization"
+      ]
+    },
     "decision": { "enum": ["approved", "changes_requested", "rejected"] },
     "reviewStatus": { "$ref": "lesson.schema.json#/$defs/reviewStatus" },
-    "sourceCheckPassed": { "type": "boolean" },
-    "equationCheckPassed": { "type": "boolean" },
-    "simulationCheckPassed": { "type": "boolean" },
-    "notes": { "type": "string" },
-    "reviewedAt": { "type": "string" }
+    "evidenceChecked": {
+      "type": "object",
+      "additionalProperties": { "type": "boolean" }
+    },
+    "sourceIdsChecked": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "equationIdsChecked": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "simulationTestIdsChecked": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "safetyReviewOutcome": { "enum": ["passed", "failed", "not_applicable"] },
+    "notes": { "type": "string", "minLength": 1 },
+    "reviewedAt": { "type": "string", "format": "date-time" }
   }
 }

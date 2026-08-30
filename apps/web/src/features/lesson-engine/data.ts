@@ -7,12 +7,11 @@ import type {
   ContentAudience,
   PublicationAccessContext
 } from "@industrial-learn/content-review-workflow/publication-visibility";
+import { evaluateStaticLessonReviewGate } from "@industrial-learn/content-review-workflow/static-review-record";
 
+import { getStaticTechnicalReviewRecords } from "../publication/review-records";
 import { getStaticSourceRecordsById } from "../publication/source-records";
-import {
-  evaluateStaticPublicationVisibility,
-  type StaticPublicationAuthority
-} from "../publication/static-publication";
+import { evaluateStaticPublicationVisibility } from "../publication/static-publication";
 import type { SourceRecord, StructuredLesson } from "./types";
 
 const lessons = [
@@ -50,15 +49,28 @@ export function evaluateLessonPublication(
   lesson: StructuredLesson,
   input: {
     audience: ContentAudience;
-    authority?: StaticPublicationAuthority;
+    reviewRecords?: readonly unknown[];
     access?: PublicationAccessContext;
   }
 ) {
+  const reviewGate = evaluateStaticLessonReviewGate({
+    subject: {
+      id: lesson.id,
+      version: lesson.version,
+      authorId: lesson.authorProfileId ?? null,
+      sourceIds: lesson.sourceIds,
+      equationIds: lesson.equationIds ?? [],
+      simulationIds: lesson.simulationIds ?? [],
+      requiresSafetyReview: true
+    },
+    reviewRecords: input.reviewRecords ?? getStaticTechnicalReviewRecords()
+  });
+
   return evaluateStaticPublicationVisibility({
     audience: input.audience,
     record: lesson,
     sourceRecords: getStaticSourceRecordsById(lesson.sourceIds),
-    ...(input.authority ? { authority: input.authority } : {}),
+    ...(reviewGate.authority ? { authority: reviewGate.authority } : {}),
     ...(input.access ? { access: input.access } : {})
   });
 }

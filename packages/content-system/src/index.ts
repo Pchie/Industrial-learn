@@ -1,5 +1,10 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { extname, isAbsolute, join } from "node:path";
+import {
+  evaluateStaticLessonReviewGate,
+  validateStaticTechnicalReviewRecord,
+  type StaticTechnicalReviewRecord
+} from "@industrial-learn/content-review-workflow/static-review-record";
 
 export const REVIEW_STATUSES = [
   "Draft",
@@ -193,10 +198,14 @@ type SourceReference = {
 
 type Lesson = {
   id: string;
+  version: string;
+  authorProfileId?: string;
   publicationStatus: "draft" | "internal" | "scheduled" | "published" | "archived";
   reviewStatus: ReviewStatus;
   knowledgeFileIds: string[];
   sourceIds: string[];
+  equationIds?: string[];
+  simulationIds?: string[];
   requiredSections: LessonSectionId[];
   sections: Record<string, { title?: string; blocks?: unknown[] }>;
   schemaVersion?: string;
@@ -371,6 +380,31 @@ function isCompetencyLevel(value: unknown): value is CompetencyLevel {
 
 function hasText(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
+}
+
+function formatReviewRequirement(
+  requirement:
+    | "authorship"
+    | "source"
+    | "educational_structure"
+    | "equation"
+    | "simulation"
+    | "safety"
+    | "engineering_approval"
+    | "publication_authorization"
+) {
+  const labels = {
+    authorship: "an identified content author",
+    source: "a matching independent source review",
+    educational_structure: "a matching independent educational-structure review",
+    equation: "a matching independent equation review",
+    simulation: "a matching independent simulation review",
+    safety: "a matching independent safety review",
+    engineering_approval: "a matching named independent engineering approval",
+    publication_authorization: "a matching administrator publication authorization"
+  } as const;
+
+  return labels[requirement];
 }
 
 function collectBlockSourceIds(block: unknown): string[] {
@@ -981,12 +1015,36 @@ export function validateContentSystem(
       data: data as Lesson
     })
   );
+  const reviewFiles = readJsonFiles(join(workspaceRoot, "content/reviews"));
   const assessmentFiles = readJsonFiles(join(workspaceRoot, "content/assessments"));
   const projectFiles = readJsonFiles(join(workspaceRoot, "content/projects"));
 
   const sourceIds = new Set(sourceRecords.map(({ data }) => data.id));
   const sourcesById = new Map(sourceRecords.map(({ data }) => [data.id, data]));
   const knowledgeIds = new Set(knowledgeFiles.map(({ data }) => data.metadata.id));
+  const lessonIds = new Set(lessonFiles.map(({ data }) => data.id));
+  const reviewRecordIds = new Set<string>();
+
+  for (const { data, file } of reviewFiles) {
+    const recordErrors = validateStaticTechnicalReviewRecord(data);
+    for (const error of recordErrors) {
+      errors.push(`${file}: invalid technical review record: ${error}.`);
+    }
+    if (recordErrors.length > 0) {
+      continue;
+    }
+
+    const record = data as StaticTechnicalReviewRecord;
+    if (reviewRecordIds.has(record.id)) {
+      errors.push(`${file}: duplicate technical review record ID ${record.id}.`);
+    }
+    reviewRecordIds.add(record.id);
+    if (!lessonIds.has(record.entityId)) {
+      errors.push(
+        `${file}: technical review record ${record.id} references unknown lesson ${record.entityId}.`
+      );
+    }
+  }
 
   for (const { data, file } of sourceRecords) {
     if (!isReviewStatus(data.reviewStatus)) {
@@ -1093,6 +1151,30 @@ export function validateContentSystem(
       errors.push(
         `${file}: published lessons require Approved for student use review status.`
       );
+    }
+
+    if (
+      data.publicationStatus === "published" ||
+      data.reviewStatus === "Approved for student use"
+    ) {
+      const reviewGate = evaluateStaticLessonReviewGate({
+        subject: {
+          id: data.id,
+          version: data.version,
+          authorId: data.authorProfileId ?? null,
+          sourceIds: data.sourceIds,
+          equationIds: data.equationIds ?? [],
+          simulationIds: data.simulationIds ?? [],
+          requiresSafetyReview: true
+        },
+        reviewRecords: reviewFiles.map(({ data: reviewRecord }) => reviewRecord)
+      });
+
+      for (const requirement of reviewGate.missingRequirements) {
+        errors.push(
+          `${file}: approved or published lesson ${data.id} version ${data.version} requires ${formatReviewRequirement(requirement)}.`
+        );
+      }
     }
 
     if (

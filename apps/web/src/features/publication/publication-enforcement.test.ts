@@ -1,4 +1,8 @@
 import { describe, expect, it } from "vitest";
+import type {
+  StaticReviewRequirement,
+  StaticTechnicalReviewRecord
+} from "@industrial-learn/content-review-workflow/static-review-record";
 
 import {
   evaluateCurriculumPublication,
@@ -53,7 +57,7 @@ describe("application publication enforcement", () => {
     expect(
       evaluateLessonPublication(lesson, {
         audience: "student",
-        authority: { currentVersion: lesson.version, publishedVersion: lesson.version }
+        reviewRecords: approvedLessonReviewRecords(lesson)
       })
     ).toMatchObject({ visible: true, scope: "public" });
   });
@@ -73,7 +77,7 @@ describe("application publication enforcement", () => {
       expect(
         evaluateLessonPublication(lesson, {
           audience: "student",
-          authority: { currentVersion: lesson.version, publishedVersion: lesson.version }
+          reviewRecords: approvedLessonReviewRecords(lesson)
         }).visible
       ).toBe(false);
     }
@@ -84,25 +88,22 @@ describe("application publication enforcement", () => {
     expect(
       evaluateLessonPublication(approvedLesson({ publicationStatus: "internal" }), {
         audience: "public",
-        authority: {
-          currentVersion: approved.version,
-          publishedVersion: approved.version
-        }
+        reviewRecords: approvedLessonReviewRecords(approved)
       }).visible
     ).toBe(false);
     expect(
       evaluateLessonPublication(approvedLesson({ reviewStatus: "Source required" }), {
         audience: "student",
-        authority: {
-          currentVersion: approved.version,
-          publishedVersion: approved.version
-        }
+        reviewRecords: approvedLessonReviewRecords(approved)
       }).visible
     ).toBe(false);
     expect(
       evaluateLessonPublication(approved, {
         audience: "student",
-        authority: { currentVersion: "2.0.0", publishedVersion: "0.9.0" }
+        reviewRecords: approvedLessonReviewRecords(approved).map((record) => ({
+          ...record,
+          entityVersion: "0.9.0"
+        }))
       }).visible
     ).toBe(false);
     expect(evaluateLessonPublication(approved, { audience: "student" }).visible).toBe(
@@ -121,6 +122,29 @@ describe("application publication enforcement", () => {
     ]) {
       expect(getPublicLessonBySlug(slug)).toBeUndefined();
     }
+  });
+
+  it("rejects self-approval and incomplete review packages", () => {
+    const lesson = approvedLesson();
+    const reviews = approvedLessonReviewRecords(lesson);
+
+    expect(
+      evaluateLessonPublication(lesson, {
+        audience: "student",
+        reviewRecords: reviews.map((record) => ({
+          ...record,
+          reviewerId: lesson.authorProfileId!
+        }))
+      }).visible
+    ).toBe(false);
+    expect(
+      evaluateLessonPublication(lesson, {
+        audience: "student",
+        reviewRecords: reviews.filter(
+          (record) => record.reviewType !== "engineering_approval"
+        )
+      }).visible
+    ).toBe(false);
   });
 
   it("requires explicit internal authorization for draft lesson lookup", () => {
@@ -318,7 +342,56 @@ function approvedLesson(overrides: Partial<StructuredLesson> = {}): StructuredLe
     ...base,
     publicationStatus: "published",
     reviewStatus: "Approved for student use",
+    authorProfileId: "author-basic-fluid-pressure",
     sourceIds: [approvedSourceId],
     ...overrides
   };
+}
+
+function approvedLessonReviewRecords(
+  lesson: StructuredLesson
+): StaticTechnicalReviewRecord[] {
+  if (!lesson.authorProfileId) {
+    throw new Error("Approved lesson fixture requires an author identity.");
+  }
+
+  const reviewTypes: StaticReviewRequirement[] = [
+    "source",
+    "educational_structure",
+    ...(lesson.equationIds?.length ? (["equation"] as const) : []),
+    ...(lesson.simulationIds?.length ? (["simulation"] as const) : []),
+    "safety",
+    "engineering_approval",
+    "publication_authorization"
+  ];
+
+  return reviewTypes.map((reviewType, index) => ({
+    schemaVersion: "1.0.0",
+    id: `REV-LESSON-TEST-${index + 1}`,
+    entityId: lesson.id,
+    entityType: "lesson",
+    entityVersion: lesson.version,
+    authorId: lesson.authorProfileId!,
+    reviewerId: `reviewer-${reviewType}`,
+    reviewerName: `Reviewer ${reviewType}`,
+    reviewerRole:
+      reviewType === "educational_structure"
+        ? "lecturer"
+        : reviewType === "publication_authorization"
+          ? "administrator"
+          : "engineering_reviewer",
+    reviewType,
+    decision: "approved",
+    reviewStatus:
+      reviewType === "engineering_approval" || reviewType === "publication_authorization"
+        ? "Approved for student use"
+        : "Engineering review required",
+    notes: `Test approval for ${reviewType}.`,
+    evidenceChecked: { reviewComplete: true },
+    sourceIdsChecked: reviewType === "source" ? [...lesson.sourceIds] : [],
+    equationIdsChecked: reviewType === "equation" ? [...(lesson.equationIds ?? [])] : [],
+    simulationTestIdsChecked: reviewType === "simulation" ? ["SIM-TEST-CASE-001"] : [],
+    safetyReviewOutcome: reviewType === "safety" ? "passed" : "not_applicable",
+    reviewedAt: "2026-08-30T12:00:00.000Z"
+  }));
 }

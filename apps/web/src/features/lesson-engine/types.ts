@@ -348,6 +348,7 @@ export type StructuredLesson = {
   publicationStatus: "draft" | "internal" | "scheduled" | "published" | "archived";
   reviewStatus: ReviewStatus;
   version: string;
+  authorProfileId?: string;
   estimatedCompletionTime: string;
   difficulty: string;
   prerequisites: string[];
