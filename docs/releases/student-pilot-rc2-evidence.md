@@ -78,6 +78,30 @@ explicitly excluded.
 | Unapproved hydraulic simulation URL  | Hidden with generic not-found response       |
 | Visible approved published lesson    | BLOCKED: no approved review record exists    |
 
+## Deployed Authenticated Route Matrix
+
+| Check                                          | Result                                                      |
+| ---------------------------------------------- | ----------------------------------------------------------- |
+| Student A sign-in                              | PASS, Supabase session resolved                             |
+| Student A dashboard                            | PASS, own empty state only                                  |
+| Dashboard impersonation parameter              | PASS, server identity remained Student A                    |
+| Student B sign-in                              | PASS, separate own empty state                              |
+| Student access to author/review routes         | Denied                                                      |
+| Content-author workspace                       | Allowed                                                     |
+| Content-author access to review/student routes | Denied                                                      |
+| Engineering-review workspace                   | Allowed                                                     |
+| Reviewer access to author/student routes       | Denied                                                      |
+| Approved staging assessment                    | Started and persisted for Student A                         |
+| Hidden assessment evidence before submission   | Not exposed                                                 |
+| Scored assessment submission                   | Not performed; no unnecessary scored test data retained     |
+| Simulation attempt                             | BLOCKED honestly because no simulation is approved publicly |
+| Explicit sign-out                              | PASS; subsequent dashboard access required sign-in          |
+
+The release-evidence branch preview deliberately returned `configuration_error` for
+authentication because trusted staging secrets are not assigned to arbitrary branch
+previews. The authenticated matrix ran against the tagged payload's protected
+`development` staging deployment.
+
 ## Live Staging Database Evidence
 
 - Migration ledger: `0001`-`0009`, `0011`, and `0012`.
@@ -90,7 +114,8 @@ explicitly excluded.
   `service_role`.
 - The repository live RLS integration suite passed 5 of 5 checks with two temporary
   staging-only students.
-- Cleanup passed: zero matching temporary auth users and zero matching profiles.
+- Cleanup passed after both matrices: zero matching temporary auth users and zero matching
+  profiles. Six staging-only identities were created and removed in total.
 
 The live integration covered anonymous private-table denial, own-profile visibility,
 cross-student profile denial, hidden answer choices, and private question-explanation
@@ -101,6 +126,6 @@ after RC1.
 ## Evidence Boundary
 
 This evidence certifies the current application payload, protected staging deployment,
-local and remote quality, public fail-closed delivery, and focused live RLS behavior. It
-does not create an engineering approval, make a lesson public, or authorise a controlled
-student pilot.
+local and remote quality, current Supabase authentication and role separation, public
+fail-closed delivery, and focused live RLS behavior. It does not create an engineering
+approval, make a lesson public, or authorise a controlled student pilot.

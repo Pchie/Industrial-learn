@@ -61,7 +61,8 @@ for student use. No database change was introduced or applied by RC2.
 2. No simulation is approved for public student use; the Simulation Lab therefore shows
    an honest empty state.
 3. The exact deployment is protected by Vercel SSO. Its readiness endpoint could not be
-   called by unauthenticated command-line automation during RC2 verification.
+   called by unauthenticated command-line automation, although current authenticated
+   student, author, and reviewer journeys passed in the protected browser session.
 4. Reviewer assignment remains role-based rather than assignment-scoped.
 
 ## Next Gate

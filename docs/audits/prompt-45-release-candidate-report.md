@@ -75,6 +75,17 @@ and denied by direct URL.
 The Simulation Lab reports zero approved simulations rather than presenting unfinished
 material as available. There is likewise no positive published lesson to display.
 
+Four temporary staging-only browser identities verified the current deployed payload.
+Both students resolved to separate server-owned dashboards; a dashboard query parameter
+could not change Student A's identity. The content author could access only the author
+workspace, and the engineering reviewer could access only the review workspace. The
+approved staging assessment started without exposing private answer evidence. Explicit
+sign-out cleared the session. No scored answer or false competency was submitted.
+
+The release-evidence branch preview correctly rejected authentication because arbitrary
+branch previews do not receive trusted staging secrets. The authenticated matrix therefore
+ran against the tagged `development` payload identified by this release.
+
 ## Supabase And RLS Verification
 
 The confirmed staging project is `lgjujyaclrpaopdabyzg`; production was excluded. The
@@ -82,8 +93,9 @@ local staging environment passes repository validation and remains ignored by Gi
 
 Read-only live checks confirm the expected migration ledger, complete RLS coverage,
 80 policies, no `PUBLIC` table grants, and service-role-only completion functions. A fresh
-5-case RLS integration run passed with two temporary students, and both identities and
-profiles were removed afterward.
+5-case RLS integration run passed with two temporary students. The focused RLS run and
+browser matrix used six temporary identities in total; all auth users and profiles were
+removed afterward.
 
 The comprehensive 55-case Prompt 44 matrix remains applicable for role separation,
 content-state visibility, assessment/simulation transaction atomicity, idempotency, and
@@ -95,8 +107,8 @@ rollback because RC2 changed no database code or authentication code.
    so controlled student pilot and Prompt 46 remain NO-GO.
 2. No approved simulation exists; the public Simulation Lab is intentionally empty.
 3. Vercel deployment protection prevented unauthenticated command-line access to the exact
-   readiness endpoint. Public UI behavior and GitHub deployment identity were verified,
-   while RC1 remains the most recent authenticated deployed-session matrix.
+   readiness endpoint. Current authenticated UI behavior, Supabase sessions, role
+   separation, sign-out, and GitHub deployment identity were verified instead.
 4. Reviewer assignment is role-based rather than assignment-scoped.
 
 ## Required Next Action
