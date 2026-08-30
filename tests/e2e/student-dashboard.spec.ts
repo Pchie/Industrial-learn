@@ -67,18 +67,23 @@ test("dashboard URL query parameter cannot impersonate another student", async (
   ).not.toBeVisible();
 });
 
-test("lecturer and reviewer roles cannot access the private student dashboard", async ({
+test("lecturer and reviewer student workspaces remain scoped to their own records", async ({
   page
 }) => {
-  await signIn(page, "lecturer@example.test", /\/auth\/error/);
+  await signIn(page, "lecturer@example.test");
 
-  await expect(page).toHaveURL(/\/auth\/error/);
-  await expect(page.getByText("You do not have access to this area")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Industrial Lecturer", level: 1 })
+  ).toBeVisible();
+  await expect(page.getByText("Active Industrial Student")).toHaveCount(0);
 
   await page.goto("/auth/sign-out");
-  await signIn(page, "reviewer@example.test", /\/auth\/error/);
+  await signIn(page, "reviewer@example.test");
 
-  await expect(page).toHaveURL(/\/auth\/error/);
+  await expect(
+    page.getByRole("heading", { name: "Engineering Reviewer", level: 1 })
+  ).toBeVisible();
+  await expect(page.getByText("Active Industrial Student")).toHaveCount(0);
 });
 
 test("shows no recent activity without leaking another student's data", async ({

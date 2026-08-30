@@ -7,7 +7,8 @@ values
   ('lecturer', 'Lecturer', 'Assigns reviewed content and views authorised cohort progress.'),
   ('content_author', 'Content author', 'Creates draft educational content and submits it for review.'),
   ('engineering_reviewer', 'Engineering reviewer', 'Reviews technical content, source references, equations, and simulations.'),
-  ('administrator', 'Administrator', 'Manages platform users, roles, cohorts, and operational policy.')
+  ('administrator', 'Administrator', 'Manages platform users, roles, cohorts, and operational policy.'),
+  ('platform_owner', 'Platform owner', 'Manages Industrial Learn workspaces and governance without bypassing independent engineering review.')
 on conflict (role_key) do update
 set
   name = excluded.name,
@@ -26,7 +27,18 @@ values
   ('content:review:read', 'Read review content', 'Allows reviewers and authors to read content in review workflows.'),
   ('content:review:write', 'Write review records', 'Allows engineering reviewers to create review records.'),
   ('roles:manage', 'Manage roles', 'Allows administrators to manage roles and role assignments.'),
-  ('audit:read', 'Read audit events', 'Allows administrators to read audit events.')
+  ('audit:read', 'Read audit events', 'Allows administrators to read audit events.'),
+  ('workspace:student', 'Use student workspace', 'Allows access to the current user''s student learning workspace.'),
+  ('workspace:author', 'Use author workspace', 'Allows access to content-authoring tools.'),
+  ('workspace:review', 'Use reviewer workspace', 'Allows read access to engineering-review packages and queues.'),
+  ('workspace:lecturer', 'Use lecturer workspace', 'Allows access to authorised lecturer tools.'),
+  ('workspace:admin', 'Use administration workspace', 'Allows access to authorised platform-administration tools.'),
+  ('workspace:owner', 'Use owner workspace', 'Allows access to Platform Owner operations.'),
+  ('content:preview', 'Preview governed content', 'Allows protected exact-version preview of unpublished content.'),
+  ('platform:manage', 'Manage platform', 'Allows controlled Platform Owner operations.'),
+  ('publication:manage', 'Manage publication', 'Allows management of approved publication records without bypassing review gates.'),
+  ('sources:manage', 'Manage sources', 'Allows management of approved source records.'),
+  ('simulations:manage', 'Manage simulations', 'Allows management of simulation registry records.')
 on conflict (permission_key) do update
 set
   name = excluded.name,
@@ -40,7 +52,8 @@ join public.permissions p on p.permission_key in (
   'profile:self:read',
   'profile:self:update',
   'content:approved:read',
-  'progress:self:write'
+  'progress:self:write',
+  'workspace:student'
 )
 where r.role_key = 'student'
 on conflict (role_id, permission_id) do nothing;
@@ -52,7 +65,9 @@ join public.permissions p on p.permission_key in (
   'profile:self:read',
   'profile:self:update',
   'content:approved:read',
-  'progress:cohort:read'
+  'progress:cohort:read',
+  'workspace:student',
+  'workspace:lecturer'
 )
 where r.role_key = 'lecturer'
 on conflict (role_id, permission_id) do nothing;
@@ -65,7 +80,10 @@ join public.permissions p on p.permission_key in (
   'profile:self:update',
   'content:approved:read',
   'content:draft:write',
-  'content:review:read'
+  'content:review:read',
+  'workspace:student',
+  'workspace:author',
+  'content:preview'
 )
 where r.role_key = 'content_author'
 on conflict (role_id, permission_id) do nothing;
@@ -77,7 +95,10 @@ join public.permissions p on p.permission_key in (
   'profile:self:read',
   'profile:self:update',
   'content:review:read',
-  'content:review:write'
+  'content:review:write',
+  'workspace:student',
+  'workspace:review',
+  'content:preview'
 )
 where r.role_key = 'engineering_reviewer'
 on conflict (role_id, permission_id) do nothing;
@@ -95,9 +116,22 @@ join public.permissions p on p.permission_key in (
   'content:review:read',
   'content:review:write',
   'roles:manage',
-  'audit:read'
+  'audit:read',
+  'workspace:author',
+  'workspace:review',
+  'workspace:admin',
+  'content:preview',
+  'platform:manage'
 )
 where r.role_key = 'administrator'
+on conflict (role_id, permission_id) do nothing;
+
+insert into public.role_permissions (role_id, permission_id)
+select r.id, p.id
+from public.roles r
+cross join public.permissions p
+where r.role_key = 'platform_owner'
+  and p.permission_key <> 'content:review:write'
 on conflict (role_id, permission_id) do nothing;
 
 insert into public.schools (slug, title, description)

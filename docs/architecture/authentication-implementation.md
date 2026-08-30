@@ -48,6 +48,9 @@ Reusable server methods live in `apps/web/src/features/auth/server.ts`:
 - `requireStudentProfile()`
 - `requireContentReviewer()`
 - `requireAdministrator()`
+- `requireCapability()`
+- `requirePlatformManager()`
+- `requirePlatformOwner()`
 
 ## Profile Creation
 
@@ -81,8 +84,15 @@ Protected routes:
 - `/author`
 - `/review`
 - `/admin`
+- `/workspace`
+- `/account/access`
+- `/lecturer`
+- `/owner`
+- `/admin/users`
+- `/preview/lessons/[lessonSlug]?version=[version]`
 
-Public curriculum and lesson-preview routes remain public.
+Only approved, published curriculum and lessons remain public. Exact-version draft preview
+requires an authenticated `content:preview` capability.
 
 ## Dashboard Identity Change
 
@@ -91,5 +101,7 @@ The dashboard no longer accepts `searchParams.studentId`. It calls `requireStude
 ## Known Boundaries
 
 - Supabase-backed role resolution expects the existing `profiles`, `roles`, and `profile_roles` tables.
+- Platform Owner access is a database role, never a browser claim. It provides workspace
+  inspection and management but not independent engineering-review approval.
 - In staging and production, Supabase credentials must be configured. The test-local provider is not statically imported by the server auth module and is blocked by environment validation outside approved local E2E hosts.
 - Real student progress persistence remains a later task; the dashboard now shows authenticated empty states rather than query-selected seeded progress.

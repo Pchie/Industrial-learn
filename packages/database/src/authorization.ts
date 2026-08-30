@@ -50,5 +50,10 @@ export function assertStudentPrivateAccess(
 }
 
 export function assertContentStaff(principal: Principal) {
-  requireAnyRole(principal, ["content_author", "engineering_reviewer", "administrator"]);
+  requireAnyRole(principal, [
+    "content_author",
+    "engineering_reviewer",
+    "administrator",
+    "platform_owner"
+  ]);
 }

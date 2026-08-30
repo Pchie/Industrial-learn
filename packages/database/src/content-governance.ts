@@ -158,7 +158,12 @@ export function createContentGovernanceServices(
       }
     ) {
       const actor = actorFromContext(context);
-      requireAnyWorkflowRole(actor, ["content_author", "lecturer", "administrator"]);
+      requireAnyWorkflowRole(actor, [
+        "content_author",
+        "lecturer",
+        "administrator",
+        "platform_owner"
+      ]);
       const now = new Date().toISOString();
       const item: GovernanceItem = {
         id: createGovernanceId(input.slug),
@@ -256,7 +261,8 @@ export function createContentGovernanceServices(
         "content_author",
         "lecturer",
         "engineering_reviewer",
-        "administrator"
+        "administrator",
+        "platform_owner"
       ]);
       if (input.sourceIds.length === 0) {
         throw new ApplicationError("invalid_input", {
@@ -363,7 +369,7 @@ export function createContentGovernanceServices(
 
     async publish(context: ContentGovernanceContext, input: { itemId: string }) {
       const actor = actorFromContext(context);
-      requireAnyWorkflowRole(actor, ["administrator"]);
+      requireAnyWorkflowRole(actor, ["administrator", "platform_owner"]);
       const item = await loadItem(repositories, input.itemId);
       const version = await loadCurrentVersion(repositories, item);
       const reviews = await repositories.content.listReviewRecords(item.id);
@@ -408,7 +414,7 @@ export function createContentGovernanceServices(
       }
     ) {
       const actor = actorFromContext(context);
-      requireAnyWorkflowRole(actor, ["administrator"]);
+      requireAnyWorkflowRole(actor, ["administrator", "platform_owner"]);
       const item = await loadItem(repositories, input.itemId);
       const target = await repositories.content.getVersion({
         itemId: item.id,
@@ -453,7 +459,7 @@ export function createContentGovernanceServices(
       input: { itemId: string; reason: string }
     ) {
       const actor = actorFromContext(context);
-      requireAnyWorkflowRole(actor, ["administrator"]);
+      requireAnyWorkflowRole(actor, ["administrator", "platform_owner"]);
       const item = await loadItem(repositories, input.itemId);
       const updated: GovernanceItem = {
         ...item,
@@ -472,14 +478,19 @@ export function createContentGovernanceServices(
         "content_author",
         "lecturer",
         "engineering_reviewer",
-        "administrator"
+        "administrator",
+        "platform_owner"
       ]);
       return repositories.content.listDraftsForActor(actor.id);
     },
 
     async listReviewQueue(context: ContentGovernanceContext) {
       const actor = actorFromContext(context);
-      requireAnyWorkflowRole(actor, ["engineering_reviewer", "administrator"]);
+      requireAnyWorkflowRole(actor, [
+        "engineering_reviewer",
+        "administrator",
+        "platform_owner"
+      ]);
       return repositories.content.listReviewQueue();
     },
 
@@ -568,7 +579,13 @@ async function loadCurrentVersion(
 function actorFromContext(context: ContentGovernanceContext): WorkflowActor {
   const principal = requireAuthenticated(context.caller);
   const roles = principal.roles.filter((role): role is WorkflowRole =>
-    ["content_author", "lecturer", "engineering_reviewer", "administrator"].includes(role)
+    [
+      "content_author",
+      "lecturer",
+      "engineering_reviewer",
+      "administrator",
+      "platform_owner"
+    ].includes(role)
   );
   return {
     id: principal.profileId,
@@ -584,7 +601,11 @@ function requireAnyWorkflowRole(actor: WorkflowActor, roles: WorkflowRole[]) {
 }
 
 function requireAuthorOrAdmin(actor: WorkflowActor, item: GovernanceItem) {
-  if (actor.id === item.authorProfileId || actor.roles.includes("administrator")) {
+  if (
+    actor.id === item.authorProfileId ||
+    actor.roles.includes("administrator") ||
+    actor.roles.includes("platform_owner")
+  ) {
     return;
   }
   throw new ApplicationError("access_denied");
@@ -604,7 +625,17 @@ function requireReviewAuthority(actor: WorkflowActor, requirement: ReviewRequire
 }
 
 function primaryWorkflowRole(actor: WorkflowActor): WorkflowRole {
-  return actor.roles[0] ?? "content_author";
+  return (
+    (
+      [
+        "engineering_reviewer",
+        "lecturer",
+        "administrator",
+        "content_author",
+        "platform_owner"
+      ] as const
+    ).find((role) => actor.roles.includes(role)) ?? "content_author"
+  );
 }
 
 function hasApprovedReview(reviews: GovernanceReviewRecord[], type: ReviewRequirement) {

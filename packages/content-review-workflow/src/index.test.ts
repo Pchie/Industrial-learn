@@ -39,6 +39,11 @@ const admin: WorkflowActor = {
   displayName: "Admin One",
   roles: ["administrator"]
 };
+const owner: WorkflowActor = {
+  id: "owner-1",
+  displayName: "Platform Owner",
+  roles: ["platform_owner"]
+};
 const reviewerAuthor: WorkflowActor = {
   id: "author-1",
   displayName: "Author Reviewer",
@@ -149,11 +154,47 @@ describe("content review workflow access control", () => {
     expect(approved.reviewStatus).toBe("Approved for student use");
   });
 
-  it("restricts audit log viewing to administrators", () => {
+  it("restricts audit log viewing to platform managers", () => {
     const record = createDraft();
 
     expect(() => viewAuditLog(reviewer, record)).toThrow("not permitted");
     expect(viewAuditLog(admin, record)).toHaveLength(1);
+    expect(viewAuditLog(owner, record)).toHaveLength(1);
+  });
+
+  it("allows owner workflow management but never grants engineering-review authority", () => {
+    const record = makePublishableDraft();
+
+    expect(() =>
+      approveOrRejectContent({
+        actor: owner,
+        decision: "approved",
+        notes: "Owner access is not reviewer authority.",
+        now,
+        record,
+        requiresSafetyReview: true,
+        requiresSimulationReview: true
+      })
+    ).toThrow("not permitted");
+
+    const approved = approveOrRejectContent({
+      actor: reviewer,
+      decision: "approved",
+      notes: "Independent engineering review complete.",
+      now,
+      record,
+      requiresSafetyReview: true,
+      requiresSimulationReview: true
+    }).record;
+    expect(
+      publishApprovedContent({
+        actor: owner,
+        now,
+        record: approved,
+        requiresSafetyReview: true,
+        requiresSimulationReview: true
+      }).record.publicationStatus
+    ).toBe("published");
   });
 });
 

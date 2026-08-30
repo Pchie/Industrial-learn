@@ -33,9 +33,17 @@ export type GovernanceInterfaceItem = {
   completedReviews: string[];
   reviewerComments: string[];
   decisionHistory: GovernanceDecisionHistory[];
+  moduleTitle: string;
+  reviewType: string;
+  sourceStatus: string;
+  equationStatus: string;
+  simulationStatus: string;
+  accessibilityStatus: string;
+  lastModified: string;
 };
 
 export type GovernanceInterfaceModel = {
+  actorProfileId: string;
   actorName: string;
   items: GovernanceInterfaceItem[];
   dataSource: "staging-database" | "local-e2e" | "unavailable";
@@ -46,6 +54,7 @@ export function loadAuthorGovernanceModel(
   session: AuthenticatedSession
 ): GovernanceInterfaceModel {
   return {
+    actorProfileId: session.profile.id,
     actorName: session.profile.displayName,
     items: isLocalGovernanceMode() ? localItemsForAuthor(session.profile.email) : [],
     dataSource: isLocalGovernanceMode() ? "local-e2e" : "unavailable"
@@ -58,6 +67,7 @@ export async function loadReviewGovernanceModel(
 ): Promise<GovernanceInterfaceModel> {
   if (isLocalGovernanceMode()) {
     return {
+      actorProfileId: session.profile.id,
       actorName: session.profile.displayName,
       items: localItemsForReview(),
       dataSource: "local-e2e"
@@ -73,7 +83,7 @@ export async function loadReviewGovernanceModel(
     const { data: items, error: itemsError } = await client
       .from("content_governance_items")
       .select(
-        "id,entity_type,slug,title,author_profile_id,current_version,published_version,workflow_status,publication_status"
+        "id,entity_type,slug,title,author_profile_id,current_version,published_version,workflow_status,publication_status,updated_at"
       )
       .order("updated_at", { ascending: false });
 
@@ -84,15 +94,18 @@ export async function loadReviewGovernanceModel(
     const itemIds = (items ?? []).map((item) => item.id);
     if (itemIds.length === 0) {
       return {
+        actorProfileId: session.profile.id,
         actorName: session.profile.displayName,
         items: [],
         dataSource: "staging-database"
       };
     }
 
+    const authorIds = [...new Set((items ?? []).map((item) => item.author_profile_id))];
     const [
       { data: versions, error: versionsError },
-      { data: reviews, error: reviewsError }
+      { data: reviews, error: reviewsError },
+      { data: authorLabels, error: authorLabelsError }
     ] = await Promise.all([
       client
         .from("content_versions")
@@ -104,16 +117,25 @@ export async function loadReviewGovernanceModel(
           "id,governance_item_id,content_version,reviewer_profile_id,decision,notes,reviewed_at,review_type,evidence_checked"
         )
         .in("governance_item_id", itemIds)
-        .order("reviewed_at", { ascending: false })
+        .order("reviewed_at", { ascending: false }),
+      client.rpc("list_content_author_labels", { p_profile_ids: authorIds })
     ]);
 
-    if (versionsError || reviewsError) {
+    if (versionsError || reviewsError || authorLabelsError) {
       throw new Error(
-        versionsError?.message ?? reviewsError?.message ?? "Review evidence query failed."
+        versionsError?.message ??
+          reviewsError?.message ??
+          authorLabelsError?.message ??
+          "Review evidence query failed."
       );
     }
 
+    const authorNames = new Map(
+      (authorLabels ?? []).map((author) => [author.profile_id, author.display_name])
+    );
+
     return {
+      actorProfileId: session.profile.id,
       actorName: session.profile.displayName,
       items: (items ?? []).map((item) => {
         const version = (versions ?? []).find(
@@ -136,7 +158,7 @@ export async function loadReviewGovernanceModel(
           title: item.title,
           slug: item.slug,
           entityType: item.entity_type,
-          authorName: `Author profile ${item.author_profile_id}`,
+          authorName: authorNames.get(item.author_profile_id) ?? "Named content author",
           authorProfileId: item.author_profile_id,
           workflowStatus: item.workflow_status,
           publicationStatus: item.publication_status,
@@ -156,7 +178,17 @@ export async function loadReviewGovernanceModel(
             comments: review.notes,
             reviewedAt: review.reviewed_at,
             governanceVersion: review.content_version ?? item.current_version
-          }))
+          })),
+          moduleTitle: "Fluid Mechanics Foundations",
+          reviewType: "Independent engineering review",
+          sourceStatus:
+            (version?.source_ids.length ?? 0) > 0
+              ? "Source evidence attached"
+              : "Source required",
+          equationStatus: "Implementation and evidence supplied; human check required",
+          simulationStatus: "No standalone simulation required for this lesson",
+          accessibilityStatus: "Automated evidence supplied; human check required",
+          lastModified: item.updated_at
         };
       }),
       dataSource: "staging-database"
@@ -171,6 +203,7 @@ export async function loadReviewGovernanceModel(
 
 function unavailableModel(session: AuthenticatedSession, error: string) {
   return {
+    actorProfileId: session.profile.id,
     actorName: session.profile.displayName,
     items: [],
     dataSource: "unavailable" as const,
@@ -212,7 +245,11 @@ function isLocalGovernanceMode() {
 }
 
 function localItemsForAuthor(email: string) {
-  if (email !== "author@example.test" && email !== "admin@example.test") {
+  if (
+    email !== "author@example.test" &&
+    email !== "admin@example.test" &&
+    email !== "owner@example.test"
+  ) {
     return [];
   }
   return localGovernanceItems;
@@ -246,6 +283,13 @@ const localGovernanceItems: GovernanceInterfaceItem[] = [
     ],
     completedReviews: [],
     reviewerComments: [],
-    decisionHistory: []
+    decisionHistory: [],
+    moduleTitle: "Fluid Mechanics Foundations",
+    reviewType: "Independent engineering review",
+    sourceStatus: "Source evidence attached",
+    equationStatus: "Implementation and evidence supplied; human check required",
+    simulationStatus: "No standalone simulation required for this lesson",
+    accessibilityStatus: "Automated evidence supplied; human check required",
+    lastModified: "2026-08-30T00:00:00.000Z"
   }
 ];

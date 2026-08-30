@@ -6,10 +6,36 @@ export const APP_ROLES = [
   "lecturer",
   "content_author",
   "engineering_reviewer",
-  "administrator"
+  "administrator",
+  "platform_owner"
 ] as const;
 
 export type AppRole = (typeof APP_ROLES)[number];
+
+export const APP_CAPABILITIES = [
+  "dashboard:read",
+  "learning:read",
+  "projects:self:read",
+  "assessments:self:read",
+  "cohort:read",
+  "learning:assign",
+  "content:draft:write",
+  "content:review:read",
+  "admin:access",
+  "workspace:student",
+  "workspace:author",
+  "workspace:review",
+  "workspace:lecturer",
+  "workspace:admin",
+  "workspace:owner",
+  "content:preview",
+  "content:review:approve",
+  "roles:manage",
+  "audit:read",
+  "platform:manage"
+] as const;
+
+export type AppCapability = (typeof APP_CAPABILITIES)[number];
 
 export type AccountStatus = "active" | "unverified" | "disabled" | "missing_profile";
 
@@ -27,7 +53,7 @@ export type AuthenticatedSession = {
   email: string;
   profile: AuthProfile;
   roles: AppRole[];
-  capabilities: string[];
+  capabilities: AppCapability[];
   expiresAt: string;
 };
 
@@ -100,17 +126,57 @@ export type AuthProvider = {
   ) => Promise<AuthResult<AuthProfile>>;
 };
 
-const capabilitiesByRole: Record<AppRole, string[]> = {
+const capabilitiesByRole: Record<AppRole, AppCapability[]> = {
   student: [
+    "workspace:student",
     "dashboard:read",
     "learning:read",
     "projects:self:read",
     "assessments:self:read"
   ],
-  lecturer: ["cohort:read", "learning:assign"],
-  content_author: ["content:draft:write", "content:review:read"],
-  engineering_reviewer: ["content:review:read", "content:review:approve"],
-  administrator: ["admin:access", "roles:manage", "audit:read"]
+  lecturer: ["workspace:student", "workspace:lecturer", "cohort:read", "learning:assign"],
+  content_author: [
+    "workspace:student",
+    "workspace:author",
+    "content:preview",
+    "content:draft:write",
+    "content:review:read"
+  ],
+  engineering_reviewer: [
+    "workspace:student",
+    "workspace:review",
+    "content:preview",
+    "content:review:read",
+    "content:review:approve"
+  ],
+  administrator: [
+    "workspace:author",
+    "workspace:review",
+    "workspace:admin",
+    "content:preview",
+    "content:draft:write",
+    "content:review:read",
+    "content:review:approve",
+    "admin:access",
+    "roles:manage",
+    "audit:read",
+    "platform:manage"
+  ],
+  platform_owner: [
+    "workspace:student",
+    "workspace:author",
+    "workspace:review",
+    "workspace:lecturer",
+    "workspace:admin",
+    "workspace:owner",
+    "content:preview",
+    "content:draft:write",
+    "content:review:read",
+    "admin:access",
+    "roles:manage",
+    "audit:read",
+    "platform:manage"
+  ]
 };
 
 const safeErrorMessages: Record<AuthFailureCode, string> = {
@@ -158,12 +224,23 @@ export function hasAnyRole(session: AuthenticatedSession, roles: AppRole[]) {
   return roles.some((role) => hasRole(session, role));
 }
 
+export function hasCapability(session: AuthenticatedSession, capability: AppCapability) {
+  return session.capabilities.includes(capability);
+}
+
 export function requireRoleResult(session: AuthenticatedSession, role: AppRole) {
   return hasRole(session, role) ? ok(session) : fail("access_denied");
 }
 
 export function requireAnyRoleResult(session: AuthenticatedSession, roles: AppRole[]) {
   return hasAnyRole(session, roles) ? ok(session) : fail("access_denied");
+}
+
+export function requireCapabilityResult(
+  session: AuthenticatedSession,
+  capability: AppCapability
+) {
+  return hasCapability(session, capability) ? ok(session) : fail("access_denied");
 }
 
 export function safeInternalRedirect(

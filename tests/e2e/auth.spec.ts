@@ -20,7 +20,9 @@ test("sign-in restores a server session for protected routes", async ({ page }) 
 
   await page.goto("/my-learning");
   await expect(page.getByRole("heading", { name: "My learning" })).toBeVisible();
-  await expect(page.getByText("Industrial Student")).toBeVisible();
+  await expect(
+    page.getByRole("status").filter({ hasText: "Server session resolved" })
+  ).toContainText("Industrial Student");
 });
 
 test("sign-out clears the session", async ({ page }) => {
@@ -70,6 +72,8 @@ test("student is denied access to admin routes", async ({ page }) => {
 
   await expect(page).toHaveURL(/\/auth\/error/);
   await expect(page.getByRole("heading", { name: "Access denied" })).toBeVisible();
+  await expect(page.getByText(/signed in as Student/)).toBeVisible();
+  await expect(page.getByRole("link", { name: "Go to my workspace" })).toBeVisible();
 });
 
 test("student is denied access to reviewer routes", async ({ page }) => {

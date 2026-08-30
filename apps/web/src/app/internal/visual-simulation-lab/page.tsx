@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { requireAnyRole } from "@/features/auth/server";
+import { requireCapability } from "@/features/auth/server";
 import { VisualSimulationLab } from "@/features/visual-simulation/visual-simulation-lab";
 
 export const metadata: Metadata = {
@@ -13,10 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function VisualSimulationLabPage() {
-  await requireAnyRole(
-    ["content_author", "engineering_reviewer", "administrator"],
-    "/internal/visual-simulation-lab"
-  );
+  await requireCapability("content:preview", "/internal/visual-simulation-lab");
 
   return <VisualSimulationLab />;
 }

@@ -9,7 +9,9 @@ import {
   fail,
   publicAuthMessage,
   requireAnyRoleResult,
+  requireCapabilityResult,
   safeInternalRedirect,
+  type AppCapability,
   type AppRole,
   type AuthProvider,
   type AuthResult,
@@ -119,8 +121,21 @@ export async function requireRole(role: AppRole, nextPath: string) {
   return requireAnyRole([role], nextPath);
 }
 
+export async function requireCapability(capability: AppCapability, nextPath: string) {
+  const session = await requireAuthenticatedUser(nextPath);
+  const result = requireCapabilityResult(session, capability);
+
+  if (!result.ok) {
+    redirect(
+      `/auth/error?error=access_denied&next=${encodeURIComponent(safeInternalRedirect(nextPath))}`
+    );
+  }
+
+  return session;
+}
+
 export async function requireStudentProfile(nextPath = "/dashboard") {
-  return requireRole("student", nextPath);
+  return requireCapability("workspace:student", nextPath);
 }
 
 export async function requireContentReviewer(nextPath = "/review") {
@@ -129,6 +144,14 @@ export async function requireContentReviewer(nextPath = "/review") {
 
 export async function requireAdministrator(nextPath = "/admin") {
   return requireRole("administrator", nextPath);
+}
+
+export async function requirePlatformManager(nextPath = "/admin") {
+  return requireCapability("platform:manage", nextPath);
+}
+
+export async function requirePlatformOwner(nextPath = "/owner") {
+  return requireRole("platform_owner", nextPath);
 }
 
 export function authMessageForUrl(code: string | string[] | undefined) {

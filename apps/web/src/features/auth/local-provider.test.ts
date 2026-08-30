@@ -2,6 +2,9 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import {
   createTestLocalAuthProvider,
+  listLocalAccessAudit,
+  listLocalUsersForAdministration,
+  manageLocalUserRole,
   resetLocalAuthStoreForTests
 } from "./test-local-provider";
 
@@ -65,7 +68,7 @@ describe("local auth provider integration", () => {
     ).resolves.toMatchObject({ ok: false, code: "disabled_account" });
   });
 
-  it("resolves lecturer, reviewer, and administrator roles from provider records", async () => {
+  it("resolves lecturer, reviewer, administrator, and owner roles from provider records", async () => {
     const provider = createTestLocalAuthProvider();
 
     await expect(signInRoles(provider, "lecturer@example.test")).resolves.toEqual([
@@ -76,6 +79,9 @@ describe("local auth provider integration", () => {
     ]);
     await expect(signInRoles(provider, "admin@example.test")).resolves.toEqual([
       "administrator"
+    ]);
+    await expect(signInRoles(provider, "owner@example.test")).resolves.toEqual([
+      "platform_owner"
     ]);
   });
 
@@ -124,6 +130,40 @@ describe("local auth provider integration", () => {
         redirectTo: "/auth/reset-password"
       })
     ).resolves.toMatchObject({ ok: true });
+  });
+
+  it("audits privileged role changes and rejects self-promotion", () => {
+    const owner = listLocalUsersForAdministration().find((user) =>
+      user.roles.includes("platform_owner")
+    );
+    const student = listLocalUsersForAdministration().find(
+      (user) => user.email === "student.b@example.test"
+    );
+    if (!owner || !student) throw new Error("expected local management fixtures");
+
+    manageLocalUserRole({
+      actorProfileId: owner.profileId,
+      targetProfileId: student.profileId,
+      role: "engineering_reviewer",
+      operation: "add",
+      reason: "Independent reviewer access test"
+    });
+
+    expect(
+      listLocalUsersForAdministration().find(
+        (user) => user.profileId === student.profileId
+      )?.roles
+    ).toContain("engineering_reviewer");
+    expect(listLocalAccessAudit().at(0)?.action).toBe("platform.role.add");
+    expect(() =>
+      manageLocalUserRole({
+        actorProfileId: student.profileId,
+        targetProfileId: student.profileId,
+        role: "platform_owner",
+        operation: "add",
+        reason: "Attempted self-promotion test"
+      })
+    ).toThrow("denied");
   });
 });
 

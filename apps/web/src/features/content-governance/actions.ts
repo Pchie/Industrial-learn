@@ -23,8 +23,9 @@ export async function recordContentReviewDecisionAction(formData: FormData) {
   const governanceVersion = Number(formData.get("governanceVersion"));
   const contentVersion = readText(formData.get("contentVersion"));
   const safetyReviewOutcome = readSafetyOutcome(formData.get("safetyReviewOutcome"));
+  const exactVersionAttestation = formData.get("exactVersionAttestation") === "on";
 
-  if (!decision || comments.length < 20 || !accessToken) {
+  if (!decision || comments.length < 20 || !accessToken || !exactVersionAttestation) {
     redirect(reviewUrl("invalid_submission"));
   }
 
@@ -46,6 +47,10 @@ export async function recordContentReviewDecisionAction(formData: FormData) {
   }
 
   const verifiedGovernanceItemId = item.governanceItemId;
+
+  if (decision === "approved" && item.authorProfileId === session.profile.id) {
+    redirect(reviewUrl("independent_reviewer_required"));
+  }
 
   const evidenceChecked = {
     source_review_complete: formData.get("sourceReviewComplete") === "on",

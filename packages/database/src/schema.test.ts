@@ -348,10 +348,29 @@ describe("database schema", () => {
       "lecturer",
       "content_author",
       "engineering_reviewer",
-      "administrator"
+      "administrator",
+      "platform_owner"
     ]) {
       expect(seedSql).toContain(`'${role}'`);
     }
+  });
+
+  it("adds audited Platform Owner management without broadening student-private admin access", () => {
+    expect(migrationSql).toContain("add value if not exists 'platform_owner'");
+    expect(migrationSql).toContain("create or replace function public.is_platform_owner");
+    expect(migrationSql).toContain(
+      "create or replace function public.manage_profile_role"
+    );
+    expect(migrationSql).toContain("Users cannot change their own privileged roles");
+    expect(migrationSql).toContain(
+      "The final Platform Owner assignment cannot be removed"
+    );
+    expect(migrationSql).toContain("insert into public.audit_events");
+    expect(migrationSql).toContain("drop policy if exists profile_roles_admin_all");
+    expect(migrationSql).toContain("drop policy if exists roles_admin_all");
+    expect(migrationSql).not.toContain(
+      "select public.is_platform_owner() or public.is_admin() as is_admin"
+    );
   });
 
   it("keeps service-role credentials out of browser application code", () => {

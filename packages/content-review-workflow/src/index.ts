@@ -4,7 +4,11 @@ export * from "./publication-visibility";
 export * from "./static-review-record";
 
 export type WorkflowRole =
-  "content_author" | "lecturer" | "engineering_reviewer" | "administrator";
+  | "content_author"
+  | "lecturer"
+  | "engineering_reviewer"
+  | "administrator"
+  | "platform_owner";
 
 export type WorkflowActor = {
   id: string;
@@ -115,7 +119,7 @@ export function createDraftLesson({
 }): WorkflowResult {
   requireAnyRole(
     actor,
-    ["content_author", "lecturer", "administrator"],
+    ["content_author", "lecturer", "administrator", "platform_owner"],
     "create draft lesson"
   );
 
@@ -214,7 +218,13 @@ export function addApprovedSourceReferences({
 }): WorkflowResult {
   requireAnyRole(
     actor,
-    ["content_author", "lecturer", "engineering_reviewer", "administrator"],
+    [
+      "content_author",
+      "lecturer",
+      "engineering_reviewer",
+      "administrator",
+      "platform_owner"
+    ],
     "add sources"
   );
   if (sourceReferences.length === 0) {
@@ -532,7 +542,7 @@ export function publishApprovedContent({
   requiresSafetyReview: boolean;
   requiresSimulationReview: boolean;
 }): WorkflowResult {
-  requireAnyRole(actor, ["administrator"], "publish approved content");
+  requireAnyRole(actor, ["administrator", "platform_owner"], "publish approved content");
 
   const gateErrors = publicationGateErrors(record, {
     requiresSafetyReview,
@@ -567,7 +577,7 @@ export function rollBackPublication({
   record: LessonWorkflowRecord;
   targetVersion: number;
 }): WorkflowResult {
-  requireAnyRole(actor, ["administrator"], "roll back publication");
+  requireAnyRole(actor, ["administrator", "platform_owner"], "roll back publication");
   const revision = record.revisions.find((item) => item.version === targetVersion);
   if (!revision) {
     throw new Error(`Revision ${targetVersion} does not exist.`);
@@ -596,12 +606,23 @@ export function rollBackPublication({
 export function viewRevisionHistory(actor: WorkflowActor, record: LessonWorkflowRecord) {
   requireAnyRole(
     actor,
-    ["content_author", "lecturer", "engineering_reviewer", "administrator"],
+    [
+      "content_author",
+      "lecturer",
+      "engineering_reviewer",
+      "administrator",
+      "platform_owner"
+    ],
     "view revision history"
   );
   if (
     actor.id !== record.authorId &&
-    !hasAnyRole(actor, ["lecturer", "engineering_reviewer", "administrator"])
+    !hasAnyRole(actor, [
+      "lecturer",
+      "engineering_reviewer",
+      "administrator",
+      "platform_owner"
+    ])
   ) {
     throw new Error(
       "Only the author or authorised review staff may view revision history."
@@ -612,7 +633,7 @@ export function viewRevisionHistory(actor: WorkflowActor, record: LessonWorkflow
 }
 
 export function viewAuditLog(actor: WorkflowActor, record: LessonWorkflowRecord) {
-  requireAnyRole(actor, ["administrator"], "view audit log");
+  requireAnyRole(actor, ["administrator", "platform_owner"], "view audit log");
   return record.auditLog;
 }
 
@@ -665,7 +686,10 @@ function publicationGateErrors(
 }
 
 function requireCanEdit(actor: WorkflowActor, record: LessonWorkflowRecord) {
-  if (actor.id === record.authorId || hasAnyRole(actor, ["administrator"])) {
+  if (
+    actor.id === record.authorId ||
+    hasAnyRole(actor, ["administrator", "platform_owner"])
+  ) {
     return;
   }
   requireAnyRole(actor, ["content_author"], "edit lesson content");
