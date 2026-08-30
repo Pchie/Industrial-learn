@@ -1,5 +1,5 @@
 import { ProtectedPage } from "@/features/auth/protected-page";
-import { requireAnyRole } from "@/features/auth/server";
+import { readSessionTokens, requireAnyRole } from "@/features/auth/server";
 import { ReviewWorkspace } from "@/features/content-governance/components";
 import { loadReviewGovernanceModel } from "@/features/content-governance/server-data";
 
@@ -8,7 +8,8 @@ export default async function ReviewPage() {
     ["engineering_reviewer", "administrator"],
     "/review"
   );
-  const model = loadReviewGovernanceModel(session);
+  const { accessToken } = await readSessionTokens();
+  const model = await loadReviewGovernanceModel(session, accessToken);
 
   return (
     <ProtectedPage

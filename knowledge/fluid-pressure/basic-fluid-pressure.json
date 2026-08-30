@@ -4,10 +4,10 @@
     "slug": "basic-fluid-pressure",
     "title": "Basic Fluid Pressure",
     "topic": "Fluid pressure in static fluids",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PSU-CIMBALA-PRESSURE-BASICS"]
   },
-  "learningPurpose": "Prepare students to recognise pressure as force distributed over area and to use consistent SI units in introductory fluid-pressure reasoning.",
+  "learningPurpose": "Prepare students to describe pressure as normal force per area, predict the effect of changing either input, and calculate an introductory result using consistent SI units.",
   "definitions": [
     {
       "term": "Pressure",
@@ -65,57 +65,35 @@
     "The example is educational and not a pressure-vessel design case."
   ],
   "limitations": [
-    "Does not cover dynamic pressure, compressibility, pipe losses, pressure-vessel design, or equipment ratings.",
+    "Does not cover fluid dynamics, leakage, compressibility, component losses, transient response, pressure-vessel design, or equipment ratings.",
+    "The force arrow, contact-area geometry, and pressure intensity are representational and not dimensioned physical models.",
     "The cited web edition has no fixed page numbering."
   ],
   "workedExample": {
     "id": "WE-FLUID-PRESSURE-001",
     "title": "Pressure from a known force and area",
     "purpose": "Show the required SI-unit relationship without creating a full lesson.",
-    "given": ["Force is stated in newtons.", "Area is stated in square metres."],
+    "given": ["Normal force is 1,000 N.", "Area is 0.010 m^2."],
     "steps": [
       "Check that force and area are in SI units.",
       "Divide force by area to obtain pressure in pascals."
     ],
-    "answer": "The result is expressed in pascals.",
+    "answer": "The result is 100,000 Pa, or 100 kPa for display.",
     "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PSU-CIMBALA-PRESSURE-BASICS"],
     "reviewStatus": "Engineering review required"
   },
-  "components": ["fluid", "surface area", "normal force", "pressure reading"],
+  "components": ["contact surface", "normal force", "calculated pressure display"],
   "normalOperation": [
-    "Pressure readings are interpreted only within the stated educational assumptions."
+    "A valid normal-force input and positive area input produce a pressure result through EQ-FLUID-PRESSURE-001."
   ],
   "commonMisconceptions": [
     "Treating pressure and force as the same quantity.",
     "Entering an area in cm^2 or mm^2 as if it were m^2.",
     "Treating an ideal classroom result as an equipment rating."
   ],
-  "faultConditions": [
-    {
-      "id": "FAULT-FLUID-PRESSURE-001",
-      "title": "Unexpected pressure reading",
-      "symptoms": ["The reading is outside the expected training range."],
-      "likelyCauses": [
-        "Incorrect area input",
-        "Incorrect unit conversion",
-        "Sensor or gauge issue in a real system"
-      ],
-      "safeResponse": "Treat real-system abnormal pressure as a safety concern and follow supervised laboratory or site procedures.",
-      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
-      "reviewStatus": "Engineering review required"
-    }
-  ],
-  "safety": [
-    {
-      "id": "SAFE-FLUID-PRESSURE-001",
-      "hazard": "Stored pressure",
-      "warning": "Real pressurised systems can be hazardous and must not be treated as simple classroom examples.",
-      "studentBoundary": "Students must not use this lesson as permission to inspect, open, adjust, or operate pressurised equipment.",
-      "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012"],
-      "reviewStatus": "Engineering review required"
-    }
-  ],
-  "relatedSimulations": ["SIM-FLUID-PRESSURE-TRAINING-001"],
+  "faultConditions": [],
+  "safety": [],
+  "relatedSimulations": [],
   "relatedLessons": ["LES-FLUID-PRESSURE-001"],
   "sourceCitations": [
     "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",

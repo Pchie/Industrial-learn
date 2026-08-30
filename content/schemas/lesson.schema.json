@@ -45,6 +45,11 @@
     "authorProfileId": { "type": "string", "minLength": 1 },
     "knowledgeFileIds": { "type": "array", "items": { "type": "string" } },
     "sourceIds": { "type": "array", "items": { "type": "string" } },
+    "learningOutcomeIds": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^LO-[A-Z0-9-]+$" },
+      "uniqueItems": true
+    },
     "learningOutcomes": { "type": "array", "items": { "type": "string" } },
     "estimatedCompletionTime": { "type": "string" },
     "estimatedInteractionTime": { "type": "string" },

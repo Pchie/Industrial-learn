@@ -296,8 +296,10 @@ describe("assessment attempt persistence", () => {
       }
     );
 
-    expect(completed.scoringSummary?.earnedPoints).toBe(12);
-    expect(completed.competencyAwards.Designed).toBe(2);
+    expect(completed.scoringSummary?.earnedPoints).toBe(6);
+    expect(completed.competencyAwards.Understood).toBe(4);
+    expect(completed.competencyAwards.Calculated).toBe(2);
+    expect(completed.competencyAwards.Designed).toBeUndefined();
     expect(completed.contentVersion).toBe(1);
     expect(auditEvents).toEqual(["assessment_attempt_completed"]);
     expect(competencyEvents).toHaveLength(1);
@@ -646,35 +648,19 @@ function correctAnswers(): StudentAnswer[] {
       answer: { value: 400.2, unit: "Pa" }
     },
     {
-      questionId: "Q-FP-COMP-001",
-      type: "component-identification",
-      componentIds: ["area", "force"]
-    },
-    {
       questionId: "Q-FP-DIAGRAM-001",
       type: "diagram-question",
-      labelIds: ["F", "A"]
+      labelIds: ["surface-a"]
     },
     {
-      questionId: "Q-FP-SEQ-001",
-      type: "sequence-question",
-      stepOrder: ["check-units", "substitute", "interpret"]
+      questionId: "Q-FP-UNIT-001",
+      type: "multiple-choice",
+      choiceId: "A"
     },
     {
-      questionId: "Q-FP-SIM-001",
-      type: "simulation-task",
-      measurements: { cylinderForce: { value: 10_000.5, unit: "N" } }
-    },
-    {
-      questionId: "Q-FP-FAULT-001",
-      type: "fault-diagnosis",
-      faultId: "seal-leak",
-      evidenceIds: ["force-below-pressure-area-prediction"]
-    },
-    {
-      questionId: "Q-FP-DESIGN-001",
-      type: "design-challenge",
-      rubricAwardedPoints: { "safety-boundary": 1, "review-boundary": 1 }
+      questionId: "Q-FP-APPLICATION-001",
+      type: "multiple-choice",
+      choiceId: "A"
     }
   ];
 }

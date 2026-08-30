@@ -18,7 +18,9 @@ const attempts = new Map<string, PersistedAssessmentAttempt>();
 const assessments = new Map<string, Assessment>(
   listAssessmentCatalog().map((entry) => [
     entry.localAssessmentId,
-    createAssessmentFromCatalog(entry)
+    createAssessmentFromCatalog(entry, {
+      reviewStatus: "Approved for student use"
+    })
   ])
 );
 
@@ -109,7 +111,7 @@ function createLocalRepositories(): AttemptPersistenceRepositories {
       recordLocalAssessmentDashboardAttempt(completed.studentProfileId, {
         id: completed.id,
         assessmentSlug: "staging-pressure-check",
-        title: "Basic Fluid Pressure Competency Check",
+        title: "Basic Fluid Pressure Check",
         moduleSlug: "fluid-mechanics-foundations",
         status: completed.status,
         score: input.scoringSummary.earnedPoints,

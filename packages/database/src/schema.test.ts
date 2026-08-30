@@ -322,6 +322,26 @@ describe("database schema", () => {
     expect(migrationSql).toContain("from anon");
   });
 
+  it("records exact-version content review decisions through an authenticated atomic gate", () => {
+    expect(migrationSql).toContain(
+      "create or replace function public.record_content_review_decision"
+    );
+    expect(migrationSql).toContain("security definer");
+    expect(migrationSql).toContain("v_item.author_profile_id = v_reviewer_id");
+    expect(migrationSql).toContain("p_governance_version <> v_item.current_version");
+    expect(migrationSql).toContain("v_version.snapshot ->> 'version'");
+    expect(migrationSql).toContain("accessibility_review_complete");
+    expect(migrationSql).toContain("insert into public.review_records");
+    expect(migrationSql).toContain("insert into public.audit_events");
+    expect(migrationSql).toContain(
+      "revoke insert, update, delete on table public.review_records from anon, authenticated"
+    );
+    expect(migrationSql).toContain(
+      "grant execute on function public.record_content_review_decision"
+    );
+    expect(migrationSql).toContain("to authenticated, service_role");
+  });
+
   it("seeds all required roles", () => {
     for (const role of [
       "student",

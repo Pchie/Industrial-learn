@@ -1,4 +1,5 @@
 import { Alert, Badge } from "@industrial-learn/design-system";
+import Link from "next/link";
 import type { GovernanceInterfaceModel } from "./server-data";
 
 export function AuthorWorkspace({ model }: { model: GovernanceInterfaceModel }) {
@@ -19,6 +20,11 @@ export function ReviewWorkspace({ model }: { model: GovernanceInterfaceModel }) 
       <Alert title="Publication gate" tone="warning">
         Approval requires required evidence, named reviewer records, and review dates.
       </Alert>
+      {model.error ? (
+        <Alert title="Review data unavailable" tone="fault">
+          {model.error}
+        </Alert>
+      ) : null}
       <GovernanceSections model={model} mode="review" />
     </div>
   );
@@ -57,6 +63,14 @@ function GovernanceSections({
                 <dd>{item.publishedVersion ?? "Not published"}</dd>
               </div>
             </dl>
+            {mode === "review" ? (
+              <Link
+                className="il-button il-button--secondary il-button--md"
+                href={`/review/${item.slug}`}
+              >
+                Open review item
+              </Link>
+            ) : null}
           </article>
         ))}
       </section>
@@ -71,15 +85,14 @@ function GovernanceSections({
             <p>Completed reviews: {item.completedReviews.join(", ") || "None"}</p>
             <p>Reviewer comments: {item.reviewerComments.join(" ") || "None"}</p>
             <div className="dashboard-section__action">
-              <button className="curriculum-action" type="button">
-                Request changes
-              </button>
-              <button className="curriculum-action" type="button">
-                Approve
-              </button>
-              <button className="curriculum-action" type="button">
-                Roll back
-              </button>
+              {mode === "review" ? (
+                <Link
+                  className="il-button il-button--secondary il-button--md"
+                  href={`/review/${item.slug}#review-decision-title`}
+                >
+                  Review exact version
+                </Link>
+              ) : null}
             </div>
           </article>
         ))}

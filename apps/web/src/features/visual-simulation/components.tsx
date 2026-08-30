@@ -40,6 +40,7 @@ export function SimulationShell({
   challenge,
   children,
   controls,
+  eyebrow = "Visual simulation foundation",
   equation,
   fault,
   guidance,
@@ -54,6 +55,7 @@ export function SimulationShell({
   challenge?: ReactNode;
   children: ReactNode;
   controls?: ReactNode;
+  eyebrow?: string;
   equation?: ReactNode;
   fault?: ReactNode;
   guidance?: ReactNode;
@@ -71,7 +73,7 @@ export function SimulationShell({
     <section className={styles.shell} aria-labelledby="visual-simulation-title">
       <header className={styles.header}>
         <div>
-          <p className={styles.eyebrow}>Visual simulation foundation</p>
+          <p className={styles.eyebrow}>{eyebrow}</p>
           <h2 id="visual-simulation-title">{title}</h2>
         </div>
         <div className={styles.statuses} aria-label="Simulation mode and status">

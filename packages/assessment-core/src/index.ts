@@ -67,6 +67,7 @@ export type DiagramQuestion = QuestionBase & {
   type: "diagram-question";
   diagramId: string;
   altText: string;
+  labels: Choice[];
   correctLabelIds: string[];
 };
 
