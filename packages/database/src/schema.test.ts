@@ -4,6 +4,10 @@ import { describe, expect, it } from "vitest";
 
 const root = process.cwd();
 const migrationSql = readSqlDirectory("database/migrations");
+const bernoulliRegistrationSql = readFileSync(
+  join(root, "database/migrations/0010_bernoulli_flow_simulation_registration.sql"),
+  "utf8"
+);
 const policySql = readSqlDirectory("database/policies");
 const effectivePolicySql = `${policySql}\n${migrationSql}`;
 const seedSql = readFileSync(
@@ -257,6 +261,21 @@ describe("database schema", () => {
       expect(policies).toContain(`${table}_student_self_select`);
       expect(policies).toContain("for insert with check (\n    false\n  )");
     }
+  });
+
+  it("registers the Bernoulli pilot idempotently without claiming approval", () => {
+    expect(bernoulliRegistrationSql).toContain("'bernoulli-flow-lab'");
+    expect(bernoulliRegistrationSql).toContain(
+      "'Engineering review required'::public.content_status"
+    );
+    expect(bernoulliRegistrationSql).toContain("'internal'::public.publication_status");
+    expect(bernoulliRegistrationSql).toContain("where not exists (\n  select 1");
+    expect(bernoulliRegistrationSql).not.toContain(
+      "'published'::public.publication_status"
+    );
+    expect(bernoulliRegistrationSql).not.toContain(
+      "'bernoulli-flow-lab',\n  'Approved for student use'"
+    );
   });
 
   it("demotes operational publication for every unapproved simulation", () => {
