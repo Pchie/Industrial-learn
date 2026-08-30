@@ -1,12 +1,33 @@
 # Dependency Risk Register
 
-Review date: 2026-07-27
+Review date: 2026-08-30
 
 ## Summary
 
 The production dependency audit initially reported high-severity advisories in the Next.js runtime dependency tree. The remediation used a targeted Next.js patch update and scoped npm overrides for vulnerable Next.js transitive dependencies.
 
 No `npm audit fix --force` or broad dependency update was used.
+
+## 2026-08-30 Follow-up
+
+The release-candidate audit found four new findings after the original review: two
+high-severity transitive development-tool advisories and two moderate findings in the
+Next.js/PostCSS runtime tree. All four were remediated with compatible targeted
+updates. A full `npm audit --json` now reports zero vulnerabilities.
+
+| Advisory            | Package           | Original version | Final version | Exposure                                                                                                                                                            | Decision                                                           | Remaining risk                                      |
+| ------------------- | ----------------- | ---------------: | ------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------- |
+| GHSA-mh99-v99m-4gvg | `brace-expansion` |            5.0.7 |         5.0.9 | Transitive through ESLint/minimatch; development and CI denial-of-service risk when expanding attacker-controlled patterns. No application runtime path identified. | Updated within minimatch's declared `^5.0.5` range.                | None known for this advisory.                       |
+| GHSA-rgw5-rvv9-x895 | `brace-expansion` |            5.0.7 |         5.0.9 | Same development and CI path; the second advisory bypassed the earlier 5.0.8 mitigation.                                                                            | Updated to the first release outside both vulnerable ranges.       | None known for this advisory.                       |
+| GHSA-2v37-7h3g-55p8 | `nanoid`          |           3.3.16 |        3.3.18 | Transitive through PostCSS under Next.js and Vite. The affected custom-generator path is not used by application code, but the package is present in build tooling. | Updated within PostCSS's declared `^3.3.16` range.                 | None known for this advisory.                       |
+| GHSA-fxqj-rqcc-2cmp | `postcss`         |  8.5.18 / 8.5.21 |        8.5.23 | Build-time and server-side CSS source-map handling. No user-supplied CSS pipeline exists, but the framework dependency was vulnerable.                              | Updated Next.js to 16.3.3, which declares PostCSS 8.5.23 directly. | Reassess if untrusted CSS processing is introduced. |
+
+Next.js moved from `16.2.12` to `16.3.3`, the smallest non-major remediation
+reported by npm. The release requires Node `>=20.9.0` and supports React 18 and 19;
+the repository uses Node `>=22`. Its declared PostCSS and Sharp versions are patched,
+so both previous npm overrides were removed. Supabase, Playwright, Vitest, React,
+engineering logic, content, and database behavior were not upgraded or changed as
+part of this dependency remediation.
 
 ## Remediation Summary
 
@@ -44,4 +65,7 @@ No `npm audit fix --force` or broad dependency update was used.
 
 ## Temporary Mitigations
 
-The patched dependency graph is preferred over temporary risk acceptance. Until the overrides can be removed, the repository should avoid adding untrusted CSS processing, custom rewrites using attacker-controlled destinations, remote image optimization, or Edge Server Actions without a fresh security review.
+The patched dependency graph is preferred over temporary risk acceptance. No known
+audit finding is currently accepted. Continue to avoid untrusted CSS processing,
+custom rewrites using attacker-controlled destinations, remote image optimization,
+or Edge Server Actions without a fresh security review.
