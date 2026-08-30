@@ -6,22 +6,22 @@ Lesson: `LES-FLUID-PRESSURE-001`, Basic Fluid Pressure
 
 Reviewed remediation version: `0.4.0`
 
-Branch: `codex/prompt-46a-basic-pressure-remediation`
+Implementation PR: `#30`, merged to `development` at `2606f487f35d80dad51d4f5ac73720e44726d6e5`
 
 This report records technical preparation for an independent human review. It is not an
 engineering approval, publication decision, or production release record.
 
 ## Executive Verdict
 
-Human review readiness: **READY WITH LIMITATIONS**
+Human review readiness: **READY**
 
 The source, lesson, engineering model, assessment, visual-learning, accessibility, and
-review-control defects identified by Prompt 46 have been remediated and pass local quality
-gates. Supabase staging migration `0013` and the exact draft review item are live and
-verified. The remaining limitation is deployment evidence: the Prompt 46A application
-revision must be deployed to the protected staging alias before the human reviewer follows
-the URL in the guide. This report must be updated to **READY** only after that route is
-verified on the deployed revision.
+review-control defects identified by Prompt 46 have been remediated and pass local and
+remote quality gates. Supabase staging migration `0013` and the exact draft review item are
+live and verified. The Prompt 46A application revision is deployed on the protected
+`development` staging alias, its readiness endpoint confirms the staging configuration,
+Supabase authentication, and database connection, and the exact reviewer route has been
+verified on that deployed revision.
 
 The lesson remains `Engineering review required` and `draft`. It is not approved for
 student use and is not published.
@@ -148,7 +148,31 @@ does not seed a decision, approval, or publication.
 - Review item: Basic Fluid Pressure, `LES-FLUID-PRESSURE-001`, version `0.4.0`
 - Required role: Engineering Reviewer; administrator access follows the same review gate
 
-Deployment status at report creation: **PENDING PROMPT 46A PREVIEW VERIFICATION**.
+Deployment status: **VERIFIED ON PROTECTED STAGING**.
+
+## Protected Staging Deployment Verification
+
+| Check                         | Result                                                                 |
+| ----------------------------- | ---------------------------------------------------------------------- |
+| Development merge commit      | `2606f487f35d80dad51d4f5ac73720e44726d6e5`                             |
+| Deployment ID                 | `dpl_6DZFueXqrAbVsEdg7MCCPc4jo85p`                                     |
+| Deployment target/status      | Preview / Ready                                                        |
+| Stable staging alias          | `https://industrial-learn-staging-git-development-kolobe.vercel.app`   |
+| Readiness status              | `ready`                                                                |
+| Configuration check           | `ok`                                                                   |
+| Supabase authentication check | `ok`                                                                   |
+| Database check                | `ok`                                                                   |
+| Exact reviewer route          | `/review/basic-fluid-pressure`                                         |
+| Unauthenticated behavior      | Redirect instruction to the exact sign-in continuation; no review data |
+| Reviewer-route cache policy   | Private, no-cache, no-store                                            |
+| Reviewer-route indexing       | `noindex`                                                              |
+
+The deployment was inspected through the authenticated Vercel CLI. Vercel automation
+protection remained enabled, the bypass value was not printed or stored, and no deployment
+setting changed. The unauthenticated route response contained Next.js's server redirect
+instruction for
+`/auth/sign-in?next=%2Freview%2Fbasic-fluid-pressure&error=missing_session`; it did not
+contain the protected lesson review workspace.
 
 ## Approval Control
 
@@ -178,6 +202,8 @@ version, score, role, author, or publication state.
 | `npm run test:a11y`           | PASS, 38 browser tests                             |
 | `npm run test:smoke`          | PASS, 5 browser tests                              |
 | `npm run test:e2e`            | PASS, 96 browser tests                             |
+| GitHub `Verify repository`    | PASS on PR `#30`, head `03e92e0`                   |
+| Vercel application previews   | PASS on PR `#30`                                   |
 
 The E2E suite includes expected safe-error-path server logging for a simulated dashboard
 database failure; the corresponding test passes.
@@ -199,14 +225,13 @@ database failure; the corresponding test passes.
 
 ## Remaining Limitations
 
-1. A qualified independent human reviewer has not yet recorded a decision.
-2. The Prompt 46A application revision still requires protected staging deployment
-   verification; until then use **READY WITH LIMITATIONS**.
-3. McGraw Hill access remains acquisition-required and is not part of the evidence set.
-4. The pressure visual is representational, not a dynamic fluid simulation.
-5. Automated accessibility checks are not a substitute for human assistive-technology
+1. A qualified independent human reviewer has not yet recorded a decision. This is the
+   intended next governance step and does not reduce technical preparation readiness.
+2. McGraw Hill access remains acquisition-required and is not part of the evidence set.
+3. The pressure visual is representational, not a dynamic fluid simulation.
+4. Automated accessibility checks are not a substitute for human assistive-technology
    review.
-6. Approval will not publish the lesson; a separate authorised publication step and
+5. Approval will not publish the lesson; a separate authorised publication step and
    positive/negative staging visibility test remain required afterward.
 
 ## Human Review Sequence
