@@ -30,11 +30,41 @@ type LocalSession = {
   expiresAt: string;
 };
 
-const localUsers = new Map<string, LocalUser>();
-const localSessions = new Map<string, LocalSession>();
-const resetTokens = new Map<string, string>();
+export type LocalAccessAudit = {
+  id: string;
+  actorProfileId: string;
+  action: string;
+  targetProfileId: string;
+  metadata: Record<string, unknown>;
+  occurredAt: string;
+};
 
-seedLocalUsers();
+type LocalAuthStore = {
+  users: Map<string, LocalUser>;
+  sessions: Map<string, LocalSession>;
+  resetTokens: Map<string, string>;
+  accessAudit: LocalAccessAudit[];
+};
+
+const localGlobal = globalThis as typeof globalThis & {
+  __industrialLearnLocalAuth?: LocalAuthStore;
+};
+const localStore = localGlobal.__industrialLearnLocalAuth ?? {
+  users: new Map<string, LocalUser>(),
+  sessions: new Map<string, LocalSession>(),
+  resetTokens: new Map<string, string>(),
+  accessAudit: []
+};
+localGlobal.__industrialLearnLocalAuth = localStore;
+
+const localUsers = localStore.users;
+const localSessions = localStore.sessions;
+const resetTokens = localStore.resetTokens;
+const localAccessAudit = localStore.accessAudit;
+
+if (localUsers.size === 0) {
+  seedLocalUsers();
+}
 
 export function createTestLocalAuthProvider(): AuthProvider {
   return {
@@ -192,7 +222,137 @@ export function resetLocalAuthStoreForTests() {
   localUsers.clear();
   localSessions.clear();
   resetTokens.clear();
+  localAccessAudit.length = 0;
   seedLocalUsers();
+}
+
+export function listLocalUsersForAdministration() {
+  return Array.from(localUsers.values())
+    .map((user) => ({
+      profileId: user.profile.id,
+      email: user.email,
+      displayName: user.displayName,
+      accountStatus: user.disabled ? "disabled" : "active",
+      roles: [...user.profile.roles],
+      updatedAt: new Date(0).toISOString()
+    }))
+    .sort((left, right) => left.displayName.localeCompare(right.displayName));
+}
+
+export function listLocalAccessAudit() {
+  return [...localAccessAudit].reverse();
+}
+
+export function manageLocalUserRole(input: {
+  actorProfileId: string;
+  targetProfileId: string;
+  role: AppRole;
+  operation: "add" | "remove";
+  reason: string;
+}) {
+  const actor = findUserByProfileId(input.actorProfileId);
+  const target = findUserByProfileId(input.targetProfileId);
+  if (
+    !actor ||
+    !target ||
+    input.actorProfileId === input.targetProfileId ||
+    (!actor.profile.roles.includes("administrator") &&
+      !actor.profile.roles.includes("platform_owner")) ||
+    (input.role === "platform_owner" && !actor.profile.roles.includes("platform_owner"))
+  ) {
+    throw new Error("Role assignment was denied.");
+  }
+
+  const roles = new Set(target.profile.roles);
+  if (input.operation === "add") {
+    roles.add(input.role);
+  } else {
+    if (roles.size <= 1) {
+      throw new Error("An active profile must retain at least one role.");
+    }
+    if (
+      input.role === "platform_owner" &&
+      listLocalUsersForAdministration().filter((user) =>
+        user.roles.includes("platform_owner")
+      ).length <= 1
+    ) {
+      throw new Error("The final Platform Owner assignment cannot be removed.");
+    }
+    roles.delete(input.role);
+  }
+  target.profile.roles = [...roles];
+  localAccessAudit.push({
+    id: `local-audit-${randomToken(6)}`,
+    actorProfileId: input.actorProfileId,
+    action: `platform.role.${input.operation}`,
+    targetProfileId: input.targetProfileId,
+    metadata: { role: input.role, reason: input.reason },
+    occurredAt: new Date().toISOString()
+  });
+}
+
+export function setLocalUserDisabled(input: {
+  actorProfileId: string;
+  targetProfileId: string;
+  disabled: boolean;
+  reason: string;
+}) {
+  const actor = findUserByProfileId(input.actorProfileId);
+  const target = findUserByProfileId(input.targetProfileId);
+  if (
+    !actor ||
+    !target ||
+    input.actorProfileId === input.targetProfileId ||
+    (!actor.profile.roles.includes("administrator") &&
+      !actor.profile.roles.includes("platform_owner")) ||
+    target.profile.roles.includes("platform_owner")
+  ) {
+    throw new Error("Account status change was denied.");
+  }
+  target.disabled = input.disabled;
+  target.profile.accountStatus = input.disabled ? "disabled" : "active";
+  localAccessAudit.push({
+    id: `local-audit-${randomToken(6)}`,
+    actorProfileId: input.actorProfileId,
+    action: input.disabled ? "platform.account.disabled" : "platform.account.enabled",
+    targetProfileId: input.targetProfileId,
+    metadata: { reason: input.reason },
+    occurredAt: new Date().toISOString()
+  });
+}
+
+export function inviteLocalUser(input: {
+  actorProfileId: string;
+  email: string;
+  displayName: string;
+  role: "lecturer" | "content_author" | "engineering_reviewer";
+  reason: string;
+}) {
+  const actor = findUserByProfileId(input.actorProfileId);
+  if (
+    !actor ||
+    (!actor.profile.roles.includes("administrator") &&
+      !actor.profile.roles.includes("platform_owner"))
+  ) {
+    throw new Error("Invitation was denied.");
+  }
+  const email = input.email.trim().toLowerCase();
+  if (localUsers.has(email)) {
+    throw new Error("An account already exists for this email address.");
+  }
+  addSeedUser(email, input.displayName.trim(), [input.role]);
+  const target = localUsers.get(email);
+  if (!target) {
+    throw new Error("The invitation could not be registered.");
+  }
+  localAccessAudit.push({
+    id: `local-audit-${randomToken(6)}`,
+    actorProfileId: input.actorProfileId,
+    action: "platform.invitation.created",
+    targetProfileId: target.profile.id,
+    metadata: { role: input.role, reason: input.reason },
+    occurredAt: new Date().toISOString()
+  });
 }
 
 function seedLocalUsers() {
@@ -219,7 +379,13 @@ function seedLocalUsers() {
   addSeedUser("lecturer@example.test", "Industrial Lecturer", ["lecturer"]);
   addSeedUser("reviewer@example.test", "Engineering Reviewer", ["engineering_reviewer"]);
   addSeedUser("author@example.test", "Content Author", ["content_author"]);
+  addSeedUser("author-reviewer@example.test", "Author Reviewer", [
+    "student",
+    "content_author",
+    "engineering_reviewer"
+  ]);
   addSeedUser("admin@example.test", "Platform Administrator", ["administrator"]);
+  addSeedUser("owner@example.test", "Platform Owner", ["platform_owner"]);
   addSeedUser("unverified@example.test", "Unverified Student", ["student"], {
     verified: false
   });
@@ -283,6 +449,10 @@ function createSession(authUserId: string): SessionTokens {
 
 function findUserByAuthId(authUserId: string) {
   return Array.from(localUsers.values()).find((user) => user.authUserId === authUserId);
+}
+
+function findUserByProfileId(profileId: string) {
+  return Array.from(localUsers.values()).find((user) => user.profile.id === profileId);
 }
 
 function randomToken(byteLength: number) {

@@ -3,7 +3,8 @@ export const DATA_ACCESS_ROLES = [
   "lecturer",
   "content_author",
   "engineering_reviewer",
-  "administrator"
+  "administrator",
+  "platform_owner"
 ] as const;
 
 export type DataAccessRole = (typeof DATA_ACCESS_ROLES)[number];

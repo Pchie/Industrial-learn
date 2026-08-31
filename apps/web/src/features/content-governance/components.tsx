@@ -1,6 +1,8 @@
-import { Alert, Badge } from "@industrial-learn/design-system";
 import Link from "next/link";
-import type { GovernanceInterfaceModel } from "./server-data";
+
+import { Alert, Badge } from "@industrial-learn/design-system";
+
+import type { GovernanceInterfaceItem, GovernanceInterfaceModel } from "./server-data";
 
 export function AuthorWorkspace({ model }: { model: GovernanceInterfaceModel }) {
   return (
@@ -9,99 +11,203 @@ export function AuthorWorkspace({ model }: { model: GovernanceInterfaceModel }) 
         Draft editing uses structured content versions. Published versions are not
         overwritten in place.
       </Alert>
-      <GovernanceSections model={model} mode="author" />
+      <AuthorSection title="My drafts" items={model.items} />
+      <AuthorSection
+        title="Lessons requiring changes"
+        items={model.items.filter((item) =>
+          item.decisionHistory.some(
+            (decision) => decision.decision === "changes_requested"
+          )
+        )}
+      />
+      <section className="management-section" aria-labelledby="author-tools-title">
+        <h2 id="author-tools-title">Authoring tools</h2>
+        <ul className="capability-list">
+          <li>Create lesson and edit structured content</li>
+          <li>Attach source evidence</li>
+          <li>Prepare simulation and assessment content</li>
+          <li>Submit an exact content version for review</li>
+          <li>Inspect version history</li>
+        </ul>
+        <p>
+          These controls remain version-gated. This workspace does not expose unrelated
+          student-private records.
+        </p>
+      </section>
+      <ReviewHistory model={model} mode="author" />
     </div>
   );
 }
 
 export function ReviewWorkspace({ model }: { model: GovernanceInterfaceModel }) {
+  const awaiting = model.items.filter(
+    (item) =>
+      item.workflowStatus === "Engineering review required" &&
+      !item.decisionHistory.some((decision) => decision.decision === "approved")
+  );
+  const assigned = model.items.filter((item) =>
+    item.decisionHistory.some(
+      (decision) => decision.reviewerProfileId === model.actorProfileId
+    )
+  );
+  const changesRequested = model.items.filter((item) =>
+    item.decisionHistory.some((decision) => decision.decision === "changes_requested")
+  );
+  const approved = model.items.filter(
+    (item) =>
+      item.workflowStatus === "Approved for student use" ||
+      item.decisionHistory.some((decision) => decision.decision === "approved")
+  );
+
   return (
     <div className="dashboard-list" aria-label="Engineering review workspace">
       <Alert title="Publication gate" tone="warning">
-        Approval requires required evidence, named reviewer records, and review dates.
+        Access authority is separate from independent review authority. Approval requires
+        required evidence, a qualified named reviewer, and an exact-version review date.
       </Alert>
       {model.error ? (
         <Alert title="Review data unavailable" tone="fault">
           {model.error}
         </Alert>
       ) : null}
-      <GovernanceSections model={model} mode="review" />
+      <ReviewQueueSection items={awaiting} title="Awaiting review" />
+      <ReviewQueueSection items={assigned} title="Assigned to me" />
+      <ReviewQueueSection items={changesRequested} title="Changes requested" />
+      <ReviewQueueSection items={approved} title="Approved" />
+      <ReviewHistory model={model} mode="review" />
     </div>
   );
 }
 
-function GovernanceSections({
+function AuthorSection({
+  items,
+  title
+}: {
+  items: GovernanceInterfaceItem[];
+  title: string;
+}) {
+  const id = `author-${title.toLowerCase().replaceAll(" ", "-")}`;
+  return (
+    <section aria-labelledby={id}>
+      <h2 id={id}>{title}</h2>
+      {items.length === 0 ? (
+        <p>No items in this section.</p>
+      ) : (
+        items.map((item) => <GovernanceCard item={item} key={item.id} mode="author" />)
+      )}
+    </section>
+  );
+}
+
+function ReviewQueueSection({
+  items,
+  title
+}: {
+  items: GovernanceInterfaceItem[];
+  title: string;
+}) {
+  const id = `review-${title.toLowerCase().replaceAll(" ", "-")}`;
+  return (
+    <section aria-labelledby={id}>
+      <h2 id={id}>{title}</h2>
+      {items.length === 0 ? (
+        <p>No review items in this section.</p>
+      ) : (
+        items.map((item) => <GovernanceCard item={item} key={item.id} mode="review" />)
+      )}
+    </section>
+  );
+}
+
+function GovernanceCard({
+  item,
+  mode
+}: {
+  item: GovernanceInterfaceItem;
+  mode: "author" | "review";
+}) {
+  return (
+    <article className="dashboard-card">
+      <header className="governance-card__header">
+        <div>
+          <h3>{item.title}</h3>
+          <p>{item.moduleTitle}</p>
+        </div>
+        <Badge tone="warning">{item.workflowStatus}</Badge>
+      </header>
+      <dl className="definition-grid">
+        <div>
+          <dt>Version</dt>
+          <dd>{item.contentVersion}</dd>
+        </div>
+        <div>
+          <dt>Author</dt>
+          <dd>{item.authorName}</dd>
+        </div>
+        <div>
+          <dt>Review type</dt>
+          <dd>{item.reviewType}</dd>
+        </div>
+        <div>
+          <dt>Sources</dt>
+          <dd>{item.sourceStatus}</dd>
+        </div>
+        <div>
+          <dt>Equation</dt>
+          <dd>{item.equationStatus}</dd>
+        </div>
+        <div>
+          <dt>Simulation</dt>
+          <dd>{item.simulationStatus}</dd>
+        </div>
+        <div>
+          <dt>Accessibility</dt>
+          <dd>{item.accessibilityStatus}</dd>
+        </div>
+        <div>
+          <dt>Governance state</dt>
+          <dd>{item.publicationStatus}</dd>
+        </div>
+      </dl>
+      {mode === "review" ? (
+        <Link
+          className="il-button il-button--secondary il-button--md"
+          href={`/review/${item.slug}`}
+        >
+          Open review package
+        </Link>
+      ) : (
+        <p>Current version: {item.currentVersion}. Version history remains preserved.</p>
+      )}
+    </article>
+  );
+}
+
+function ReviewHistory({
   mode,
   model
 }: {
   mode: "author" | "review";
   model: GovernanceInterfaceModel;
 }) {
-  if (model.items.length === 0) {
-    return <p>No content governance records are available for {model.actorName}.</p>;
-  }
-
+  const decisions = model.items.flatMap((item) =>
+    item.decisionHistory.map((decision) => ({ item, decision }))
+  );
   return (
-    <>
-      <section aria-labelledby={`${mode}-draft-list`}>
-        <h2 id={`${mode}-draft-list`}>
-          {mode === "author" ? "Draft list" : "Review queue"}
-        </h2>
-        {model.items.map((item) => (
-          <article className="dashboard-card" key={item.id}>
-            <h3>{item.title}</h3>
-            <p>{item.entityType}</p>
-            <Badge tone="info">{item.workflowStatus}</Badge>
-            <Badge tone="normal">{item.publicationStatus}</Badge>
-            <dl>
-              <div>
-                <dt>Current version</dt>
-                <dd>{item.currentVersion}</dd>
-              </div>
-              <div>
-                <dt>Published version</dt>
-                <dd>{item.publishedVersion ?? "Not published"}</dd>
-              </div>
-            </dl>
-            {mode === "review" ? (
-              <Link
-                className="il-button il-button--secondary il-button--md"
-                href={`/review/${item.slug}`}
-              >
-                Open review item
-              </Link>
-            ) : null}
-          </article>
-        ))}
-      </section>
-
-      <section aria-labelledby={`${mode}-detail`}>
-        <h2 id={`${mode}-detail`}>Review detail</h2>
-        {model.items.map((item) => (
-          <article className="dashboard-card" key={`${item.id}-detail`}>
-            <h3>{item.title}</h3>
-            <p>Source attachment: {item.sourceIds.join(", ") || "Source required"}</p>
-            <p>Required reviews: {item.requiredReviews.join(", ")}</p>
-            <p>Completed reviews: {item.completedReviews.join(", ") || "None"}</p>
-            <p>Reviewer comments: {item.reviewerComments.join(" ") || "None"}</p>
-            <div className="dashboard-section__action">
-              {mode === "review" ? (
-                <Link
-                  className="il-button il-button--secondary il-button--md"
-                  href={`/review/${item.slug}#review-decision-title`}
-                >
-                  Review exact version
-                </Link>
-              ) : null}
-            </div>
-          </article>
-        ))}
-      </section>
-
-      <section aria-labelledby={`${mode}-history`}>
-        <h2 id={`${mode}-history`}>Version history</h2>
-        <p>Published versions remain reproducible for historical assessment attempts.</p>
-      </section>
-    </>
+    <section aria-labelledby={`${mode}-review-history`}>
+      <h2 id={`${mode}-review-history`}>Review history</h2>
+      {decisions.length === 0 ? (
+        <p>No human review decisions have been recorded.</p>
+      ) : (
+        <ol>
+          {decisions.map(({ decision, item }) => (
+            <li key={decision.id}>
+              {item.title}: {decision.decision.replaceAll("_", " ")} for version{" "}
+              {decision.governanceVersion}
+            </li>
+          ))}
+        </ol>
+      )}
+    </section>
   );
 }

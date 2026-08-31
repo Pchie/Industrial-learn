@@ -89,17 +89,18 @@ test("keeps the empty laboratory keyboard accessible on mobile", async ({ page }
 });
 
 test("does not render or preload hidden simulation workspaces", async ({ page }) => {
-  const scriptBodies: string[] = [];
-  page.on("response", async (response) => {
+  const scriptBodyReads: Promise<string>[] = [];
+  page.on("response", (response) => {
     if (response.request().resourceType() === "script") {
-      scriptBodies.push(await response.text().catch(() => ""));
+      scriptBodyReads.push(response.text().catch(() => ""));
     }
   });
 
-  await page.goto("/simulations");
-  await page.waitForLoadState("networkidle");
+  await page.goto("/simulations", { waitUntil: "load" });
+  await expect(page.getByRole("heading", { name: "Simulation Lab" })).toBeVisible();
 
   await expect(page.locator("[aria-label$='simulation attempt']")).toHaveCount(0);
+  const scriptBodies = await Promise.all(scriptBodyReads);
   expect(scriptBodies.join("\n")).not.toContain("Submitted cylinder force answer");
 });
 

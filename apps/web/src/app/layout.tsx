@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { PRODUCT_NAME } from "@industrial-learn/shared";
+
+import { SiteNavigation } from "@/features/auth/site-navigation";
 
 import "@industrial-learn/design-system/styles.css";
 import "./globals.css";
@@ -30,14 +31,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
               <p className="eyebrow">Industrial Learn</p>
               <p className="site-subtitle">Engineering education platform foundation</p>
             </div>
-            <nav className="site-nav" aria-label="Primary navigation">
-              <Link href="/">Home</Link>
-              <Link href="/learn">Learn</Link>
-              <Link href="/learn/core-engineering">Core Engineering</Link>
-              <Link href="/learn/future-engineering">Future Engineering</Link>
-              <Link href="/simulations">Simulations</Link>
-              <Link href="/dashboard">Dashboard</Link>
-            </nav>
+            <SiteNavigation />
           </header>
           <main id="main-content" className="main-content" tabIndex={-1}>
             {children}

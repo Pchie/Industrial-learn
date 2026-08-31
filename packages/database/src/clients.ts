@@ -53,6 +53,47 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      list_content_author_labels: {
+        Args: { p_profile_ids: string[] };
+        Returns: Array<{ profile_id: string; display_name: string }>;
+      };
+      list_platform_access_audit: {
+        Args: { p_limit?: number };
+        Returns: Array<{
+          audit_id: string;
+          actor_profile_id: string | null;
+          action: string;
+          target_profile_id: string | null;
+          metadata: Record<string, unknown>;
+          occurred_at: string;
+        }>;
+      };
+      list_platform_users: {
+        Args: Record<string, never>;
+        Returns: Array<{
+          profile_id: string;
+          email: string;
+          display_name: string;
+          account_status: string;
+          roles: string[];
+          updated_at: string;
+        }>;
+      };
+      manage_profile_role: {
+        Args: {
+          p_target_profile_id: string;
+          p_role:
+            | "student"
+            | "lecturer"
+            | "content_author"
+            | "engineering_reviewer"
+            | "administrator"
+            | "platform_owner";
+          p_operation: "add" | "remove";
+          p_reason: string;
+        };
+        Returns: Array<{ profile_id: string; roles: string[] }>;
+      };
       record_content_review_decision: {
         Args: {
           p_governance_item_id: string;
@@ -66,6 +107,24 @@ export type Database = {
           p_safety_review_outcome: "passed" | "failed" | "not_applicable";
         };
         Returns: Record<string, unknown>;
+      };
+      register_invited_profile: {
+        Args: {
+          p_target_profile_id: string;
+          p_email: string;
+          p_display_name: string;
+          p_role: "lecturer" | "content_author" | "engineering_reviewer";
+          p_reason: string;
+        };
+        Returns: string;
+      };
+      set_profile_disabled: {
+        Args: {
+          p_target_profile_id: string;
+          p_disabled: boolean;
+          p_reason: string;
+        };
+        Returns: undefined;
       };
     };
     Enums: Record<string, never>;

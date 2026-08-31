@@ -4,6 +4,7 @@ import {
   absoluteAppUrl,
   capabilitiesForRoles,
   fail,
+  requireCapabilityResult,
   requireAnyRoleResult,
   safeInternalRedirect,
   type AuthenticatedSession
@@ -59,6 +60,10 @@ describe("auth session core", () => {
       "content:review:approve"
     );
     expect(capabilitiesForRoles(["administrator"])).toContain("admin:access");
+    const ownerCapabilities = capabilitiesForRoles(["platform_owner"]);
+    expect(ownerCapabilities).toContain("workspace:review");
+    expect(ownerCapabilities).toContain("roles:manage");
+    expect(ownerCapabilities).not.toContain("content:review:approve");
   });
 
   it("authorises allowed roles and denies unauthorised role access", () => {
@@ -66,5 +71,19 @@ describe("auth session core", () => {
     const reviewerResult = requireAnyRoleResult(studentSession, ["engineering_reviewer"]);
 
     expect(reviewerResult).toEqual(fail("access_denied"));
+  });
+
+  it("keeps workspace access separate from independent review approval", () => {
+    const ownerSession: AuthenticatedSession = {
+      ...studentSession,
+      roles: ["platform_owner"],
+      profile: { ...studentSession.profile, roles: ["platform_owner"] },
+      capabilities: capabilitiesForRoles(["platform_owner"])
+    };
+
+    expect(requireCapabilityResult(ownerSession, "workspace:review").ok).toBe(true);
+    expect(requireCapabilityResult(ownerSession, "content:review:approve")).toEqual(
+      fail("access_denied")
+    );
   });
 });

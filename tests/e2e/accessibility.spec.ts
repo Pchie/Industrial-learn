@@ -59,6 +59,26 @@ const authenticatedRoutes = [
     label: "Basic Fluid Pressure human review"
   },
   {
+    email: "owner@example.test",
+    path: "/workspace",
+    label: "owner workspace portal"
+  },
+  {
+    email: "owner@example.test",
+    path: "/owner",
+    label: "Platform Owner management"
+  },
+  {
+    email: "owner@example.test",
+    path: "/admin/users",
+    label: "owner user and role management"
+  },
+  {
+    email: "owner@example.test",
+    path: "/preview/lessons/basic-fluid-pressure?version=0.4.0",
+    label: "protected exact-version lesson preview"
+  },
+  {
     email: "active.student@example.test",
     path: "/assessments",
     label: "assessment workspace"
@@ -240,7 +260,7 @@ async function signIn(page: Page, email: string, nextPath: string) {
   await page.getByLabel("Email address").fill(email);
   await page.getByLabel("Password").fill("IndustrialLearn1!");
   await page.getByRole("button", { name: "Sign in" }).click();
-  await expect(page).toHaveURL(new RegExp(nextPath.replaceAll("/", "\\/")));
+  await expect(page).toHaveURL((url) => `${url.pathname}${url.search}` === nextPath);
   await expect(page.locator("main")).toBeVisible();
   await expect(page).toHaveTitle(/Industrial Learn/);
 }
