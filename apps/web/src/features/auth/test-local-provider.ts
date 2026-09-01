@@ -39,11 +39,24 @@ export type LocalAccessAudit = {
   occurredAt: string;
 };
 
+export type LocalReviewAssignment = {
+  id: string;
+  governanceItemId: string;
+  contentVersion: number;
+  reviewerProfileId: string;
+  assignedByProfileId: string;
+  reviewType: "engineering_approval";
+  status: "assigned" | "in_progress" | "completed" | "cancelled";
+  reason: string;
+  assignedAt: string;
+};
+
 type LocalAuthStore = {
   users: Map<string, LocalUser>;
   sessions: Map<string, LocalSession>;
   resetTokens: Map<string, string>;
   accessAudit: LocalAccessAudit[];
+  reviewAssignments: LocalReviewAssignment[];
 };
 
 const localGlobal = globalThis as typeof globalThis & {
@@ -53,7 +66,8 @@ const localStore = localGlobal.__industrialLearnLocalAuth ?? {
   users: new Map<string, LocalUser>(),
   sessions: new Map<string, LocalSession>(),
   resetTokens: new Map<string, string>(),
-  accessAudit: []
+  accessAudit: [],
+  reviewAssignments: []
 };
 localGlobal.__industrialLearnLocalAuth = localStore;
 
@@ -61,6 +75,7 @@ const localUsers = localStore.users;
 const localSessions = localStore.sessions;
 const resetTokens = localStore.resetTokens;
 const localAccessAudit = localStore.accessAudit;
+const localReviewAssignments = localStore.reviewAssignments;
 
 if (localUsers.size === 0) {
   seedLocalUsers();
@@ -223,6 +238,7 @@ export function resetLocalAuthStoreForTests() {
   localSessions.clear();
   resetTokens.clear();
   localAccessAudit.length = 0;
+  localReviewAssignments.length = 0;
   seedLocalUsers();
 }
 
@@ -241,6 +257,85 @@ export function listLocalUsersForAdministration() {
 
 export function listLocalAccessAudit() {
   return [...localAccessAudit].reverse();
+}
+
+export function listLocalReviewAssignments() {
+  return localReviewAssignments.map((assignment) => ({ ...assignment }));
+}
+
+export function manageLocalReviewAssignment(input: {
+  actorProfileId: string;
+  governanceItemId: string;
+  contentVersion: number;
+  reviewerProfileId: string;
+  reviewType: "engineering_approval";
+  operation: "assign" | "cancel";
+  reason: string;
+}) {
+  const actor = findUserByProfileId(input.actorProfileId);
+  const reviewer = findUserByProfileId(input.reviewerProfileId);
+  if (
+    !actor ||
+    !reviewer ||
+    input.actorProfileId === input.reviewerProfileId ||
+    (!actor.profile.roles.includes("administrator") &&
+      !actor.profile.roles.includes("platform_owner")) ||
+    !reviewer.profile.roles.includes("engineering_reviewer") ||
+    input.governanceItemId !== "94f5c2b9-a0b9-43f5-8b6b-4a3a67fc4f01" ||
+    input.contentVersion !== 4 ||
+    input.reason.trim().length < 10
+  ) {
+    throw new Error("Review assignment was denied.");
+  }
+
+  const existing = localReviewAssignments.find(
+    (assignment) =>
+      assignment.governanceItemId === input.governanceItemId &&
+      assignment.contentVersion === input.contentVersion &&
+      assignment.reviewerProfileId === input.reviewerProfileId &&
+      assignment.reviewType === input.reviewType
+  );
+
+  if (input.operation === "cancel") {
+    if (!existing || existing.status === "completed") {
+      throw new Error("Review assignment cancellation was denied.");
+    }
+    existing.status = "cancelled";
+    existing.reason = input.reason.trim();
+  } else if (existing) {
+    if (existing.status === "completed") {
+      throw new Error("Completed review assignments cannot be reopened.");
+    }
+    existing.status = "assigned";
+    existing.reason = input.reason.trim();
+    existing.assignedAt = new Date().toISOString();
+  } else {
+    localReviewAssignments.push({
+      id: `local-review-assignment-${randomToken(6)}`,
+      governanceItemId: input.governanceItemId,
+      contentVersion: input.contentVersion,
+      reviewerProfileId: input.reviewerProfileId,
+      assignedByProfileId: input.actorProfileId,
+      reviewType: input.reviewType,
+      status: "assigned",
+      reason: input.reason.trim(),
+      assignedAt: new Date().toISOString()
+    });
+  }
+
+  localAccessAudit.push({
+    id: `local-audit-${randomToken(6)}`,
+    actorProfileId: input.actorProfileId,
+    action: `content.review_assignment.${input.operation}`,
+    targetProfileId: input.reviewerProfileId,
+    metadata: {
+      contentVersion: input.contentVersion,
+      governanceItemId: input.governanceItemId,
+      reviewType: input.reviewType,
+      reason: input.reason.trim()
+    },
+    occurredAt: new Date().toISOString()
+  });
 }
 
 export function manageLocalUserRole(input: {
@@ -279,6 +374,16 @@ export function manageLocalUserRole(input: {
       throw new Error("The final Platform Owner assignment cannot be removed.");
     }
     roles.delete(input.role);
+    if (input.role === "engineering_reviewer") {
+      for (const assignment of localReviewAssignments) {
+        if (
+          assignment.reviewerProfileId === input.targetProfileId &&
+          (assignment.status === "assigned" || assignment.status === "in_progress")
+        ) {
+          assignment.status = "cancelled";
+        }
+      }
+    }
   }
   target.profile.roles = [...roles];
   localAccessAudit.push({
@@ -391,6 +496,27 @@ function seedLocalUsers() {
   });
   addSeedUser("disabled@example.test", "Disabled Student", ["student"], {
     disabled: true
+  });
+  seedLocalReviewAssignments();
+}
+
+function seedLocalReviewAssignments() {
+  const owner = localUsers.get("owner@example.test");
+  const reviewer = localUsers.get("reviewer@example.test");
+  if (!owner || !reviewer) {
+    return;
+  }
+
+  localReviewAssignments.push({
+    id: "local-basic-pressure-review-assignment",
+    governanceItemId: "94f5c2b9-a0b9-43f5-8b6b-4a3a67fc4f01",
+    contentVersion: 4,
+    reviewerProfileId: reviewer.profile.id,
+    assignedByProfileId: owner.profile.id,
+    reviewType: "engineering_approval",
+    status: "assigned",
+    reason: "Independent Basic Fluid Pressure engineering review",
+    assignedAt: new Date(0).toISOString()
   });
 }
 

@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { Breadcrumbs } from "@industrial-learn/design-system";
 
@@ -26,6 +26,16 @@ export default async function ReviewLessonPage({
 }: ReviewLessonPageProps) {
   const { lessonSlug } = await params;
   const session = await requireCapability("workspace:review", `/review/${lessonSlug}`);
+  const { accessToken } = await readSessionTokens();
+  const model = await loadReviewGovernanceModel(session, accessToken);
+  const item = model.items.find((candidate) => candidate.slug === lessonSlug);
+
+  if (!item) {
+    redirect(
+      `/auth/error?error=review_assignment_required&next=${encodeURIComponent(`/review/${lessonSlug}`)}`
+    );
+  }
+
   const lesson = getInternalLessonBySlug({
     slug: lessonSlug,
     audience: "engineering_reviewer",
@@ -36,14 +46,16 @@ export default async function ReviewLessonPage({
     notFound();
   }
 
-  const { accessToken } = await readSessionTokens();
-  const model = await loadReviewGovernanceModel(session, accessToken);
-  const item = model.items.find((candidate) => candidate.slug === lesson.slug);
   const visualStageOverrides = getInternalVisualExperienceOverrides(lesson);
   const evidence = getBasicPressureReviewEvidence();
   const { review_result: reviewResult } = await searchParams;
-  const canRecordDecision = hasCapability(session, "content:review:approve");
-  const canApprove = canRecordDecision && item?.authorProfileId !== session.profile.id;
+  const activeAssignment =
+    item.assignment?.reviewerProfileId === session.profile.id &&
+    (item.assignment.status === "assigned" || item.assignment.status === "in_progress");
+  const canRecordDecision =
+    hasCapability(session, "content:review:approve") &&
+    (session.roles.includes("administrator") || activeAssignment);
+  const canApprove = canRecordDecision && item.authorProfileId !== session.profile.id;
 
   return (
     <div className="operational-page page-stack">

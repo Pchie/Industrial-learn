@@ -14,6 +14,15 @@ export type GovernanceDecisionHistory = {
   governanceVersion: number;
 };
 
+export type GovernanceReviewAssignment = {
+  id: string;
+  reviewerProfileId: string;
+  contentVersion: number;
+  reviewType: string;
+  status: "assigned" | "in_progress" | "completed" | "cancelled";
+  assignedAt: string;
+};
+
 export type GovernanceInterfaceItem = {
   id: string;
   governanceItemId?: string;
@@ -33,6 +42,8 @@ export type GovernanceInterfaceItem = {
   completedReviews: string[];
   reviewerComments: string[];
   decisionHistory: GovernanceDecisionHistory[];
+  assignment?: GovernanceReviewAssignment | undefined;
+  isAssignedToActor: boolean;
   moduleTitle: string;
   reviewType: string;
   sourceStatus: string;
@@ -66,10 +77,11 @@ export async function loadReviewGovernanceModel(
   accessToken: string | undefined
 ): Promise<GovernanceInterfaceModel> {
   if (isLocalGovernanceMode()) {
+    const local = await import("../auth/test-local-provider");
     return {
       actorProfileId: session.profile.id,
       actorName: session.profile.displayName,
-      items: localItemsForReview(),
+      items: localItemsForReview(session, local.listLocalReviewAssignments()),
       dataSource: "local-e2e"
     };
   }
@@ -105,6 +117,7 @@ export async function loadReviewGovernanceModel(
     const [
       { data: versions, error: versionsError },
       { data: reviews, error: reviewsError },
+      { data: assignments, error: assignmentsError },
       { data: authorLabels, error: authorLabelsError }
     ] = await Promise.all([
       client
@@ -118,13 +131,21 @@ export async function loadReviewGovernanceModel(
         )
         .in("governance_item_id", itemIds)
         .order("reviewed_at", { ascending: false }),
+      client
+        .from("review_assignments")
+        .select(
+          "id,governance_item_id,content_version,reviewer_profile_id,assigned_by_profile_id,review_type,status,reason,assigned_at,completed_at,cancelled_at,created_at,updated_at"
+        )
+        .in("governance_item_id", itemIds)
+        .order("assigned_at", { ascending: false }),
       client.rpc("list_content_author_labels", { p_profile_ids: authorIds })
     ]);
 
-    if (versionsError || reviewsError || authorLabelsError) {
+    if (versionsError || reviewsError || assignmentsError || authorLabelsError) {
       throw new Error(
         versionsError?.message ??
           reviewsError?.message ??
+          assignmentsError?.message ??
           authorLabelsError?.message ??
           "Review evidence query failed."
       );
@@ -133,11 +154,26 @@ export async function loadReviewGovernanceModel(
     const authorNames = new Map(
       (authorLabels ?? []).map((author) => [author.profile_id, author.display_name])
     );
+    const manager = session.roles.some(
+      (role) => role === "administrator" || role === "platform_owner"
+    );
+    const visibleItems = (items ?? []).filter((item) => {
+      if (manager) {
+        return true;
+      }
+      return (assignments ?? []).some(
+        (assignment) =>
+          assignment.governance_item_id === item.id &&
+          assignment.content_version === item.current_version &&
+          assignment.reviewer_profile_id === session.profile.id &&
+          assignment.status !== "cancelled"
+      );
+    });
 
     return {
       actorProfileId: session.profile.id,
       actorName: session.profile.displayName,
-      items: (items ?? []).map((item) => {
+      items: visibleItems.map((item) => {
         const version = (versions ?? []).find(
           (candidate) =>
             candidate.governance_item_id === item.id &&
@@ -146,6 +182,17 @@ export async function loadReviewGovernanceModel(
         const itemReviews = (reviews ?? []).filter(
           (review) => review.governance_item_id === item.id
         );
+        const itemAssignments = (assignments ?? []).filter(
+          (assignment) =>
+            assignment.governance_item_id === item.id &&
+            assignment.content_version === item.current_version &&
+            assignment.status !== "cancelled"
+        );
+        const assignment = manager
+          ? itemAssignments[0]
+          : itemAssignments.find(
+              (candidate) => candidate.reviewer_profile_id === session.profile.id
+            );
         const snapshot = version?.snapshot ?? {};
         const contentVersion =
           typeof snapshot.version === "string"
@@ -179,6 +226,19 @@ export async function loadReviewGovernanceModel(
             reviewedAt: review.reviewed_at,
             governanceVersion: review.content_version ?? item.current_version
           })),
+          ...(assignment
+            ? {
+                assignment: {
+                  id: assignment.id,
+                  reviewerProfileId: assignment.reviewer_profile_id,
+                  contentVersion: assignment.content_version,
+                  reviewType: assignment.review_type,
+                  status: assignment.status,
+                  assignedAt: assignment.assigned_at
+                }
+              }
+            : {}),
+          isAssignedToActor: assignment?.reviewer_profile_id === session.profile.id,
           moduleTitle: "Fluid Mechanics Foundations",
           reviewType: "Independent engineering review",
           sourceStatus:
@@ -255,8 +315,46 @@ function localItemsForAuthor(email: string) {
   return localGovernanceItems;
 }
 
-function localItemsForReview() {
-  return localGovernanceItems;
+function localItemsForReview(
+  session: AuthenticatedSession,
+  assignments: Array<{
+    id: string;
+    governanceItemId: string;
+    contentVersion: number;
+    reviewerProfileId: string;
+    reviewType: "engineering_approval";
+    status: "assigned" | "in_progress" | "completed" | "cancelled";
+    assignedAt: string;
+  }>
+) {
+  const manager = session.roles.some(
+    (role) => role === "administrator" || role === "platform_owner"
+  );
+
+  return localGovernanceItems.flatMap((item) => {
+    const itemAssignments = assignments.filter(
+      (assignment) =>
+        assignment.governanceItemId === item.governanceItemId &&
+        assignment.contentVersion === item.currentVersion &&
+        assignment.status !== "cancelled"
+    );
+    const assignment = manager
+      ? itemAssignments[0]
+      : itemAssignments.find(
+          (candidate) => candidate.reviewerProfileId === session.profile.id
+        );
+    if (!manager && !assignment) {
+      return [];
+    }
+
+    return [
+      {
+        ...item,
+        ...(assignment ? { assignment } : {}),
+        isAssignedToActor: assignment?.reviewerProfileId === session.profile.id
+      }
+    ];
+  });
 }
 
 const localGovernanceItems: GovernanceInterfaceItem[] = [
@@ -284,6 +382,7 @@ const localGovernanceItems: GovernanceInterfaceItem[] = [
     completedReviews: [],
     reviewerComments: [],
     decisionHistory: [],
+    isAssignedToActor: false,
     moduleTitle: "Fluid Mechanics Foundations",
     reviewType: "Independent engineering review",
     sourceStatus: "Source evidence attached",

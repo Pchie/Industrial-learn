@@ -42,14 +42,11 @@ export function AuthorWorkspace({ model }: { model: GovernanceInterfaceModel }) 
 export function ReviewWorkspace({ model }: { model: GovernanceInterfaceModel }) {
   const awaiting = model.items.filter(
     (item) =>
+      !item.isAssignedToActor &&
       item.workflowStatus === "Engineering review required" &&
       !item.decisionHistory.some((decision) => decision.decision === "approved")
   );
-  const assigned = model.items.filter((item) =>
-    item.decisionHistory.some(
-      (decision) => decision.reviewerProfileId === model.actorProfileId
-    )
-  );
+  const assigned = model.items.filter((item) => item.isAssignedToActor);
   const changesRequested = model.items.filter((item) =>
     item.decisionHistory.some((decision) => decision.decision === "changes_requested")
   );
@@ -68,6 +65,12 @@ export function ReviewWorkspace({ model }: { model: GovernanceInterfaceModel }) 
       {model.error ? (
         <Alert title="Review data unavailable" tone="fault">
           {model.error}
+        </Alert>
+      ) : null}
+      {!model.error && model.items.length === 0 ? (
+        <Alert title="No assigned reviews" tone="info">
+          No governed review package is currently assigned to this account. The Platform
+          Owner or an administrator can assign an exact content version.
         </Alert>
       ) : null}
       <ReviewQueueSection items={awaiting} title="Awaiting review" />
@@ -168,6 +171,15 @@ function GovernanceCard({
           <dt>Governance state</dt>
           <dd>{item.publicationStatus}</dd>
         </div>
+        {item.assignment ? (
+          <div>
+            <dt>Assignment</dt>
+            <dd>
+              {item.assignment.status.replaceAll("_", " ")} for revision{" "}
+              {item.assignment.contentVersion}
+            </dd>
+          </div>
+        ) : null}
       </dl>
       {mode === "review" ? (
         <Link

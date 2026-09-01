@@ -48,6 +48,7 @@ const requiredTables = [
   "knowledge_files",
   "content_versions",
   "review_records",
+  "review_assignments",
   "audit_events",
   "content_governance_items",
   "saved_lessons",
@@ -370,6 +371,34 @@ describe("database schema", () => {
     expect(migrationSql).toContain("drop policy if exists roles_admin_all");
     expect(migrationSql).not.toContain(
       "select public.is_platform_owner() or public.is_admin() as is_admin"
+    );
+  });
+
+  it("persists exact-version review assignments behind RLS and an audited manager gate", () => {
+    const policies = policiesForTable("review_assignments").join("\n");
+
+    expect(migrationSql).toContain("create table public.review_assignments");
+    expect(migrationSql).toContain("foreign key (governance_item_id, content_version)");
+    expect(migrationSql).toContain(
+      "unique (governance_item_id, content_version, reviewer_profile_id, review_type)"
+    );
+    expect(policies).toContain("reviewer_profile_id = auth.uid()");
+    expect(policies).toContain("public.is_platform_manager()");
+    expect(migrationSql).toContain(
+      "create or replace function public.manage_review_assignment"
+    );
+    expect(migrationSql).toContain(
+      "Users cannot assign an engineering review to themselves"
+    );
+    expect(migrationSql).toContain(
+      "An active exact-version review assignment is required"
+    );
+    expect(migrationSql).toContain("content.review_assignment.' || p_operation");
+    expect(migrationSql).toContain(
+      "revoke all on table public.review_assignments from anon, authenticated"
+    );
+    expect(migrationSql).toContain(
+      "grant select on table public.review_assignments to authenticated, service_role"
     );
   });
 

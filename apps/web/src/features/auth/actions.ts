@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { getServerEnv } from "@industrial-learn/env";
+import { getAuthConfigurationDiagnostics, getServerEnv } from "@industrial-learn/env";
 
 import {
   clearSessionCookies,
@@ -39,7 +39,12 @@ export async function signUpAction(formData: FormData) {
       result: "failure",
       route: "/auth/sign-up",
       safeUserId: safeHashIdentifier(email),
-      details: { code: result.code }
+      details: {
+        code: result.code,
+        ...(result.code === "configuration_error"
+          ? { configuration: getAuthConfigurationDiagnostics() }
+          : {})
+      }
     });
     redirect(`/auth/sign-up?next=${encodeURIComponent(next)}&error=${result.code}`);
   }
@@ -65,7 +70,12 @@ export async function signInAction(formData: FormData) {
       result: "failure",
       route: "/auth/sign-in",
       safeUserId: safeHashIdentifier(email),
-      details: { code: result.code }
+      details: {
+        code: result.code,
+        ...(result.code === "configuration_error"
+          ? { configuration: getAuthConfigurationDiagnostics() }
+          : {})
+      }
     });
     redirect(`/auth/sign-in?next=${encodeURIComponent(next)}&error=${result.code}`);
   }

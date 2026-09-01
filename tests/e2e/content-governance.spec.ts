@@ -36,6 +36,7 @@ test("engineering reviewer sees the exact lesson, evidence, and secure gate cont
     page.getByRole("heading", { name: "Engineering Review Workspace" })
   ).toBeVisible();
   await expect(page.getByRole("heading", { name: "Awaiting review" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Assigned to me" })).toBeVisible();
   await expect(page.getByText("Publication gate")).toBeVisible();
   await expect(page.getByText("Source evidence attached")).toBeVisible();
   await page.getByRole("link", { name: "Open review package" }).click();
@@ -65,6 +66,57 @@ test("engineering reviewer sees the exact lesson, evidence, and secure gate cont
   await page.getByLabel(/I confirm that I reviewed/).check();
   await page.getByRole("button", { name: "Submit review decision" }).click();
   await expect(page.getByText("Review decision accepted")).toBeVisible();
+});
+
+test("unassigned reviewer sees guidance and cannot use the direct review URL", async ({
+  page
+}) => {
+  await signIn(page, "author-reviewer@example.test", /\/review/, "/review");
+
+  await expect(page.getByText("No assigned reviews")).toBeVisible();
+  await expect(page.getByText("Basic Fluid Pressure", { exact: true })).toHaveCount(0);
+
+  await page.goto("/review/basic-fluid-pressure");
+  await expect(page).toHaveURL(/review_assignment_required/);
+  await expect(page.getByText(/active exact-version assignment/)).toBeVisible();
+});
+
+test("Platform Owner assigns reviewer role and exact Basic Fluid Pressure version", async ({
+  page
+}) => {
+  await signIn(page, "owner@example.test", /\/admin\/users/, "/admin/users");
+
+  await page.getByLabel("Find user by name or email").fill("student.b@example.test");
+  await page.getByRole("button", { name: "Find user" }).click();
+  const user = page.locator("article").filter({ hasText: "Second Industrial Student" });
+  await expect(user).toBeVisible();
+  await user.locator('select[name="role"]').selectOption("engineering_reviewer");
+  await user.locator('select[name="operation"]').selectOption("add");
+  await user
+    .getByLabel("Audit reason")
+    .fill("Independent Basic Fluid Pressure reviewer onboarding");
+  await user.getByLabel("I confirm this role change.").check();
+  await user.getByRole("button", { name: "Apply role change" }).click();
+  await expect(page.getByText("Role updated")).toBeVisible();
+
+  const assignment = page.getByRole("region", {
+    name: "Engineering review assignments"
+  });
+  await assignment
+    .getByLabel("Engineering Reviewer")
+    .selectOption({ label: "Second Industrial Student (student.b@example.test)" });
+  await assignment
+    .getByLabel("Assignment reason")
+    .fill("Independent Basic Fluid Pressure engineering review");
+  await assignment.getByLabel(/I confirm assignment of content version/).check();
+  await assignment.getByRole("button", { name: "Assign exact version" }).click();
+  await expect(page.getByText("Review assigned")).toBeVisible();
+
+  await page.goto("/auth/sign-out");
+  await page.getByRole("button", { name: "Sign out" }).click();
+  await signIn(page, "student.b@example.test", /\/review/, "/review");
+  await expect(page.getByRole("heading", { name: "Assigned to me" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Basic Fluid Pressure" })).toBeVisible();
 });
 
 test("Platform Owner can inspect and preview but cannot record engineering approval", async ({
