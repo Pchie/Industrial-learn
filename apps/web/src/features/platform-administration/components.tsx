@@ -5,6 +5,7 @@ import { roleLabel } from "../auth/workspace-access";
 
 import {
   inviteRoleHolderAction,
+  manageReviewAssignmentAction,
   manageRoleAction,
   setAccountStatusAction
 } from "./actions";
@@ -35,21 +36,38 @@ const resultMessages: Record<string, { title: string; message: string }> = {
   invitation_sent: {
     title: "Invitation sent",
     message: "The invited role holder has been registered and an invitation was sent."
+  },
+  review_assigned: {
+    title: "Review assigned",
+    message: "The exact content version is now visible in the reviewer's workspace."
+  },
+  review_cancelled: {
+    title: "Review assignment cancelled",
+    message: "The reviewer no longer has this active assignment."
   }
 };
 
 export function UserRoleManagement({
   model,
+  query,
   result,
   session
 }: {
   model: PlatformAdministrationModel;
+  query: string;
   result?: string | undefined;
   session: AuthenticatedSession;
 }) {
   const success = result ? resultMessages[result] : undefined;
   const failed = Boolean(result && !success);
   const owner = session.roles.includes("platform_owner");
+  const normalisedQuery = query.toLowerCase();
+  const visibleUsers = model.users.filter(
+    (user) =>
+      !normalisedQuery ||
+      user.displayName.toLowerCase().includes(normalisedQuery) ||
+      user.email.toLowerCase().includes(normalisedQuery)
+  );
 
   return (
     <div className="management-stack">
@@ -108,11 +126,20 @@ export function UserRoleManagement({
           Role changes are server-authorised and audited. Users cannot change their own
           privileged access.
         </p>
-        {model.users.length === 0 ? (
+        <form className="management-form" method="get" role="search">
+          <label>
+            Find user by name or email
+            <input defaultValue={query} name="q" type="search" />
+          </label>
+          <Button type="submit" variant="secondary">
+            Find user
+          </Button>
+        </form>
+        {visibleUsers.length === 0 ? (
           <p>No manageable user records are available.</p>
         ) : (
           <div className="managed-user-list">
-            {model.users.map((user) => {
+            {visibleUsers.map((user) => {
               const isSelf = user.profileId === session.profile.id;
               const isOwnerAccount = user.roles.includes("platform_owner");
               return (
@@ -211,6 +238,8 @@ export function UserRoleManagement({
         )}
       </section>
 
+      <ReviewAssignmentManagement model={model} />
+
       <section aria-labelledby="access-audit-title" className="management-section">
         <h2 id="access-audit-title">Access audit</h2>
         {model.audit.length === 0 ? (
@@ -228,6 +257,154 @@ export function UserRoleManagement({
         )}
       </section>
     </div>
+  );
+}
+
+function ReviewAssignmentManagement({ model }: { model: PlatformAdministrationModel }) {
+  const reviewers = model.users.filter(
+    (user) =>
+      user.accountStatus === "active" && user.roles.includes("engineering_reviewer")
+  );
+  const userById = new Map(model.users.map((user) => [user.profileId, user]));
+
+  return (
+    <section aria-labelledby="review-assignment-title" className="management-section">
+      <h2 id="review-assignment-title">Engineering review assignments</h2>
+      <p>
+        Assign one named Engineering Reviewer to one exact governed content version.
+        Assignment permits review access; it does not publish or approve content.
+      </p>
+      {model.reviewItems.length === 0 ? (
+        <p>No governed items are available for assignment.</p>
+      ) : (
+        <div className="managed-user-list">
+          {model.reviewItems.map((item) => {
+            const assignments = model.reviewAssignments.filter(
+              (assignment) => assignment.governanceItemId === item.governanceItemId
+            );
+            return (
+              <article className="managed-user" key={item.governanceItemId}>
+                <header>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>
+                      Version {item.contentVersionLabel} (governance revision{" "}
+                      {item.contentVersion})
+                    </p>
+                  </div>
+                  <Badge tone="warning">{item.workflowStatus}</Badge>
+                </header>
+                <p>Publication status: {item.publicationStatus}</p>
+                {reviewers.length === 0 ? (
+                  <Alert title="Reviewer role required" tone="warning">
+                    Assign Engineering Reviewer to an active user before assigning this
+                    review.
+                  </Alert>
+                ) : (
+                  <form action={manageReviewAssignmentAction} className="management-form">
+                    <input
+                      name="governanceItemId"
+                      type="hidden"
+                      value={item.governanceItemId}
+                    />
+                    <input
+                      name="contentVersion"
+                      type="hidden"
+                      value={item.contentVersion}
+                    />
+                    <input name="operation" type="hidden" value="assign" />
+                    <label>
+                      Engineering Reviewer
+                      <select name="reviewerProfileId" required>
+                        {reviewers.map((reviewer) => (
+                          <option key={reviewer.profileId} value={reviewer.profileId}>
+                            {reviewer.displayName} ({reviewer.email})
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      Assignment reason
+                      <input minLength={10} name="reason" required type="text" />
+                    </label>
+                    <Confirmation
+                      label={`I confirm assignment of content version ${item.contentVersionLabel}.`}
+                    />
+                    <Button type="submit" variant="secondary">
+                      Assign exact version
+                    </Button>
+                  </form>
+                )}
+                <h4>Assignment history</h4>
+                {assignments.length === 0 ? (
+                  <p>No reviewer has been assigned to this version.</p>
+                ) : (
+                  <div className="dashboard-list">
+                    {assignments.map((assignment) => {
+                      const reviewer = userById.get(assignment.reviewerProfileId);
+                      const canCancel =
+                        assignment.status === "assigned" ||
+                        assignment.status === "in_progress";
+                      return (
+                        <div key={assignment.id}>
+                          <p>
+                            <strong>
+                              {reviewer?.displayName ?? "Named Engineering Reviewer"}
+                            </strong>
+                            : {assignment.status.replaceAll("_", " ")} since{" "}
+                            {new Date(assignment.assignedAt).toLocaleString("en-ZA")}
+                          </p>
+                          <p>
+                            Review type: independent engineering approval; exact revision:{" "}
+                            {assignment.contentVersion}
+                          </p>
+                          {canCancel ? (
+                            <form
+                              action={manageReviewAssignmentAction}
+                              className="management-form"
+                            >
+                              <input
+                                name="governanceItemId"
+                                type="hidden"
+                                value={assignment.governanceItemId}
+                              />
+                              <input
+                                name="contentVersion"
+                                type="hidden"
+                                value={assignment.contentVersion}
+                              />
+                              <input
+                                name="reviewerProfileId"
+                                type="hidden"
+                                value={assignment.reviewerProfileId}
+                              />
+                              <input name="operation" type="hidden" value="cancel" />
+                              <label>
+                                Cancellation reason
+                                <input
+                                  minLength={10}
+                                  name="reason"
+                                  required
+                                  type="text"
+                                />
+                              </label>
+                              <Confirmation label="I confirm cancellation of this assignment." />
+                              <Button type="submit" variant="secondary">
+                                Cancel assignment
+                              </Button>
+                            </form>
+                          ) : null}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </article>
+            );
+          })}
+        </div>
+      )}
+    </section>
   );
 }
 

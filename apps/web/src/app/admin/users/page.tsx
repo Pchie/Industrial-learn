@@ -4,13 +4,15 @@ import { readSessionTokens, requirePlatformManager } from "@/features/auth/serve
 import { UserRoleManagement } from "@/features/platform-administration/components";
 import { loadPlatformAdministrationModel } from "@/features/platform-administration/server-data";
 
-type AdminUsersPageProps = { searchParams: Promise<{ result?: string }> };
+type AdminUsersPageProps = {
+  searchParams: Promise<{ q?: string; result?: string }>;
+};
 
 export default async function AdminUsersPage({ searchParams }: AdminUsersPageProps) {
   const session = await requirePlatformManager("/admin/users");
   const { accessToken } = await readSessionTokens();
   const model = await loadPlatformAdministrationModel(session, accessToken);
-  const { result } = await searchParams;
+  const { q, result } = await searchParams;
 
   return (
     <div className="operational-page page-stack">
@@ -32,7 +34,12 @@ export default async function AdminUsersPage({ searchParams }: AdminUsersPagePro
           service credentials to the browser.
         </p>
       </header>
-      <UserRoleManagement model={model} result={result} session={session} />
+      <UserRoleManagement
+        model={model}
+        query={q?.trim() ?? ""}
+        result={result}
+        session={session}
+      />
     </div>
   );
 }

@@ -99,6 +99,24 @@ export type LocalTestAuthSafetyInput = Pick<
   "appEnv" | "appBaseUrl" | "authMode" | "isE2E"
 >;
 
+const stagingRuntimeVariableNames = [
+  "NEXT_PUBLIC_APP_ENV",
+  "APP_BASE_URL",
+  "NEXT_PUBLIC_SUPABASE_URL",
+  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+  "SUPABASE_SERVICE_ROLE_KEY",
+  "SUPABASE_PROJECT_REF",
+  "SUPABASE_DB_URL",
+  "INDUSTRIAL_LEARN_AUTH_MODE"
+] as const;
+
+const signupVariableNames = [
+  "APP_BASE_URL",
+  "NEXT_PUBLIC_SUPABASE_URL",
+  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+  "SUPABASE_SERVICE_ROLE_KEY"
+] as const;
+
 export function getServerEnv(input: NodeJS.ProcessEnv = process.env): IndustrialLearnEnv {
   const parsed = envSchema.parse(input);
 
@@ -131,6 +149,16 @@ export function getPublicEnv(input: NodeJS.ProcessEnv = process.env) {
       url: env.supabase.url,
       anonKey: env.supabase.anonKey
     }
+  };
+}
+
+export function getAuthConfigurationDiagnostics(input: NodeJS.ProcessEnv = process.env) {
+  return {
+    appEnvironment: input.NEXT_PUBLIC_APP_ENV?.trim() || "defaulted",
+    authMode: input.INDUSTRIAL_LEARN_AUTH_MODE?.trim() || "defaulted",
+    vercelEnvironment: input.VERCEL_ENV?.trim() || "unavailable",
+    missingSignupVariables: missingVariableNames(input, signupVariableNames),
+    missingStagingVariables: missingVariableNames(input, stagingRuntimeVariableNames)
   };
 }
 
@@ -167,4 +195,8 @@ function hostFromAppBaseUrl(appBaseUrl: string | undefined) {
 
 function isApprovedLocalTestHost(host: string) {
   return host === "localhost" || host === "127.0.0.1" || host === "[::1]";
+}
+
+function missingVariableNames(input: NodeJS.ProcessEnv, names: readonly string[]) {
+  return names.filter((name) => !input[name]?.trim());
 }

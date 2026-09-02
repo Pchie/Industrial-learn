@@ -50,6 +50,26 @@ export type Database = {
         Update: Record<string, never>;
         Relationships: [];
       };
+      review_assignments: {
+        Row: {
+          id: string;
+          governance_item_id: string;
+          content_version: number;
+          reviewer_profile_id: string;
+          assigned_by_profile_id: string;
+          review_type: "engineering_approval";
+          status: "assigned" | "in_progress" | "completed" | "cancelled";
+          reason: string;
+          assigned_at: string;
+          completed_at: string | null;
+          cancelled_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Record<string, never>;
+        Update: Record<string, never>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -93,6 +113,17 @@ export type Database = {
           p_reason: string;
         };
         Returns: Array<{ profile_id: string; roles: string[] }>;
+      };
+      manage_review_assignment: {
+        Args: {
+          p_governance_item_id: string;
+          p_content_version: number;
+          p_reviewer_profile_id: string;
+          p_review_type: "engineering_approval";
+          p_operation: "assign" | "cancel";
+          p_reason: string;
+        };
+        Returns: Database["public"]["Tables"]["review_assignments"]["Row"];
       };
       record_content_review_decision: {
         Args: {

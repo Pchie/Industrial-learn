@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { getPublicEnv, getServerEnv, validateLocalTestAuthSafety } from "./index";
+import {
+  getAuthConfigurationDiagnostics,
+  getPublicEnv,
+  getServerEnv,
+  validateLocalTestAuthSafety
+} from "./index";
 
 describe("environment validation", () => {
   it("uses safe development defaults when Supabase is not configured", () => {
@@ -131,5 +136,33 @@ describe("environment validation", () => {
         NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co"
       })
     ).toThrow(/must be provided together/);
+  });
+
+  it("reports only missing variable names in safe auth diagnostics", () => {
+    const diagnostics = getAuthConfigurationDiagnostics({
+      NEXT_PUBLIC_APP_ENV: "staging",
+      INDUSTRIAL_LEARN_AUTH_MODE: "supabase",
+      NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co",
+      VERCEL_ENV: "preview"
+    });
+
+    expect(diagnostics).toEqual({
+      appEnvironment: "staging",
+      authMode: "supabase",
+      vercelEnvironment: "preview",
+      missingSignupVariables: [
+        "APP_BASE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY"
+      ],
+      missingStagingVariables: [
+        "APP_BASE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "SUPABASE_PROJECT_REF",
+        "SUPABASE_DB_URL"
+      ]
+    });
+    expect(JSON.stringify(diagnostics)).not.toContain("example.supabase.co");
   });
 });

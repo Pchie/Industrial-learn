@@ -16,7 +16,11 @@ export default async function AuthErrorPage({ searchParams }: AuthErrorPageProps
   const signedIn = sessionResult.ok;
   const requirement = workspaceRequirement(next);
   const error = signedIn
-    ? `You are signed in as ${primaryRoleLabel(sessionResult.value.roles)}. ${requirement} requires ${requirement} access.`
+    ? signedInAccessMessage(
+        primaryRoleLabel(sessionResult.value.roles),
+        requirement,
+        params.error
+      )
     : authMessageForUrl(params.error) || "Authentication could not continue.";
 
   return (
@@ -38,6 +42,18 @@ export default async function AuthErrorPage({ searchParams }: AuthErrorPageProps
       </div>
     </AuthPageShell>
   );
+}
+
+function signedInAccessMessage(
+  role: string,
+  requirement: string,
+  error: string | undefined
+) {
+  if (error === "review_assignment_required") {
+    return `Engineering Review requires an active exact-version assignment. You are signed in as ${role}, but this review is not currently assigned to your account.`;
+  }
+
+  return `You are signed in as ${role}. ${requirement} requires ${requirement} access.`;
 }
 
 function workspaceRequirement(path: string) {

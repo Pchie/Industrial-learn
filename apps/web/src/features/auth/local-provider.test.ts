@@ -3,7 +3,9 @@ import { beforeEach, describe, expect, it } from "vitest";
 import {
   createTestLocalAuthProvider,
   listLocalAccessAudit,
+  listLocalReviewAssignments,
   listLocalUsersForAdministration,
+  manageLocalReviewAssignment,
   manageLocalUserRole,
   resetLocalAuthStoreForTests
 } from "./test-local-provider";
@@ -162,6 +164,44 @@ describe("local auth provider integration", () => {
         role: "platform_owner",
         operation: "add",
         reason: "Attempted self-promotion test"
+      })
+    ).toThrow("denied");
+  });
+
+  it("audits exact-version review assignment and rejects self-assignment", () => {
+    const owner = listLocalUsersForAdministration().find((user) =>
+      user.roles.includes("platform_owner")
+    );
+    const reviewer = listLocalUsersForAdministration().find(
+      (user) => user.email === "reviewer@example.test"
+    );
+    if (!owner || !reviewer) throw new Error("expected local assignment fixtures");
+
+    manageLocalReviewAssignment({
+      actorProfileId: owner.profileId,
+      governanceItemId: "94f5c2b9-a0b9-43f5-8b6b-4a3a67fc4f01",
+      contentVersion: 4,
+      reviewerProfileId: reviewer.profileId,
+      reviewType: "engineering_approval",
+      operation: "assign",
+      reason: "Independent review assignment verification"
+    });
+
+    expect(
+      listLocalReviewAssignments().find(
+        (assignment) => assignment.reviewerProfileId === reviewer.profileId
+      )
+    ).toMatchObject({ contentVersion: 4, status: "assigned" });
+    expect(listLocalAccessAudit().at(0)?.action).toBe("content.review_assignment.assign");
+    expect(() =>
+      manageLocalReviewAssignment({
+        actorProfileId: owner.profileId,
+        governanceItemId: "94f5c2b9-a0b9-43f5-8b6b-4a3a67fc4f01",
+        contentVersion: 4,
+        reviewerProfileId: owner.profileId,
+        reviewType: "engineering_approval",
+        operation: "assign",
+        reason: "Attempted self-assignment verification"
       })
     ).toThrow("denied");
   });

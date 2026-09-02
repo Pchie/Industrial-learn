@@ -149,6 +149,67 @@ export async function inviteRoleHolderAction(formData: FormData) {
   redirect(resultUrl("invitation_sent"));
 }
 
+export async function manageReviewAssignmentAction(formData: FormData) {
+  const session = await requirePlatformManager(ADMIN_USERS_ROUTE);
+  const governanceItemId = readText(formData.get("governanceItemId"));
+  const contentVersion = Number(formData.get("contentVersion"));
+  const reviewerProfileId = readText(formData.get("reviewerProfileId"));
+  const operation = readText(formData.get("operation"));
+  const reason = readText(formData.get("reason"));
+
+  if (
+    !governanceItemId ||
+    !Number.isSafeInteger(contentVersion) ||
+    contentVersion < 1 ||
+    !reviewerProfileId ||
+    !isReviewAssignmentOperation(operation) ||
+    reason.length < 10 ||
+    formData.get("confirmed") !== "on"
+  ) {
+    redirect(resultUrl("invalid_review_assignment"));
+  }
+
+  try {
+    if (isLocalAdministrationMode()) {
+      const local = await import("../auth/test-local-provider");
+      local.manageLocalReviewAssignment({
+        actorProfileId: session.profile.id,
+        governanceItemId,
+        contentVersion,
+        reviewerProfileId,
+        reviewType: "engineering_approval",
+        operation,
+        reason
+      });
+    } else {
+      const { accessToken } = await readSessionTokens();
+      if (!accessToken) {
+        throw new Error("Missing session-bound database token.");
+      }
+      const { error } = await createSupabaseServerClient(getServerEnv(), accessToken).rpc(
+        "manage_review_assignment",
+        {
+          p_governance_item_id: governanceItemId,
+          p_content_version: contentVersion,
+          p_reviewer_profile_id: reviewerProfileId,
+          p_review_type: "engineering_approval",
+          p_operation: operation,
+          p_reason: reason
+        }
+      );
+      if (error) {
+        throw error;
+      }
+    }
+  } catch {
+    redirect(resultUrl("review_assignment_denied"));
+  }
+
+  revalidatePath(ADMIN_USERS_ROUTE);
+  revalidatePath("/review");
+  redirect(resultUrl(operation === "assign" ? "review_assigned" : "review_cancelled"));
+}
+
 async function inviteSupabaseUser(input: {
   email: string;
   displayName: string;
@@ -201,6 +262,10 @@ function readText(value: FormDataEntryValue | null) {
 
 function isOperation(value: string): value is "add" | "remove" {
   return value === "add" || value === "remove";
+}
+
+function isReviewAssignmentOperation(value: string): value is "assign" | "cancel" {
+  return value === "assign" || value === "cancel";
 }
 
 function isInvitableRole(value: string): value is (typeof INVITABLE_ROLES)[number] {

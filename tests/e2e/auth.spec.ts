@@ -15,6 +15,20 @@ test("new-user registration creates a student session", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("signup next route cannot grant reviewer access", async ({ page }) => {
+  const email = `review-next-${Date.now()}@example.test`;
+
+  await page.goto("/auth/sign-up?next=%2Freview%2Fbasic-fluid-pressure");
+  await page.getByLabel("Display name").fill("Student Review Request");
+  await page.getByLabel("Email address").fill(email);
+  await page.getByLabel("Password").fill("IndustrialLearn1!");
+  await page.getByRole("button", { name: "Create account" }).click();
+
+  await expect(page).toHaveURL(/\/auth\/error/);
+  await expect(page.getByText(/signed in as Student/)).toBeVisible();
+  await expect(page.getByRole("link", { name: "Go to my workspace" })).toBeVisible();
+});
+
 test("sign-in restores a server session for protected routes", async ({ page }) => {
   await signInAsStudent(page);
 
