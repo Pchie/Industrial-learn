@@ -112,4 +112,10 @@ or grant Vercel project access merely to silence this optional toolbar.
 - `configuration_error`: required provider configuration is unavailable; inspect safe server diagnostics.
 - `missing_profile` or `profile_creation_failed`: Supabase Auth may have created the user, but trusted profile provisioning failed.
 - `invalid_credentials`: the provider rejected the submitted credentials or signup request without disclosing sensitive detail.
+- A successful-looking repeated signup does not replace an existing account password or guarantee
+  another confirmation email. Check the Auth service log for `user_repeated_signup`, then use the
+  original password or the controlled password-recovery flow.
+- Supabase's built-in SMTP service is unsuitable for an independent external reviewer. Configure a
+  dedicated staging SMTP provider before relying on confirmation or recovery delivery outside the
+  Supabase organisation team. Do not disable email confirmation as a workaround.
 - access denied after `next=/review/...`: signup succeeded as Student, and reviewer authorization correctly remained absent.
