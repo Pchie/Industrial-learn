@@ -8,6 +8,10 @@ const bernoulliRegistrationSql = readFileSync(
   join(root, "database/migrations/0010_bernoulli_flow_simulation_registration.sql"),
   "utf8"
 );
+const profileRoleConflictFixSql = readFileSync(
+  join(root, "database/migrations/0017_fix_profile_role_conflict_target.sql"),
+  "utf8"
+);
 const policySql = readSqlDirectory("database/policies");
 const effectivePolicySql = `${policySql}\n${migrationSql}`;
 const seedSql = readFileSync(
@@ -371,6 +375,18 @@ describe("database schema", () => {
     expect(migrationSql).toContain("drop policy if exists roles_admin_all");
     expect(migrationSql).not.toContain(
       "select public.is_platform_owner() or public.is_admin() as is_admin"
+    );
+  });
+
+  it("uses the named profile-role constraint without PL/pgSQL output-column ambiguity", () => {
+    expect(profileRoleConflictFixSql).toContain(
+      "on conflict on constraint profile_roles_profile_id_role_id_key do nothing"
+    );
+    expect(profileRoleConflictFixSql).not.toContain(
+      "on conflict (profile_id, role_id) do nothing"
+    );
+    expect(profileRoleConflictFixSql).toContain(
+      "create or replace function public.manage_profile_role"
     );
   });
 

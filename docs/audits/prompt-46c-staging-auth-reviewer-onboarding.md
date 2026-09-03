@@ -2,6 +2,8 @@
 
 Date: 2026-09-01
 
+Last verified: 2026-09-03
+
 ## Executive Summary
 
 The staging signup error was traced to Vercel branch scoping, not application redirect logic.
@@ -9,12 +11,12 @@ All auth variables were restricted to `Preview (development)`, while the observe
 was a feature-branch Preview. The application therefore selected its fail-closed provider and
 returned `configuration_error`.
 
-The repository now contains safe configuration diagnostics and a first-class, audited,
-exact-version reviewer assignment boundary. Migration 0016 is applied to the staging database,
-its privileges and RLS boundaries have been verified, and all local quality gates pass.
-Privileged staging secrets were not copied to a feature Preview because that would broaden
-credential exposure. The application changes still require review and merge to `development`
-before the final live signup and reviewer onboarding journey can run on stable staging.
+The repository contains safe configuration diagnostics and a first-class, audited, exact-version
+reviewer assignment boundary. The application changes are merged into `development`; stable
+staging is healthy and uses the intended Supabase project. Migrations 0016 and 0017 are applied.
+A confirmed, independent staging account now has Student and Engineering Reviewer roles plus one
+active assignment for Basic Fluid Pressure governance revision 4 / content version 0.4.0. No
+review decision or publication action was recorded.
 
 ## Exact Root Cause
 
@@ -36,6 +38,8 @@ Evidence ID: IL-46C-VERCEL-001, read-only Vercel inspection on 2026-08-31.
 - Added unit coverage for valid Supabase signup, missing configuration, and Student-only
   profile provisioning.
 - Added migration `0016_secure_review_assignments.sql`.
+- Added migration `0017_fix_profile_role_conflict_target.sql` after live use exposed an ambiguous
+  PL/pgSQL `ON CONFLICT` target in the existing role manager.
 - Added owner/admin assignment controls with user search, role management, exact-version
   assignment, cancellation, and audit history.
 - Changed Reviewer Workspace data to assignment-filtered records.
@@ -94,6 +98,31 @@ privilege and RLS verification proved:
 
 No synthetic verification assignment was retained after the transaction rolled back.
 
+### Live Reviewer Onboarding
+
+On 2026-09-03, the first live role change initially failed inside
+`manage_profile_role` because its `profile_id` output column conflicted with the unqualified
+`ON CONFLICT (profile_id, role_id)` target. The surrounding transaction rolled back, so no partial
+role, assignment, or audit state survived.
+
+Migration `0017_fix_profile_role_conflict_target.sql` replaced that target with the existing named
+unique constraint. Staging verification confirmed:
+
+- migration 0017 is present in the remote migration ledger;
+- anonymous execution remains denied;
+- authenticated managers and the trusted service role retain function execution;
+- the designated account was confirmed, active, independent from the Platform Owner, and Student-only before elevation;
+- the final roles are Student and Engineering Reviewer;
+- exactly one active engineering-review assignment targets governance revision 4 / content version 0.4.0;
+- the Platform Owner is the recorded assigner and both audit events exist;
+- the reviewer is not the lesson author;
+- no review decision exists; and
+- Basic Fluid Pressure remains Engineering review required and draft.
+
+The current Supabase built-in mailer is not suitable for dependable external reviewer email
+delivery. Custom staging SMTP remains an operational follow-up; email confirmation was not
+disabled or bypassed.
+
 ## Test Record
 
 Final verification results:
@@ -105,9 +134,9 @@ Final verification results:
 | Type checking               | PASS                                         |
 | Linting                     | PASS                                         |
 | Content validation          | PASS, 29 validations                         |
-| Migration validation        | PASS, 19 validations                         |
+| Migration validation        | PASS, 20 validations                         |
 | Focused auth/database tests | PASS, 39 tests                               |
-| Full unit tests             | PASS, 367 passed and 5 intentionally skipped |
+| Full unit tests             | PASS, 368 passed and 5 intentionally skipped |
 | Production build            | PASS, 38 routes generated                    |
 | Accessibility browser tests | PASS, 42 tests                               |
 | Smoke browser tests         | PASS, 5 tests                                |
@@ -119,20 +148,18 @@ It has no effect on application behaviour or test results.
 
 ## Verdicts
 
-| Area                                 | Current verdict                                                  |
-| ------------------------------------ | ---------------------------------------------------------------- |
-| Staging signup configuration         | PASS on current stable staging runtime                           |
-| Normal user registration             | PENDING controlled synthetic live signup                         |
-| Reviewer role assignment             | PASS locally; staging database protected by migration 0015       |
-| Reviewer assignment                  | PASS locally and at staging database boundary via migration 0016 |
-| Basic Fluid Pressure reviewer access | PENDING application merge and named exact-version assignment     |
+| Area                                 | Current verdict                                                   |
+| ------------------------------------ | ----------------------------------------------------------------- |
+| Staging signup configuration         | PASS on current stable staging runtime                            |
+| Normal user registration             | PASS for the designated confirmed staging account                 |
+| Reviewer role assignment             | PASS live through the audited manager function                    |
+| Reviewer assignment                  | PASS live for exact governance revision 4 / content version 0.4.0 |
+| Basic Fluid Pressure reviewer access | PENDING reviewer sign-in and deployed-workspace visual check      |
 
 ## Exact Next Human Action
 
-Review and merge the Prompt 46B and Prompt 46C pull requests into `development` in dependency
-order. Confirm the stable staging alias redeploys with the existing `Preview (development)`
-variables. Then create a synthetic Student account, assign Engineering Reviewer, assign Basic
-Fluid Pressure version `0.4.0` / revision `4`, and verify the item appears under Reviewer,
-Assigned to me.
+The designated reviewer must sign out, sign in with the confirmed account, open Workspace,
+Reviewer, then Assigned to me, and confirm Basic Fluid Pressure appears. This visual check does not
+permit an approval or publication decision.
 
 Do not publish Basic Fluid Pressure during this verification.
