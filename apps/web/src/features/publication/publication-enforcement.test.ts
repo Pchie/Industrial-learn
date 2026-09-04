@@ -14,6 +14,7 @@ import {
   getInternalLessonBySlug,
   getPublicLessonBySlug,
   getPublicLessons,
+  getSourceRecordsById,
   searchPublicLessons
 } from "../lesson-engine/data";
 import { projectLessonForPublicDelivery } from "../lesson-engine/visual-experience-registry";
@@ -63,6 +64,26 @@ describe("application publication enforcement", () => {
       "SRC-PSU-CIMBALA-PRESSURE-BASICS"
     ]);
     expect(records.every((record) => record.evidenceStatus === "approved")).toBe(true);
+  });
+
+  it("projects only student-safe source citation metadata", () => {
+    const records = getStaticSourceRecordsById([approvedSourceId]);
+    const publicRecords = getSourceRecordsById([approvedSourceId]);
+
+    expect(records[0]).toHaveProperty("url");
+    expect(Object.keys(publicRecords[0]!).sort()).toEqual(
+      [
+        "approvalStatus",
+        "citation",
+        "evidenceStatus",
+        "id",
+        "reviewStatus",
+        "title"
+      ].sort()
+    );
+    expect(JSON.stringify(publicRecords)).not.toContain("filePath");
+    expect(JSON.stringify(publicRecords)).not.toContain("reviewerType");
+    expect(JSON.stringify(publicRecords)).not.toContain("copyrightStatus");
   });
 
   it("allows a synthetic current, approved and published lesson", () => {
@@ -142,6 +163,19 @@ describe("application publication enforcement", () => {
     ]) {
       expect(getPublicLessonBySlug(slug)).toBeUndefined();
     }
+  });
+
+  it("removes internal governance metadata from public lesson delivery", () => {
+    const lesson = getPublicLessonBySlug("basic-fluid-pressure");
+    expect(lesson).toBeDefined();
+
+    const projected = projectLessonForPublicDelivery(lesson!);
+
+    expect(projected).not.toHaveProperty("approvalRecordIds");
+    expect(projected).not.toHaveProperty("authorProfileId");
+    expect(projected).not.toHaveProperty("multipleSourceVerification");
+    expect(projected).not.toHaveProperty("publishedVersion");
+    expect(projected).toHaveProperty("version", "0.4.0");
   });
 
   it("searches only the publication-gated lesson set", () => {

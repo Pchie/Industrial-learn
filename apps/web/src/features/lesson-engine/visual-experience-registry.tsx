@@ -84,10 +84,18 @@ export function getInternalVisualExperienceOverrides(
 export function projectLessonForPublicDelivery(
   lesson: StructuredLesson
 ): StructuredLesson {
+  const publicLesson = {
+    ...lesson
+  } as StructuredLesson & { multipleSourceVerification?: unknown };
+  delete publicLesson.approvalRecordIds;
+  delete publicLesson.authorProfileId;
+  delete publicLesson.multipleSourceVerification;
+  delete publicLesson.publishedVersion;
+
   return {
-    ...lesson,
+    ...publicLesson,
     sections: Object.fromEntries(
-      Object.entries(lesson.sections).map(([sectionId, section]) => [
+      Object.entries(publicLesson.sections).map(([sectionId, section]) => [
         sectionId,
         {
           ...section,
@@ -95,16 +103,16 @@ export function projectLessonForPublicDelivery(
         }
       ])
     ) as StructuredLesson["sections"],
-    ...(lesson.simulationIds
+    ...(publicLesson.simulationIds
       ? {
-          simulationIds: lesson.simulationIds.filter((simulationId) =>
+          simulationIds: publicLesson.simulationIds.filter((simulationId) =>
             Boolean(getPublicSimulationCatalogById(simulationId))
           )
         }
       : {}),
-    ...(lesson.experienceSequence
+    ...(publicLesson.experienceSequence
       ? {
-          experienceSequence: lesson.experienceSequence.map((stage) => ({
+          experienceSequence: publicLesson.experienceSequence.map((stage) => ({
             ...stage,
             blocks: stage.blocks.flatMap(projectBlockForPublicDelivery)
           }))
