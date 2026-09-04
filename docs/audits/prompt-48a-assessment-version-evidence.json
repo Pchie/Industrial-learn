@@ -81,11 +81,51 @@
     "endToEndTests": { "result": "PASS", "passed": 113 }
   },
   "liveEvidence": {
-    "migrationApplied": false,
-    "reviewItemSeeded": false,
+    "verifiedAt": "2026-09-04T17:38:02Z",
+    "migrationApplied": true,
+    "migrationVersion": "0019",
+    "migrationName": "assessment_version_integrity_and_pilot_progress",
+    "reviewItemSeeded": true,
+    "governanceItemId": "3c91523e-e30c-4f7b-89ef-0c8f7eeb3803",
+    "contentVersionId": "acf25cec-cac1-41a0-9ff1-7fa5614919c3",
+    "governanceVersion": 2,
+    "reviewItemStatus": "Engineering review required",
+    "reviewItemPublicationStatus": "draft",
+    "historicalVersion1PassesExactGate": false,
+    "canonicalVersion2PrematurelyPublished": false,
+    "functionPrivileges": {
+      "exactVersionPredicate": ["authenticated", "service_role"],
+      "attemptStart": ["service_role"],
+      "attemptCompletion": ["service_role"],
+      "pilotProgressWrite": ["service_role"],
+      "controlledPublication": ["authenticated", "service_role"],
+      "controlledPublicationInternalPlatformManagerCheck": true
+    },
+    "rlsRollbackProbes": {
+      "result": "PASS",
+      "studentOwnProgressVisible": true,
+      "crossStudentProgressVisible": false,
+      "studentOwnAttemptVisible": true,
+      "crossStudentAttemptVisible": false,
+      "hiddenQuestionsVisible": false,
+      "hiddenAnswersVisible": false,
+      "contentVersionsVisibleToStudent": false,
+      "reviewRecordsVisibleToStudent": false,
+      "unapprovedLessonsVisible": false,
+      "unapprovedSimulationsVisible": false,
+      "reviewerStudentDataVisible": false,
+      "authorStudentDataVisible": false,
+      "retainedProbeRows": 0
+    },
     "independentReviewComplete": false,
     "assessmentPublished": false,
     "syntheticStudentFlow": "PENDING"
+  },
+  "releaseState": {
+    "featureBranch": "codex/prompt-48a-publication-integrity-remediation",
+    "localCommit": "ae99459",
+    "githubPush": "PENDING_EXPLICIT_APPROVAL",
+    "stagingDeployment": "PENDING_BRANCH_INTEGRATION"
   },
   "provisionalVerdicts": {
     "assessmentVersionIntegrity": "BLOCKED",

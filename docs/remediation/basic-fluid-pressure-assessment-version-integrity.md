@@ -109,5 +109,16 @@ assessment review item. It does not approve or publish content. Publication is a
 only through `publish_approved_assessment_version_to_staging` after an independent reviewer
 records a complete assessment-specific decision.
 
+On 2026-09-04, migration `0019` and seed `0007` were applied to staging project
+`lgjujyaclrpaopdabyzg`. The resulting assessment governance item is
+`3c91523e-e30c-4f7b-89ef-0c8f7eeb3803`, exact version `2`, with content-version record
+`acf25cec-cac1-41a0-9ff1-7fa5614919c3`. Its live state is intentionally
+`Engineering review required / draft`; no assessment publication row was created.
+
+Live rollback-only RLS probes confirmed that the old v1 fixture fails the exact gate,
+students cannot read protected questions or answer choices, students see only their own
+progress and attempts, and neither a reviewer nor a content author inherits student-data
+access. The probes rolled back and retained no test rows.
+
 Production is outside this remediation and must not receive migration `0019` or the
 staging review seed as part of Prompt 48A.
