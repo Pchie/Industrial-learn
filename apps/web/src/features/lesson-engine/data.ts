@@ -29,6 +29,29 @@ export function getPublicLessonBySlug(slug: string) {
   return getPublicLessons().find((lesson) => lesson.slug === slug);
 }
 
+export function searchPublicLessons(query: string) {
+  const normalizedQuery = query.trim().toLocaleLowerCase();
+  const publicLessons = getPublicLessons();
+
+  if (!normalizedQuery) {
+    return publicLessons;
+  }
+
+  return publicLessons.filter((lesson) =>
+    [
+      lesson.title,
+      lesson.description,
+      lesson.slug,
+      lesson.difficulty,
+      ...lesson.learningOutcomes,
+      ...lesson.sourceIds
+    ]
+      .join(" ")
+      .toLocaleLowerCase()
+      .includes(normalizedQuery)
+  );
+}
+
 export function getSourceRecordsById(sourceIds: string[]) {
   return getStaticSourceRecordsById(sourceIds) as SourceRecord[];
 }
@@ -66,11 +89,14 @@ export function evaluateLessonPublication(
     reviewRecords: input.reviewRecords ?? getStaticTechnicalReviewRecords()
   });
 
+  const exactPublishedVersion =
+    lesson.publishedVersion === lesson.version ? reviewGate.authority : null;
+
   return evaluateStaticPublicationVisibility({
     audience: input.audience,
     record: lesson,
     sourceRecords: getStaticSourceRecordsById(lesson.sourceIds),
-    ...(reviewGate.authority ? { authority: reviewGate.authority } : {}),
+    ...(exactPublishedVersion ? { authority: exactPublishedVersion } : {}),
     ...(input.access ? { access: input.access } : {})
   });
 }

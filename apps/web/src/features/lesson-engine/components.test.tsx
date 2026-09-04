@@ -44,7 +44,7 @@ describe("lesson engine renderer", () => {
     );
 
     expect(markup).toContain("Basic Fluid Pressure");
-    expect(markup).toContain("Engineering review required");
+    expect(markup).toContain("Approved for student use");
     expect(markup).toContain("Calculation steps");
     expect(markup).toContain("p = F / A");
     expect(markup).toContain("Source ID:");

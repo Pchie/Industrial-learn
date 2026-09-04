@@ -42,6 +42,13 @@
     },
     "reviewStatus": { "$ref": "#/$defs/reviewStatus" },
     "version": { "type": "string" },
+    "publishedVersion": { "type": "string", "minLength": 1 },
+    "approvalRecordIds": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^REV-[A-Z0-9-]+$" }
+    },
     "authorProfileId": { "type": "string", "minLength": 1 },
     "knowledgeFileIds": { "type": "array", "items": { "type": "string" } },
     "sourceIds": { "type": "array", "items": { "type": "string" } },
@@ -144,6 +151,15 @@
         ]
       },
       "then": { "required": ["authorProfileId"] }
+    },
+    {
+      "if": {
+        "properties": { "publicationStatus": { "const": "published" } },
+        "required": ["publicationStatus"]
+      },
+      "then": {
+        "required": ["publishedVersion", "approvalRecordIds"]
+      }
     }
   ],
   "$defs": {

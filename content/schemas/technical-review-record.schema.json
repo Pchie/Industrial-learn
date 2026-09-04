@@ -40,7 +40,7 @@
     "reviewerId": { "type": "string", "minLength": 1 },
     "reviewerName": { "type": "string", "minLength": 1 },
     "reviewerRole": {
-      "enum": ["lecturer", "engineering_reviewer", "administrator"]
+      "enum": ["lecturer", "engineering_reviewer", "administrator", "platform_owner"]
     },
     "reviewType": {
       "enum": [

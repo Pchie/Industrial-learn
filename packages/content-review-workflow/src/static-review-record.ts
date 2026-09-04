@@ -13,7 +13,8 @@ export const STATIC_REVIEW_REQUIREMENTS = [
 export const STATIC_REVIEWER_ROLES = [
   "lecturer",
   "engineering_reviewer",
-  "administrator"
+  "administrator",
+  "platform_owner"
 ] as const;
 
 export type StaticReviewRequirement = (typeof STATIC_REVIEW_REQUIREMENTS)[number];
@@ -206,7 +207,7 @@ function hasPassingReview(
 ) {
   return records.some((record) => {
     if (
-      record.reviewType !== requirement ||
+      !recordSatisfiesRequirement(record, requirement) ||
       !roleMayPerform(requirement, record.reviewerRole) ||
       (requirement !== "publication_authorization" &&
         record.reviewerId === subject.authorId)
@@ -214,24 +215,45 @@ function hasPassingReview(
       return false;
     }
     if (requirement === "source") {
-      return containsEvery(record.sourceIdsChecked, subject.sourceIds);
+      return (
+        evidenceIsComplete(record, "source_review_complete") &&
+        containsExactly(record.sourceIdsChecked, subject.sourceIds)
+      );
     }
     if (requirement === "equation") {
-      return containsEvery(record.equationIdsChecked, subject.equationIds);
+      return (
+        evidenceIsComplete(record, "equation_review_complete") &&
+        containsExactly(record.equationIdsChecked, subject.equationIds)
+      );
     }
     if (requirement === "simulation") {
-      return record.simulationTestIdsChecked.length > 0;
+      return (
+        evidenceIsComplete(record, "simulation_review_complete") &&
+        record.simulationTestIdsChecked.length > 0
+      );
     }
     if (requirement === "safety") {
-      return record.safetyReviewOutcome === "passed";
+      return (
+        evidenceIsComplete(record, "safety_limitations_review_complete") &&
+        record.safetyReviewOutcome === "passed"
+      );
     }
-    if (
-      requirement === "engineering_approval" ||
-      requirement === "publication_authorization"
-    ) {
+    if (requirement === "educational_structure") {
+      return evidenceIsComplete(record, "educational_review_complete");
+    }
+    if (requirement === "engineering_approval") {
       return (
         record.reviewStatus === "Approved for student use" &&
         Object.values(record.evidenceChecked).some(Boolean)
+      );
+    }
+    if (requirement === "publication_authorization") {
+      return (
+        record.reviewStatus === "Approved for student use" &&
+        record.evidenceChecked.exact_version_verified === true &&
+        record.evidenceChecked.approval_record_verified === true &&
+        record.evidenceChecked.artifact_hash_verified === true &&
+        record.evidenceChecked.staging_only === true
       );
     }
     return Object.values(record.evidenceChecked).some(Boolean);
@@ -240,7 +262,10 @@ function hasPassingReview(
 
 function roleMayPerform(requirement: StaticReviewRequirement, role: StaticReviewerRole) {
   if (requirement === "publication_authorization") {
-    return role === "administrator";
+    return role === "administrator" || role === "platform_owner";
+  }
+  if (role === "platform_owner") {
+    return false;
   }
   if (role === "administrator" || role === "engineering_reviewer") {
     return true;
@@ -248,9 +273,38 @@ function roleMayPerform(requirement: StaticReviewRequirement, role: StaticReview
   return requirement === "educational_structure" && role === "lecturer";
 }
 
-function containsEvery(actual: readonly string[], required: readonly string[]) {
+function recordSatisfiesRequirement(
+  record: StaticTechnicalReviewRecord,
+  requirement: StaticReviewRequirement
+) {
+  return (
+    record.reviewType === requirement ||
+    (record.reviewType === "engineering_approval" &&
+      ["source", "educational_structure", "equation", "simulation", "safety"].includes(
+        requirement
+      ))
+  );
+}
+
+function evidenceIsComplete(
+  record: StaticTechnicalReviewRecord,
+  compositeEvidenceKey: string
+) {
+  return record.reviewType === "engineering_approval"
+    ? record.evidenceChecked[compositeEvidenceKey] === true
+    : Object.values(record.evidenceChecked).some(Boolean);
+}
+
+function containsExactly(actual: readonly string[], required: readonly string[]) {
   const actualIds = new Set(actual);
-  return required.length > 0 && required.every((id) => actualIds.has(id));
+  const requiredIds = new Set(required);
+  return (
+    required.length > 0 &&
+    actualIds.size === actual.length &&
+    requiredIds.size === required.length &&
+    actualIds.size === requiredIds.size &&
+    required.every((id) => actualIds.has(id))
+  );
 }
 
 function hasText(value: unknown): value is string {

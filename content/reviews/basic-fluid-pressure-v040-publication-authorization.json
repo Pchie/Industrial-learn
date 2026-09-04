@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "REV-BASIC-FLUID-PRESSURE-V040-PUBLICATION-AUTHORIZATION",
+  "entityId": "LES-FLUID-PRESSURE-001",
+  "entityType": "lesson",
+  "entityVersion": "0.4.0",
+  "authorId": "author-basic-fluid-pressure-v040",
+  "reviewerId": "staging-platform-owner",
+  "reviewerName": "Industrial Learn Staging Platform Owner",
+  "reviewerRole": "platform_owner",
+  "reviewType": "publication_authorization",
+  "decision": "approved",
+  "reviewStatus": "Approved for student use",
+  "evidenceChecked": {
+    "exact_version_verified": true,
+    "approval_record_verified": true,
+    "artifact_hash_verified": true,
+    "staging_only": true
+  },
+  "sourceIdsChecked": [
+    "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+    "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+  ],
+  "equationIdsChecked": ["EQ-FLUID-PRESSURE-001"],
+  "simulationTestIdsChecked": [],
+  "safetyReviewOutcome": "passed",
+  "notes": "Authorizes only Basic Fluid Pressure version 0.4.0 for protected staging release basic-fluid-pressure-staging-v0.4.0-rc1. The reviewed instructional artifact is commit bbd81abc0e1351d6280e3fc022d1138ad316ec1e with SHA-256 f3746a0730b154023a1faea80719f1cfde27477aae22b164bcfe71cab3ca552a. Production is excluded.",
+  "reviewedAt": "2026-09-04T13:48:56.000Z"
+}

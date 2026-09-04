@@ -7,9 +7,11 @@ import {
   CurriculumHero,
   DisciplineSection,
   EmptyState,
-  ProgressNotice
+  ProgressNotice,
+  PublishedLessonSection
 } from "@/features/curriculum/components";
 import { getCurriculum, getSchool } from "@/features/curriculum/data";
+import { getPublicLessons } from "@/features/lesson-engine/data";
 
 export const metadata: Metadata = {
   title: "Core Engineering | Industrial Learn"
@@ -35,6 +37,7 @@ export default function CoreEngineeringPage() {
         title={school.title}
       />
       <ProgressNotice />
+      <PublishedLessonSection lessons={getPublicLessons()} />
       {school.disciplines.length === 0 ? (
         <EmptyState message="No Core Engineering disciplines are available yet." />
       ) : (

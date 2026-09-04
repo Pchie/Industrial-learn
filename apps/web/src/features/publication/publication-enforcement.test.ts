@@ -13,7 +13,8 @@ import {
   evaluateLessonPublication,
   getInternalLessonBySlug,
   getPublicLessonBySlug,
-  getPublicLessons
+  getPublicLessons,
+  searchPublicLessons
 } from "../lesson-engine/data";
 import { projectLessonForPublicDelivery } from "../lesson-engine/visual-experience-registry";
 import type { StructuredLesson } from "../lesson-engine/types";
@@ -119,15 +120,21 @@ describe("application publication enforcement", () => {
         }))
       }).visible
     ).toBe(false);
-    expect(evaluateLessonPublication(approved, { audience: "student" }).visible).toBe(
-      false
-    );
+    expect(
+      evaluateLessonPublication(approved, {
+        audience: "student",
+        reviewRecords: []
+      }).visible
+    ).toBe(false);
   });
 
-  it("keeps every current structured lesson out of public lookup and static enumeration", () => {
-    expect(getPublicLessons()).toEqual([]);
+  it("publishes only the exact approved Basic Fluid Pressure lesson", () => {
+    expect(getPublicLessons().map((lesson) => lesson.slug)).toEqual([
+      "basic-fluid-pressure"
+    ]);
+    expect(getPublicLessonBySlug("basic-fluid-pressure")?.version).toBe("0.4.0");
+
     for (const slug of [
-      "basic-fluid-pressure",
       "pump-system-units-and-measurements",
       "hydraulic-cylinder-force",
       "bernoulli-flow-lab",
@@ -135,6 +142,14 @@ describe("application publication enforcement", () => {
     ]) {
       expect(getPublicLessonBySlug(slug)).toBeUndefined();
     }
+  });
+
+  it("searches only the publication-gated lesson set", () => {
+    expect(searchPublicLessons("pressure").map((lesson) => lesson.slug)).toEqual([
+      "basic-fluid-pressure"
+    ]);
+    expect(searchPublicLessons("hydraulic cylinder")).toEqual([]);
+    expect(searchPublicLessons("SRC-NASA-GLENN-BERNOULLI")).toEqual([]);
   });
 
   it("rejects self-approval and incomplete review packages", () => {
@@ -163,25 +178,25 @@ describe("application publication enforcement", () => {
   it("requires explicit internal authorization for draft lesson lookup", () => {
     expect(
       getInternalLessonBySlug({
-        slug: "basic-fluid-pressure",
+        slug: "hydraulic-cylinder-force",
         audience: "content_author",
         access: {}
       })
     ).toBeUndefined();
     expect(
       getInternalLessonBySlug({
-        slug: "basic-fluid-pressure",
+        slug: "hydraulic-cylinder-force",
         audience: "content_author",
         access: { contentAuthorAuthorized: true }
       })?.slug
-    ).toBe("basic-fluid-pressure");
+    ).toBe("hydraulic-cylinder-force");
     expect(
       getInternalLessonBySlug({
-        slug: "basic-fluid-pressure",
+        slug: "hydraulic-cylinder-force",
         audience: "engineering_reviewer",
         access: { reviewerAuthorized: true }
       })?.slug
-    ).toBe("basic-fluid-pressure");
+    ).toBe("hydraulic-cylinder-force");
   });
 
   it("filters draft modules, lessons, pathways and prerequisite edges from curriculum", () => {
@@ -400,7 +415,15 @@ function approvedLessonReviewRecords(
         ? "Approved for student use"
         : "Engineering review required",
     notes: `Test approval for ${reviewType}.`,
-    evidenceChecked: { reviewComplete: true },
+    evidenceChecked:
+      reviewType === "publication_authorization"
+        ? {
+            exact_version_verified: true,
+            approval_record_verified: true,
+            artifact_hash_verified: true,
+            staging_only: true
+          }
+        : { reviewComplete: true },
     sourceIdsChecked: reviewType === "source" ? [...lesson.sourceIds] : [],
     equationIdsChecked: reviewType === "equation" ? [...(lesson.equationIds ?? [])] : [],
     simulationTestIdsChecked: reviewType === "simulation" ? ["SIM-TEST-CASE-001"] : [],

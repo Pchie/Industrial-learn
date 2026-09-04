@@ -1070,6 +1070,11 @@ function minimalLesson() {
     publicationStatus: "published",
     reviewStatus: "Approved for student use",
     version: "1.0.0",
+    publishedVersion: "1.0.0",
+    approvalRecordIds: [
+      "REV-TEST-ENGINEERING-APPROVAL",
+      "REV-TEST-PUBLICATION-AUTHORIZATION"
+    ],
     authorProfileId: "author-test-001",
     equationIds: [],
     simulationIds: [],
@@ -1103,9 +1108,9 @@ function approvedLessonReviewRecords(lesson: {
     "publication_authorization"
   ] as const;
 
-  return reviewTypes.map((reviewType, index) => ({
+  return reviewTypes.map((reviewType) => ({
     schemaVersion: "1.0.0",
-    id: `REV-TEST-${index + 1}`,
+    id: `REV-TEST-${reviewType.replaceAll("_", "-").toUpperCase()}`,
     entityId: lesson.id,
     entityType: "lesson",
     entityVersion: lesson.version,
@@ -1125,11 +1130,40 @@ function approvedLessonReviewRecords(lesson: {
         ? "Approved for student use"
         : "Engineering review required",
     notes: `Test approval for ${reviewType}.`,
-    evidenceChecked: { reviewComplete: true },
-    sourceIdsChecked: reviewType === "source" ? [...lesson.sourceIds] : [],
-    equationIdsChecked: reviewType === "equation" ? [...lesson.equationIds] : [],
-    simulationTestIdsChecked: reviewType === "simulation" ? ["SIM-TEST-CASE-001"] : [],
-    safetyReviewOutcome: reviewType === "safety" ? "passed" : "not_applicable",
+    evidenceChecked:
+      reviewType === "engineering_approval"
+        ? {
+            source_review_complete: true,
+            educational_review_complete: true,
+            equation_review_complete: true,
+            simulation_review_complete: true,
+            safety_limitations_review_complete: true
+          }
+        : reviewType === "publication_authorization"
+          ? {
+              exact_version_verified: true,
+              approval_record_verified: true,
+              artifact_hash_verified: true,
+              staging_only: true
+            }
+          : { reviewComplete: true },
+    sourceIdsChecked:
+      reviewType === "source" || reviewType === "engineering_approval"
+        ? [...lesson.sourceIds]
+        : [],
+    equationIdsChecked:
+      reviewType === "equation" || reviewType === "engineering_approval"
+        ? [...lesson.equationIds]
+        : [],
+    simulationTestIdsChecked:
+      reviewType === "simulation" ||
+      (reviewType === "engineering_approval" && lesson.simulationIds.length > 0)
+        ? ["SIM-TEST-CASE-001"]
+        : [],
+    safetyReviewOutcome:
+      reviewType === "safety" || reviewType === "engineering_approval"
+        ? "passed"
+        : "not_applicable",
     reviewedAt: "2026-08-30T12:00:00.000Z"
   }));
 }

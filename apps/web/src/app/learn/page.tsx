@@ -6,17 +6,26 @@ import {
   DifficultyIndex,
   PathwayCard,
   ProgressNotice,
+  PublishedLessonSection,
   SchoolCard
 } from "@/features/curriculum/components";
 import { getCurriculum } from "@/features/curriculum/data";
+import { searchPublicLessons } from "@/features/lesson-engine/data";
 
 export const metadata: Metadata = {
   title: "Learn | Industrial Learn",
   description: "Browse Industrial Learn curriculum by school, difficulty, and pathway."
 };
 
-export default function LearnPage() {
+type LearnPageProps = {
+  searchParams: Promise<{ q?: string | string[] }>;
+};
+
+export default async function LearnPage({ searchParams }: LearnPageProps) {
   const curriculum = getCurriculum();
+  const rawQuery = (await searchParams).q;
+  const query = Array.isArray(rawQuery) ? (rawQuery[0] ?? "") : (rawQuery ?? "");
+  const lessons = searchPublicLessons(query);
 
   return (
     <div className="curriculum-page">
@@ -27,6 +36,8 @@ export default function LearnPage() {
         title="Browse Industrial Learn"
       />
       <ProgressNotice />
+
+      <PublishedLessonSection lessons={lessons} query={query} searchable />
 
       <section className="curriculum-section" aria-labelledby="schools-title">
         <div className="section-heading">

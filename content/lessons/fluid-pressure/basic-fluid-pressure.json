@@ -60,15 +60,28 @@
       }
     ]
   },
-  "publicationStatus": "draft",
-  "reviewStatus": "Engineering review required",
+  "publicationStatus": "published",
+  "reviewStatus": "Approved for student use",
   "version": "0.4.0",
+  "publishedVersion": "0.4.0",
+  "approvalRecordIds": [
+    "REV-BASIC-FLUID-PRESSURE-V040-ENGINEERING-APPROVAL",
+    "REV-BASIC-FLUID-PRESSURE-V040-PUBLICATION-AUTHORIZATION"
+  ],
+  "authorProfileId": "author-basic-fluid-pressure-v040",
   "estimatedCompletionTime": "25 minutes",
   "estimatedInteractionTime": "10 minutes",
   "difficulty": "Introductory",
   "prerequisites": ["Basic algebra", "SI base and derived units"],
   "knowledgeFileIds": ["KF-FLUID-PRESSURE-001"],
   "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PSU-CIMBALA-PRESSURE-BASICS"],
+  "multipleSourceVerification": {
+    "status": "verified",
+    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PSU-CIMBALA-PRESSURE-BASICS"],
+    "rationale": "The independent engineering review confirmed that both registered university educational sources support the bounded pressure definition, equation, and SI-unit claims in version 0.4.0.",
+    "reviewerId": "independent-reviewer-basic-fluid-pressure-v040",
+    "reviewedAt": "2026-09-03T17:55:56.269Z"
+  },
   "learningOutcomeIds": ["LO-FP-001", "LO-FP-002", "LO-FP-003"],
   "learningOutcomes": [
     "Describe pressure as normal force distributed over an area.",

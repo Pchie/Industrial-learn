@@ -2,8 +2,14 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { createElement } from "react";
 import { describe, expect, it } from "vitest";
 
-import { LessonList, ModuleCard, ProgressNotice } from "./components";
+import {
+  LessonList,
+  ModuleCard,
+  ProgressNotice,
+  PublishedLessonSection
+} from "./components";
 import { getCurriculum, getInternalCurriculum, getModule } from "./data";
+import { getPublicLessons } from "../lesson-engine/data";
 
 describe("curriculum browsing components", () => {
   it("does not display fake completion data in signed-out progress messaging", () => {
@@ -53,5 +59,19 @@ describe("curriculum browsing components", () => {
   it("excludes review-gated modules from public curriculum lookup", () => {
     expect(getCurriculum().modules).toEqual([]);
     expect(getModule("fluid-mechanics-foundations")).toBeUndefined();
+  });
+
+  it("renders only registry-approved published lessons", () => {
+    const markup = renderToStaticMarkup(
+      createElement(PublishedLessonSection, {
+        lessons: getPublicLessons(),
+        searchable: true
+      })
+    );
+
+    expect(markup).toContain("Basic Fluid Pressure");
+    expect(markup).toContain("/lessons/basic-fluid-pressure");
+    expect(markup).not.toContain("Hydraulic Cylinder Force");
+    expect(markup).not.toContain("Bernoulli Flow Lab");
   });
 });

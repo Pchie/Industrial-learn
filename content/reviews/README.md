@@ -14,5 +14,7 @@ After review records are created, register their static imports in
 `apps/web/src/features/publication/review-records.ts`. Validation and runtime delivery are
 separate gates; status changes or unregistered review files cannot publish a lesson.
 
-No approval records exist yet. The current lessons remain draft or internal pending
-independent human review.
+Basic Fluid Pressure version `0.4.0` has one independent engineering approval and one
+separate Platform Owner authorization for protected staging. Other lessons remain draft
+or internal pending independent review. Private reviewer comments and account identifiers
+remain in the protected governance database rather than this repository.

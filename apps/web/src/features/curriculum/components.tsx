@@ -3,6 +3,7 @@ import {
   Alert,
   Badge,
   Breadcrumbs,
+  Button,
   EngineeringReviewBadge
 } from "@industrial-learn/design-system";
 
@@ -15,6 +16,7 @@ import type {
   School
 } from "./data";
 import { prerequisiteTitles } from "./data";
+import type { StructuredLesson } from "../lesson-engine/types";
 
 export function CurriculumHero({
   eyebrow,
@@ -48,6 +50,85 @@ export function EmptyState({ message }: { message: string }) {
     <section className="curriculum-state" aria-live="polite">
       <h2>No items to show</h2>
       <p>{message}</p>
+    </section>
+  );
+}
+
+export function PublishedLessonSection({
+  lessons,
+  query,
+  searchable = false
+}: {
+  lessons: StructuredLesson[];
+  query?: string;
+  searchable?: boolean;
+}) {
+  return (
+    <section className="curriculum-section" aria-labelledby="published-lessons-title">
+      <div className="section-heading">
+        <p className="eyebrow">Approved and published</p>
+        <h2 id="published-lessons-title">Student lessons</h2>
+        <p>Only exact versions that passed review and publication checks appear here.</p>
+      </div>
+
+      {searchable ? (
+        <form action="/learn" className="curriculum-search" role="search">
+          <label htmlFor="lesson-search">Search published lessons</label>
+          <div>
+            <input
+              defaultValue={query}
+              id="lesson-search"
+              name="q"
+              placeholder="Search by topic or lesson name"
+              type="search"
+            />
+            <Button type="submit">Search</Button>
+            {query ? (
+              <Link className="curriculum-search__clear" href="/learn">
+                Clear
+              </Link>
+            ) : null}
+          </div>
+        </form>
+      ) : null}
+
+      {lessons.length > 0 ? (
+        <div className="curriculum-grid">
+          {lessons.map((lesson) => (
+            <article className="curriculum-card" key={lesson.id}>
+              <div className="curriculum-card__topline">
+                <p className="il-card-kicker">Lesson</p>
+                <Badge tone="normal">Published</Badge>
+              </div>
+              <h3>{lesson.title}</h3>
+              <p>{lesson.description}</p>
+              <dl className="curriculum-meta">
+                <div>
+                  <dt>Difficulty</dt>
+                  <dd>{lesson.difficulty}</dd>
+                </div>
+                <div>
+                  <dt>Duration</dt>
+                  <dd>{lesson.estimatedCompletionTime}</dd>
+                </div>
+              </dl>
+              <EngineeringReviewBadge status={lesson.reviewStatus} />
+              <Link className="curriculum-action" href={`/lessons/${lesson.slug}`}>
+                Start lesson
+              </Link>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div className="curriculum-search-empty" aria-live="polite">
+          <h3>No published lessons found</h3>
+          <p>
+            {query
+              ? `No published lesson matches “${query}”.`
+              : "No reviewed lesson is published in this area yet."}
+          </p>
+        </div>
+      )}
     </section>
   );
 }

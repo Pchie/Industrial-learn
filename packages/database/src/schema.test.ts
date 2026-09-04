@@ -418,6 +418,35 @@ describe("database schema", () => {
     );
   });
 
+  it("publishes an exact approved staging version atomically and idempotently", () => {
+    expect(migrationSql).toContain(
+      "create or replace function public.publish_approved_content_version_to_staging"
+    );
+    expect(migrationSql).toContain("for update");
+    expect(migrationSql).toContain("p_environment is distinct from 'staging'");
+    expect(migrationSql).toContain(
+      "The approving reviewer must differ from the content author"
+    );
+    expect(migrationSql).toContain(
+      "Every required approval attestation must be complete"
+    );
+    expect(migrationSql).toContain(
+      "The exact-version engineering review assignment is not complete"
+    );
+    expect(migrationSql).toContain(
+      "A later unresolved review finding blocks publication"
+    );
+    expect(migrationSql).toContain("'approvalRecordId', p_approval_record_id");
+    expect(migrationSql).toContain("'artifactSha256', p_artifact_sha256");
+    expect(migrationSql).toContain("'environment', p_environment");
+    expect(migrationSql).toContain("was_already_published boolean");
+    expect(migrationSql).toContain(
+      "grant execute on function public.publish_approved_content_version_to_staging"
+    );
+    expect(migrationSql).toContain("to authenticated, service_role");
+    expect(migrationSql).toContain("from public, anon");
+  });
+
   it("keeps service-role credentials out of browser application code", () => {
     const appFiles = readdirSync(join(root, "apps/web/src/app"), {
       recursive: true,
