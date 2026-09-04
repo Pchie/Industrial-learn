@@ -53,7 +53,18 @@ export function searchPublicLessons(query: string) {
 }
 
 export function getSourceRecordsById(sourceIds: string[]) {
-  return getStaticSourceRecordsById(sourceIds) as SourceRecord[];
+  return getStaticSourceRecordsById(sourceIds).map((source) => {
+    const record = source as unknown as SourceRecord;
+
+    return {
+      id: record.id,
+      title: record.title,
+      citation: record.citation,
+      approvalStatus: record.approvalStatus,
+      reviewStatus: record.reviewStatus,
+      evidenceStatus: record.evidenceStatus
+    } satisfies SourceRecord;
+  });
 }
 
 export function getInternalLessonBySlug(input: {
