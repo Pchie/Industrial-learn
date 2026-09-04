@@ -1,6 +1,7 @@
 import type {
   AssessmentAttemptRecord,
   DashboardEnrolment,
+  LessonProgressRecord,
   SavedLessonRecord,
   SimulationAttemptRecord,
   StudentDashboardData
@@ -10,6 +11,7 @@ import type { AuthProfile } from "../auth/session-core";
 const dismissedRecommendations = new Map<string, Set<string>>();
 const completedAssessmentAttempts = new Map<string, AssessmentAttemptRecord[]>();
 const completedSimulationAttempts = new Map<string, SimulationAttemptRecord[]>();
+const lessonProgressRecords = new Map<string, LessonProgressRecord[]>();
 
 const baseDate = "2026-07-22T10:00:00.000Z";
 
@@ -17,6 +19,7 @@ export function resetLocalDashboardStoreForTests() {
   dismissedRecommendations.clear();
   completedAssessmentAttempts.clear();
   completedSimulationAttempts.clear();
+  lessonProgressRecords.clear();
 }
 
 export function dismissLocalDashboardRecommendation(
@@ -34,9 +37,11 @@ export function loadLocalStudentDashboardData(
   const seed = localDashboardSeeds[profile.email] ?? emptyStudentSeed(profile);
   const dynamicAssessmentAttempts = completedAssessmentAttempts.get(profile.id) ?? [];
   const dynamicSimulationAttempts = completedSimulationAttempts.get(profile.id) ?? [];
+  const dynamicLessonProgress = lessonProgressRecords.get(profile.id) ?? [];
 
   return {
     ...seed,
+    lessonProgress: mergeById(dynamicLessonProgress, seed.lessonProgress),
     assessmentAttempts: [...dynamicAssessmentAttempts, ...seed.assessmentAttempts],
     simulationAttempts: [...dynamicSimulationAttempts, ...seed.simulationAttempts],
     profile: {
@@ -46,6 +51,14 @@ export function loadLocalStudentDashboardData(
     },
     dismissedRecommendationIds: Array.from(dismissedRecommendations.get(profile.id) ?? [])
   };
+}
+
+export function recordLocalLessonProgress(
+  studentProfileId: string,
+  progress: LessonProgressRecord
+) {
+  const current = lessonProgressRecords.get(studentProfileId) ?? [];
+  lessonProgressRecords.set(studentProfileId, mergeById([progress], current));
 }
 
 export function recordLocalAssessmentDashboardAttempt(
@@ -64,6 +77,14 @@ export function recordLocalSimulationDashboardAttempt(
   const current = completedSimulationAttempts.get(studentProfileId) ?? [];
   const next = [attempt, ...current.filter((item) => item.id !== attempt.id)];
   completedSimulationAttempts.set(studentProfileId, next);
+}
+
+function mergeById<T extends { id: string }>(preferred: T[], fallback: T[]) {
+  const records = new Map(fallback.map((record) => [record.id, record]));
+  for (const record of preferred) {
+    records.set(record.id, record);
+  }
+  return [...records.values()];
 }
 
 function emptyStudentSeed(profile: AuthProfile): StudentDashboardData {

@@ -12,6 +12,20 @@ const profileRoleConflictFixSql = readFileSync(
   join(root, "database/migrations/0017_fix_profile_role_conflict_target.sql"),
   "utf8"
 );
+const assessmentIntegritySql = readFileSync(
+  join(
+    root,
+    "database/migrations/0019_assessment_version_integrity_and_pilot_progress.sql"
+  ),
+  "utf8"
+);
+const assessmentReviewSeedSql = readFileSync(
+  join(
+    root,
+    "database/seed/0007_basic_fluid_pressure_assessment_review_item.staging.sql"
+  ),
+  "utf8"
+);
 const policySql = readSqlDirectory("database/policies");
 const effectivePolicySql = `${policySql}\n${migrationSql}`;
 const seedSql = readFileSync(
@@ -180,8 +194,6 @@ describe("database schema", () => {
       ["lessons", "lessons_read_approved_or_authorized"],
       ["lesson_prerequisites", "lesson_prerequisites_read_accessible_lessons"],
       ["learning_outcomes", "learning_outcomes_read_accessible_content"],
-      ["assessments", "assessments_read_approved_or_authorized"],
-      ["questions", "questions_read_accessible_assessment"],
       ["simulations", "simulations_read_approved_or_authorized"],
       ["projects", "projects_read_approved_or_authorized"]
     ] as const) {
@@ -195,6 +207,20 @@ describe("database schema", () => {
       );
       expect(replacement, `${table}.${policy}`).toContain("public.is_content_staff()");
     }
+
+    const assessmentsPolicy = latestPolicyForTable(
+      "assessments",
+      "assessments_read_approved_or_authorized"
+    );
+    expect(assessmentsPolicy).toContain("public.is_current_published_assessment(id)");
+
+    const questionsPolicy = latestPolicyForTable(
+      "questions",
+      "questions_read_accessible_assessment"
+    );
+    expect(questionsPolicy).not.toContain("public.is_student_visible_content");
+    expect(questionsPolicy).not.toContain("public.is_current_published_assessment");
+    expect(questionsPolicy).toContain("public.has_role('lecturer')");
   });
 
   it("prevents enrolment helpers from bypassing content approval in replacement policies", () => {
@@ -215,15 +241,13 @@ describe("database schema", () => {
       "projects_read_approved_or_authorized"
     );
 
-    for (const policy of [
-      lessonsPolicy,
-      assessmentsPolicy,
-      simulationsPolicy,
-      projectsPolicy
-    ]) {
+    for (const policy of [lessonsPolicy, simulationsPolicy, projectsPolicy]) {
       expect(policy).not.toContain("public.student_has_module");
       expect(policy).toContain("public.is_student_visible_content");
     }
+
+    expect(assessmentsPolicy).not.toContain("public.student_has_module");
+    expect(assessmentsPolicy).toContain("public.is_current_published_assessment");
   });
 
   it("prevents direct author policies from self-approving or publishing governance records", () => {
@@ -445,6 +469,62 @@ describe("database schema", () => {
     );
     expect(migrationSql).toContain("to authenticated, service_role");
     expect(migrationSql).toContain("from public, anon");
+  });
+
+  it("gates the pilot assessment on exact reviewed version and lesson evidence", () => {
+    expect(assessmentIntegritySql).toContain(
+      "create or replace function public.is_current_published_assessment"
+    );
+    expect(assessmentIntegritySql).toContain(
+      "assessment_version.snapshot ->> 'artifactSha256' = a.artifact_sha256"
+    );
+    expect(assessmentIntegritySql).toContain(
+      "assessment_version.snapshot ->> 'relatedLessonVersion' = a.lesson_content_version"
+    );
+    expect(assessmentIntegritySql).toContain(
+      "approval.reviewer_profile_id <> assessment_item.author_profile_id"
+    );
+    expect(assessmentIntegritySql).toContain("assignment.status = 'completed'");
+    expect(assessmentIntegritySql).toContain(
+      "a.answer_protection_status = 'server_only'"
+    );
+    expect(assessmentIntegritySql).toContain("a.unresolved_review_blockers = false");
+  });
+
+  it("keeps pilot progress and attempt mutations behind service-only transactions", () => {
+    expect(assessmentIntegritySql).toContain(
+      "create or replace function public.record_pilot_lesson_activity_progress"
+    );
+    expect(assessmentIntegritySql).toContain(
+      "create or replace function public.start_assessment_attempt_transaction"
+    );
+    expect(assessmentIntegritySql).toContain(
+      "create or replace function public.complete_assessment_attempt_transaction"
+    );
+    expect(assessmentIntegritySql).toContain(
+      "revoke insert, update, delete on table public.lesson_progress from anon, authenticated"
+    );
+    expect(assessmentIntegritySql).toContain(
+      "revoke insert, update, delete on table public.assessment_attempts from anon, authenticated"
+    );
+    expect(assessmentIntegritySql).toContain(") to service_role;");
+    expect(assessmentIntegritySql).toContain(
+      "on conflict (lesson_content_id, student_profile_id)"
+    );
+  });
+
+  it("prepares assessment v2 for review without approving or publishing it", () => {
+    expect(assessmentReviewSeedSql).toContain("'ASM-FLUID-PRESSURE-001'");
+    expect(assessmentReviewSeedSql).toContain("'basic-fluid-pressure-check'");
+    expect(assessmentReviewSeedSql).toContain("'version', '2'");
+    expect(assessmentReviewSeedSql).toContain(
+      "'artifactSha256', 'db6268839cdfb959e7f7e392d9879cb3518b30d8b13ee01686cdd88ec71cec88'"
+    );
+    expect(assessmentReviewSeedSql).toContain("'Engineering review required'");
+    expect(assessmentReviewSeedSql).toContain("'draft'");
+    expect(assessmentReviewSeedSql).not.toContain(
+      "'Approved for student use'::public.content_status"
+    );
   });
 
   it("keeps service-role credentials out of browser application code", () => {

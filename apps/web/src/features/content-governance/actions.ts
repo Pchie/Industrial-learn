@@ -9,12 +9,11 @@ import { readSessionTokens, requireAnyRole } from "../auth/server";
 
 import { loadReviewGovernanceModel } from "./server-data";
 
-const BASIC_PRESSURE_SLUG = "basic-fluid-pressure";
-
 export async function recordContentReviewDecisionAction(formData: FormData) {
+  const itemSlug = reviewSlug(formData.get("itemSlug"));
   const session = await requireAnyRole(
     ["engineering_reviewer", "administrator"],
-    `/review/${BASIC_PRESSURE_SLUG}`
+    `/review/${itemSlug}`
   );
   const { accessToken } = await readSessionTokens();
   const decision = readDecision(formData.get("decision"));
@@ -26,14 +25,13 @@ export async function recordContentReviewDecisionAction(formData: FormData) {
   const exactVersionAttestation = formData.get("exactVersionAttestation") === "on";
 
   if (!decision || comments.length < 20 || !accessToken || !exactVersionAttestation) {
-    redirect(reviewUrl("invalid_submission"));
+    redirect(reviewUrl(itemSlug, "invalid_submission"));
   }
 
   const model = await loadReviewGovernanceModel(session, accessToken);
   const item = model.items.find(
     (candidate) =>
-      candidate.slug === BASIC_PRESSURE_SLUG &&
-      candidate.governanceItemId === governanceItemId
+      candidate.slug === itemSlug && candidate.governanceItemId === governanceItemId
   );
 
   if (
@@ -43,13 +41,13 @@ export async function recordContentReviewDecisionAction(formData: FormData) {
     item.contentVersion !== contentVersion ||
     item.workflowStatus !== "Engineering review required"
   ) {
-    redirect(reviewUrl("version_conflict"));
+    redirect(reviewUrl(itemSlug, "version_conflict"));
   }
 
   const verifiedGovernanceItemId = item.governanceItemId;
 
   if (decision === "approved" && item.authorProfileId === session.profile.id) {
-    redirect(reviewUrl("independent_reviewer_required"));
+    redirect(reviewUrl(itemSlug, "independent_reviewer_required"));
   }
 
   const evidenceChecked = {
@@ -65,11 +63,11 @@ export async function recordContentReviewDecisionAction(formData: FormData) {
     decision === "approved" &&
     (!Object.values(evidenceChecked).every(Boolean) || !safetyReviewOutcome)
   ) {
-    redirect(reviewUrl("incomplete_attestation"));
+    redirect(reviewUrl(itemSlug, "incomplete_attestation"));
   }
 
   if (isLocalGovernanceMode()) {
-    redirect(reviewUrl(`local_${decision}`));
+    redirect(reviewUrl(itemSlug, `local_${decision}`));
   }
 
   const client = createSupabaseServerClient(getServerEnv(), accessToken);
@@ -86,12 +84,12 @@ export async function recordContentReviewDecisionAction(formData: FormData) {
   });
 
   if (error) {
-    redirect(reviewUrl("database_rejected"));
+    redirect(reviewUrl(itemSlug, "database_rejected"));
   }
 
   revalidatePath("/review");
-  revalidatePath(`/review/${BASIC_PRESSURE_SLUG}`);
-  redirect(reviewUrl(decision));
+  revalidatePath(`/review/${itemSlug}`);
+  redirect(reviewUrl(itemSlug, decision));
 }
 
 function readDecision(value: FormDataEntryValue | null) {
@@ -108,8 +106,13 @@ function readText(value: FormDataEntryValue | null) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-function reviewUrl(result: string) {
-  return `/review/${BASIC_PRESSURE_SLUG}?review_result=${encodeURIComponent(result)}`;
+function reviewSlug(value: FormDataEntryValue | null) {
+  const slug = readText(value);
+  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) ? slug : "basic-fluid-pressure";
+}
+
+function reviewUrl(slug: string, result: string) {
+  return `/review/${slug}?review_result=${encodeURIComponent(result)}`;
 }
 
 function isLocalGovernanceMode() {

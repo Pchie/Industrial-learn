@@ -20,17 +20,27 @@ const BernoulliFlowVisualLesson = dynamic(() =>
   )
 );
 
-const BasicFluidPressureVisualLesson = dynamic(() =>
-  import("../basic-fluid-pressure-lesson/basic-fluid-pressure-visual-lesson").then(
-    (module) => module.BasicFluidPressureVisualLesson
+const BasicFluidPressureVisualExperience = dynamic(() =>
+  import("../basic-fluid-pressure-lesson/basic-fluid-pressure-visual-experience").then(
+    (module) => module.BasicFluidPressureVisualExperience
   )
 );
 
-type VisualExperienceRenderer = (lesson: StructuredLesson) => ReactNode;
+type VisualExperienceContext = {
+  canSaveProgress: boolean;
+};
+
+type VisualExperienceRenderer = (
+  lesson: StructuredLesson,
+  context: VisualExperienceContext
+) => ReactNode;
 
 const visualExperienceRegistry: Record<string, VisualExperienceRenderer> = {
-  "VIS-FLUID-PRESSURE-HERO-001": (lesson) => (
-    <BasicFluidPressureVisualLesson content={getBasicPressureExperienceContent(lesson)} />
+  "VIS-FLUID-PRESSURE-HERO-001": (lesson, context) => (
+    <BasicFluidPressureVisualExperience
+      canSaveProgress={context.canSaveProgress}
+      content={getBasicPressureExperienceContent(lesson)}
+    />
   ),
   "SIM-HYD-CYL-FORCE-001": (lesson) => (
     <HydraulicCylinderVisualLesson
@@ -47,14 +57,17 @@ export const REGISTERED_VISUAL_EXPERIENCE_IDS = Object.freeze(
 );
 
 export function getPublicVisualExperienceOverrides(
-  lesson: StructuredLesson
+  lesson: StructuredLesson,
+  context: VisualExperienceContext = { canSaveProgress: false }
 ): Partial<Record<VisualLessonStageId, ReactNode>> | undefined {
   const experienceId = resolveVisualExperienceId(lesson, false);
   const renderExperience = experienceId
     ? visualExperienceRegistry[experienceId]
     : undefined;
 
-  return renderExperience ? { heroExperience: renderExperience(lesson) } : undefined;
+  return renderExperience
+    ? { heroExperience: renderExperience(lesson, context) }
+    : undefined;
 }
 
 function resolveVisualExperienceId(lesson: StructuredLesson, internal: boolean) {
@@ -78,7 +91,9 @@ export function getInternalVisualExperienceOverrides(
     ? visualExperienceRegistry[experienceId]
     : undefined;
 
-  return renderExperience ? { heroExperience: renderExperience(lesson) } : undefined;
+  return renderExperience
+    ? { heroExperience: renderExperience(lesson, { canSaveProgress: false }) }
+    : undefined;
 }
 
 export function projectLessonForPublicDelivery(

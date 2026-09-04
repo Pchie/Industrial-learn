@@ -1,0 +1,101 @@
+{
+  "auditDate": "2026-09-04",
+  "environment": {
+    "name": "staging",
+    "supabaseProjectRef": "lgjujyaclrpaopdabyzg",
+    "productionModified": false
+  },
+  "lesson": {
+    "id": "LES-FLUID-PRESSURE-001",
+    "slug": "basic-fluid-pressure",
+    "version": "0.4.0",
+    "governanceVersion": 4,
+    "publicationStatus": "published",
+    "reviewStatus": "Approved for student use"
+  },
+  "canonicalAssessment": {
+    "id": "ASM-FLUID-PRESSURE-001",
+    "entityId": "94f5c2b9-a0b9-43f5-8b6b-4a3a67fc4f02",
+    "slug": "basic-fluid-pressure-check",
+    "version": 2,
+    "artifact": "content/assessments/fluid-pressure/basic-fluid-pressure-assessment.json",
+    "artifactSha256": "db6268839cdfb959e7f7e392d9879cb3518b30d8b13ee01686cdd88ec71cec88",
+    "questionCount": 5,
+    "maximumPoints": 6,
+    "learningOutcomeIds": ["LO-FP-001", "LO-FP-002", "LO-FP-003"],
+    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PSU-CIMBALA-PRESSURE-BASICS"],
+    "equationIds": ["EQ-FLUID-PRESSURE-001"],
+    "competencyLevels": ["Understood", "Calculated"],
+    "answerProtection": "server_only",
+    "reviewRecordId": null,
+    "publicationAuditEventId": null,
+    "publicationStatus": "pending_independent_review"
+  },
+  "lineage": [
+    {
+      "name": "repository-v1",
+      "description": "Earlier broad artifact containing out-of-scope simulation, fault, and design tasks.",
+      "supersededBy": "repository-v2",
+      "historyRewritten": false
+    },
+    {
+      "name": "repository-v2",
+      "createdByCommit": "2606f487f35d80dad51d4f5ac73720e44726d6e5",
+      "description": "Five-question lesson-aligned artifact prepared for independent review.",
+      "canonical": true
+    },
+    {
+      "name": "live-staging-v1-fixture",
+      "databaseId": "10000000-0000-4000-8000-000000003309",
+      "slug": "staging-pressure-check",
+      "title": "Staging Pressure Check",
+      "version": 1,
+      "description": "One-question RLS fixture; not a canonical published assessment for the lesson.",
+      "acceptedAsVersion2": false
+    }
+  ],
+  "controls": {
+    "applicationExactVersionGate": true,
+    "databaseExactVersionGate": true,
+    "independentAssessmentReviewRequired": true,
+    "studentDirectAnswerTableAccess": false,
+    "studentDirectAttemptWrite": false,
+    "studentDirectProgressWrite": false,
+    "atomicAttemptStart": true,
+    "atomicAttemptCompletionAndProgress": true,
+    "parentModulePublished": false,
+    "pilotCollectionUsed": true
+  },
+  "localEvidence": {
+    "postgresRollbackValidation": "PASS",
+    "typecheck": "PASS",
+    "secretScan": "PASS",
+    "formatting": "PASS",
+    "lint": "PASS",
+    "contentValidation": { "result": "PASS", "passed": 29 },
+    "migrationValidation": { "result": "PASS", "passed": 24 },
+    "unitTests": { "result": "PASS", "passed": 382, "skippedOptInLive": 5 },
+    "build": "PASS",
+    "focusedBrowserTests": { "result": "PASS", "passed": 50 },
+    "smokeTests": { "result": "PASS", "passed": 5 },
+    "endToEndTests": { "result": "PASS", "passed": 113 }
+  },
+  "liveEvidence": {
+    "migrationApplied": false,
+    "reviewItemSeeded": false,
+    "independentReviewComplete": false,
+    "assessmentPublished": false,
+    "syntheticStudentFlow": "PENDING"
+  },
+  "provisionalVerdicts": {
+    "assessmentVersionIntegrity": "BLOCKED",
+    "assessmentGovernance": "PARTIAL",
+    "assessmentBrowserFlow": "BLOCKED",
+    "authenticatedProgressPersistence": "PARTIAL",
+    "parentModulePilotNavigation": "PASS WITH PILOT COLLECTION",
+    "mobileHeader": "PASS",
+    "publicationIntegrity": "FAIL",
+    "basicFluidPressureCompletePilotFlow": "NOT READY",
+    "prompt49Readiness": "NO-GO"
+  }
+}

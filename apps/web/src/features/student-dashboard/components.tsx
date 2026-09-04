@@ -62,6 +62,19 @@ export function StudentDashboard({
         Competency is based on assessed evidence, not time spent alone.
       </Alert>
 
+      <DashboardSection title="Pilot learning path">
+        <article className="dashboard-card">
+          <h3>Fluid Engineering Pilot</h3>
+          <p>
+            Continue through the approved Basic Fluid Pressure lesson, its practical
+            challenge, and the linked assessment.
+          </p>
+          <Link className="curriculum-action" href="/learn/pilot">
+            Open pilot learning path
+          </Link>
+        </article>
+      </DashboardSection>
+
       <DashboardSection title="Continue learning">
         {model.continueLearningTitle && model.continueLessonSlug ? (
           <article className="dashboard-card">

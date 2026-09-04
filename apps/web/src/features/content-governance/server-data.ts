@@ -35,6 +35,12 @@ export type GovernanceInterfaceItem = {
   publicationStatus: string;
   currentVersion: number;
   contentVersion: string;
+  artifactSha256?: string;
+  relatedLessonId?: string;
+  relatedLessonSlug?: string;
+  relatedLessonVersion?: string;
+  learningOutcomeIds: string[];
+  questionCount?: number;
   publishedVersion?: number | undefined;
   sourceIds: string[];
   equationIds: string[];
@@ -198,6 +204,9 @@ export async function loadReviewGovernanceModel(
           typeof snapshot.version === "string"
             ? snapshot.version
             : String(item.current_version);
+        const sourceIds = stringArray(snapshot.sourceIds) ?? version?.source_ids ?? [];
+        const equationIds = stringArray(snapshot.equationIds) ?? [];
+        const learningOutcomeIds = stringArray(snapshot.learningOutcomeIds) ?? [];
 
         return {
           id: typeof snapshot.id === "string" ? snapshot.id : `GOVERNANCE-${item.id}`,
@@ -211,10 +220,17 @@ export async function loadReviewGovernanceModel(
           publicationStatus: item.publication_status,
           currentVersion: item.current_version,
           contentVersion,
+          ...optionalStringField("artifactSha256", snapshot.artifactSha256),
+          ...optionalStringField("relatedLessonId", snapshot.relatedLessonId),
+          ...optionalStringField("relatedLessonSlug", snapshot.relatedLessonSlug),
+          ...optionalStringField("relatedLessonVersion", snapshot.relatedLessonVersion),
+          learningOutcomeIds,
+          ...(typeof snapshot.questionCount === "number"
+            ? { questionCount: snapshot.questionCount }
+            : {}),
           ...(item.published_version ? { publishedVersion: item.published_version } : {}),
-          sourceIds: version?.source_ids ?? [],
-          equationIds:
-            item.entity_type === "calculation_lesson" ? ["EQ-FLUID-PRESSURE-001"] : [],
+          sourceIds,
+          equationIds,
           requiredReviews: requiredReviewsFor(item.entity_type),
           completedReviews: completedReviews(itemReviews),
           reviewerComments: itemReviews.map((review) => review.notes),
@@ -239,14 +255,23 @@ export async function loadReviewGovernanceModel(
               }
             : {}),
           isAssignedToActor: assignment?.reviewer_profile_id === session.profile.id,
-          moduleTitle: "Fluid Mechanics Foundations",
+          moduleTitle:
+            typeof snapshot.moduleTitle === "string"
+              ? snapshot.moduleTitle
+              : "Fluid Mechanics Foundations",
           reviewType: "Independent engineering review",
           sourceStatus:
             (version?.source_ids.length ?? 0) > 0
               ? "Source evidence attached"
               : "Source required",
-          equationStatus: "Implementation and evidence supplied; human check required",
-          simulationStatus: "No standalone simulation required for this lesson",
+          equationStatus:
+            equationIds.length > 0
+              ? "Implementation and evidence supplied; human check required"
+              : "No equation evidence registered",
+          simulationStatus:
+            item.entity_type === "assessment"
+              ? "No simulation task is included in this assessment version"
+              : "No standalone simulation required for this lesson",
           accessibilityStatus: "Automated evidence supplied; human check required",
           lastModified: item.updated_at
         };
@@ -272,9 +297,21 @@ function unavailableModel(session: AuthenticatedSession, error: string) {
 }
 
 function requiredReviewsFor(entityType: string) {
-  return entityType === "calculation_lesson"
+  return entityType === "calculation_lesson" || entityType === "assessment"
     ? ["source", "equation", "safety and limitations", "educational", "accessibility"]
     : ["source", "educational", "accessibility"];
+}
+
+function stringArray(value: unknown) {
+  return Array.isArray(value) && value.every((entry) => typeof entry === "string")
+    ? value
+    : undefined;
+}
+
+function optionalStringField<Key extends string>(key: Key, value: unknown) {
+  return typeof value === "string" && value.trim()
+    ? ({ [key]: value } as Record<Key, string>)
+    : {};
 }
 
 function completedReviews(
@@ -370,6 +407,7 @@ const localGovernanceItems: GovernanceInterfaceItem[] = [
     publicationStatus: "draft",
     currentVersion: 4,
     contentVersion: "0.4.0",
+    learningOutcomeIds: ["LO-FP-001", "LO-FP-002", "LO-FP-003"],
     sourceIds: ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PSU-CIMBALA-PRESSURE-BASICS"],
     equationIds: ["EQ-FLUID-PRESSURE-001"],
     requiredReviews: [

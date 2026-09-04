@@ -89,6 +89,7 @@ async function loadSupabaseStudentDashboardData(
       limit: "25"
     }),
     client.get("assessment_attempts", {
+      select: "*,assessments(slug,title,module_slug)",
       student_profile_id: `eq.${session.profile.id}`,
       order: "submitted_at.desc.nullslast",
       limit: "10"
@@ -222,16 +223,25 @@ function mapLessonProgressRow(row: SupabaseRow): LessonProgressRecord {
 }
 
 function mapAssessmentAttemptRow(row: SupabaseRow): AssessmentAttemptRecord {
+  const assessment = nestedRow(row.assessments);
   return {
     id: stringValue(row.id) ?? "unknown-assessment-attempt",
     assessmentSlug:
-      stringValue(row.assessment_slug) ?? stringValue(row.assessment_id) ?? "",
-    title: stringValue(row.assessment_title) ?? "Assessment attempt",
-    moduleSlug: stringValue(row.module_slug) ?? "",
+      stringValue(assessment?.slug) ??
+      stringValue(row.assessment_slug) ??
+      stringValue(row.assessment_id) ??
+      "",
+    title:
+      stringValue(assessment?.title) ??
+      stringValue(row.assessment_title) ??
+      "Assessment attempt",
+    moduleSlug:
+      stringValue(assessment?.module_slug) ?? stringValue(row.module_slug) ?? "",
     status: attemptStatus(row.status),
     score: numberValue(row.score),
     maxScore: numberValue(row.max_score),
     submittedAt: stringValue(row.submitted_at),
+    competencyLevel: highestCompetency(row.competency_awards),
     incorrectTopics: arrayValue(row.incorrect_topics),
     unitErrors: numberValue(row.unit_errors)
   };
@@ -286,6 +296,33 @@ function arrayValue(value: unknown) {
   return Array.isArray(value)
     ? value.filter((item): item is string => typeof item === "string")
     : [];
+}
+
+function nestedRow(value: unknown): SupabaseRow | undefined {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value as SupabaseRow;
+  }
+  return undefined;
+}
+
+function highestCompetency(value: unknown): AssessmentAttemptRecord["competencyLevel"] {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return undefined;
+  }
+
+  const awards = value as Record<string, unknown>;
+  const levels: NonNullable<AssessmentAttemptRecord["competencyLevel"]>[] = [
+    "Introduced",
+    "Understood",
+    "Calculated",
+    "Operated",
+    "Diagnosed",
+    "Designed"
+  ];
+
+  return [...levels]
+    .reverse()
+    .find((level) => typeof awards[level] === "number" && awards[level] > 0);
 }
 
 function attemptStatus(value: unknown) {

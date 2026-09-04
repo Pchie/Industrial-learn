@@ -12,7 +12,10 @@ import {
 import type { Assessment, CompetencyLevel } from "@industrial-learn/assessment-core";
 
 import { createAssessmentFromCatalog, listAssessmentCatalog } from "./catalog";
-import { recordLocalAssessmentDashboardAttempt } from "../student-dashboard/local-dashboard-store";
+import {
+  recordLocalAssessmentDashboardAttempt,
+  recordLocalLessonProgress
+} from "../student-dashboard/local-dashboard-store";
 
 const attempts = new Map<string, PersistedAssessmentAttempt>();
 const assessments = new Map<string, Assessment>(
@@ -110,7 +113,7 @@ function createLocalRepositories(): AttemptPersistenceRepositories {
       attempts.set(key(completed.studentProfileId, completed.id), completed);
       recordLocalAssessmentDashboardAttempt(completed.studentProfileId, {
         id: completed.id,
-        assessmentSlug: "staging-pressure-check",
+        assessmentSlug: "basic-fluid-pressure-check",
         title: "Basic Fluid Pressure Check",
         moduleSlug: "fluid-mechanics-foundations",
         status: completed.status,
@@ -124,6 +127,16 @@ function createLocalRepositories(): AttemptPersistenceRepositories {
         unitErrors: input.scoringSummary.questionResults.filter((result) =>
           result.errors.some((error) => error.includes("Unit must be"))
         ).length
+      });
+      recordLocalLessonProgress(completed.studentProfileId, {
+        id: "pilot-progress-basic-fluid-pressure",
+        lessonSlug: "basic-fluid-pressure",
+        moduleSlug: "fluid-mechanics-foundations",
+        status: "graded",
+        percentComplete: 100,
+        startedAt: existing.startedAt,
+        completedAt: input.submittedAt,
+        lastActivityAt: input.submittedAt
       });
       return Promise.resolve(completed);
     },

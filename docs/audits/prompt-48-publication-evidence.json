@@ -1,0 +1,321 @@
+{
+  "schemaVersion": "1.0.0",
+  "audit": {
+    "prompt": "48",
+    "title": "Basic Fluid Pressure post-publication verification",
+    "date": "2026-09-04",
+    "mode": "read-only",
+    "environment": "protected staging",
+    "independent": true,
+    "productionModified": false
+  },
+  "target": {
+    "lessonId": "LES-FLUID-PRESSURE-001",
+    "slug": "basic-fluid-pressure",
+    "title": "Basic Fluid Pressure",
+    "contentEntityId": "94f5c2b9-a0b9-43f5-8b6b-4a3a67fc4f01",
+    "governanceItemId": "ee1c9dd7-83a1-4811-9fce-3cb517186a9f",
+    "stagingProjectRef": "lgjujyaclrpaopdabyzg",
+    "stagingUrl": "https://industrial-learn-staging-git-development-kolobe.vercel.app",
+    "repositoryCommit": "51bbd963314a1177e9edd6324d268518138b3366"
+  },
+  "evidenceBoundary": {
+    "livePublicBrowser": true,
+    "liveSyntheticStudentRls": true,
+    "localAuthenticatedExactReleaseBuild": true,
+    "liveAuthenticatedBrowser": false,
+    "liveAuthenticatedBrowserReason": "The Prompt 47 temporary student was deleted and Prompt 48 did not create new live state or credentials.",
+    "liveHeadlessMobile": false,
+    "liveHeadlessMobileReason": "Vercel deployment protection intercepted the automated browser; mobile checks used the exact release build.",
+    "secretsRecorded": false
+  },
+  "versionIntegrity": {
+    "lesson": {
+      "result": "PASS",
+      "reviewedVersion": "0.4.0",
+      "publishedVersion": "0.4.0",
+      "governanceCurrentVersion": 4,
+      "governancePublishedVersion": 4,
+      "reviewedArtifactCommit": "bbd81abc0e1351d6280e3fc022d1138ad316ec1e",
+      "reviewedArtifactSha256": "f3746a0730b154023a1faea80719f1cfde27477aae22b164bcfe71cab3ca552a",
+      "normalizedInstructionalObjectsEqual": true,
+      "instructionalChangesAfterReview": false
+    },
+    "sources": {
+      "result": "PASS",
+      "exactSetMatch": true,
+      "ids": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PSU-CIMBALA-PRESSURE-BASICS"]
+    },
+    "equations": {
+      "result": "PASS",
+      "exactSetMatch": true,
+      "ids": ["EQ-FLUID-PRESSURE-001"]
+    },
+    "simulations": {
+      "result": "NOT_APPLICABLE",
+      "ids": [],
+      "reason": "The lesson declares no simulation and no simulation inherited publication."
+    },
+    "assessment": {
+      "result": "FAIL",
+      "lessonRelatedAssessmentId": "ASM-FLUID-PRESSURE-001",
+      "applicationExpectedContentVersion": 2,
+      "liveDatabaseContentVersion": 1,
+      "liveDatabaseTitle": "Staging Pressure Check",
+      "liveDatabaseQuestionCount": 1,
+      "repositoryAlignedQuestionCount": 5,
+      "routeFailsClosed": true,
+      "hiddenAnswersExposed": false,
+      "reason": "The live assessment is not the exact reviewed version expected by the application."
+    },
+    "overall": "FAIL"
+  },
+  "publication": {
+    "migrationVersion": "0018",
+    "migrationName": "atomic_staging_content_publication",
+    "migrationPresentInLiveLedger": true,
+    "workflowStatus": "Published",
+    "publicationStatus": "published",
+    "reviewRecordId": "31510bc1-aecf-48fb-a40e-c427a86f115e",
+    "releaseCandidate": "basic-fluid-pressure-staging-v0.4.0-rc1",
+    "releaseCommit": "9b8329a589dee3ac953d6245de51ad2c876a8bae",
+    "publishedAt": "2026-09-04T14:28:13.657991Z",
+    "auditEventId": "ce2b68d1-6d7e-4f4d-8593-86da3d729c71",
+    "matchingEventCount": 1,
+    "actorRecorded": true,
+    "approvalReferenceRecorded": true,
+    "currentPublishedVersionRelationCorrect": true,
+    "studentInvocationDenied": true
+  },
+  "deployment": {
+    "githubCiRun": 33890021369,
+    "githubCiResult": "PASS",
+    "stagingDeploymentId": 6267611205,
+    "secondaryPreviewDeploymentId": 6267621834,
+    "deployedCommit": "51bbd963314a1177e9edd6324d268518138b3366",
+    "productionEnvironment": false
+  },
+  "studentDiscovery": {
+    "learnCatalogue": "PASS",
+    "coreEngineeringCatalogue": "PASS",
+    "deterministicSearch": "PASS",
+    "directUrl": "PASS",
+    "parentModule": "PARTIAL",
+    "parentModuleReason": "The parent module remains unpublished and unavailable.",
+    "titleAndStudentMetadata": "PASS",
+    "internalMetadataProjection": "PASS"
+  },
+  "draftIsolation": {
+    "draftLessonRoute": "PASS",
+    "sourceRequiredLessonRoute": "PASS",
+    "engineeringReviewRequiredRoute": "PASS",
+    "olderVersionPreview": "PASS",
+    "reviewerWorkspace": "PASS",
+    "authorWorkspace": "PASS",
+    "sourceEvidencePackage": "PASS",
+    "contentVersionRowsVisibleToStudent": 0,
+    "reviewRecordRowsVisibleToStudent": 0,
+    "auditEventRowsVisibleToStudent": 0
+  },
+  "engineeringBehaviour": {
+    "equationId": "EQ-FLUID-PRESSURE-001",
+    "equation": "p = F / A",
+    "result": "PASS",
+    "knownAnswerCases": [
+      {
+        "forceN": 1000,
+        "areaM2": 0.01,
+        "expectedPressurePa": 100000,
+        "displayedPressureKPa": 100
+      },
+      {
+        "forceN": 2000,
+        "areaM2": 0.01,
+        "expectedPressurePa": 200000,
+        "displayedPressureKPa": 200
+      },
+      {
+        "forceN": 1000,
+        "areaM2": 0.02,
+        "expectedPressurePa": 50000,
+        "displayedPressureKPa": 50
+      }
+    ],
+    "sliderNumericSynchronization": "PASS",
+    "siUnits": "PASS",
+    "displayConversion": "PASS",
+    "liveEquation": "PASS",
+    "challengeThresholdKPa": 200,
+    "challengeThreshold": "PASS"
+  },
+  "visualLearning": {
+    "result": "PASS",
+    "firstMeaningfulContentIsVisual": true,
+    "sequence": [
+      "SEE",
+      "INTERACT",
+      "OBSERVE",
+      "EXPLAIN",
+      "CALCULATE",
+      "CHALLENGE",
+      "APPLY"
+    ],
+    "visualDominance": "PASS",
+    "equationIntegration": "PASS",
+    "challenge": "PASS",
+    "theoryBurden": "PASS",
+    "realWorldApplication": "PASS",
+    "visualNormalizationDisclosed": true,
+    "unsupportedFlowOrDynamicsImplied": false
+  },
+  "assessmentAndProgress": {
+    "assessmentResult": "PARTIAL",
+    "repositoryQuestionsAligned": true,
+    "hiddenAnswersBeforeSubmission": "PASS",
+    "numericUnitValidation": "PASS",
+    "serverControlledScoring": "PASS",
+    "competencies": ["Understood", "Calculated"],
+    "outOfScopeDiagnosticsPresent": false,
+    "liveAssessmentAvailable": false,
+    "progressResult": "PARTIAL",
+    "falseMasteryOnOpen": false,
+    "progressRowsCreatedOnOpen": 0,
+    "dashboardChangedOnOpenOrChallenge": false,
+    "challengeCompletionPersisted": false,
+    "assessmentCompetencyAwardTestableLive": false,
+    "authenticatedProgressMessageCorrect": false
+  },
+  "security": {
+    "result": "PASS",
+    "studentReviewerAccessDenied": true,
+    "studentAuthorAccessDenied": true,
+    "studentPublicationMutationDenied": true,
+    "hiddenAnswerChoiceRowsVisibleToStudent": 0,
+    "crossStudentLessonProgressRows": 0,
+    "crossStudentAssessmentAttemptRows": 0,
+    "crossStudentSimulationAttemptRows": 0,
+    "sourceFilesPubliclyReadable": false,
+    "administrativeCredentialsDeliveredToBrowser": false
+  },
+  "accessibility": {
+    "result": "PASS",
+    "automatedChecksPassed": 42,
+    "keyboard": "PASS",
+    "sliderNumericAlternatives": "PASS",
+    "reducedMotion": "PASS",
+    "screenReaderState": "PASS",
+    "equationAccessibility": "PASS",
+    "challengeFeedback": "PASS",
+    "colourOnlyMeaning": false,
+    "certificationClaimed": false
+  },
+  "mobile": {
+    "result": "PASS_WITH_POLISH_LIMITATION",
+    "widthsPx": [320, 375, 430],
+    "horizontalOverflowPx": [0, 0, 0],
+    "simulationUsable": true,
+    "controlsReadable": true,
+    "equationReadable": true,
+    "challengeUsable": true,
+    "globalHeaderWrapsHeavilyAtNarrowWidths": true
+  },
+  "performance": {
+    "result": "PASS_INDICATIVE",
+    "testWidthPx": 375,
+    "domInteractiveMs": 29,
+    "loadEventEndMs": 190,
+    "harnessInteractiveReadyMs": 210,
+    "inputToRenderedResultMsIncludingAutomation": 129,
+    "resourceCount": 27,
+    "scriptTransferBytes": 185859,
+    "cssTransferBytes": 15433,
+    "rasterImageCount": 0,
+    "canvasCount": 0,
+    "svgCount": 2,
+    "videoCount": 0,
+    "fieldBenchmark": false
+  },
+  "qualityGates": {
+    "targetedTests": {
+      "result": "PASS",
+      "files": 7,
+      "passed": 97
+    },
+    "secretScan": "PASS",
+    "formatCheck": "PASS",
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "contentValidation": {
+      "result": "PASS",
+      "passed": 29
+    },
+    "migrationValidation": {
+      "result": "PASS",
+      "passed": 21
+    },
+    "unitAndIntegration": {
+      "result": "PASS",
+      "passed": 375,
+      "skippedOptInLive": 5
+    },
+    "build": {
+      "result": "PASS",
+      "staticPages": 39
+    },
+    "accessibility": {
+      "result": "PASS",
+      "passed": 42
+    },
+    "smoke": {
+      "result": "PASS",
+      "passed": 5
+    },
+    "endToEnd": {
+      "result": "PASS",
+      "passed": 108
+    },
+    "liveReadOnlyRls": "PASS"
+  },
+  "blockers": [
+    {
+      "severity": "blocking-for-scored-pilot",
+      "area": "linked assessment integrity",
+      "detail": "The live assessment version and content do not match the version expected by the published lesson application."
+    },
+    {
+      "severity": "blocking-for-progress-tracked-pilot",
+      "area": "progress integration",
+      "detail": "Authenticated activity and challenge completion are not persisted, and authenticated students receive signed-out progress wording."
+    },
+    {
+      "severity": "limitation",
+      "area": "curriculum discovery",
+      "detail": "The unpublished parent module cannot provide the intended module discovery path."
+    },
+    {
+      "severity": "evidence limitation",
+      "area": "live authenticated browser",
+      "detail": "Read-only constraints prevented creation of a new live synthetic account; live RLS and exact-build authenticated UI were verified separately."
+    },
+    {
+      "severity": "polish",
+      "area": "narrow mobile navigation",
+      "detail": "Global navigation labels wrap heavily at 320 px and 375 px without causing overflow or blocking controls."
+    }
+  ],
+  "verdicts": {
+    "publicationIntegrity": "FAIL",
+    "engineeringBehaviour": "PASS",
+    "visualLearning": "PASS",
+    "accessibility": "PASS",
+    "security": "PASS",
+    "controlledPilotLessonReadiness": "READY WITH LIMITATIONS"
+  },
+  "controlledPilotConditions": [
+    "Use only the visual lesson and its educational challenge.",
+    "Exclude formal assessment, competency award, and progress tracking.",
+    "Enter through Learn, Core Engineering, search, or the direct lesson URL.",
+    "Do not describe the unavailable assessment or progress tracking as operational.",
+    "Reconcile and independently re-audit the assessment before any scored activity."
+  ]
+}

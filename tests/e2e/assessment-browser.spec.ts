@@ -66,9 +66,9 @@ test.describe("authenticated assessment browser journey", () => {
 });
 
 async function completeMinimalAttempt(page: Page) {
-  await page.goto("/assessments/staging-pressure-check");
+  await page.goto("/assessments/basic-fluid-pressure-check");
   await page.getByRole("button", { name: /Start assessment|Continue attempt/ }).click();
-  await expect(page).toHaveURL(/\/assessments\/staging-pressure-check\/attempt\//);
+  await expect(page).toHaveURL(/\/assessments\/basic-fluid-pressure-check\/attempt\//);
   const attemptUrl = page.url();
 
   await page.getByLabel("Normal force distributed over an area.").check();
@@ -82,6 +82,47 @@ async function completeMinimalAttempt(page: Page) {
 
   return attemptUrl;
 }
+
+test("pilot challenge, exact assessment, and competency persist across a new session", async ({
+  page
+}) => {
+  await signIn(page, "pilot.student@example.test");
+  await page.goto("/learn/pilot");
+  await page.getByRole("link", { name: "Start approved lesson" }).click();
+
+  await page.getByRole("button", { name: "Start challenge" }).click();
+  await page.getByLabel("Normal force numeric input").fill("2000");
+  await page.getByRole("button", { name: "Check current result" }).click();
+  await page.getByRole("button", { name: "Save and continue to assessment" }).click();
+
+  await expect(page).toHaveURL(/\/assessments\/basic-fluid-pressure-check$/);
+  await page.getByRole("button", { name: "Start assessment" }).click();
+  await page.getByLabel("Normal force distributed over an area.").check();
+  await page.getByLabel("Value").first().fill("0.4");
+  await page.getByLabel("Unit").first().fill("kPa");
+  await page.getByLabel("Smaller area (surface A)").check();
+  await page.getByLabel("1 Pa = 1 N/m^2").check();
+  await page.getByLabel("Pressure increases.").last().check();
+  await page.getByRole("button", { name: "Submit final answers" }).click();
+  await expect(page.getByRole("heading", { name: "Completed attempt" })).toBeVisible();
+
+  await page.goto("/auth/sign-out");
+  await page.getByRole("button", { name: "Sign out" }).click();
+  await signIn(page, "pilot.student@example.test");
+  await page.goto("/dashboard");
+
+  await expect(
+    page
+      .getByLabel("Recent assessment results")
+      .getByRole("heading", { name: "Basic Fluid Pressure Check" })
+  ).toBeVisible();
+  await expect(
+    page.getByLabel("Recent learning activity").getByText("Lesson graded")
+  ).toBeVisible();
+  await expect(
+    page.getByLabel("Competency profile").getByRole("heading", { name: "Calculated" })
+  ).toBeVisible();
+});
 
 async function signIn(page: Page, email: string) {
   await page.goto("/auth/sign-in");
