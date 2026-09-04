@@ -6,6 +6,7 @@ const publicRoutes = [
   "/auth/sign-in",
   "/auth/forgot-password",
   "/learn",
+  "/learn/pilot",
   "/learn/core-engineering",
   "/learn/future-engineering",
   "/programmes/mechanical-foundations",
@@ -24,6 +25,7 @@ const publicRoutes = [
 const overflowRoutes = [
   "/",
   "/learn",
+  "/learn/pilot",
   "/modules/robotics-foundations",
   "/lessons/basic-fluid-pressure",
   "/lessons/hydraulic-cylinder-force",
@@ -207,6 +209,22 @@ test("Basic Fluid Pressure visual supports keyboard input, text state, reduced m
   );
   expect(overflow).toBeLessThanOrEqual(1);
 });
+
+for (const width of [320, 375, 430]) {
+  test(`authenticated header remains usable without page overflow at ${width}px`, async ({
+    page
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await signIn(page, "pilot.student@example.test", "/learn/pilot");
+
+    await expect(page.getByText("Industrial Learn", { exact: true })).toBeVisible();
+    await expect(page.locator(".workspace-menu summary")).toBeVisible();
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - window.innerWidth
+    );
+    expect(overflow).toBeLessThanOrEqual(1);
+  });
+}
 
 test("unpublished lessons expose no equation metadata and internal controls remain labelled", async ({
   page

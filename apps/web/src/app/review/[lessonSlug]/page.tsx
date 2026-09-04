@@ -36,8 +36,9 @@ export default async function ReviewLessonPage({
     );
   }
 
+  const relatedLessonSlug = item.relatedLessonSlug ?? lessonSlug;
   const lesson = getInternalLessonBySlug({
-    slug: lessonSlug,
+    slug: relatedLessonSlug,
     audience: "engineering_reviewer",
     access: { reviewerAuthorized: true }
   });
@@ -63,17 +64,17 @@ export default async function ReviewLessonPage({
         items={[
           { href: "/workspace", label: "Workspace" },
           { href: "/review", label: "Engineering Review" },
-          { href: `/review/${lesson.slug}`, label: lesson.title },
+          { href: `/review/${item.slug}`, label: item.title },
           {
-            href: `/review/${lesson.slug}#review-target-title`,
-            label: `Version ${lesson.version}`
+            href: `/review/${item.slug}#review-target-title`,
+            label: `Version ${item.contentVersion}`
           }
         ]}
       />
       <ProtectedPage
-        description="Inspect the exact lesson, evidence, assessment scope, and model before recording a human decision."
+        description="Inspect the exact governed version, evidence, assessment scope, and related learning experience before recording a human decision."
         session={session}
-        title="Basic Fluid Pressure review"
+        title={`${item.title} review`}
       >
         <BasicPressureReviewDetail
           assessment={evidence.assessment}

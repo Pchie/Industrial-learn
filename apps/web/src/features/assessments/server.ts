@@ -30,6 +30,10 @@ import {
   createLocalAssessmentPersistence,
   listLocalAssessmentAttempts
 } from "./local-store";
+import {
+  evaluateAssessmentPublicationGate,
+  type AssessmentPublicationRecord
+} from "./publication-gate";
 
 export type AssessmentSummary = {
   slug: string;
@@ -62,15 +66,14 @@ export type ReviewPageModel = {
   attempt: PersistedAssessmentAttempt & { scoringSummary: AssessmentAttempt };
 };
 
-type AssessmentRow = {
+type AssessmentRow = AssessmentPublicationRecord & {
   id: string;
-  slug: string;
   title: string;
   description: string;
   lesson_id: string | null;
-  version: number;
-  technical_review_status: string;
-  publication_status: string;
+  source_ids?: string[] | null;
+  equation_ids?: string[] | null;
+  learning_outcome_ids?: string[] | null;
 };
 
 type AssessmentAttemptRow = {
@@ -96,7 +99,7 @@ export async function listAssessmentsForStudent(
 ): Promise<AssessmentSummary[]> {
   noStore();
   const records = await Promise.all(
-    ["staging-pressure-check"].map((slug) => loadAssessmentOverview(session, slug))
+    ["basic-fluid-pressure-check"].map((slug) => loadAssessmentOverview(session, slug))
   );
 
   return records.filter((record): record is AssessmentOverview => Boolean(record));
@@ -128,14 +131,14 @@ export async function loadAssessmentOverview(
     };
   }
 
-  const row = await getSupabaseAssessmentRowBySlug(slug);
-  if (!row || row.version !== entry.contentVersion) {
+  const row = await getSupabaseAssessmentRow(entry);
+  if (!row || !assessmentRowMatchesEntry(row, entry)) {
     return null;
   }
 
   const assessment = createAssessmentFromCatalog(entry, {
     id: row.id,
-    title: row.title,
+    title: entry.title,
     lessonId: row.lesson_id ?? entry.lessonId,
     reviewStatus: row.technical_review_status
   });
@@ -350,8 +353,8 @@ function summaryFromRow(
 ): AssessmentSummary {
   return {
     slug,
-    title: row.title,
-    description: row.description || entry.description,
+    title: entry.title,
+    description: entry.description,
     lessonTitle: entry.lessonTitle,
     moduleTitle: entry.moduleTitle,
     estimatedMinutes: entry.estimatedMinutes,
@@ -380,7 +383,7 @@ function createSupabaseAttemptRepositories(): AttemptPersistenceRepositories {
         return null;
       }
       const entry = getAssessmentCatalogBySlug(row.slug);
-      if (!entry || row.version !== entry.contentVersion) {
+      if (!entry || !assessmentRowMatchesEntry(row, entry)) {
         return null;
       }
 
@@ -418,19 +421,14 @@ function createSupabaseAttemptRepositories(): AttemptPersistenceRepositories {
       return (rows[0]?.attempt_number ?? 0) + 1;
     },
     async createAssessmentAttempt(attempt) {
-      const rows = await client.post<AssessmentAttemptRow>(
-        "assessment_attempts",
+      const rows = await client.rpc<AssessmentAttemptRow>(
+        "start_assessment_attempt_transaction",
         {
-          assessment_id: attempt.assessmentId,
-          student_profile_id: attempt.studentProfileId,
-          content_version: attempt.contentVersion,
-          attempt_number: attempt.attemptNumber,
-          status: attempt.status,
-          submitted_answers: attempt.submittedAnswers,
-          competency_awards: attempt.competencyAwards,
-          started_at: attempt.startedAt
-        },
-        true
+          p_student_profile_id: attempt.studentProfileId,
+          p_assessment_id: attempt.assessmentId,
+          p_content_version: attempt.contentVersion,
+          p_started_at: attempt.startedAt
+        }
       );
       return mapAttemptRow(firstRow(rows));
     },
@@ -443,7 +441,8 @@ function createSupabaseAttemptRepositories(): AttemptPersistenceRepositories {
         },
         {
           student_profile_id: `eq.${input.studentProfileId}`,
-          id: `eq.${input.attemptId}`
+          id: `eq.${input.attemptId}`,
+          status: "eq.in_progress"
         }
       );
       return mapAttemptRow(firstRow(rows));
@@ -547,17 +546,63 @@ async function listSupabaseAttempts(input: {
   return attempts.sort((left, right) => right.attemptNumber - left.attemptNumber);
 }
 
-async function getSupabaseAssessmentRowBySlug(slug: string) {
+async function getSupabaseAssessmentRow(
+  entry: NonNullable<ReturnType<typeof getAssessmentCatalogBySlug>>
+) {
   const env = getServerEnv();
   const client = createServiceRestClient(env);
   const rows = await client.get<AssessmentRow>("assessments", {
-    slug: `eq.${slug}`,
+    slug: `eq.${entry.slug}`,
+    content_id: `eq.${entry.localAssessmentId}`,
+    version: `eq.${entry.contentVersion}`,
+    published_version: `eq.${entry.contentVersion}`,
+    artifact_sha256: `eq.${entry.artifactSha256}`,
+    lesson_content_id: `eq.${entry.lessonId}`,
+    lesson_slug: `eq.${entry.lessonSlug}`,
+    lesson_content_version: `eq.${entry.lessonVersion}`,
+    module_slug: `eq.${entry.moduleSlug}`,
     publication_status: `eq.${STUDENT_PUBLICATION_REQUIREMENTS.publicationStatus}`,
     technical_review_status: `eq.${STUDENT_PUBLICATION_REQUIREMENTS.reviewStatus}`,
+    answer_protection_status: "eq.server_only",
+    unresolved_review_blockers: "eq.false",
     limit: "1"
   });
 
   return rows[0] ?? null;
+}
+
+function assessmentRowMatchesEntry(
+  row: AssessmentRow,
+  entry: NonNullable<ReturnType<typeof getAssessmentCatalogBySlug>>
+) {
+  const gate = evaluateAssessmentPublicationGate(
+    {
+      slug: entry.slug,
+      contentId: entry.localAssessmentId,
+      contentVersion: entry.contentVersion,
+      artifactSha256: entry.artifactSha256,
+      lessonId: entry.lessonId,
+      lessonSlug: entry.lessonSlug,
+      lessonVersion: entry.lessonVersion,
+      moduleSlug: entry.moduleSlug
+    },
+    row
+  );
+
+  return (
+    gate.allowed &&
+    sameSet(row.source_ids ?? [], entry.sourceIds) &&
+    sameSet(row.equation_ids ?? [], entry.equationIds) &&
+    sameSet(row.learning_outcome_ids ?? [], entry.learningOutcomeIds)
+  );
+}
+
+function sameSet(left: string[], right: string[]) {
+  return (
+    left.length === right.length &&
+    left.every((value) => right.includes(value)) &&
+    right.every((value) => left.includes(value))
+  );
 }
 
 function createServiceRestClient(env: IndustrialLearnEnv) {

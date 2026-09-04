@@ -2008,7 +2008,12 @@ dd {
   .site-nav > a:nth-of-type(3),
   .site-nav > a:nth-of-type(4),
   .workspace-menu {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
+  }
+
+  .site-nav a,
+  .workspace-menu summary {
+    white-space: nowrap;
   }
 
   .workspace-menu__panel {

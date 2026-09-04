@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Alert, Button, NumberInput, Slider } from "@industrial-learn/design-system";
 import { useMemo, useState } from "react";
 
@@ -45,9 +46,13 @@ const pressureDisplay: InstrumentConfiguration = {
 };
 
 export function BasicFluidPressureVisualLesson({
-  content
+  canSaveProgress = false,
+  content,
+  progressAction
 }: {
+  canSaveProgress?: boolean;
   content: BasicPressureExperienceContent;
+  progressAction?: (formData: FormData) => void | Promise<void>;
 }) {
   const [input, setInput] = useState<BasicPressureInput>({
     forceN: BASIC_PRESSURE_LIMITS.forceN.defaultValue,
@@ -234,6 +239,22 @@ export function BasicFluidPressureVisualLesson({
             <Button onClick={() => setChallengeChecked(true)} variant="secondary">
               Check current result
             </Button>
+            {challengeChecked && model.challenge.complete ? (
+              canSaveProgress && progressAction ? (
+                <form action={progressAction}>
+                  <input name="forceN" type="hidden" value={input.forceN} />
+                  <input name="areaM2" type="hidden" value={input.areaM2} />
+                  <Button type="submit">Save and continue to assessment</Button>
+                </form>
+              ) : (
+                <Alert title="Sign in to save progress" tone="info">
+                  <Link href="/auth/sign-in?next=%2Flessons%2Fbasic-fluid-pressure">
+                    Sign in as a student
+                  </Link>{" "}
+                  to save this completed activity and continue to the assessment.
+                </Alert>
+              )
+            ) : null}
           </div>
         )}
         <p className={styles.visualBoundary}>

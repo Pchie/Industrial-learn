@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { resolveAuthenticatedSession } from "@/features/auth/server";
 import { LessonRenderer } from "@/features/lesson-engine/components";
 import {
   getPublicLessonBySlug,
@@ -17,6 +18,8 @@ type LessonPageProps = {
   }>;
 };
 
+export const dynamic = "force-dynamic";
+
 export function generateStaticParams() {
   return getPublicLessons().map((lesson) => ({
     lessonSlug: lesson.slug
@@ -32,10 +35,15 @@ export default async function LessonPage({ params }: LessonPageProps) {
   }
 
   const publicLesson = projectLessonForPublicDelivery(lesson);
-  const visualStageOverrides = getPublicVisualExperienceOverrides(publicLesson);
+  const session = await resolveAuthenticatedSession();
+  const canSaveProgress = session.ok && session.value.roles.includes("student");
+  const visualStageOverrides = getPublicVisualExperienceOverrides(publicLesson, {
+    canSaveProgress
+  });
 
   return (
     <LessonRenderer
+      isAuthenticated={canSaveProgress}
       lesson={publicLesson}
       sources={getSourceRecordsById(publicLesson.sourceIds)}
       {...(visualStageOverrides ? { visualStageOverrides } : {})}

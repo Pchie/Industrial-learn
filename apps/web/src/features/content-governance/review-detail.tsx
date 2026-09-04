@@ -56,7 +56,10 @@ export function BasicPressureReviewDetail({
         <p className="eyebrow">Overview</p>
         <h2 id="review-target-title">{item.title}</h2>
         <dl>
-          <ReviewField label="Lesson ID" value={item.id} />
+          <ReviewField
+            label={item.entityType === "assessment" ? "Assessment ID" : "Lesson ID"}
+            value={item.id}
+          />
           <ReviewField label="Module" value={item.moduleTitle} />
           <ReviewField label="Content version" value={item.contentVersion} />
           <ReviewField label="Governance revision" value={String(item.currentVersion)} />
@@ -64,6 +67,15 @@ export function BasicPressureReviewDetail({
           <ReviewField label="Review type" value={item.reviewType} />
           <ReviewField label="Review status" value={item.workflowStatus} />
           <ReviewField label="Publication status" value={item.publicationStatus} />
+          {item.artifactSha256 ? (
+            <ReviewField label="Artifact SHA-256" value={item.artifactSha256} />
+          ) : null}
+          {item.relatedLessonId ? (
+            <ReviewField
+              label="Related lesson"
+              value={`${item.relatedLessonId}, version ${item.relatedLessonVersion ?? "unrecorded"}`}
+            />
+          ) : null}
           <ReviewField
             label="Last modified"
             value={new Date(item.lastModified).toLocaleString("en-ZA")}
@@ -165,9 +177,11 @@ export function BasicPressureReviewDetail({
         </p>
         <Link
           className="il-button il-button--primary il-button--md"
-          href={`/preview/lessons/${item.slug}?version=${encodeURIComponent(item.contentVersion)}`}
+          href={`/preview/lessons/${item.relatedLessonSlug ?? item.slug}?version=${encodeURIComponent(item.relatedLessonVersion ?? item.contentVersion)}`}
         >
-          Preview as Student
+          {item.entityType === "assessment"
+            ? "Preview related lesson as Student"
+            : "Preview as Student"}
         </Link>
       </section>
 
@@ -266,6 +280,7 @@ export function BasicPressureReviewDetail({
             <input name="governanceItemId" type="hidden" value={item.governanceItemId} />
             <input name="governanceVersion" type="hidden" value={item.currentVersion} />
             <input name="contentVersion" type="hidden" value={item.contentVersion} />
+            <input name="itemSlug" type="hidden" value={item.slug} />
 
             <fieldset>
               <legend>Decision</legend>
@@ -322,7 +337,11 @@ export function BasicPressureReviewDetail({
               <textarea minLength={20} name="comments" required rows={6} />
             </label>
             <ReviewCheckbox
-              label={`I confirm that I reviewed the listed sources, governing equation, model assumptions, student visualisation, and assessment for content version ${item.contentVersion}.`}
+              label={
+                item.entityType === "assessment"
+                  ? `I confirm that I reviewed the listed sources, governing equation, learning outcomes, protected answers, units, tolerances, explanations, and related lesson for assessment version ${item.contentVersion}.`
+                  : `I confirm that I reviewed the listed sources, governing equation, model assumptions, student visualisation, and assessment for content version ${item.contentVersion}.`
+              }
               name="exactVersionAttestation"
               required
             />

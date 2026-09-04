@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import {
   BrowseNav,
@@ -36,6 +37,17 @@ export default async function LearnPage({ searchParams }: LearnPageProps) {
         title="Browse Industrial Learn"
       />
       <ProgressNotice />
+
+      <section className="curriculum-section" aria-labelledby="pilot-path-title">
+        <div className="section-heading">
+          <p className="eyebrow">Controlled pilot</p>
+          <h2 id="pilot-path-title">Fluid Engineering Pilot</h2>
+          <p>A short path containing only independently approved, published content.</p>
+        </div>
+        <Link className="curriculum-action" href="/learn/pilot">
+          Open pilot learning path
+        </Link>
+      </section>
 
       <PublishedLessonSection lessons={lessons} query={query} searchable />
 
