@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
 test.describe("staging smoke checks", () => {
-  test("homepage and curriculum render while unpublished lessons fail closed", async ({
+  test("homepage and curriculum render while only the approved lesson is public", async ({
     page
   }) => {
     await page.goto("/");
@@ -14,11 +14,18 @@ test.describe("staging smoke checks", () => {
 
     await page.goto("/lessons/basic-fluid-pressure");
     await expect(
+      page.getByRole("heading", { name: "Basic Fluid Pressure", level: 1 })
+    ).toBeVisible();
+
+    await page.goto("/lessons/hydraulic-cylinder-force");
+    await expect(
       page.getByRole("heading", {
         name: "This part of Industrial Learn is not available yet"
       })
     ).toBeVisible();
-    await expect(page.getByText("Basic Fluid Pressure", { exact: true })).toHaveCount(0);
+    await expect(page.getByText("Hydraulic Cylinder Force", { exact: true })).toHaveCount(
+      0
+    );
   });
 
   test("protected dashboard requires authentication and protects student ownership", async ({

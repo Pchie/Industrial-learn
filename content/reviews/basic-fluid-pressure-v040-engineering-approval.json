@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "REV-BASIC-FLUID-PRESSURE-V040-ENGINEERING-APPROVAL",
+  "entityId": "LES-FLUID-PRESSURE-001",
+  "entityType": "lesson",
+  "entityVersion": "0.4.0",
+  "authorId": "author-basic-fluid-pressure-v040",
+  "reviewerId": "independent-reviewer-basic-fluid-pressure-v040",
+  "reviewerName": "Independent Staging Engineering Reviewer",
+  "reviewerRole": "engineering_reviewer",
+  "reviewType": "engineering_approval",
+  "decision": "approved",
+  "reviewStatus": "Approved for student use",
+  "evidenceChecked": {
+    "source_review_complete": true,
+    "equation_review_complete": true,
+    "safety_limitations_review_complete": true,
+    "educational_review_complete": true,
+    "accessibility_review_complete": true
+  },
+  "sourceIdsChecked": [
+    "SRC-OPENSTAX-COLLEGE-PHYSICS-2012",
+    "SRC-PSU-CIMBALA-PRESSURE-BASICS"
+  ],
+  "equationIdsChecked": ["EQ-FLUID-PRESSURE-001"],
+  "simulationTestIdsChecked": [],
+  "safetyReviewOutcome": "passed",
+  "notes": "Independent human approval recorded in Supabase staging review record 31510bc1-aecf-48fb-a40e-c427a86f115e for the frozen version 0.4.0 artifact SHA-256 f3746a0730b154023a1faea80719f1cfde27477aae22b164bcfe71cab3ca552a. Private reviewer comments are retained only in the protected governance database.",
+  "reviewedAt": "2026-09-03T17:55:56.269Z"
+}

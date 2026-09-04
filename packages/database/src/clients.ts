@@ -139,6 +139,31 @@ export type Database = {
         };
         Returns: Record<string, unknown>;
       };
+      publish_approved_content_version_to_staging: {
+        Args: {
+          p_governance_item_id: string;
+          p_governance_version: number;
+          p_content_version_label: string;
+          p_approval_record_id: string;
+          p_source_ids: string[];
+          p_equation_ids: string[];
+          p_release_candidate: string;
+          p_git_commit: string;
+          p_artifact_sha256: string;
+          p_environment: "staging";
+        };
+        Returns: Array<{
+          governance_item_id: string;
+          published_version: number;
+          content_version_label: string;
+          publication_status: string;
+          workflow_status: string;
+          published_at: string;
+          approval_record_id: string;
+          audit_event_id: string;
+          was_already_published: boolean;
+        }>;
+      };
       register_invited_profile: {
         Args: {
           p_target_profile_id: string;

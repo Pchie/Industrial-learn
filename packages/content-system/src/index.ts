@@ -250,6 +250,8 @@ type SourceReference = {
 type Lesson = {
   id: string;
   version: string;
+  publishedVersion?: string;
+  approvalRecordIds?: string[];
   authorProfileId?: string;
   publicationStatus: "draft" | "internal" | "scheduled" | "published" | "archived";
   reviewStatus: ReviewStatus;
@@ -1415,10 +1417,37 @@ export function validateContentSystem(
     }
 
     if (
+      data.publicationStatus === "published" &&
+      data.publishedVersion !== data.version
+    ) {
+      errors.push(
+        `${file}: published lesson ${data.id} must identify its exact current version as publishedVersion.`
+      );
+    }
+
+    if (
+      data.publicationStatus === "published" &&
+      (!data.approvalRecordIds || data.approvalRecordIds.length < 2)
+    ) {
+      errors.push(
+        `${file}: published lesson ${data.id} requires engineering approval and publication authorization record IDs.`
+      );
+    }
+
+    if (
       data.publicationStatus === "published" ||
       data.reviewStatus === "Approved for student use"
     ) {
       validateMultipleSourceVerification(data, file, sourcesById, errors);
+
+      const referencedReviewIds = new Set(data.approvalRecordIds ?? []);
+      for (const reviewId of referencedReviewIds) {
+        if (!reviewRecordIds.has(reviewId)) {
+          errors.push(
+            `${file}: approval record ID ${reviewId} does not resolve to a technical review record.`
+          );
+        }
+      }
 
       const reviewGate = evaluateStaticLessonReviewGate({
         subject: {
@@ -1430,7 +1459,19 @@ export function validateContentSystem(
           simulationIds: data.simulationIds ?? [],
           requiresSafetyReview: true
         },
-        reviewRecords: reviewFiles.map(({ data: reviewRecord }) => reviewRecord)
+        reviewRecords: reviewFiles
+          .filter(({ data: reviewRecord }) => {
+            if (referencedReviewIds.size === 0) {
+              return true;
+            }
+
+            const reviewRecordId = (reviewRecord as { id?: unknown }).id;
+            return (
+              typeof reviewRecordId === "string" &&
+              referencedReviewIds.has(reviewRecordId)
+            );
+          })
+          .map(({ data: reviewRecord }) => reviewRecord)
       });
 
       for (const requirement of reviewGate.missingRequirements) {

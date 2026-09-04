@@ -61,6 +61,28 @@ describe("static technical review records", () => {
     expect(result.missingRequirements).toContain("equation");
   });
 
+  it("rejects review evidence for a different source or equation set", () => {
+    const records = approvedRecords().map((record) => {
+      if (record.reviewType === "source") {
+        return {
+          ...record,
+          sourceIdsChecked: [...record.sourceIdsChecked, "SRC-UNREVIEWED-EXTRA"]
+        };
+      }
+      if (record.reviewType === "equation") {
+        return {
+          ...record,
+          equationIdsChecked: [...record.equationIdsChecked, "EQ-UNREVIEWED-EXTRA"]
+        };
+      }
+      return record;
+    });
+    const result = evaluateStaticLessonReviewGate({ subject, reviewRecords: records });
+
+    expect(result.missingRequirements).toContain("source");
+    expect(result.missingRequirements).toContain("equation");
+  });
+
   it("requires administrator authorization without replacing engineering approval", () => {
     const records = approvedRecords().map((record) =>
       record.reviewType === "publication_authorization"
@@ -71,6 +93,41 @@ describe("static technical review records", () => {
 
     expect(result.approved).toBe(false);
     expect(result.missingRequirements).toEqual(["publication_authorization"]);
+  });
+
+  it("accepts one exact composite engineering approval plus separate owner publication authorization", () => {
+    const engineeringApproval: StaticTechnicalReviewRecord = {
+      ...approvedRecords().find(
+        (record) => record.reviewType === "engineering_approval"
+      )!,
+      evidenceChecked: {
+        source_review_complete: true,
+        equation_review_complete: true,
+        safety_limitations_review_complete: true,
+        educational_review_complete: true,
+        accessibility_review_complete: true
+      },
+      sourceIdsChecked: [...subject.sourceIds],
+      equationIdsChecked: [...subject.equationIds],
+      safetyReviewOutcome: "passed"
+    };
+    const publicationAuthorization: StaticTechnicalReviewRecord = {
+      ...approvedRecords().find(
+        (record) => record.reviewType === "publication_authorization"
+      )!,
+      reviewerRole: "platform_owner"
+    };
+
+    expect(
+      evaluateStaticLessonReviewGate({
+        subject,
+        reviewRecords: [engineeringApproval, publicationAuthorization]
+      })
+    ).toEqual({
+      approved: true,
+      authority: { currentVersion: "0.2.0", publishedVersion: "0.2.0" },
+      missingRequirements: []
+    });
   });
 
   it("rejects malformed reviewer identity, role, and timestamp metadata", () => {
@@ -123,7 +180,15 @@ function approvedRecords(): StaticTechnicalReviewRecord[] {
         ? "Approved for student use"
         : "Engineering review required",
     notes: `Reviewed ${reviewType}.`,
-    evidenceChecked: { reviewComplete: true },
+    evidenceChecked:
+      reviewType === "publication_authorization"
+        ? {
+            exact_version_verified: true,
+            approval_record_verified: true,
+            artifact_hash_verified: true,
+            staging_only: true
+          }
+        : { reviewComplete: true },
     sourceIdsChecked: reviewType === "source" ? [...subject.sourceIds] : [],
     equationIdsChecked: reviewType === "equation" ? [...subject.equationIds] : [],
     simulationTestIdsChecked: [],

@@ -208,10 +208,10 @@ test("Basic Fluid Pressure visual supports keyboard input, text state, reduced m
   expect(overflow).toBeLessThanOrEqual(1);
 });
 
-test("hidden lessons expose no equation metadata and internal controls remain labelled", async ({
+test("unpublished lessons expose no equation metadata and internal controls remain labelled", async ({
   page
 }) => {
-  await page.goto("/lessons/basic-fluid-pressure");
+  await page.goto("/lessons/hydraulic-cylinder-force");
 
   await expect(
     page.getByRole("heading", {
