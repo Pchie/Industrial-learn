@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "1.0.0",
+  "audit": {
+    "prompt": "47",
+    "title": "Controlled Basic Fluid Pressure staging publication",
+    "generatedAt": "2026-09-04T15:26:09Z",
+    "environment": "staging",
+    "overallVerdict": "PASS"
+  },
+  "artifact": {
+    "lessonId": "LES-FLUID-PRESSURE-001",
+    "slug": "basic-fluid-pressure",
+    "contentEntityId": "94f5c2b9-a0b9-43f5-8b6b-4a3a67fc4f01",
+    "governanceItemId": "ee1c9dd7-83a1-4811-9fce-3cb517186a9f",
+    "reviewedVersion": "0.4.0",
+    "publishedVersion": "0.4.0",
+    "reviewedArtifactCommit": "bbd81abc0e1351d6280e3fc022d1138ad316ec1e",
+    "reviewedArtifactSha256": "f3746a0730b154023a1faea80719f1cfde27477aae22b164bcfe71cab3ca552a",
+    "normalizedInstructionalComparison": "PASS",
+    "authorAlias": "author-basic-fluid-pressure-v040",
+    "independentReviewerAlias": "independent-reviewer-basic-fluid-pressure-v040",
+    "sourceIds": ["SRC-OPENSTAX-COLLEGE-PHYSICS-2012", "SRC-PSU-CIMBALA-PRESSURE-BASICS"],
+    "equationIds": ["EQ-FLUID-PRESSURE-001"],
+    "simulationIds": []
+  },
+  "approval": {
+    "databaseReviewRecordId": "31510bc1-aecf-48fb-a40e-c427a86f115e",
+    "repositoryEngineeringApprovalId": "REV-BASIC-FLUID-PRESSURE-V040-ENGINEERING-APPROVAL",
+    "repositoryPublicationAuthorizationId": "REV-BASIC-FLUID-PRESSURE-V040-PUBLICATION-AUTHORIZATION",
+    "approvedAt": "2026-09-03T17:55:56.269Z",
+    "reviewerIndependentFromAuthor": true,
+    "requiredAttestationsComplete": true,
+    "safetyReviewPassed": true,
+    "accessibilityEvidenceAccepted": true
+  },
+  "publication": {
+    "releaseCandidate": "basic-fluid-pressure-staging-v0.4.0-rc1",
+    "releaseCommit": "9b8329a589dee3ac953d6245de51ad2c876a8bae",
+    "publisherRole": "platform_owner",
+    "publishedAt": "2026-09-04T14:28:13.657991Z",
+    "auditEventId": "ce2b68d1-6d7e-4f4d-8593-86da3d729c71",
+    "governanceRevision": 4,
+    "initialRequestWasAlreadyPublished": false,
+    "retryWasAlreadyPublished": true,
+    "matchingAuditEventCount": 1,
+    "atomic": true,
+    "idempotent": true
+  },
+  "deliveryHardening": {
+    "commit": "e3804a3ae4ab6fa1b79ef1192703f5ef35814a52",
+    "pullRequest": 36,
+    "postMergeCiRun": 33888662662,
+    "postMergeCiResult": "PASS",
+    "stagingPreviewDeploymentId": 6267354865,
+    "secondaryPreviewDeploymentId": 6267366171,
+    "allDeploymentsProductionEnvironment": false
+  },
+  "environmentIsolation": {
+    "stagingSupabaseProjectRef": "lgjujyaclrpaopdabyzg",
+    "stagingUrl": "https://industrial-learn-staging-git-development-kolobe.vercel.app",
+    "productionSupabaseProjectRef": "vhjjfapkxytmaakbleee",
+    "productionCheckedReadOnly": true,
+    "productionMigration0018Count": 0,
+    "productionLessonPublicationCount": 0,
+    "productionPrompt47AuditEventCount": 0,
+    "productionModified": false
+  },
+  "studentVisibility": {
+    "directLessonRoute": "PASS",
+    "learnCatalogue": "PASS",
+    "coreEngineeringCatalogue": "PASS",
+    "deterministicSearch": "PASS",
+    "parentModuleIntentionallyHidden": true,
+    "visualExperience": "PASS",
+    "liveEquation": "PASS",
+    "challenge": "PASS",
+    "formalAssessmentIntentionallyUnavailable": true,
+    "progressCreatedOnOpen": 0,
+    "assessmentAttemptsCreatedOnOpen": 0,
+    "simulationAttemptsCreatedOnOpen": 0
+  },
+  "security": {
+    "draftLessonDenial": "PASS",
+    "sourceRequiredLessonDenial": "PASS",
+    "unapprovedLessonDenial": "PASS",
+    "unapprovedSimulationDenial": "PASS",
+    "reviewerRouteStudentDenial": "PASS",
+    "exactVersionPreviewStudentDenial": "PASS",
+    "contentVersionsStudentRows": 0,
+    "reviewRecordsStudentRows": 0,
+    "auditEventsStudentRows": 0,
+    "hiddenAssessmentAnswersStudentRows": 0,
+    "crossStudentAttemptRows": 0,
+    "reviewerCrossStudentAttemptRows": 0,
+    "studentPublicationInvocationDenied": true,
+    "citationOnlySourceProjection": "PASS",
+    "internalGovernanceMetadataProjection": "PASS"
+  },
+  "qualityGates": {
+    "secretScan": "PASS",
+    "formatCheck": "PASS",
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "contentValidation": {
+      "result": "PASS",
+      "passed": 29
+    },
+    "migrationValidation": {
+      "result": "PASS",
+      "passed": 21
+    },
+    "unitAndIntegration": {
+      "result": "PASS",
+      "passed": 375,
+      "skipped": 5
+    },
+    "accessibility": {
+      "result": "PASS",
+      "passed": 42
+    },
+    "build": "PASS",
+    "smoke": {
+      "result": "PASS",
+      "passed": 5
+    },
+    "endToEnd": {
+      "result": "PASS",
+      "passed": 108
+    },
+    "githubCi": "PASS",
+    "finalPrivacyHardeningDeployment": "PASS"
+  },
+  "temporarySyntheticStudent": {
+    "used": true,
+    "credentialsRecorded": false,
+    "learningRecordsCreated": false,
+    "removedAfterVerification": true,
+    "remainingAuthUsers": 0,
+    "remainingProfiles": 0,
+    "remainingLearningRecords": 0
+  },
+  "verdicts": {
+    "approvedVersionIntegrity": "PASS",
+    "publicationGate": "PASS",
+    "stagingPublication": "PASS",
+    "studentVisibility": "PASS",
+    "draftIsolation": "PASS",
+    "simulationGovernance": "PASS",
+    "prompt48Readiness": "GO"
+  },
+  "knownLimitations": [
+    "The public lesson renderer does not yet persist authenticated progress.",
+    "The parent module and related formal assessment remain separately gated and unavailable.",
+    "No simulation is attached to or published with the lesson.",
+    "A generic atomic withdrawal function is outside Prompt 47."
+  ]
+}
