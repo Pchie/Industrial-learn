@@ -178,25 +178,48 @@
     },
     "mobileWidths": [320, 375, 430],
     "mobilePageOverflow": false,
-    "dashboardProjectionCorrection": "LOCAL_PASS_DEPLOYMENT_PENDING",
-    "syntheticCleanup": "PENDING_POST_DEPLOYMENT_CHECK"
+    "dashboardProjectionCorrection": "PASS_DEPLOYED",
+    "postDeploymentFreshSession": "PASS: Student A Understood 4 / Calculated 2; Student B Understood 4 / Calculated 0",
+    "syntheticCleanup": {
+      "result": "PASS",
+      "authUsers": 0,
+      "profiles": 0,
+      "attempts": 0,
+      "lessonProgress": 0,
+      "retainedAttemptAuditEvents": 4,
+      "retainedAttemptAuditActorsNull": true,
+      "independentReviewRetained": true,
+      "publicationAuditRetained": true,
+      "canonicalVersion2StillPublished": true
+    }
   },
   "releaseState": {
     "initialPullRequest": "https://github.com/Pchie/Industrial-learn/pull/38",
     "initialMergedCommit": "bec15e32473081bb5818d5536df37d3657260cea",
     "initialStagingDeployment": "PASS",
     "featureBranch": "codex/prompt-48a-live-verification",
-    "followUpRelease": "PENDING"
+    "followUpPullRequest": "https://github.com/Pchie/Industrial-learn/pull/39",
+    "followUpMergedCommit": "a99b68cca8363f39aeeaea3ba76c3e0dce927a70",
+    "followUpMergedAt": "2026-09-06T17:47:17Z",
+    "followUpRelease": "PASS",
+    "pullRequestCiRun": 34049474545,
+    "developmentCiRun": 34049690386,
+    "ciResult": "PASS",
+    "stagingDeploymentId": 6296065319,
+    "stagingDeploymentResult": "success",
+    "stagingDeploymentUrl": "https://industrial-learn-staging-k6k26dxb9-kolobe.vercel.app",
+    "stableStagingUrl": "https://industrial-learn-staging-git-development-kolobe.vercel.app",
+    "branchProtectionBypassed": false
   },
-  "provisionalVerdicts": {
+  "finalVerdicts": {
     "assessmentVersionIntegrity": "PASS",
     "assessmentGovernance": "PASS",
     "assessmentBrowserFlow": "PASS",
-    "authenticatedProgressPersistence": "PARTIAL",
+    "authenticatedProgressPersistence": "PASS",
     "parentModulePilotNavigation": "PASS WITH PILOT COLLECTION",
     "mobileHeader": "PASS",
     "publicationIntegrity": "PASS",
-    "basicFluidPressureCompletePilotFlow": "NOT READY",
-    "prompt49Readiness": "NO-GO"
+    "basicFluidPressureCompletePilotFlow": "READY WITH LIMITATIONS",
+    "prompt49Readiness": "CONDITIONAL GO"
   }
 }

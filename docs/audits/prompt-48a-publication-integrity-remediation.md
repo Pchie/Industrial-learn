@@ -11,8 +11,9 @@ Production changes: none
 Independent review and controlled publication are complete. Exact assessment v2 now launches
 from lesson `0.4.0` on staging. Two synthetic students verified successful scoring, wrong-unit
 rejection, private review, and saved progress. The live test identified a dashboard projection
-defect, now corrected locally without changing server scoring or assessed content. Its final
-release verification is recorded below. No production change or real student pilot occurred.
+defect, now corrected and verified on deployed staging without changing server scoring or
+assessed content. Prompt 48A remediation is complete. No production change or real student
+pilot occurred.
 
 ## Remediation Implemented
 
@@ -34,26 +35,26 @@ release verification is recorded below. No production change or real student pil
 
 ## Local Verification To Date
 
-| Check                                  | Result                                                   |
-| -------------------------------------- | -------------------------------------------------------- |
-| PostgreSQL staging rollback validation | PASS                                                     |
-| Strict type checking                   | PASS                                                     |
-| Unit/integration suite                 | PASS: 385 passed; 5 opt-in live tests separately passed  |
-| Production build                       | PASS: 39 generated static entries plus dynamic routes    |
-| Focused browser/accessibility suite    | PASS: 50 tests                                           |
-| Secret scan                            | PASS                                                     |
-| Formatting                             | PASS                                                     |
-| Lint                                   | PASS                                                     |
-| Content validation                     | PASS: 29 tests                                           |
-| Migration validation                   | PASS: 24 tests                                           |
-| Smoke                                  | PASS: 5 tests                                            |
-| Full end-to-end suite                  | PASS: 113 tests                                          |
-| Live migration and review-item seed    | PASS: applied to staging only                            |
-| Live RLS rollback probes               | PASS                                                     |
-| Live function privilege review         | PASS                                                     |
-| Independent assessment review          | PASS: exact v2, 2026-09-06                               |
-| Controlled assessment publication      | PASS: exact v2, staging only                             |
-| Live synthetic-student flow            | PASS: two students; dashboard correction release pending |
+| Check                                  | Result                                                  |
+| -------------------------------------- | ------------------------------------------------------- |
+| PostgreSQL staging rollback validation | PASS                                                    |
+| Strict type checking                   | PASS                                                    |
+| Unit/integration suite                 | PASS: 385 passed; 5 opt-in live tests separately passed |
+| Production build                       | PASS: 39 generated static entries plus dynamic routes   |
+| Focused browser/accessibility suite    | PASS: 50 tests                                          |
+| Secret scan                            | PASS                                                    |
+| Formatting                             | PASS                                                    |
+| Lint                                   | PASS                                                    |
+| Content validation                     | PASS: 29 tests                                          |
+| Migration validation                   | PASS: 24 tests                                          |
+| Smoke                                  | PASS: 5 tests                                           |
+| Full end-to-end suite                  | PASS: 113 tests                                         |
+| Live migration and review-item seed    | PASS: applied to staging only                           |
+| Live RLS rollback probes               | PASS                                                    |
+| Live function privilege review         | PASS                                                    |
+| Independent assessment review          | PASS: exact v2, 2026-09-06                              |
+| Controlled assessment publication      | PASS: exact v2, staging only                            |
+| Live synthetic-student flow            | PASS: two students; deployed dashboard verified         |
 
 ## Live Staging Evidence
 
@@ -98,28 +99,38 @@ delivery. Progress and completion writes require trusted server transactions.
 
 ## Verdicts
 
-| Area                               | Verdict                                            |
-| ---------------------------------- | -------------------------------------------------- |
-| Assessment version integrity       | PASS                                               |
-| Assessment governance              | PASS                                               |
-| Assessment browser flow            | PASS                                               |
-| Authenticated progress persistence | PARTIAL pending dashboard correction release       |
-| Parent module / pilot navigation   | PASS WITH PILOT COLLECTION                         |
-| Mobile header                      | PASS                                               |
-| Publication integrity              | PASS                                               |
-| Complete pilot flow                | NOT READY                                          |
-| Prompt 49 readiness                | NO-GO pending final dashboard release verification |
+| Area                               | Verdict                    |
+| ---------------------------------- | -------------------------- |
+| Assessment version integrity       | PASS                       |
+| Assessment governance              | PASS                       |
+| Assessment browser flow            | PASS                       |
+| Authenticated progress persistence | PASS                       |
+| Parent module / pilot navigation   | PASS WITH PILOT COLLECTION |
+| Mobile header                      | PASS                       |
+| Publication integrity              | PASS                       |
+| Complete pilot flow                | READY WITH LIMITATIONS     |
+| Prompt 49 readiness                | CONDITIONAL GO             |
 
-No student pilot may begin from this provisional report.
+Prompt 49 may proceed only as a separately authorised controlled pilot of this exact
+published lesson and assessment, with a named facilitator and stop/escalation criteria.
+This report neither starts that pilot nor authorises production or AI Mentor work.
 
 The only recurring informational warning was Playwright's existing note that `NO_COLOR`
 is ignored when `FORCE_COLOR` is set. The intentionally simulated dashboard-failure case
 logged its expected server error and passed its safe-error-page assertion.
+The post-merge dependency installation and both audit gates reported zero vulnerabilities.
 
 Initial implementation PR [38](https://github.com/Pchie/Industrial-learn/pull/38) merged
 into `development` on 2026-09-04 as `bec15e32473081bb5818d5536df37d3657260cea` after
 approved publication to GitHub. Its CI and staging deployment passed. The targeted dashboard
-follow-up is on `codex/prompt-48a-live-verification`; final release checks are pending.
+follow-up PR [39](https://github.com/Pchie/Industrial-learn/pull/39) merged normally into
+`development` at `2026-09-06T17:47:17Z` as `a99b68cca8363f39aeeaea3ba76c3e0dce927a70`.
+No branch protection was bypassed. PR CI run `34049474545` and development CI run
+`34049690386` passed. Staging deployment `6296065319` succeeded at
+`2026-09-06T17:47:55Z`; GitHub identifies its environment as `Preview - industrial-learn-staging`.
+Its immutable address is <https://industrial-learn-staging-k6k26dxb9-kolobe.vercel.app>.
+The stable development staging alias was used for the final authenticated check. Private
+preview protection was left in place; production remained untouched.
 
 ## Independent Review And Publication: 2026-09-06
 
@@ -202,12 +213,18 @@ The repository's opt-in staging integration suite was run with genuine temporary
 provided in process memory: all 5 tests passed. Its 30-second per-test timeout accommodates
 live network calls; no assertion was skipped or suppressed.
 
-## Remaining Release Checks And Limitations
+## Final Release Checks And Limitations
 
 - The follow-up full E2E run passed all 113 tests, including 46 accessibility tests and
-  5 smoke tests. Final GitHub CI and dashboard staging release checks are pending.
-- Temporary synthetic accounts and learning rows will be removed after the release check;
-  real review/publication records and non-secret audit evidence will remain.
+  5 smoke tests. Both GitHub CI runs and the staging deployment passed.
+- After deployment, Student B's dashboard showed Understood 4 / Calculated 0. A fresh
+  Student A sign-in showed Understood 4 / Calculated 2, 6/6, and saved lesson-graded activity.
+  Student A's completed review remained accessible with the same submitted answers.
+- Both temporary users were signed out and deleted through the staging Auth admin API after
+  exact identity checks. Live counts confirmed zero synthetic users, profiles, attempts,
+  and progress rows. Four attempt audit events remain with null actor references; no audit
+  history was deleted. The independent review and publication audit remain, and v2 still
+  passes the publication gate.
 - The parent module remains unpublished and pilot users have no fabricated enrolment.
 - Dashboard awards cover at most ten recent attempts, not lifetime mastery. Completing the
   path is not the same as passing every question; the wrong-unit attempt gets no Calculated credit.
@@ -215,4 +232,5 @@ live network calls; no assertion was skipped or suppressed.
   was not retested by this flow.
 - No production deployment, AI Mentor work, or actual student pilot was performed.
 - The next task should be a separately authorised controlled student pilot with a named
-  facilitator, feedback collection, and stop/escalation criteria, after final release checks.
+  facilitator, feedback collection, and stop/escalation criteria. Student recruitment and
+  email-delivery readiness should be confirmed before invitations are sent.
