@@ -1,6 +1,6 @@
 # Fluid Engineering Pilot Learning Path
 
-Date: 2026-09-04
+Date: 2026-09-06
 
 ## Purpose
 
@@ -44,3 +44,10 @@ pass. The collection is not a general curriculum publication mechanism.
 Lesson content remains public only under existing reviewed publication rules. Assessment
 attempts, progress, scores, and competency evidence require an authenticated student and
 remain private to that profile. Reviewer access does not imply access to student progress.
+
+## Verified Staging Entry
+
+Use the [staging pilot path](https://industrial-learn-staging-git-development-kolobe.vercel.app/learn/pilot).
+The approved assessment v2 was published on 2026-09-06 after its own independent review.
+The parent module has not been published; no programme enrolment is fabricated for this
+single-lesson pilot. Synthetic verification is not the start of a real student pilot.

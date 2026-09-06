@@ -1,6 +1,6 @@
 # Basic Fluid Pressure Assessment Version Integrity
 
-Date: 2026-09-04
+Date: 2026-09-06
 
 Scope: staging-only remediation for the Basic Fluid Pressure controlled pilot
 
@@ -21,8 +21,9 @@ number alone:
 - The review package in `docs/reviews/basic-fluid-pressure-review-evidence.md` presents
   all five questions, answers, explanations, units, tolerance, sources, and equation
   evidence.
-- The assessment remains blocked until it receives its own independent exact-version
-  review record. The lesson approval is supporting evidence, not an assessment approval.
+- Independent assessment-specific review `6e326982-ce64-480b-a779-96cf4fdf3b13`
+  approved exact version 2 on 2026-09-06. The lesson approval is supporting evidence,
+  not a substitute for that assessment approval.
 
 ## Version Lineage
 
@@ -112,13 +113,31 @@ records a complete assessment-specific decision.
 On 2026-09-04, migration `0019` and seed `0007` were applied to staging project
 `lgjujyaclrpaopdabyzg`. The resulting assessment governance item is
 `3c91523e-e30c-4f7b-89ef-0c8f7eeb3803`, exact version `2`, with content-version record
-`acf25cec-cac1-41a0-9ff1-7fa5614919c3`. Its live state is intentionally
+`acf25cec-cac1-41a0-9ff1-7fa5614919c3`. At that time its state was intentionally
 `Engineering review required / draft`; no assessment publication row was created.
 
 Live rollback-only RLS probes confirmed that the old v1 fixture fails the exact gate,
 students cannot read protected questions or answer choices, students see only their own
 progress and attempts, and neither a reviewer nor a content author inherits student-data
 access. The probes rolled back and retained no test rows.
+
+On 2026-09-06 the independently assigned engineering reviewer recorded approval of exact
+version 2 at `17:21:00.670030Z`, including source, equation, educational, accessibility, and
+safety-limitations checks. The author and reviewer are different profiles. The approved
+staging publication RPC then created audit event
+`58f31ab2-b784-4694-a8a8-1aa0cf2075a3` at `17:23:51.505751Z`, bound to lesson `0.4.0`,
+assessment `2`, the unchanged artifact hash, and release commit
+`bec15e32473081bb5818d5536df37d3657260cea`. A retry returned the same publication.
+
+This was a delegated privileged SQL release under the user's staging authorization, with
+scoped Platform Owner claims supplied to the controlled RPC. It was not a browser owner
+session and did not create or impersonate the independent engineering review. No version
+number or published artifact was edited to bypass governance.
+
+The current exact gate accepts the published canonical v2 and rejects the historical v1
+fixture. Genuine browser attempts and live REST/SQL tests verified scoring, unit rejection,
+ownership, duplicate protection, and transaction rollback. See the Prompt 48A audit and
+machine-readable evidence for results and release follow-up status.
 
 Production is outside this remediation and must not receive migration `0019` or the
 staging review seed as part of Prompt 48A.

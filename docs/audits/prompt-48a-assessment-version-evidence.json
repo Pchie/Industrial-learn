@@ -1,5 +1,5 @@
 {
-  "auditDate": "2026-09-04",
+  "auditDate": "2026-09-06",
   "environment": {
     "name": "staging",
     "supabaseProjectRef": "lgjujyaclrpaopdabyzg",
@@ -27,9 +27,17 @@
     "equationIds": ["EQ-FLUID-PRESSURE-001"],
     "competencyLevels": ["Understood", "Calculated"],
     "answerProtection": "server_only",
-    "reviewRecordId": null,
-    "publicationAuditEventId": null,
-    "publicationStatus": "pending_independent_review"
+    "reviewRecordId": "6e326982-ce64-480b-a779-96cf4fdf3b13",
+    "publicationAuditEventId": "58f31ab2-b784-4694-a8a8-1aa0cf2075a3",
+    "publicationStatus": "published",
+    "reviewedAt": "2026-09-06T17:21:00.670030Z",
+    "publishedAt": "2026-09-06T17:23:51.505751Z",
+    "reviewerProfileId": "8c0f8743-0935-4eb4-a708-6083a5a0fb88",
+    "authorProfileId": "539d2cc4-1d9c-4ceb-ad7e-bbad4a582488",
+    "reviewAssignmentId": "aa352dff-adb9-4eed-ba9b-6b2ce5071519",
+    "publicationAuthorizationId": "PROMPT-48A-USER-AUTHORIZED-STAGING-2026-09-06",
+    "publicationMethod": "Controlled staging RPC through delegated privileged SQL with scoped Platform Owner claims; not a browser owner session",
+    "publicationRetryIdempotent": true
   },
   "lineage": [
     {
@@ -74,14 +82,16 @@
     "lint": "PASS",
     "contentValidation": { "result": "PASS", "passed": 29 },
     "migrationValidation": { "result": "PASS", "passed": 24 },
-    "unitTests": { "result": "PASS", "passed": 382, "skippedOptInLive": 5 },
+    "unitTests": { "result": "PASS", "passed": 385, "skippedOptInLive": 5 },
+    "optInStagingIntegration": { "result": "PASS", "passed": 5, "testTimeoutMs": 30000 },
     "build": "PASS",
     "focusedBrowserTests": { "result": "PASS", "passed": 50 },
     "smokeTests": { "result": "PASS", "passed": 5 },
     "endToEndTests": { "result": "PASS", "passed": 113 }
   },
   "liveEvidence": {
-    "verifiedAt": "2026-09-04T17:38:02Z",
+    "verifiedAt": "2026-09-06",
+    "prePublicationVerifiedAt": "2026-09-04T17:38:02Z",
     "migrationApplied": true,
     "migrationVersion": "0019",
     "migrationName": "assessment_version_integrity_and_pilot_progress",
@@ -89,8 +99,8 @@
     "governanceItemId": "3c91523e-e30c-4f7b-89ef-0c8f7eeb3803",
     "contentVersionId": "acf25cec-cac1-41a0-9ff1-7fa5614919c3",
     "governanceVersion": 2,
-    "reviewItemStatus": "Engineering review required",
-    "reviewItemPublicationStatus": "draft",
+    "reviewItemStatus": "Published",
+    "reviewItemPublicationStatus": "published",
     "historicalVersion1PassesExactGate": false,
     "canonicalVersion2PrematurelyPublished": false,
     "functionPrivileges": {
@@ -117,24 +127,75 @@
       "authorStudentDataVisible": false,
       "retainedProbeRows": 0
     },
-    "independentReviewComplete": false,
-    "assessmentPublished": false,
-    "syntheticStudentFlow": "PENDING"
+    "independentReviewComplete": true,
+    "assessmentPublished": true,
+    "syntheticStudentFlow": "PASS",
+    "postPublicationSecurity": {
+      "studentAJwtApi": "PASS",
+      "studentBJwtApi": "PASS",
+      "crossStudentBrowserReviewDenied": true,
+      "scoreCompetencyVersionTamperHttpStatus": 403,
+      "studentScoringRpcHttpStatus": 403,
+      "privateExplanationColumnReadDenied": true,
+      "reviewerStudentDataVisible": false,
+      "authorStudentDataVisible": false,
+      "unapprovedLessonsVisible": false,
+      "unapprovedSimulationsVisible": false,
+      "unapprovedAssessmentsVisible": false,
+      "duplicateFinalSubmissionUnchanged": true,
+      "differentFinalKeyRejected": true,
+      "versionMismatchStartRejected": true,
+      "lateFailureAtomicRollback": true
+    },
+    "studentA": {
+      "profileId": "5dacb510-921b-4dae-8b87-0575f5da9935",
+      "attemptId": "0f343906-d3e7-4591-b5eb-c1d2d22c4246",
+      "progressId": "a2a195f7-7b9f-46aa-b3f1-1d16f8096b38",
+      "contentVersion": 2,
+      "attemptNumber": 1,
+      "submittedAt": "2026-09-06T17:26:57.375Z",
+      "score": 6,
+      "maxScore": 6,
+      "competencyAwards": { "Understood": 4, "Calculated": 2 },
+      "challengeProgressPercent": 50,
+      "gradedProgressPercent": 100,
+      "savedAnswerReload": "PASS",
+      "signOutSignInPersistence": "PASS",
+      "numericConversion": "0.4 kPa normalized to 400 Pa"
+    },
+    "studentB": {
+      "profileId": "ab48a2a1-2e86-45ce-b43e-7d3cdf5b441f",
+      "attemptId": "bd229bc5-8a58-46e7-89a5-0d715b3fbe7b",
+      "progressId": "9f42b1df-dd02-4619-9891-bf141570ff8e",
+      "contentVersion": 2,
+      "attemptNumber": 1,
+      "submittedAt": "2026-09-06T17:32:18.228Z",
+      "score": 4,
+      "maxScore": 6,
+      "competencyAwards": { "Understood": 4, "Calculated": 0 },
+      "gradedProgressPercent": 100,
+      "wrongDimension": "400 N rejected with zero numeric credit"
+    },
+    "mobileWidths": [320, 375, 430],
+    "mobilePageOverflow": false,
+    "dashboardProjectionCorrection": "LOCAL_PASS_DEPLOYMENT_PENDING",
+    "syntheticCleanup": "PENDING_POST_DEPLOYMENT_CHECK"
   },
   "releaseState": {
-    "featureBranch": "codex/prompt-48a-publication-integrity-remediation",
-    "localCommit": "ae99459",
-    "githubPush": "PENDING_EXPLICIT_APPROVAL",
-    "stagingDeployment": "PENDING_BRANCH_INTEGRATION"
+    "initialPullRequest": "https://github.com/Pchie/Industrial-learn/pull/38",
+    "initialMergedCommit": "bec15e32473081bb5818d5536df37d3657260cea",
+    "initialStagingDeployment": "PASS",
+    "featureBranch": "codex/prompt-48a-live-verification",
+    "followUpRelease": "PENDING"
   },
   "provisionalVerdicts": {
-    "assessmentVersionIntegrity": "BLOCKED",
-    "assessmentGovernance": "PARTIAL",
-    "assessmentBrowserFlow": "BLOCKED",
+    "assessmentVersionIntegrity": "PASS",
+    "assessmentGovernance": "PASS",
+    "assessmentBrowserFlow": "PASS",
     "authenticatedProgressPersistence": "PARTIAL",
     "parentModulePilotNavigation": "PASS WITH PILOT COLLECTION",
     "mobileHeader": "PASS",
-    "publicationIntegrity": "FAIL",
+    "publicationIntegrity": "PASS",
     "basicFluidPressureCompletePilotFlow": "NOT READY",
     "prompt49Readiness": "NO-GO"
   }

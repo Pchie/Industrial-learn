@@ -122,6 +122,13 @@ test("pilot challenge, exact assessment, and competency persist across a new ses
   await expect(
     page.getByLabel("Competency profile").getByRole("heading", { name: "Calculated" })
   ).toBeVisible();
+  const competency = page.getByLabel("Competency profile");
+  await expect(
+    competency.locator("article").filter({ hasText: "Calculated" })
+  ).toContainText("2 assessed evidence points");
+  await expect(
+    competency.locator("article").filter({ hasText: "Understood" })
+  ).toContainText("4 assessed evidence points");
 });
 
 async function signIn(page: Page, email: string) {
