@@ -4,6 +4,7 @@ import {
   buildWeakTopicRecommendations,
   calculateCompetencyProfile,
   calculateModuleProgress,
+  readCompetencyAwards,
   type StudentDashboardData
 } from "./data";
 import { getInternalCurriculum } from "../curriculum/data";
@@ -36,6 +37,77 @@ const baseData: StudentDashboardData = {
 };
 
 describe("student dashboard model", () => {
+  it("preserves every server-awarded competency point after reloading an attempt", () => {
+    const profile = calculateCompetencyProfile({
+      ...baseData,
+      assessmentAttempts: [
+        {
+          id: "persisted-v2",
+          assessmentSlug: "basic-fluid-pressure-check",
+          title: "Basic Fluid Pressure Check",
+          moduleSlug: "fluid-mechanics-foundations",
+          status: "graded",
+          score: 6,
+          maxScore: 6,
+          competencyLevel: "Calculated",
+          competencyAwards: readCompetencyAwards({ Understood: 4, Calculated: 2 })
+        }
+      ]
+    });
+    expect(profile).toEqual({
+      Introduced: 0,
+      Understood: 4,
+      Calculated: 2,
+      Operated: 0,
+      Diagnosed: 0,
+      Designed: 0
+    });
+  });
+
+  it("does not infer an award from a score when persisted awards are empty or invalid", () => {
+    for (const raw of [
+      undefined,
+      {},
+      [],
+      { Calculated: "2", Understood: -1, Operated: Infinity, Unknown: 9 }
+    ]) {
+      const profile = calculateCompetencyProfile({
+        ...baseData,
+        assessmentAttempts: [
+          {
+            id: "empty-awards",
+            assessmentSlug: "basic-fluid-pressure-check",
+            title: "Check",
+            moduleSlug: "fluid-mechanics-foundations",
+            status: "graded",
+            score: 6,
+            maxScore: 6,
+            competencyAwards: readCompetencyAwards(raw)
+          }
+        ]
+      });
+      expect(Object.values(profile).every((points) => points === 0)).toBe(true);
+    }
+  });
+
+  it("does not count persisted awards before an attempt is graded", () => {
+    const profile = calculateCompetencyProfile({
+      ...baseData,
+      assessmentAttempts: [
+        {
+          id: "in-progress",
+          assessmentSlug: "basic-fluid-pressure-check",
+          title: "Check",
+          moduleSlug: "fluid-mechanics-foundations",
+          status: "in_progress",
+          competencyAwards: { Understood: 4, Calculated: 2 }
+        }
+      ]
+    });
+    expect(profile.Understood).toBe(0);
+    expect(profile.Calculated).toBe(0);
+  });
+
   it("does not award progress for merely opening a lesson", () => {
     const data = {
       ...baseData,

@@ -3,6 +3,7 @@ import "server-only";
 import { getServerEnv } from "@industrial-learn/env";
 import type { AuthenticatedSession } from "../auth/session-core";
 import { readSessionTokens } from "../auth/server";
+import { readCompetencyAwards } from "./data";
 import type {
   AssessmentAttemptRecord,
   DashboardEnrolment,
@@ -242,6 +243,7 @@ function mapAssessmentAttemptRow(row: SupabaseRow): AssessmentAttemptRecord {
     maxScore: numberValue(row.max_score),
     submittedAt: stringValue(row.submitted_at),
     competencyLevel: highestCompetency(row.competency_awards),
+    competencyAwards: readCompetencyAwards(row.competency_awards),
     incorrectTopics: arrayValue(row.incorrect_topics),
     unitErrors: numberValue(row.unit_errors)
   };

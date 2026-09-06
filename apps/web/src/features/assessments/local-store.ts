@@ -121,6 +121,7 @@ function createLocalRepositories(): AttemptPersistenceRepositories {
         maxScore: input.scoringSummary.maxPoints,
         submittedAt: input.submittedAt,
         competencyLevel: highestAward(input.competencyAwards),
+        competencyAwards: input.competencyAwards,
         incorrectTopics: input.scoringSummary.questionResults
           .filter((result) => !result.correct)
           .map((result) => result.questionId),

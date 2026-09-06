@@ -48,6 +48,7 @@ export type AssessmentAttemptRecord = {
   maxScore?: number | undefined;
   submittedAt?: string | undefined;
   competencyLevel?: CompetencyLevel | undefined;
+  competencyAwards?: Partial<Record<CompetencyLevel, number>> | undefined;
   incorrectTopics?: string[] | undefined;
   unitErrors?: number | undefined;
 };
@@ -383,6 +384,17 @@ export function calculateCompetencyProfile(data: StudentDashboardData) {
   };
 
   for (const attempt of data.assessmentAttempts) {
+    if (attempt.competencyAwards !== undefined) {
+      if (attempt.status === "graded") {
+        for (const level of Object.keys(profile) as CompetencyLevel[]) {
+          const points = attempt.competencyAwards[level];
+          if (typeof points === "number" && Number.isFinite(points) && points > 0) {
+            profile[level] += points;
+          }
+        }
+      }
+      continue;
+    }
     if (assessmentHasCompletionEvidence(attempt)) {
       profile[attempt.competencyLevel ?? competencyFromAssessmentScore(attempt)] += 1;
     }
@@ -403,6 +415,31 @@ export function calculateCompetencyProfile(data: StudentDashboardData) {
   }
 
   return profile;
+}
+
+export function readCompetencyAwards(
+  value: unknown
+): Partial<Record<CompetencyLevel, number>> {
+  const awards: Partial<Record<CompetencyLevel, number>> = {};
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return awards;
+  }
+  const record = value as Record<string, unknown>;
+  const levels: CompetencyLevel[] = [
+    "Introduced",
+    "Understood",
+    "Calculated",
+    "Operated",
+    "Diagnosed",
+    "Designed"
+  ];
+  for (const level of levels) {
+    const points = record[level];
+    if (typeof points === "number" && Number.isFinite(points) && points > 0) {
+      awards[level] = points;
+    }
+  }
+  return awards;
 }
 
 export function buildWeakTopicRecommendations(

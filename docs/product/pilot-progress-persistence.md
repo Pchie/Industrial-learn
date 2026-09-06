@@ -1,6 +1,6 @@
 # Pilot Progress Persistence
 
-Date: 2026-09-04
+Date: 2026-09-06
 
 ## Evidence Model
 
@@ -57,9 +57,27 @@ competency is derived from the persisted server award object. A sign-out/sign-in
 therefore reads the same database evidence rather than reconstructing completion from page
 state.
 
+The adapter preserves every positive finite award for the six recognised competency levels,
+not only the highest level. An empty or invalid persisted award object contributes zero;
+the production projection does not infer a replacement award from the score. Awards are
+counted only for graded attempts. A full-mark v2 attempt contributes four `Understood`
+evidence points and two `Calculated` evidence points. These are assessed evidence points,
+not six separate mastered competencies.
+
+Live verification on 2026-09-06 found that the previous adapter retained only the highest
+level and the dashboard therefore showed one `Calculated` point. The stored scoring and
+awards were correct. The targeted adapter/model correction and regression tests preserve
+the original server scoring without changing assessment content.
+
 ## Retention And Limitations
 
 The migration uses the existing attempt and progress retention model. It stores one
 meaningful lesson progress record and one assessment summary per attempt; it does not store
 slider history or high-frequency interaction data. The parent module remains unpublished,
 and pilot progress is intentionally presented through the dedicated pilot route.
+
+The dashboard currently reads at most ten recent assessment attempts and twenty-five lesson
+progress records. Its displayed evidence is therefore a bounded recent projection, not a
+lifetime competency total. Repeated graded attempts can add evidence points; completion
+percentages are not pass marks. A wrong-unit attempt can complete the path while receiving
+zero `Calculated` points. Broad analytics and mastery aggregation remain outside this pilot.
