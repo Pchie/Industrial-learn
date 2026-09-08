@@ -1,0 +1,138 @@
+{
+  "version": 2,
+  "classification": "UI concept art; not engineering evidence",
+  "assets": {
+    "pressureHero": {
+      "image": {
+        "src": "/images/dashboard/pressure-press-feature.webp",
+        "width": 1440,
+        "height": 576
+      },
+      "alt": "Concept illustration of a press contact assembly",
+      "provenance": "Prompt 53B generated artwork; exec-eca2aa17-8e22-4d09-9c5c-c1ce369438b0.png",
+      "permittedUse": "UI concept illustration only",
+      "classification": "decorative"
+    },
+    "pressureCompact": {
+      "image": {
+        "src": "/images/dashboard/pressure-press-concept.webp",
+        "width": 1120,
+        "height": 840
+      },
+      "alt": "Concept illustration of a press contact assembly",
+      "provenance": "Prompt 53B generated artwork; exec-8e60a15f-68d6-40ad-91dc-3058007fc67c.png",
+      "permittedUse": "UI concept illustration only",
+      "classification": "decorative"
+    },
+    "pressureDetail": {
+      "image": {
+        "src": "/images/dashboard/pressure-contact-detail.webp",
+        "width": 960,
+        "height": 480
+      },
+      "alt": "Concept close-up of the press face and work surface; not a technical drawing",
+      "provenance": "Prompt 53C generated artwork; exec-b07d171d-1ae7-47ca-b52c-8c6155094f84.png",
+      "permittedUse": "UI concept illustration only",
+      "classification": "decorative"
+    },
+    "future": {
+      "image": {
+        "src": "/images/dashboard/future-engineering-banner.webp",
+        "width": 1800,
+        "height": 600
+      },
+      "alt": "Clean-energy city concept with solar panels and wind turbines",
+      "provenance": "Prompt 53D generated artwork; exec-d632b6ae-31b8-42b8-80df-60996c68adb6.png",
+      "permittedUse": "UI concept illustration only",
+      "classification": "decorative"
+    },
+    "support": {
+      "image": {
+        "src": "/images/dashboard/study-support.webp",
+        "width": 480,
+        "height": 360
+      },
+      "alt": "Learning companion reading a notebook",
+      "provenance": "Prompt 53D generated artwork; exec-51bb8e24-8e1e-4c05-a261-561b488c7802.png",
+      "permittedUse": "UI concept illustration only",
+      "classification": "decorative"
+    },
+    "pumpHero": {
+      "image": {
+        "src": "/images/dashboard/pump-hero-v2.webp",
+        "width": 1600,
+        "height": 800
+      },
+      "alt": "Transparent blue pump concept; fictional course artwork",
+      "provenance": "Reference fidelity V2 generated artwork; exec-ebf9713f-99f9-4cc3-bbc1-7613a28a9eac.png",
+      "permittedUse": "UI concept illustration only",
+      "classification": "decorative"
+    },
+    "pressureScene": {
+      "image": {
+        "src": "/images/dashboard/pressure-scene-v2.webp",
+        "width": 1600,
+        "height": 800
+      },
+      "alt": "Concept illustration of a press contact assembly",
+      "provenance": "Reference fidelity V2 generated artwork; exec-a1684aa8-27ea-4098-a03e-2ff7756e4eea.png",
+      "permittedUse": "UI concept illustration only",
+      "classification": "decorative"
+    },
+    "pressureWater": {
+      "image": {
+        "src": "/images/dashboard/pressure-water-v2.webp",
+        "width": 640,
+        "height": 320
+      },
+      "alt": "Water vessel and pressure probe concept; not a calibrated diagram",
+      "provenance": "Reference fidelity V2 generated artwork; exec-54a52c4a-1842-4e91-9f3a-b5735fa5142e.png",
+      "permittedUse": "UI concept illustration only",
+      "classification": "decorative"
+    },
+    "cylinder": {
+      "image": {
+        "src": "/images/dashboard/cylinder-v2.webp",
+        "width": 640,
+        "height": 320
+      },
+      "alt": "Hydraulic cylinder concept; fictional course artwork",
+      "provenance": "Reference fidelity V2 generated artwork; exec-1aac6c51-3eb4-439d-84af-0cc05eff18ec.png",
+      "permittedUse": "UI concept illustration only",
+      "classification": "decorative"
+    },
+    "venturi": {
+      "image": {
+        "src": "/images/dashboard/venturi-v2.webp",
+        "width": 640,
+        "height": 320
+      },
+      "alt": "Transparent pipe concept; fictional course artwork",
+      "provenance": "Reference fidelity V2 generated artwork; exec-6a162f7b-fafd-4714-a13b-e3cb5968a1f9.png",
+      "permittedUse": "UI concept illustration only",
+      "classification": "decorative"
+    },
+    "thermal": {
+      "image": {
+        "src": "/images/dashboard/thermal-v2.webp",
+        "width": 640,
+        "height": 320
+      },
+      "alt": "Heat exchanger concept; fictional course artwork",
+      "provenance": "Reference fidelity V2 generated artwork; exec-720acdbe-c354-4047-986c-b3c5da6dc769.png",
+      "permittedUse": "UI concept illustration only",
+      "classification": "decorative"
+    },
+    "pipeSystem": {
+      "image": {
+        "src": "/images/dashboard/pipe-system-v2.webp",
+        "width": 400,
+        "height": 400
+      },
+      "alt": "Piping system concept; fictional course artwork",
+      "provenance": "Reference fidelity V2 generated artwork; exec-fe17d246-65ef-4bca-99d9-9b4b9b70622f.png",
+      "permittedUse": "UI concept illustration only",
+      "classification": "decorative"
+    }
+  }
+}

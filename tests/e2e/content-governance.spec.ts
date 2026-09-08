@@ -150,12 +150,16 @@ test("workspace switcher is keyboard accessible and exposes owner role state", a
   await page.setViewportSize({ width: 375, height: 820 });
   await signIn(page, "owner@example.test", /\/workspace/, "/workspace");
 
-  const switcher = page.locator("summary").filter({ hasText: "Workspace:" });
+  const switcher = page.locator("summary[aria-label^='Workspace:']");
   await switcher.focus();
   await page.keyboard.press("Enter");
-  await expect(page.getByText("Platform Owner", { exact: true }).first()).toBeVisible();
-  await expect(page.getByRole("link", { name: "Reviewer", exact: true })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Account access" })).toBeVisible();
+  const panel = page.locator(".workspace-menu__panel");
+  await expect(panel.locator(".workspace-menu__identity > span")).toHaveText(
+    "Platform Owner"
+  );
+  await expect(panel.locator(".workspace-menu__identity > span")).toBeVisible();
+  await expect(panel.getByRole("link", { name: "Reviewer", exact: true })).toBeVisible();
+  await expect(panel.getByRole("link", { name: "Account access" })).toBeVisible();
 });
 
 test("role-based workspace choices remain least privilege", async ({ page }) => {

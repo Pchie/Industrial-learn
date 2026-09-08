@@ -64,12 +64,12 @@ const nextConfig: NextConfig = {
       },
       {
         source:
-          "/(dashboard|my-learning|assessments|simulations/history|projects|author|review|admin)",
+          "/(dashboard|my-learning|assessments|simulations/history|projects|author|review|admin|internal|preview)",
         headers: privateCacheHeaders
       },
       {
         source:
-          "/(dashboard|my-learning|assessments|simulations/history|projects|author|review|admin)/:path*",
+          "/(dashboard|my-learning|assessments|simulations/history|projects|author|review|admin|internal|preview)/:path*",
         headers: privateCacheHeaders
       }
     ];

@@ -41,6 +41,14 @@ export function loadLocalStudentDashboardData(
 
   return {
     ...seed,
+    ...(profile.email === "incomplete.student@example.test"
+      ? {
+          partialDataWarnings: ["Assessment and lesson records could not be loaded."],
+          unavailableSections: ["lessons", "assessments"] satisfies NonNullable<
+            StudentDashboardData["unavailableSections"]
+          >
+        }
+      : {}),
     lessonProgress: mergeById(dynamicLessonProgress, seed.lessonProgress),
     assessmentAttempts: [...dynamicAssessmentAttempts, ...seed.assessmentAttempts],
     simulationAttempts: [...dynamicSimulationAttempts, ...seed.simulationAttempts],

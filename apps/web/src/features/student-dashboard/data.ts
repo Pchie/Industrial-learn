@@ -40,6 +40,8 @@ export type LessonProgressRecord = {
 
 export type AssessmentAttemptRecord = {
   id: string;
+  contentVersion?: number | undefined;
+  reviewAvailable?: boolean | undefined;
   assessmentSlug: string;
   title: string;
   moduleSlug: string;
@@ -55,6 +57,8 @@ export type AssessmentAttemptRecord = {
 
 export type SimulationAttemptRecord = {
   id: string;
+  startedAt?: string | undefined;
+  competencyAwards?: Partial<Record<CompetencyLevel, number>> | undefined;
   simulationSlug: string;
   title: string;
   moduleSlug: string;
@@ -94,7 +98,18 @@ export type StudentDashboardData = {
   dismissedRecommendationIds: string[];
   loadedAt: string;
   partialDataWarnings: string[];
+  unavailableSections?: DashboardDataSection[];
+  limitedSections?: DashboardDataSection[];
 };
+
+export type DashboardDataSection =
+  | "enrolments"
+  | "lessons"
+  | "assessments"
+  | "simulations"
+  | "projects"
+  | "saved"
+  | "dismissals";
 
 export type ProgressCalculation = {
   available: boolean;
@@ -764,7 +779,7 @@ function unavailableProgress(explanation: string): ProgressCalculation {
   };
 }
 
-function lessonHasCompletionEvidence(progress: LessonProgressRecord) {
+export function lessonHasCompletionEvidence(progress: LessonProgressRecord) {
   return (
     Boolean(progress.completedAt) ||
     progress.status === "graded" ||

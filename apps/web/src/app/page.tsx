@@ -1,80 +1,75 @@
-import { getServerEnv } from "@industrial-learn/env";
-import { PRODUCT_NAME, SCHOOLS } from "@industrial-learn/shared";
+import Link from "next/link";
+import { ArrowRight, BookOpen, Compass, FlaskConical } from "lucide-react";
+import { getPublicLessons } from "@/features/lesson-engine/data";
+import { getCurriculum } from "@/features/curriculum/data";
+import { PublishedLessonSection, SchoolCard } from "@/features/curriculum/components";
+import { BasicFluidPressureScene } from "@/features/basic-fluid-pressure-lesson/basic-fluid-pressure-scene";
+import {
+  BASIC_PRESSURE_LIMITS,
+  createBasicPressureLessonModel
+} from "@/features/basic-fluid-pressure-lesson/model";
 
 export default function HomePage() {
-  const env = getServerEnv();
-
+  const lessons = getPublicLessons();
+  const pressure = lessons.find((lesson) => lesson.slug === "basic-fluid-pressure");
+  const model = createBasicPressureLessonModel({
+    forceN: BASIC_PRESSURE_LIMITS.forceN.defaultValue,
+    areaM2: BASIC_PRESSURE_LIMITS.areaM2.defaultValue
+  });
   return (
-    <div className="page-stack">
-      <section className="hero" aria-labelledby="home-title">
-        <div className="hero-copy">
-          <p className="eyebrow">Application foundation</p>
-          <h1 id="home-title">{PRODUCT_NAME}</h1>
-          <p className="hero-text">
-            A temporary shell for a reviewed engineering education platform connecting
-            academic theory, structured practice, and professional readiness.
-          </p>
-        </div>
-        <dl className="status-panel" aria-label="Foundation status">
-          <div>
-            <dt>Framework</dt>
-            <dd>Next.js App Router</dd>
+    <div className="page-stack home-workbench">
+      <header className="home-heading">
+        <p className="eyebrow">Engineering learning workspace</p>
+        <h1>Industrial Learn</h1>
+        <p>
+          Explore a concept. Test your understanding. Build your engineering foundations.
+        </p>
+      </header>
+      <nav className="home-destinations" aria-label="Start learning">
+        <Link href="/learn/pilot">
+          <BookOpen aria-hidden="true" />
+          <span>Fluid Engineering Pilot</span>
+          <ArrowRight aria-hidden="true" />
+        </Link>
+        <Link href="/simulations">
+          <FlaskConical aria-hidden="true" />
+          <span>Simulation Lab</span>
+          <ArrowRight aria-hidden="true" />
+        </Link>
+        <Link href="/workspace">
+          <Compass aria-hidden="true" />
+          <span>My workspace</span>
+          <ArrowRight aria-hidden="true" />
+        </Link>
+      </nav>
+      {pressure ? (
+        <section className="home-feature" aria-labelledby="featured-lesson-title">
+          <div className="section-heading">
+            <p className="eyebrow">Start with a visual</p>
+            <h2 id="featured-lesson-title">{pressure.title}</h2>
+            <Link className="curriculum-action" href={`/lessons/${pressure.slug}`}>
+              Open lesson <ArrowRight size={18} aria-hidden="true" />
+            </Link>
           </div>
-          <div>
-            <dt>Data architecture</dt>
-            <dd>PostgreSQL-compatible, Supabase-ready</dd>
-          </div>
-          <div>
-            <dt>Supabase env</dt>
-            <dd>{env.supabase.isConfigured ? "Configured" : "Awaiting values"}</dd>
-          </div>
-        </dl>
-      </section>
-
-      <section id="schools" className="section-band" aria-labelledby="schools-title">
+          <BasicFluidPressureScene
+            {...model.input}
+            contactSideLength={model.contactSideLength}
+            forceVectorLength={model.forceVectorLength}
+            pressureIntensity={model.pressureIntensity}
+            pressureKPa={model.pressureDisplayConversion?.calculatedValue ?? 0}
+          />
+        </section>
+      ) : null}
+      <PublishedLessonSection lessons={lessons} />
+      <section className="curriculum-section" aria-labelledby="schools-title">
         <div className="section-heading">
-          <p className="eyebrow">Two connected schools</p>
-          <h2 id="schools-title">Core foundations before future systems</h2>
+          <h2 id="schools-title">Two connected schools</h2>
         </div>
-        <div className="school-grid">
-          {SCHOOLS.map((school) => (
-            <article key={school.id} className="school-card">
-              <h3>{school.title}</h3>
-              <p>{school.description}</p>
-            </article>
+        <div className="curriculum-grid">
+          {getCurriculum().schools.map((school) => (
+            <SchoolCard key={school.id} school={school} />
           ))}
         </div>
-      </section>
-
-      <section
-        id="foundation"
-        className="section-band"
-        aria-labelledby="foundation-title"
-      >
-        <div className="section-heading">
-          <p className="eyebrow">Prepared boundaries</p>
-          <h2 id="foundation-title">Built for the first real product work</h2>
-        </div>
-        <ul className="capability-list">
-          <li>Strict TypeScript and workspace boundaries.</li>
-          <li>Environment validation with server and browser safety in mind.</li>
-          <li>Responsive, accessible shell with loading, error, and not-found states.</li>
-          <li>Unit and end-to-end test configuration ready for CI.</li>
-        </ul>
-      </section>
-
-      <section id="status" className="section-band" aria-labelledby="status-title">
-        <div className="section-heading">
-          <p className="eyebrow">Not built yet</p>
-          <h2 id="status-title">
-            Lessons, simulations, and authentication are intentionally deferred
-          </h2>
-        </div>
-        <p>
-          This foundation keeps the application ready for reviewed content, calculation
-          libraries, Supabase-backed persistence, and role-based workflows without
-          creating those features ahead of the approved scope.
-        </p>
       </section>
     </div>
   );

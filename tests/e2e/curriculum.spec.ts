@@ -19,14 +19,14 @@ test("browses the main curriculum catalogue", async ({ page }) => {
 
 test("searches only published lessons and preserves a usable URL", async ({ page }) => {
   await page.goto("/learn");
-  await page.getByLabel("Search published lessons").fill("pressure");
-  await page.getByRole("button", { name: "Search" }).click();
+  await page.getByLabel("Search within lessons").fill("pressure");
+  await page.getByRole("button", { name: "Search", exact: true }).click();
 
   await expect(page).toHaveURL(/\/learn\?q=pressure/);
   await expect(page.getByRole("heading", { name: "Basic Fluid Pressure" })).toBeVisible();
 
-  await page.getByLabel("Search published lessons").fill("Bernoulli");
-  await page.getByRole("button", { name: "Search" }).click();
+  await page.getByLabel("Search within lessons").fill("Bernoulli");
+  await page.getByRole("button", { name: "Search", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "No published lessons found" })
   ).toBeVisible();

@@ -101,7 +101,12 @@ export function roleLabel(role: AppRole) {
 }
 
 export function workspaceForPath(pathname: string) {
-  if (pathname.startsWith("/review") || pathname.startsWith("/preview/lessons")) {
+  if (
+    pathname.startsWith("/review") ||
+    pathname.startsWith("/preview/lessons") ||
+    pathname.startsWith("/internal/simulations") ||
+    pathname === "/internal/visual-simulation-lab"
+  ) {
     return "Reviewer";
   }
   if (pathname.startsWith("/author")) {

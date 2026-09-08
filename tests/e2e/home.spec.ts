@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("renders the temporary Industrial Learn product shell", async ({ page }) => {
+test("renders the governed Industrial Learn learning workspace", async ({ page }) => {
   await page.goto("/");
 
   await expect(
@@ -9,5 +9,7 @@ test("renders the temporary Industrial Learn product shell", async ({ page }) =>
   await expect(
     page.getByRole("navigation", { name: "Primary navigation" })
   ).toBeVisible();
-  await expect(page.getByText("Next.js App Router")).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Start learning" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Student lessons" })).toBeVisible();
+  await expect(page.getByText("Application foundation", { exact: true })).toHaveCount(0);
 });

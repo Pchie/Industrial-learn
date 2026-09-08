@@ -141,9 +141,9 @@ export function HydraulicCylinderScene({
       <desc>{stateDescription}</desc>
       <defs>
         <linearGradient id={`barrel-${id}`} x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#d7dee5" />
-          <stop offset="0.48" stopColor="#f7f9fa" />
-          <stop offset="1" stopColor="#aeb9c3" />
+          <stop offset="0" stopColor="var(--il-material-metal-mid)" />
+          <stop offset="0.48" stopColor="var(--il-material-metal-light)" />
+          <stop offset="1" stopColor="var(--il-material-metal-dark)" />
         </linearGradient>
         <pattern
           height="12"

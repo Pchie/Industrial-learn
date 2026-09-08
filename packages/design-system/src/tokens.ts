@@ -1,7 +1,58 @@
 export const designTokens = {
+  surfaces: {
+    page: "var(--il-color-bg-page)",
+    surface: "var(--il-color-bg-surface)",
+    elevated: "var(--il-color-bg-elevated)",
+    muted: "var(--il-color-bg-muted)"
+  },
+  actions: {
+    primary: "var(--il-color-action-primary)",
+    primaryHover: "var(--il-color-action-primary-hover)",
+    secondary: "var(--il-color-action-secondary)",
+    accent: "var(--il-color-accent)",
+    focus: "var(--il-color-focus)"
+  },
+  text: {
+    primary: "var(--il-color-text-primary)",
+    secondary: "var(--il-color-text-secondary)",
+    muted: "var(--il-color-text-muted)"
+  },
+  interaction: {
+    hover: "var(--il-color-hover)",
+    activeNavigationBackground: "var(--il-color-nav-active-bg)",
+    activeNavigationText: "var(--il-color-nav-active-text)"
+  },
+  borders: {
+    subtle: "var(--il-border-subtle)",
+    strong: "var(--il-border-strong)"
+  },
+  feature: {
+    background: "var(--il-color-feature-bg)",
+    text: "var(--il-color-feature-text)",
+    secondaryText: "var(--il-color-feature-secondary)",
+    actionBackground: "var(--il-color-feature-action-bg)",
+    actionText: "var(--il-color-feature-action-text)"
+  },
+  shadows: {
+    card: "var(--il-shadow-card)",
+    panel: "var(--il-shadow-panel)",
+    overlay: "var(--il-shadow-overlay)"
+  },
+  motion: {
+    fast: "var(--il-motion-fast)",
+    standard: "var(--il-motion-standard)",
+    entrance: "var(--il-motion-entrance)",
+    stagger: "var(--il-motion-stagger)",
+    art: "var(--il-motion-art)",
+    theme: "var(--il-motion-theme)",
+    press: "var(--il-motion-press)",
+    ease: "var(--il-motion-ease)",
+    lift: "var(--il-motion-lift)",
+    rise: "var(--il-motion-rise)"
+  },
   typography: {
     fontFamilySans:
-      "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
+      "'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
     fontFamilyMono:
       "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace"
   },

@@ -4,6 +4,8 @@ import { getServerEnv } from "@industrial-learn/env";
 import type { AuthenticatedSession } from "../auth/session-core";
 import { readSessionTokens } from "../auth/server";
 import { readCompetencyAwards } from "./data";
+import { DashboardSessionError, readDashboardSummaries } from "./summary-queries";
+import { canReviewDashboardAssessment } from "./summary-access";
 import type {
   AssessmentAttemptRecord,
   DashboardEnrolment,
@@ -69,53 +71,10 @@ async function loadSupabaseStudentDashboardData(
   }
 
   const client = createRestClient(env.supabase.url, env.supabase.anonKey, accessToken);
-  const [
-    enrolments,
-    progress,
-    assessments,
-    simulations,
-    projects,
-    savedLessons,
-    dismissals
-  ] = await Promise.all([
-    client.get("enrolments", {
-      student_profile_id: `eq.${session.profile.id}`,
-      withdrawn_at: "is.null",
-      order: "enrolled_at.desc",
-      limit: "5"
-    }),
-    client.get("lesson_progress", {
-      student_profile_id: `eq.${session.profile.id}`,
-      order: "last_activity_at.desc.nullslast",
-      limit: "25"
-    }),
-    client.get("assessment_attempts", {
-      select: "*,assessments(slug,title,module_slug)",
-      student_profile_id: `eq.${session.profile.id}`,
-      order: "submitted_at.desc.nullslast",
-      limit: "10"
-    }),
-    client.get("simulation_attempts", {
-      student_profile_id: `eq.${session.profile.id}`,
-      order: "completed_at.desc.nullslast",
-      limit: "10"
-    }),
-    client.get("project_submissions", {
-      student_profile_id: `eq.${session.profile.id}`,
-      order: "submitted_at.desc.nullslast",
-      limit: "10"
-    }),
-    client.get("saved_lessons", {
-      student_profile_id: `eq.${session.profile.id}`,
-      order: "saved_at.desc",
-      limit: "10"
-    }),
-    client.get("dashboard_recommendation_dismissals", {
-      student_profile_id: `eq.${session.profile.id}`,
-      order: "dismissed_at.desc",
-      limit: "100"
-    })
-  ]);
+  const { rows, unavailableSections, limitedSections } = await readDashboardSummaries(
+    (table, params) => client.get(table, params),
+    session.profile.id
+  );
 
   return {
     profile: {
@@ -123,17 +82,21 @@ async function loadSupabaseStudentDashboardData(
       displayName: session.profile.displayName,
       email: session.profile.email
     },
-    enrolments: enrolments.map(mapEnrolmentRow),
-    lessonProgress: progress.map(mapLessonProgressRow),
-    assessmentAttempts: assessments.map(mapAssessmentAttemptRow),
-    simulationAttempts: simulations.map(mapSimulationAttemptRow),
-    projectSubmissions: projects.map(mapProjectSubmissionRow),
-    savedLessons: savedLessons.map(mapSavedLessonRow),
-    dismissedRecommendationIds: dismissals
+    enrolments: rows.enrolments.map(mapEnrolmentRow),
+    lessonProgress: rows.lessons.map(mapLessonProgressRow),
+    assessmentAttempts: rows.assessments.map(mapAssessmentAttemptRow),
+    simulationAttempts: rows.simulations.map(mapSimulationAttemptRow),
+    projectSubmissions: rows.projects.map(mapProjectSubmissionRow),
+    savedLessons: rows.saved.map(mapSavedLessonRow),
+    dismissedRecommendationIds: rows.dismissals
       .map((row) => stringValue(row.recommendation_id))
       .filter((value): value is string => Boolean(value)),
     loadedAt: new Date().toISOString(),
-    partialDataWarnings: []
+    partialDataWarnings: unavailableSections.map(
+      (section) => `${section} data is temporarily unavailable.`
+    ),
+    unavailableSections,
+    limitedSections
   };
 }
 
@@ -165,16 +128,15 @@ function createRestClient(url: string, anonKey: string, accessToken: string) {
 
   return {
     async get(table: string, params: Record<string, string>) {
-      const query = new URLSearchParams({
-        select: "*",
-        ...params
-      });
+      const query = new URLSearchParams(params);
       const response = await fetch(`${restBase}/${table}?${query}`, {
         headers,
         cache: "no-store"
       });
 
       if (!response.ok) {
+        if (response.status === 401 || response.status === 403)
+          throw new DashboardSessionError("Dashboard access could not be verified.");
         throw new Error("Dashboard database query failed.");
       }
 
@@ -199,14 +161,19 @@ function createRestClient(url: string, anonKey: string, accessToken: string) {
 }
 
 function mapEnrolmentRow(row: SupabaseRow): DashboardEnrolment {
+  const cohort = nestedRow(row.cohorts);
+  const programme = nestedRow(cohort?.programmes);
+  const modules = Array.isArray(cohort?.cohort_modules) ? cohort.cohort_modules : [];
   return {
     id: stringValue(row.id) ?? "unknown-enrolment",
-    programmeSlug: stringValue(row.programme_slug) ?? "mechanical-foundations",
-    cohortTitle: stringValue(row.cohort_title) ?? "Current cohort",
-    enrolledAt: stringValue(row.enrolled_at) ?? new Date().toISOString(),
+    programmeSlug: stringValue(programme?.slug) ?? "",
+    cohortTitle: stringValue(cohort?.title) ?? "Current cohort",
+    enrolledAt: stringValue(row.enrolled_at) ?? "",
     currentYear: numberValue(row.current_year),
     currentSemester: numberValue(row.current_semester),
-    moduleSlugs: arrayValue(row.module_slugs)
+    moduleSlugs: modules
+      .map((item) => stringValue(nestedRow(nestedRow(item)?.modules)?.slug))
+      .filter((slug): slug is string => Boolean(slug))
   };
 }
 
@@ -225,8 +192,14 @@ function mapLessonProgressRow(row: SupabaseRow): LessonProgressRecord {
 
 function mapAssessmentAttemptRow(row: SupabaseRow): AssessmentAttemptRecord {
   const assessment = nestedRow(row.assessments);
+  const reviewAvailable = canReviewDashboardAssessment(assessment, {
+    status: row.status,
+    content_version: row.content_version
+  });
   return {
     id: stringValue(row.id) ?? "unknown-assessment-attempt",
+    contentVersion: numberValue(row.content_version),
+    reviewAvailable,
     assessmentSlug:
       stringValue(assessment?.slug) ??
       stringValue(row.assessment_slug) ??
@@ -250,17 +223,19 @@ function mapAssessmentAttemptRow(row: SupabaseRow): AssessmentAttemptRecord {
 }
 
 function mapSimulationAttemptRow(row: SupabaseRow): SimulationAttemptRecord {
+  const simulation = nestedRow(row.simulations);
   return {
     id: stringValue(row.id) ?? "unknown-simulation-attempt",
-    simulationSlug:
-      stringValue(row.simulation_slug) ?? stringValue(row.simulation_id) ?? "",
-    title: stringValue(row.simulation_title) ?? "Simulation attempt",
+    simulationSlug: stringValue(simulation?.slug) ?? "",
+    title: stringValue(simulation?.title) ?? "Simulation attempt",
     moduleSlug: stringValue(row.module_slug) ?? "",
     mode: stringValue(row.mode) ?? "Explore",
     status: attemptStatus(row.status),
     scenarioState: stringValue(row.scenario_state) ?? "normal-state",
     faultDiagnosisErrors: numberValue(row.fault_diagnosis_errors),
-    completedAt: stringValue(row.completed_at)
+    completedAt: stringValue(row.completed_at),
+    startedAt: stringValue(row.started_at),
+    competencyAwards: readCompetencyAwards(row.competency_awards)
   };
 }
 
@@ -281,7 +256,7 @@ function mapProjectSubmissionRow(row: SupabaseRow): ProjectSubmissionRecord {
 function mapSavedLessonRow(row: SupabaseRow): SavedLessonRecord {
   return {
     id: stringValue(row.id) ?? "unknown-saved-lesson",
-    lessonSlug: stringValue(row.lesson_slug) ?? stringValue(row.lesson_id) ?? "",
+    lessonSlug: stringValue(nestedRow(row.lessons)?.slug) ?? "",
     savedAt: stringValue(row.saved_at) ?? stringValue(row.created_at) ?? ""
   };
 }

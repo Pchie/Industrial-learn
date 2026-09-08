@@ -6,6 +6,7 @@ import {
   Select
 } from "@industrial-learn/design-system";
 import { useId, type ChangeEvent, type ReactNode } from "react";
+import { Pause, Play, RotateCcw, StepForward } from "lucide-react";
 
 import {
   type ChallengeEvaluation,
@@ -32,6 +33,12 @@ import {
 import { clampGaugeValue, scaleFlowLineWeight, scaleVectorLength } from "./state";
 import styles from "./visual-simulation.module.css";
 
+export {
+  LiveEquation as LiveEquationPanel,
+  ObservationPrompt as ObservationPanel,
+  EngineeringChallenge as ChallengePanel
+};
+
 function cx(...classes: Array<string | false | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
@@ -40,7 +47,7 @@ export function SimulationShell({
   challenge,
   children,
   controls,
-  eyebrow = "Visual simulation foundation",
+  eyebrow = "Engineering workbench",
   equation,
   fault,
   guidance,
@@ -68,13 +75,14 @@ export function SimulationShell({
   title: string;
 }) {
   const primaryControlsId = useId();
+  const titleId = useId();
 
   return (
-    <section className={styles.shell} aria-labelledby="visual-simulation-title">
+    <section className={styles.shell} aria-labelledby={titleId}>
       <header className={styles.header}>
         <div>
           <p className={styles.eyebrow}>{eyebrow}</p>
-          <h2 id="visual-simulation-title">{title}</h2>
+          <h2 id={titleId}>{title}</h2>
         </div>
         <div className={styles.statuses} aria-label="Simulation mode and status">
           <Badge tone="automation">{formatMode(mode)}</Badge>
@@ -91,18 +99,17 @@ export function SimulationShell({
         <div className={styles.playbackRegion}>{playbackControls}</div>
       ) : null}
 
-      {primaryControls ? (
-        <div className={styles.primaryControlsRegion} id={primaryControlsId}>
-          {primaryControls}
-        </div>
-      ) : null}
-
       <div className={styles.workbench}>
         <div className={styles.viewportRegion}>{children}</div>
         <aside
           className={styles.contextRegion}
           aria-label="Simulation controls and context"
         >
+          {primaryControls ? (
+            <div className={styles.primaryControlsRegion} id={primaryControlsId}>
+              {primaryControls}
+            </div>
+          ) : null}
           {controls ? <Panel title="Controls">{controls}</Panel> : null}
           {measurements ? <Panel title="Measurements">{measurements}</Panel> : null}
           {modeCapability.equationsVisible && equation ? (
@@ -191,16 +198,16 @@ export function SimulationPlaybackControls({
         onClick={onPlay}
         size="sm"
       >
-        <span aria-hidden="true">▶</span> Play
+        <Play aria-hidden="true" size={16} /> Play
       </Button>
       <Button disabled={disabled} onClick={onPause} size="sm" variant="secondary">
-        <span aria-hidden="true">Ⅱ</span> Pause
+        <Pause aria-hidden="true" size={16} /> Pause
       </Button>
       <Button disabled={disabled} onClick={onStep} size="sm" variant="secondary">
-        <span aria-hidden="true">▮▶</span> Step
+        <StepForward aria-hidden="true" size={16} /> Step
       </Button>
       <Button disabled={disabled} onClick={onReset} size="sm" variant="quiet">
-        <span aria-hidden="true">↺</span> Reset
+        <RotateCcw aria-hidden="true" size={16} /> Reset
       </Button>
       <Select
         aria-label="Simulation speed"

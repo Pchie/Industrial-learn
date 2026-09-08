@@ -1,6 +1,6 @@
 import { unstable_noStore as noStore } from "next/cache";
 import { StudentDashboard } from "@/features/student-dashboard/components";
-import { buildStudentDashboardModel } from "@/features/student-dashboard/data";
+import { buildDashboardExperience } from "@/features/student-dashboard/experience";
 import { loadStudentDashboardData } from "@/features/student-dashboard/server-data";
 import { requireStudentProfile } from "@/features/auth/server";
 import { WorkspacePerspectiveBanner } from "@/features/auth/workspace-perspective-banner";
@@ -26,7 +26,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       <WorkspacePerspectiveBanner perspective={params.perspective} session={session} />
       <StudentDashboard
         hideRecommendations={params.hideRecommendations === "1"}
-        model={buildStudentDashboardModel(dashboardData)}
+        model={buildDashboardExperience(dashboardData)}
       />
     </div>
   );

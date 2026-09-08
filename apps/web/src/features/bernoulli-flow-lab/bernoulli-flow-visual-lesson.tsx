@@ -1,5 +1,12 @@
 "use client";
 
+import { AerialSystemView } from "../simulation-views/aerial-system-view";
+import {
+  useSimulationView,
+  ViewModeSwitcher
+} from "../simulation-views/view-mode-switcher";
+import type { ViewNavigation } from "../simulation-views/capabilities";
+
 import { Alert, Button, NumberInput, Slider } from "@industrial-learn/design-system";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -96,10 +103,15 @@ const representations: RepresentationDefinition[] = [
 ];
 
 export function BernoulliFlowVisualLesson({
-  content
+  content,
+  inspectionEnabled = false,
+  viewNavigation
 }: {
   content: BernoulliFlowExperienceContent;
+  inspectionEnabled?: boolean;
+  viewNavigation?: ViewNavigation;
 }) {
+  const { view, changeView } = useSimulationView("bernoulli-flow-lab", viewNavigation);
   const [input, setInput] = useState<BernoulliFlowLessonInput>({
     flowRateLps: BERNOULLI_FLOW_LESSON_LIMITS.flowRateLps.defaultValue,
     outletDiameterMm: BERNOULLI_FLOW_LESSON_LIMITS.outletDiameterMm.defaultValue
@@ -253,48 +265,70 @@ export function BernoulliFlowVisualLesson({
             title="Two-section horizontal flow model"
           >
             <div>
-              <RepresentationSwitcher
-                activeMode={representation}
-                onChange={setRepresentation}
-                representations={representations}
-              />
-              <div className={styles.nextActions}>
-                <div aria-label="Presentation motion controls" role="group">
-                  <Button
-                    aria-pressed={presentationPlaying}
-                    onClick={() => setPresentationPlaying(true)}
-                    size="sm"
-                  >
-                    <span aria-hidden="true">▶</span> Play flow cue
-                  </Button>
-                  <Button
-                    onClick={() => setPresentationPlaying(false)}
-                    size="sm"
-                    variant="secondary"
-                  >
-                    <span aria-hidden="true">Ⅱ</span> Pause
-                  </Button>
-                </div>
-              </div>
-              <BernoulliFlowScene
-                flowRateLps={input.flowRateLps}
-                onSelectComponent={selectComponent}
-                onSelectPoint={selectPoint}
-                outletDiameterMm={input.outletDiameterMm}
-                presentationPlaying={presentationPlaying}
-                pressure1KPa={pressure1KPa}
-                pressure2KPa={pressure2KPa}
-                pressureHead1M={outputs?.pressureHead1 ?? 0}
-                pressureHead2M={outputs?.pressureHead2 ?? 0}
-                representation={representation}
-                selectedComponentId={selectedComponentId}
-                selectedPointId={selectedPointId}
-                totalHeadM={outputs?.totalHead1 ?? 0}
-                velocity1Mps={velocity1}
-                velocity2Mps={velocity2}
-                velocityHead1M={outputs?.velocityHead1 ?? 0}
-                velocityHead2M={outputs?.velocityHead2 ?? 0}
-              />
+              {inspectionEnabled ? (
+                <ViewModeSwitcher
+                  slug="bernoulli-flow-lab"
+                  view={view}
+                  onChange={changeView}
+                  navigation={viewNavigation}
+                />
+              ) : null}
+              {inspectionEnabled && view === "aerialview" ? (
+                <AerialSystemView
+                  pressure1KPa={pressure1KPa}
+                  pressure2KPa={pressure2KPa}
+                  velocity1Mps={velocity1}
+                  velocity2Mps={velocity2}
+                  outletDiameterMm={input.outletDiameterMm}
+                  onSelectPoint={selectPoint}
+                  selectedPointId={selectedPointId}
+                />
+              ) : (
+                <>
+                  <RepresentationSwitcher
+                    activeMode={representation}
+                    onChange={setRepresentation}
+                    representations={representations}
+                  />
+                  <div className={styles.nextActions}>
+                    <div aria-label="Presentation motion controls" role="group">
+                      <Button
+                        aria-pressed={presentationPlaying}
+                        onClick={() => setPresentationPlaying(true)}
+                        size="sm"
+                      >
+                        <span aria-hidden="true">▶</span> Play flow cue
+                      </Button>
+                      <Button
+                        onClick={() => setPresentationPlaying(false)}
+                        size="sm"
+                        variant="secondary"
+                      >
+                        <span aria-hidden="true">Ⅱ</span> Pause
+                      </Button>
+                    </div>
+                  </div>
+                  <BernoulliFlowScene
+                    flowRateLps={input.flowRateLps}
+                    onSelectComponent={selectComponent}
+                    onSelectPoint={selectPoint}
+                    outletDiameterMm={input.outletDiameterMm}
+                    presentationPlaying={presentationPlaying}
+                    pressure1KPa={pressure1KPa}
+                    pressure2KPa={pressure2KPa}
+                    pressureHead1M={outputs?.pressureHead1 ?? 0}
+                    pressureHead2M={outputs?.pressureHead2 ?? 0}
+                    representation={representation}
+                    selectedComponentId={selectedComponentId}
+                    selectedPointId={selectedPointId}
+                    totalHeadM={outputs?.totalHead1 ?? 0}
+                    velocity1Mps={velocity1}
+                    velocity2Mps={velocity2}
+                    velocityHead1M={outputs?.velocityHead1 ?? 0}
+                    velocityHead2M={outputs?.velocityHead2 ?? 0}
+                  />
+                </>
+              )}
               <p className={styles.visualNote}>
                 Moving dots are a bounded direction cue only. The model does not calculate
                 particle paths, flow development, or elapsed-time dynamics.
