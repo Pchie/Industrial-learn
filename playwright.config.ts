@@ -26,7 +26,9 @@ export default defineConfig({
       SUPABASE_DB_URL: ""
     },
     url: "http://127.0.0.1:3100",
-    reuseExistingServer: !process.env.CI,
+    // Reuse is for debugging only: fixture servers retain attempts between runs.
+    reuseExistingServer:
+      process.env.PLAYWRIGHT_REUSE_SERVER === "true" && !process.env.CI,
     timeout: 120000
   },
   projects: [

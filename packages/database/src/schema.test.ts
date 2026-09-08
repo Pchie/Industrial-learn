@@ -26,6 +26,13 @@ const assessmentReviewSeedSql = readFileSync(
   ),
   "utf8"
 );
+const publicationEvidenceSql = readFileSync(
+  join(
+    root,
+    "database/migrations/0020_require_reviewed_lesson_simulation_publication.sql"
+  ),
+  "utf8"
+);
 const policySql = readSqlDirectory("database/policies");
 const effectivePolicySql = `${policySql}\n${migrationSql}`;
 const seedSql = readFileSync(
@@ -113,6 +120,60 @@ function latestPolicyForTable(table: string, policyName: string) {
 }
 
 describe("database schema", () => {
+  it("requires exact published version and independent review evidence for lessons and simulations", () => {
+    for (const requirement of [
+      "item.current_version = p_version",
+      "item.published_version = p_version",
+      "version.version = item.current_version",
+      "approval.content_version = version.version",
+      "approval.reviewer_profile_id <> item.author_profile_id",
+      "assignment.status = 'completed'",
+      "version.archived_at is null",
+      "cardinality(version.source_ids) > 0",
+      "approval.simulation_test_ids_checked",
+      "later_review.reviewed_at >= approval.reviewed_at"
+    ]) {
+      expect(publicationEvidenceSql).toContain(requirement);
+    }
+  });
+
+  it("adds restrictive evidence policies without replacing existing course scopes", () => {
+    for (const table of ["lessons", "simulations"]) {
+      expect(publicationEvidenceSql).toContain(
+        `create policy ${table}_require_review_evidence on public.${table}\n  as restrictive for select to authenticated`
+      );
+    }
+    expect(publicationEvidenceSql).not.toContain("drop policy if exists lessons_read");
+    expect(publicationEvidenceSql).not.toContain(
+      "drop policy if exists simulations_read"
+    );
+    expect(publicationEvidenceSql).not.toMatch(
+      /delete from|update public\.(lessons|simulations)/i
+    );
+  });
+
+  it("exposes only a bounded publication predicate, not private review records", () => {
+    expect(publicationEvidenceSql).toContain("returns boolean");
+    expect(publicationEvidenceSql).toContain("set search_path = public, pg_temp");
+    expect(publicationEvidenceSql).toContain(
+      "p_entity_table in ('lessons', 'simulations')"
+    );
+    expect(publicationEvidenceSql).toContain("from public, anon;");
+    expect(publicationEvidenceSql).toContain("to authenticated, service_role;");
+    expect(publicationEvidenceSql).not.toMatch(/grant select.*review_records/i);
+  });
+
+  it("keeps lecturer publication-evidence exceptions scoped to their modules", () => {
+    for (const table of ["lessons", "simulations"]) {
+      const policy = latestPolicyForTable(table, `${table}_require_review_evidence`);
+      expect(policy).toContain("as restrictive for select to authenticated");
+      expect(policy).toContain("public.has_role('lecturer')\n      and");
+      expect(policy).toContain("public.lecturer_has_module(");
+      expect(policy).toContain("public.has_current_engineering_publication(");
+      expect(policy).toContain("or public.is_platform_owner()");
+    }
+  });
+
   it("creates every required application table", () => {
     for (const table of requiredTables) {
       expect(migrationSql).toContain(`create table public.${table}`);

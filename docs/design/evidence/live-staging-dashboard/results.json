@@ -1,0 +1,208 @@
+{
+  "date": "2026-09-08T17:50:42.573Z",
+  "commit": "93e3d52b2e262b984eb4675bf695740a05cc79bc",
+  "target": "https://industrial-learn-staging-git-development-kolobe.vercel.app",
+  "checks": [
+    {
+      "name": "Exact staging release and readiness",
+      "status": "PASS",
+      "detail": {
+        "commit": "93e3d52b2e262b984eb4675bf695740a05cc79bc",
+        "checks": {
+          "configuration": "ok",
+          "authProvider": "ok",
+          "database": "ok"
+        }
+      }
+    },
+    {
+      "name": "Migration ledger matches approved scope",
+      "status": "PASS",
+      "detail": {
+        "applied": 20,
+        "held": "0010, review-required Bernoulli registration"
+      }
+    },
+    {
+      "name": "Public route /",
+      "status": "PASS"
+    },
+    {
+      "name": "Public route /learn",
+      "status": "PASS"
+    },
+    {
+      "name": "Public route /simulations",
+      "status": "PASS"
+    },
+    {
+      "name": "Public route /lessons/basic-fluid-pressure",
+      "status": "PASS"
+    },
+    {
+      "name": "Unpublished/demo route renders Not Found without protected content /internal/reference-dashboard",
+      "status": "PASS",
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "Unpublished/demo route renders Not Found without protected content /lessons/hydraulic-cylinder-force",
+      "status": "PASS",
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "Unpublished/demo route renders Not Found without protected content /lessons/bernoulli-flow-lab",
+      "status": "PASS",
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "Unpublished/demo route renders Not Found without protected content /simulations/hydraulic-cylinder-force",
+      "status": "PASS",
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "Anonymous dashboard denied",
+      "status": "PASS"
+    },
+    {
+      "name": "Two temporary staging students created and authenticated (no email sent)",
+      "status": "PASS"
+    },
+    {
+      "name": "Live RLS integration suite (five existing, two new)",
+      "status": "PASS",
+      "detail": {
+        "passed": 7,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "Real empty dashboard and query ownership 0",
+      "status": "PASS"
+    },
+    {
+      "name": "Student staff-workspace denial",
+      "status": "PASS"
+    },
+    {
+      "name": "Approved lesson challenge and authenticated save",
+      "status": "PASS"
+    },
+    {
+      "name": "Pre-submission explanation protection 0",
+      "status": "PASS"
+    },
+    {
+      "name": "Save and reload answers 0",
+      "status": "PASS"
+    },
+    {
+      "name": "Converted kPa answer scored and atomically persisted",
+      "status": "PASS",
+      "detail": {
+        "score": 6,
+        "max": 6,
+        "competency": {
+          "Calculated": 2,
+          "Understood": 4
+        }
+      }
+    },
+    {
+      "name": "Same-key completion retry preserves answers, score, competency and audit 0",
+      "status": "PASS"
+    },
+    {
+      "name": "Completed attempt cannot be edited 0",
+      "status": "PASS"
+    },
+    {
+      "name": "Dashboard evidence survives fresh sign-in 0",
+      "status": "PASS"
+    },
+    {
+      "name": "Dashboard layout and accessibility 375",
+      "status": "PASS"
+    },
+    {
+      "name": "Dashboard layout and accessibility 768",
+      "status": "PASS"
+    },
+    {
+      "name": "Dashboard layout and accessibility 1536",
+      "status": "PASS"
+    },
+    {
+      "name": "Real empty dashboard and query ownership 1",
+      "status": "PASS"
+    },
+    {
+      "name": "Pre-submission explanation protection 1",
+      "status": "PASS"
+    },
+    {
+      "name": "Save and reload answers 1",
+      "status": "PASS"
+    },
+    {
+      "name": "Wrong-dimension answer receives no calculation credit",
+      "status": "PASS",
+      "detail": {
+        "score": 4,
+        "max": 6,
+        "competency": {
+          "Calculated": 0,
+          "Understood": 4
+        }
+      }
+    },
+    {
+      "name": "Same-key completion retry preserves answers, score, competency and audit 1",
+      "status": "PASS"
+    },
+    {
+      "name": "Completed attempt cannot be edited 1",
+      "status": "PASS"
+    },
+    {
+      "name": "Dashboard evidence survives fresh sign-in 1",
+      "status": "PASS"
+    },
+    {
+      "name": "Cross-student completed review denied",
+      "status": "PASS"
+    },
+    {
+      "name": "Both students: private data isolation, hidden tables and score/version/RPC tampering denied",
+      "status": "PASS"
+    },
+    {
+      "name": "Only canonical reviewed assessment visible; unapproved simulations hidden",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser JavaScript errors",
+      "status": "PASS",
+      "detail": {
+        "count": 0
+      }
+    }
+  ],
+  "cleanup": [
+    {
+      "status": "PASS",
+      "remainingPrivateRows": 0
+    },
+    {
+      "status": "PASS",
+      "remainingPrivateRows": 0
+    }
+  ]
+}

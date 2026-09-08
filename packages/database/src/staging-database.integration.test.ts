@@ -81,6 +81,68 @@ describeIfConfigured("staging database RLS integration", () => {
 
     expect([401, 403]).toContain(response.status);
   });
+
+  it("requires exact review evidence for every student-visible lesson and simulation", async () => {
+    for (const table of ["lessons", "simulations"]) {
+      const response = await restSelect(
+        table,
+        process.env.STAGING_STUDENT_A_ACCESS_TOKEN,
+        "select=id,slug,version,technical_review_status,publication_status"
+      );
+      expect(response.status).toBe(200);
+      const rows = (await response.json()) as Array<{
+        id: string;
+        slug: string;
+        version: number;
+        technical_review_status: string;
+        publication_status: string;
+      }>;
+      for (const row of rows) {
+        expect(row.publication_status).toBe("published");
+        expect(row.technical_review_status).toBe("Approved for student use");
+        const evidence = await fetch(
+          `${requiredEnv("NEXT_PUBLIC_SUPABASE_URL")}/rest/v1/rpc/has_current_engineering_publication`,
+          {
+            method: "POST",
+            headers: {
+              apikey: requiredEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
+              Authorization: `Bearer ${requiredEnv("STAGING_STUDENT_A_ACCESS_TOKEN")}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              p_entity_table: table,
+              p_entity_id: row.id,
+              p_version: row.version,
+              p_slug: row.slug
+            })
+          }
+        );
+        expect(evidence.status).toBe(200);
+        expect(await evidence.json()).toBe(true);
+      }
+    }
+  });
+
+  it("hides legacy published-looking fixtures that have no independent review", async () => {
+    for (const [table, slugs] of [
+      [
+        "lessons",
+        "prompt-33a-published-lesson,prompt-33b-lesson-published_approved,staging-fluid-pressure"
+      ],
+      [
+        "simulations",
+        "prompt-33a-simulation,prompt-33b-simulation-published_approved,staging-hydraulic-cylinder"
+      ]
+    ]) {
+      const response = await restSelect(
+        table!,
+        process.env.STAGING_STUDENT_A_ACCESS_TOKEN,
+        `select=id&slug=in.(${slugs})`
+      );
+      expect(response.status).toBe(200);
+      expect(await response.json()).toEqual([]);
+    }
+  });
 });
 
 async function restSelect(
