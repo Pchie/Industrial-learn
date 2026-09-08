@@ -170,6 +170,7 @@ describe("database schema", () => {
       expect(policy).toContain("public.has_role('lecturer')\n      and");
       expect(policy).toContain("public.lecturer_has_module(");
       expect(policy).toContain("public.has_current_engineering_publication(");
+      expect(policy).toContain("or public.is_platform_owner()");
     }
   });
 

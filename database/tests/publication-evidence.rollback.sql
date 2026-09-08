@@ -14,6 +14,7 @@ declare
   student_id uuid := gen_random_uuid();
   author_id uuid := gen_random_uuid();
   reviewer_id uuid := gen_random_uuid();
+  owner_id uuid := gen_random_uuid();
   item_id uuid;
   entity_id uuid;
   approval_id uuid;
@@ -28,16 +29,19 @@ begin
   insert into auth.users (id, email) values
     (student_id, student_id::text || '@example.test'),
     (author_id, author_id::text || '@example.test'),
-    (reviewer_id, reviewer_id::text || '@example.test');
+    (reviewer_id, reviewer_id::text || '@example.test'),
+    (owner_id, owner_id::text || '@example.test');
   insert into public.profiles (id, email, display_name)
     select id, email, 'Rollback-only security fixture'
-    from auth.users where id in (student_id, author_id, reviewer_id);
+    from auth.users where id in (student_id, author_id, reviewer_id, owner_id);
   insert into public.profile_roles (profile_id, role_id)
     select student_id, id from public.roles where role_key = 'student';
   insert into public.profile_roles (profile_id, role_id)
     select author_id, id from public.roles where role_key = 'content_author';
   insert into public.profile_roles (profile_id, role_id)
     select reviewer_id, id from public.roles where role_key = 'engineering_reviewer';
+  insert into public.profile_roles (profile_id, role_id)
+    select owner_id, id from public.roles where role_key = 'platform_owner';
 
   foreach target_table in array array['lessons', 'simulations'] loop
     entity_id := gen_random_uuid();
@@ -145,7 +149,7 @@ begin
 
   insert into public.lesson_progress (lesson_id, student_profile_id)
     select id, student_id from public.lessons where slug = 'staging-fluid-pressure';
-  foreach staff_id in array array[author_id, reviewer_id] loop
+  foreach staff_id in array array[author_id, reviewer_id, owner_id] loop
     perform set_config('request.jwt.claims', jsonb_build_object('sub', staff_id, 'role', 'authenticated')::text, true);
     set local role authenticated;
     select count(*) into visible_count from public.lessons where slug = 'staging-fluid-pressure';

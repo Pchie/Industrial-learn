@@ -104,6 +104,8 @@ test("preview disclosure never covers a short or collapsed sidebar", async ({
   await login(page, "owner@example.test");
   await expect(page).toHaveURL(/\/internal\/reference-dashboard$/);
   const notice = page.locator("#reference-demo-notice");
+  // The URL changes before the streamed preview applies its sidebar spacing.
+  await expect(notice).toBeVisible();
   const scrollArea = (await page.locator(".sidebar-scroll").boundingBox())!;
   const disclosure = (await notice.boundingBox())!;
   await page.screenshot({ path: info.outputPath("short-sidebar.png") });
