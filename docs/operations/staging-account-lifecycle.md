@@ -52,6 +52,12 @@ redacted evidence.
 - Recovery confirmation creates no ordinary application login. The protected password
   form works; the old password is rejected, the new password signs in, and link reuse
   fails. Ordinary login cookies or a form/URL token do not authorize this form.
+- Recovery cookies carry a purpose-bound HMAC-SHA256 ticket, not a bare provider token.
+  The server verifies its signature and the earlier of provider expiry or ten minutes.
+  Relabelling a normal session cookie therefore does not authorize recovery. Signing uses
+  the existing server-only service credential with a recovery-specific domain prefix;
+  rotating it invalidates outstanding recovery tickets. No new secret is sent to clients.
+  A fixed test key is allowed only behind the existing isolated-local-auth safety guard.
 - Expired sessions require sign-in again. No automatic refresh behavior is promised.
 - Verify Secure/HttpOnly/SameSite cookies, no-referrer/no-store auth responses, and no
   credentials in rendered pages, client logs or error reports.

@@ -33,6 +33,9 @@ must not be reported as completed merely because automated tests pass.
   a profile before verified identity; privileged metadata is ignored.
 - Preserve password whitespace; clear recovery on logout; reject unconfirmed identities;
   fail on profile lookup or role-assignment errors. Auth calls have bounded/no-store requests.
+- Independent recheck found that a separate cookie name alone did not prove recovery
+  purpose. Recovery authority now requires a server-signed, purpose-bound ticket with
+  server-enforced expiry; raw session tokens and tampered tickets are rejected.
 - The staging monitoring probe requires platform management permission. Readiness requires
   2xx responses and bounded dependency timeouts. Recovery transport failures are logged
   without exposing whether a mailbox exists.

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getServerEnv, validateLocalTestAuthSafety } from "@industrial-learn/env";
 
 import { createSupabaseAuthProvider } from "./supabase-provider";
+import { createRecoveryTicket, verifyRecoveryTicket } from "./recovery-ticket";
 import {
   AUTH_REFRESH_COOKIE,
   AUTH_RECOVERY_COOKIE,
@@ -75,17 +76,33 @@ export async function clearSessionCookies() {
 
 export async function setRecoveryCookie(tokens: SessionTokens) {
   const cookieStore = await cookies();
-  cookieStore.set(AUTH_RECOVERY_COOKIE, tokens.accessToken, {
-    ...secureCookieOptions(),
-    maxAge: Math.max(
-      1,
-      Math.min(600, Math.floor((Date.parse(tokens.expiresAt) - Date.now()) / 1000))
-    )
-  });
+  cookieStore.set(
+    AUTH_RECOVERY_COOKIE,
+    createRecoveryTicket(tokens, recoverySigningKey()),
+    {
+      ...secureCookieOptions(),
+      maxAge: Math.max(
+        1,
+        Math.min(600, Math.floor((Date.parse(tokens.expiresAt) - Date.now()) / 1000))
+      )
+    }
+  );
 }
 
 export async function readRecoveryToken() {
-  return (await cookies()).get(AUTH_RECOVERY_COOKIE)?.value;
+  const value = (await cookies()).get(AUTH_RECOVERY_COOKIE)?.value;
+  if (!value) return undefined;
+  return verifyRecoveryTicket(value, recoverySigningKey());
+}
+
+function recoverySigningKey() {
+  const env = getServerEnv();
+  if (env.supabase.serviceRoleKey) return env.supabase.serviceRoleKey;
+  if (env.authMode === "local") {
+    validateLocalTestAuthSafety(env);
+    return "isolated-local-test-recovery";
+  }
+  throw new Error("Recovery signing is unavailable.");
 }
 
 export async function clearRecoveryCookie() {
