@@ -4,6 +4,8 @@
 !.env.example
 !.env.staging.example
 docs/deployment/production-owner-record.private.md
+# Local pilot records, encrypted backups and private operator evidence
+.private-operations/
 
 # Dependencies
 node_modules/

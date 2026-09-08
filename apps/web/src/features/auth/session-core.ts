@@ -1,5 +1,7 @@
 export const AUTH_SESSION_COOKIE = "il_session";
 export const AUTH_REFRESH_COOKIE = "il_refresh";
+export const AUTH_RECOVERY_COOKIE = "il_recovery";
+export type EmailLinkType = "email" | "recovery";
 
 export const APP_ROLES = [
   "student",
@@ -107,7 +109,6 @@ export type PasswordResetRequest = {
 
 export type PasswordUpdateInput = {
   password: string;
-  resetToken?: string | undefined;
   accessToken?: string | undefined;
 };
 
@@ -117,7 +118,10 @@ export type AuthProvider = {
   signOut: (tokens: Partial<SessionTokens>) => Promise<void>;
   requestPasswordReset: (input: PasswordResetRequest) => Promise<AuthResult<null>>;
   updatePassword: (input: PasswordUpdateInput) => Promise<AuthResult<null>>;
-  verifyEmail: (token: string, type?: string) => Promise<AuthResult<null>>;
+  verifyEmail: (
+    tokenHash: string,
+    type: EmailLinkType
+  ) => Promise<AuthResult<{ tokens: SessionTokens }>>;
   resolveSession: (
     tokens: Partial<SessionTokens>
   ) => Promise<AuthResult<AuthenticatedSession>>;

@@ -2,6 +2,11 @@
 
 Audit date: 2026-09-06. Decision: **NO-GO for invitations or starting the pilot**.
 
+Historical assessment: for the subsequent fixes and current gate status, read
+[the 2026-09-08 remediation record](../audits/staging-pilot-gate-remediation.md).
+In particular, the six legacy database publication exposures below were closed by the
+preceding staging release. This audit's original evidence is retained rather than rewritten.
+
 This is an independent readiness assessment, not permission to run a pilot. Production,
 AI Mentor, public certificates, high-stakes grading, and university records are excluded.
 No students were invited and no application, content, configuration, or database state

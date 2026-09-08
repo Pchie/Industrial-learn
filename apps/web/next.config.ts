@@ -63,6 +63,14 @@ const nextConfig: NextConfig = {
         headers: securityHeaders
       },
       {
+        source: "/auth/:path*",
+        headers: [
+          ...privateCacheHeaders,
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" }
+        ]
+      },
+      {
         source:
           "/(dashboard|my-learning|assessments|simulations/history|projects|author|review|admin|internal|preview)",
         headers: privateCacheHeaders

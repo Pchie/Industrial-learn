@@ -11,6 +11,7 @@ import {
   type AuthProvider,
   type AuthResult,
   type AuthenticatedSession,
+  type EmailLinkType,
   type PasswordResetRequest,
   type PasswordUpdateInput,
   type SessionTokens,
@@ -65,35 +66,31 @@ export function createSupabaseAuthProvider(env: IndustrialLearnEnv): AuthProvide
   const authBase = `${env.supabase.url}/auth/v1`;
   const restBase = `${env.supabase.url}/rest/v1`;
 
-  return {
+  const provider: AuthProvider = {
     async signUp(input: SignUpInput) {
-      const response = await authFetch<SupabaseAuthResponse>(env, `${authBase}/signup`, {
-        method: "POST",
-        body: JSON.stringify({
-          email: input.email,
-          password: input.password,
-          data: { display_name: input.displayName },
-          email_redirect_to: input.redirectTo
-        })
-      });
+      const response = await authFetch<SupabaseAuthResponse>(
+        env,
+        `${authBase}/signup?redirect_to=${encodeURIComponent(input.redirectTo)}`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: input.email,
+            password: input.password,
+            data: { display_name: input.displayName }
+          })
+        }
+      );
 
       if (!response.ok) {
         return mapAuthFailure(response);
       }
 
-      const user = response.value.user;
-      if (user?.id && user.email) {
-        const profile = await createSupabaseProfile(env, {
-          authUserId: user.id,
-          email: user.email,
-          displayName: input.displayName
-        });
-        if (!profile.ok) {
-          return profile;
-        }
-      }
-
+      // Profile creation requires a verified /user response, not a signup payload.
       const tokens = tokensFromResponse(response.value);
+      if (tokens) {
+        const session = await provider.resolveSession(tokens);
+        if (!session.ok) return session;
+      }
       return ok(tokens ? { tokens } : {});
     },
 
@@ -116,6 +113,10 @@ export function createSupabaseAuthProvider(env: IndustrialLearnEnv): AuthProvide
         return fail("invalid_credentials");
       }
 
+      // Finish verified provisioning before parallel workspace requests begin.
+      const session = await provider.resolveSession(tokens);
+      if (!session.ok) return session;
+
       return ok({ tokens });
     },
 
@@ -130,38 +131,41 @@ export function createSupabaseAuthProvider(env: IndustrialLearnEnv): AuthProvide
     },
 
     async requestPasswordReset(input: PasswordResetRequest) {
-      await authFetch(env, `${authBase}/recover`, {
-        method: "POST",
-        body: JSON.stringify({ email: input.email, redirect_to: input.redirectTo })
-      });
-      return ok(null);
+      const response = await authFetch(
+        env,
+        `${authBase}/recover?redirect_to=${encodeURIComponent(input.redirectTo)}`,
+        {
+          method: "POST",
+          body: JSON.stringify({ email: input.email })
+        }
+      );
+      return response.ok ? ok(null) : fail("network_failure");
     },
 
     async updatePassword(input: PasswordUpdateInput) {
-      if (!input.accessToken && !input.resetToken) {
-        return fail("expired_reset_link");
-      }
-
-      const accessToken = input.accessToken ?? input.resetToken;
-      if (!accessToken) {
+      if (!input.accessToken) {
         return fail("expired_reset_link");
       }
 
       const response = await authFetch(env, `${authBase}/user`, {
         method: "PUT",
-        accessToken,
+        accessToken: input.accessToken,
         body: JSON.stringify({ password: input.password })
       });
 
       return response.ok ? ok(null) : fail("expired_reset_link");
     },
 
-    async verifyEmail(token: string, type = "signup") {
-      const response = await authFetch(env, `${authBase}/verify`, {
+    async verifyEmail(tokenHash: string, type: EmailLinkType) {
+      if (!tokenHash || !["email", "recovery"].includes(type))
+        return fail("expired_session");
+      const response = await authFetch<SupabaseAuthResponse>(env, `${authBase}/verify`, {
         method: "POST",
-        body: JSON.stringify({ token, type })
+        body: JSON.stringify({ token_hash: tokenHash, type })
       });
-      return response.ok ? ok(null) : fail("expired_session");
+      if (!response.ok) return fail("expired_session");
+      const tokens = tokensFromResponse(response.value);
+      return tokens ? ok({ tokens }) : fail("expired_session");
     },
 
     async resolveSession(tokens: Partial<SessionTokens>) {
@@ -180,6 +184,9 @@ export function createSupabaseAuthProvider(env: IndustrialLearnEnv): AuthProvide
 
       if (!userResponse.ok || !userResponse.value.id || !userResponse.value.email) {
         return fail("expired_session");
+      }
+      if (!userResponse.value.email_confirmed_at) {
+        return fail("unverified_email");
       }
 
       const profile = await resolveSupabaseProfile(env, restBase, tokens.accessToken, {
@@ -211,6 +218,7 @@ export function createSupabaseAuthProvider(env: IndustrialLearnEnv): AuthProvide
       return createSupabaseProfile(env, authUser);
     }
   };
+  return provider;
 }
 
 function unavailableProvider(): AuthProvider {
@@ -239,6 +247,8 @@ async function authFetch<T = unknown>(
   try {
     const response = await fetch(url, {
       ...init,
+      cache: "no-store",
+      signal: AbortSignal.timeout(10000),
       headers: {
         apikey: env.supabase.anonKey,
         Authorization: `Bearer ${init.accessToken ?? env.supabase.anonKey}`,
@@ -345,18 +355,24 @@ async function createSupabaseProfile(
       auth: { persistSession: false }
     });
 
-    const { data: existing } = await admin
+    const { data: existing, error: lookupError } = await admin
       .from("profiles")
       .select("id,email,display_name,deleted_at")
       .eq("id", authUser.authUserId)
       .maybeSingle();
 
+    if (lookupError) return fail<AuthProfile>("profile_creation_failed");
+    if (existing?.deleted_at) return fail<AuthProfile>("disabled_account");
+
     if (!existing) {
-      const { error: insertError } = await admin.from("profiles").insert({
-        id: authUser.authUserId,
-        email: authUser.email,
-        display_name: authUser.displayName
-      });
+      const { error: insertError } = await admin.from("profiles").upsert(
+        {
+          id: authUser.authUserId,
+          email: authUser.email,
+          display_name: authUser.displayName
+        },
+        { onConflict: "id", ignoreDuplicates: true }
+      );
       if (insertError) {
         return fail<AuthProfile>("profile_creation_failed");
       }
@@ -371,13 +387,14 @@ async function createSupabaseProfile(
       return fail<AuthProfile>("profile_creation_failed");
     }
 
-    await admin.from("profile_roles").upsert(
+    const { error: roleError } = await admin.from("profile_roles").upsert(
       {
         profile_id: authUser.authUserId,
         role_id: role.id
       },
       { onConflict: "profile_id,role_id" }
     );
+    if (roleError) return fail<AuthProfile>("profile_creation_failed");
 
     return ok<AuthProfile>({
       id: authUser.authUserId,
@@ -399,6 +416,8 @@ async function restFetch<T>(env: IndustrialLearnEnv, url: string, accessToken: s
 
   try {
     const response = await fetch(url, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(10000),
       headers: {
         apikey: env.supabase.anonKey,
         Authorization: `Bearer ${accessToken}`,

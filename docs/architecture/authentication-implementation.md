@@ -16,6 +16,9 @@ Session cookies:
 
 - `il_session`: HTTP-only access/session token.
 - `il_refresh`: HTTP-only refresh token where the provider supplies one.
+- `il_recovery`: separate HTTP-only password-recovery authority, capped at ten minutes
+  and at the provider token's remaining lifetime. It is never used to resolve an
+  application session.
 
 Cookie controls:
 
@@ -55,6 +58,11 @@ Reusable server methods live in `apps/web/src/features/auth/server.ts`:
 ## Profile Creation
 
 New accounts receive one application profile through an idempotent provider operation. The default role is `student`.
+
+Provisioning happens only after the server validates `/auth/v1/user` and a confirmed
+email address. A signup response alone does not authorize a profile insert. Profile
+lookup/role-assignment failures are not reported as successful provisioning, and a
+disabled profile cannot be reactivated by this path.
 
 Profile rules:
 
@@ -104,4 +112,28 @@ The dashboard no longer accepts `searchParams.studentId`. It calls `requireStude
 - Platform Owner access is a database role, never a browser claim. It provides workspace
   inspection and management but not independent engineering-review approval.
 - In staging and production, Supabase credentials must be configured. The test-local provider is not statically imported by the server auth module and is blocked by environment validation outside approved local E2E hosts.
-- Real student progress persistence remains a later task; the dashboard now shows authenticated empty states rather than query-selected seeded progress.
+- Student progress is now read through the authenticated data-access layer. See
+  `docs/architecture/data-access-layer.md`; a missing profile never selects demo data.
+- No automatic refresh-token renewal is implemented. Expired access sessions require
+  a fresh sign-in; the refresh cookie lifetime is not an uninterrupted-session promise.
+
+## Confirmation And Password Recovery
+
+See [the staging mail runbook](../operations/staging-account-lifecycle.md) for deployment
+ordering, exact templates, live evidence and the external delivery gate.
+
+`GET /auth/verify?token_hash=...&type=email|recovery` renders an explicit confirmation
+button without consuming the one-time link. A same-origin server action exchanges the
+hash with Supabase. Email confirmation returns to sign-in; recovery clears ordinary
+session cookies and creates only `il_recovery`. The password action ignores URL/form
+tokens and ordinary login cookies, uses the recovery authority on the server, and clears
+all cookies after a successful password change. Logout also clears recovery authority.
+Passwords retain their exact whitespace. Unsupported link types and used/expired hashes
+fail closed. Auth routes use private/no-store, no-referrer and noindex headers.
+
+Password-reset requests remain enumeration-safe. Provider transport failures generate
+redacted operational events without email addresses, passwords or link hashes. Auth and
+profile HTTP requests use bounded timeouts and no-store. Existing server-action origin
+validation remains in force. A Supabase logout revokes refresh sessions; already issued
+access JWTs may remain valid until their provider expiry, so this is not an immediate
+all-device revocation guarantee.

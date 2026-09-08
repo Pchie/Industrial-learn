@@ -29,7 +29,9 @@ export default defineConfig({
     // Reuse is for debugging only: fixture servers retain attempts between runs.
     reuseExistingServer:
       process.env.PLAYWRIGHT_REUSE_SERVER === "true" && !process.env.CI,
-    timeout: 120000
+    // A cold production build can exceed five minutes on the local pilot laptop.
+    // This changes server startup allowance only, not test/assertion timeouts.
+    timeout: process.env.CI ? 300000 : 600000
   },
   projects: [
     {

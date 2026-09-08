@@ -17,6 +17,7 @@ type SignInPageProps = {
 };
 
 const statusMessages: Record<string, string> = {
+  email_verified: "Email verified. Sign in to continue.",
   signed_out: "You have been signed out.",
   password_updated: "Your password has been updated. Sign in with the new password.",
   verify_email: "Check your email to complete verification before signing in."
