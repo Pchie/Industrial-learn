@@ -1,0 +1,8 @@
+{
+  "domContentLoadedMs": 546.2999999970198,
+  "responseBytes": 13733,
+  "scriptRequests": 10,
+  "encodedScriptBytes": 151159,
+  "rendererRequests": 0,
+  "environment": "Local production-mode build; synthetic account; not field Core Web Vitals"
+}

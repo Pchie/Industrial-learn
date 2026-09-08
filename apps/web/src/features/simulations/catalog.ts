@@ -27,6 +27,10 @@ import type {
   SimulationPreviewMetadata,
   SimulationType
 } from "./catalog-contract";
+import {
+  getSupportedViews,
+  type SimulationViewMode
+} from "../simulation-views/capabilities";
 
 export {
   simulationDifficulties,
@@ -43,6 +47,7 @@ export type {
 
 export type SimulationCatalogEntry = {
   slug: string;
+  viewModes: readonly SimulationViewMode[];
   moduleId: string;
   moduleSlug: string;
   moduleTitle: string;
@@ -80,6 +85,7 @@ const thermodynamicsModuleId = "mod-core-thermodynamics-001";
 export const simulationRegistry: SimulationCatalogEntry[] = [
   {
     slug: "hydraulic-cylinder-force",
+    viewModes: getSupportedViews("hydraulic-cylinder-force"),
     moduleId: hydraulicModuleId,
     moduleSlug: "fluid-mechanics-foundations",
     moduleTitle: "Fluid Mechanics Foundations",
@@ -122,6 +128,7 @@ export const simulationRegistry: SimulationCatalogEntry[] = [
   },
   {
     slug: "thermal-system-boundary-simulation",
+    viewModes: ["standard"],
     moduleId: thermodynamicsModuleId,
     moduleSlug: "thermodynamics-foundations",
     moduleTitle: "Thermodynamics Foundations",
@@ -164,6 +171,7 @@ export const simulationRegistry: SimulationCatalogEntry[] = [
   },
   {
     slug: "bernoulli-flow-lab",
+    viewModes: getSupportedViews("bernoulli-flow-lab"),
     moduleId: hydraulicModuleId,
     moduleSlug: "fluid-mechanics-foundations",
     moduleTitle: "Fluid Mechanics Foundations",

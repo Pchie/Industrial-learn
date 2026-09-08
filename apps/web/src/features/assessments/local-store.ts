@@ -113,6 +113,8 @@ function createLocalRepositories(): AttemptPersistenceRepositories {
       attempts.set(key(completed.studentProfileId, completed.id), completed);
       recordLocalAssessmentDashboardAttempt(completed.studentProfileId, {
         id: completed.id,
+        contentVersion: completed.contentVersion,
+        reviewAvailable: true,
         assessmentSlug: "basic-fluid-pressure-check",
         title: "Basic Fluid Pressure Check",
         moduleSlug: "fluid-mechanics-foundations",

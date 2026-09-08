@@ -1,7 +1,6 @@
 .shell {
   background: var(--il-color-bg-surface);
-  border: var(--il-border-subtle);
-  border-radius: var(--il-radius-panel);
+  border-block: var(--il-border-subtle);
   display: grid;
   gap: var(--il-space-4);
   overflow: clip;
@@ -72,7 +71,7 @@
 
 .primaryControlsRegion {
   border-bottom: var(--il-border-subtle);
-  padding-block: var(--il-space-3);
+  padding: 0 0 var(--il-space-4);
 }
 
 .frameReadout {
@@ -112,29 +111,26 @@
 .application,
 .referenceBlock,
 .liveEquation {
-  background: var(--il-color-bg-muted);
-  border: var(--il-border-subtle);
-  border-radius: var(--il-radius-card);
-  padding: var(--il-space-4);
+  border-top: var(--il-border-subtle);
+  padding-block: var(--il-space-4);
 }
 
 .viewport {
   display: grid;
   gap: var(--il-space-3);
   min-width: 0;
+  align-content: start;
 }
 
 .canvas {
   aspect-ratio: 16 / 9;
   background: var(--il-color-bg-muted);
-  border: var(--il-border-strong);
-  border-radius: var(--il-radius-card);
   display: grid;
   gap: var(--il-space-3);
   grid-template-columns: repeat(2, minmax(0, 1fr));
   min-height: 280px;
   overflow: hidden;
-  padding: var(--il-space-3);
+  padding: 0;
   place-items: center;
 }
 
@@ -387,10 +383,8 @@
 
 .substitution div,
 .capabilityList div {
-  background: var(--il-color-bg-surface);
-  border: var(--il-border-subtle);
-  border-radius: var(--il-radius-control);
-  padding: var(--il-space-2);
+  border-bottom: var(--il-border-subtle);
+  padding-block: var(--il-space-2);
 }
 
 .substitution dt,
@@ -503,26 +497,8 @@
 }
 
 @media (min-width: 1024px) {
-  .shell:has(.primaryControlsRegion) {
-    grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.8fr);
-  }
-
-  .shell:has(.primaryControlsRegion) .header {
-    grid-column: 1 / -1;
-  }
-
-  .shell:has(.primaryControlsRegion) .primaryControlsRegion {
-    border-bottom: 0;
-    border-right: var(--il-border-subtle);
-    grid-column: 1;
-    grid-row: 2;
-  }
-
-  .shell:has(.primaryControlsRegion) .workbench {
-    grid-column: 2;
-    grid-row: 2;
-    grid-template-columns: minmax(0, 1fr);
-    padding-left: 0;
+  .workbench {
+    grid-template-columns: minmax(0, 2.5fr) minmax(280px, 1fr);
   }
 }
 
@@ -539,6 +515,9 @@
     aspect-ratio: auto;
     grid-template-columns: minmax(0, 1fr);
     min-height: 420px;
+  }
+  .canvasSingle {
+    min-height: 0;
   }
 }
 
@@ -558,22 +537,6 @@
   .workbench,
   .learningRegion {
     padding: var(--il-space-3);
-  }
-
-  .shell:has(.primaryControlsRegion) .header {
-    order: 1;
-  }
-
-  .shell:has(.primaryControlsRegion) .workbench {
-    order: 2;
-  }
-
-  .shell:has(.primaryControlsRegion) .primaryControlsRegion {
-    order: 3;
-  }
-
-  .shell:has(.primaryControlsRegion) .learningRegion {
-    order: 4;
   }
 
   .primaryControlJump {

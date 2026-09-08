@@ -9,8 +9,12 @@ test.describe("staging smoke checks", () => {
 
     await page.goto("/learn");
     await expect(page.getByRole("heading", { name: "Learn" })).toBeVisible();
-    await expect(page.getByRole("link", { name: /Core Engineering/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /Future Engineering/i })).toBeVisible();
+    await expect(
+      page.getByRole("main").getByRole("link", { name: /Browse Core Engineering/i })
+    ).toBeVisible();
+    await expect(
+      page.getByRole("main").getByRole("link", { name: /Browse Future Engineering/i })
+    ).toBeVisible();
 
     await page.goto("/lessons/basic-fluid-pressure");
     await expect(

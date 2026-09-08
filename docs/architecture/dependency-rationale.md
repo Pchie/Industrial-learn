@@ -51,4 +51,22 @@ application features or adding a dependency.
 
 ## Installation Rule
 
+## Optional Inspection Views (Prompt 51)
+
+- `three` (owned by `apps/web`): an on-demand WebGL2 renderer for genuine hydraulic
+  360-degree inspection. SVG remains the default and accessible fallback. No external
+  models, textures, telemetry, physics engine, or React renderer wrapper is added.
+  Layered SVG cannot provide arbitrary rotation; loading Three.js only after the
+  student explicitly requests 3D limits its cost to that inspection mode.
+- `@types/three` (development only): strict types for the renderer and OrbitControls.
+  Its transitive declarations include Rapier compatibility, Tween, WebXR, stats,
+  compression and mesh-optimisation packages. They are development-only dependencies;
+  none is imported by the application or used as a physics engine.
+- `lucide-react` (owned by `apps/web`): consistent, accessible navigation and inspection
+  control icons; named imports allow unused icons to be removed from browser bundles.
+
+These dependencies do not receive student data and do not change calculation or
+publication authority. Geometry and animation are illustrative, not a physical solver.
+Renderer resources and event handlers must be disposed when the view closes.
+
 Future dependencies must be added to this file before installation, including purpose, owning module, alternatives considered where relevant, and security or privacy notes.

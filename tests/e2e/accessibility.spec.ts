@@ -217,7 +217,9 @@ for (const width of [320, 375, 430]) {
     await page.setViewportSize({ width, height: 900 });
     await signIn(page, "pilot.student@example.test", "/learn/pilot");
 
-    await expect(page.getByText("Industrial Learn", { exact: true })).toBeVisible();
+    await expect(
+      page.locator(".app-topbar").getByRole("link", { name: "Industrial Learn home" })
+    ).toBeVisible();
     await expect(page.locator(".workspace-menu summary")).toBeVisible();
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - window.innerWidth
@@ -247,7 +249,9 @@ test("dashboard progress labels expose meaning", async ({ page }) => {
   await signIn(page, "active.student@example.test", "/dashboard");
 
   await expect(page.getByText("Progress calculation")).toBeVisible();
-  await expect(page.getByLabel("Module progress").first()).toBeVisible();
+  await page.getByText("Progress calculation", { exact: true }).click();
+  await expect(page.getByText(/Opening a lesson does not award progress/)).toBeVisible();
+  await expect(page.getByText(/Unavailable progress is not zero/)).toBeVisible();
 });
 
 for (const width of viewportWidths) {

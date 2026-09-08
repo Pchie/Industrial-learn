@@ -208,8 +208,8 @@
 
 .rod,
 .schematicRod {
-  fill: #eef1f3;
-  stroke: #64717d;
+  fill: var(--il-material-metal-light);
+  stroke: var(--il-material-metal-dark);
   stroke-width: 5;
   transition:
     x 280ms ease,
@@ -289,14 +289,14 @@
   align-items: end;
   display: grid;
   gap: var(--il-space-3);
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .pairedInput {
   background: var(--il-color-bg-surface);
   border: var(--il-border-subtle);
   border-radius: var(--il-radius-card);
-  grid-template-columns: minmax(0, 1fr) minmax(9rem, 0.45fr);
+  grid-template-columns: minmax(0, 1fr);
   padding: var(--il-space-3);
 }
 
@@ -306,7 +306,7 @@
 }
 
 .inputControls {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .outputReadings,
@@ -448,7 +448,7 @@
   }
 
   .pairedInput {
-    grid-template-columns: minmax(0, 1fr) minmax(7rem, 0.45fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .sceneRegion > .sceneSvg {

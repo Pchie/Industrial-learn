@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import { frontendAssets } from "../app-shell/assets";
 import {
   Alert,
   Badge,
@@ -73,7 +75,7 @@ export function PublishedLessonSection({
 
       {searchable ? (
         <form action="/learn" className="curriculum-search" role="search">
-          <label htmlFor="lesson-search">Search published lessons</label>
+          <label htmlFor="lesson-search">Search within lessons</label>
           <div>
             <input
               defaultValue={query}
@@ -96,6 +98,15 @@ export function PublishedLessonSection({
         <div className="curriculum-grid">
           {lessons.map((lesson) => (
             <article className="curriculum-card" key={lesson.id}>
+              {lesson.slug === "basic-fluid-pressure" && (
+                <Image
+                  className="curriculum-cover"
+                  {...frontendAssets.pressureDetail.image}
+                  alt={frontendAssets.pressureDetail.alt}
+                  sizes="(max-width: 700px) 100vw, 400px"
+                  loading="lazy"
+                />
+              )}
               <div className="curriculum-card__topline">
                 <p className="il-card-kicker">Lesson</p>
                 <Badge tone="normal">Published</Badge>
@@ -171,6 +182,15 @@ export function BrowseNav({
 export function SchoolCard({ school }: { school: School }) {
   return (
     <article className="curriculum-card">
+      <Image
+        className="curriculum-cover"
+        {...(school.slug === "future-engineering"
+          ? frontendAssets.future.image
+          : frontendAssets.pressureDetail.image)}
+        alt=""
+        sizes="(max-width: 700px) 100vw, 400px"
+        loading="lazy"
+      />
       <div>
         <p className="il-card-kicker">School</p>
         <h2>{school.title}</h2>

@@ -1,378 +1,350 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { COMPETENCY_LEVELS } from "@industrial-learn/assessment-core";
-import { Alert, Badge, ProgressIndicator } from "@industrial-learn/design-system";
-
+import { ArrowRight, CheckCircle2, FlaskConical } from "lucide-react";
+import { ProgressIndicator } from "@industrial-learn/design-system";
+import { SimulationPreview } from "../simulations/simulation-preview";
 import { dismissRecommendationAction } from "./actions";
-import type { StudentDashboardModel } from "./data";
+import { dashboardDate, type DashboardExperience } from "./experience";
+import { DashboardOverview } from "./dashboard-overview";
+import { buildDashboardOverview } from "./overview-model";
+import styles from "./dashboard.module.css";
 
 export function StudentDashboard({
   hideRecommendations,
   model
 }: {
   hideRecommendations: boolean;
-  model: StudentDashboardModel;
+  model: DashboardExperience;
 }) {
+  const hasAwards = Object.values(model.awards).some((value) => value > 0);
   return (
-    <div className="student-dashboard">
-      <header className="student-dashboard__hero">
-        <div>
-          <p className="eyebrow">Student dashboard</p>
-          <h1>{model.displayName}</h1>
-          <p>
-            Private learning data is shown only for the authenticated student record
-            resolved on the server.
-          </p>
-        </div>
-        <dl className="student-dashboard__identity">
-          <div>
-            <dt>Current programme</dt>
-            <dd>{model.programmeTitle ?? "No current enrolment"}</dd>
-          </div>
-          <div>
-            <dt>Current year and semester</dt>
-            <dd>{yearSemesterLabel(model)}</dd>
-          </div>
-        </dl>
-      </header>
-
-      {model.state === "new_student" ? (
-        <Alert title="New student" tone="info">
-          No enrolment or learning evidence has been recorded for this student yet.
-        </Alert>
-      ) : null}
-
-      {model.state === "no_enrolment" ? (
-        <Alert title="No current enrolment" tone="warning">
-          Learning records exist, but no active enrolment is available for the
-          authenticated student.
-        </Alert>
-      ) : null}
-
-      {model.state === "partial_data" ? (
-        <Alert title="Partial dashboard data" tone="warning">
-          Some dashboard data is unavailable. Sections with missing evidence are shown as
-          unavailable instead of zero.
-        </Alert>
-      ) : null}
-
-      <Alert title="Progress calculation" tone="info">
-        Progress counts completed lessons, submitted assessments, completed simulations,
-        and submitted project evidence. Opening a lesson does not award progress.
-        Competency is based on assessed evidence, not time spent alone.
-      </Alert>
-
-      <DashboardSection title="Pilot learning path">
-        <article className="dashboard-card">
-          <h3>Fluid Engineering Pilot</h3>
-          <p>
-            Continue through the approved Basic Fluid Pressure lesson, its practical
-            challenge, and the linked assessment.
-          </p>
-          <Link className="curriculum-action" href="/learn/pilot">
-            Open pilot learning path
-          </Link>
-        </article>
-      </DashboardSection>
-
-      <DashboardSection title="Continue learning">
-        {model.continueLearningTitle && model.continueLessonSlug ? (
-          <article className="dashboard-card">
-            <h3>{model.continueLearningTitle}</h3>
+    <div className={styles.dashboard}>
+      <div className={styles.content}>
+        <DashboardOverview
+          data={buildDashboardOverview(model)}
+          hideRecommendations={hideRecommendations}
+        />
+        <Section title="Current programme" id="current-programme">
+          <h3>
+            {model.programmeTitle ??
+              (model.unavailable.includes("enrolments")
+                ? "Enrolment details unavailable"
+                : model.hasEnrolment
+                  ? "Programme details unavailable"
+                  : "No current enrolment")}
+          </h3>
+          {(model.currentYear || model.currentSemester) && (
             <p>
-              Continue from the next incomplete lesson step recorded for this student.
+              {[
+                model.currentYear ? `Year ${model.currentYear}` : "",
+                model.currentSemester ? `Semester ${model.currentSemester}` : ""
+              ]
+                .filter(Boolean)
+                .join(", ")}
             </p>
-            <Link
-              className="curriculum-action"
-              href={`/lessons/${model.continueLessonSlug}`}
-            >
-              Continue lesson
+          )}
+          {!model.hasEnrolment && !model.unavailable.includes("enrolments") && (
+            <p>You can still explore approved learning.</p>
+          )}
+          <Link href="/learn">
+            Explore programmes <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+        </Section>
+        <Section
+          title="Practice"
+          id="practice"
+          action={
+            <Link href="/simulations">
+              Simulation Lab <ArrowRight size={16} aria-hidden="true" />
             </Link>
-          </article>
-        ) : (
-          <EmptyState message="No in-progress lesson yet. Start from the curriculum browser when ready." />
-        )}
-      </DashboardSection>
-
-      <DashboardSection title="Weekly learning plan">
-        {model.weeklyPlan.length > 0 ? (
-          <div className="dashboard-list">
-            {model.weeklyPlan.map((item) => (
-              <article className="dashboard-row" key={item.id}>
-                <h3>{item.title}</h3>
-                <p>{item.estimate}</p>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <EmptyState message="No weekly plan has been assigned yet." />
-        )}
-      </DashboardSection>
-
-      <DashboardSection title="Module progress">
-        {model.moduleCards.length > 0 ? (
-          <div className="dashboard-grid">
-            {model.moduleCards.map((item) => (
-              <article className="dashboard-card" key={item.moduleSlug}>
-                <h3>{item.moduleTitle}</h3>
-                <ProgressBlock label="Module progress" progress={item.progress} />
+          }
+        >
+          {model.practice.length > 0 ? (
+            <div className={styles.practiceList}>
+              {model.practice.map((simulation) => (
+                <article key={simulation.slug} className={styles.practiceItem}>
+                  <SimulationPreview preview={simulation.preview} />
+                  <div>
+                    <h3>{simulation.definition.title}</h3>
+                    <p>{simulation.reason}</p>
+                    <p>{simulation.recommendedMode} mode</p>
+                    <Link href={`/simulations/${simulation.slug}`}>
+                      Open simulation <ArrowRight size={16} aria-hidden="true" />
+                    </Link>
+                    <small>
+                      Starts a new operating state; previous settings are not restored.
+                    </small>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : model.next ? (
+            <div className={styles.practiceEmpty}>
+              <FlaskConical size={26} aria-hidden="true" />
+              <div>
+                <h3>Practise within your lesson</h3>
                 <p>
-                  {item.completedLessons} of {item.totalLessons} lessons and{" "}
-                  {item.completedAssessments} of {item.totalAssessments} assessments
-                  completed. Simulations: {item.completedSimulations} of{" "}
-                  {item.totalSimulations}. Projects: {item.completedProjects} of{" "}
-                  {item.totalProjects}.
+                  Open the visual activity and challenge in your lesson. A separate
+                  simulation is not available for this topic yet.
                 </p>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <EmptyState message="No module completion evidence has been recorded yet." />
-        )}
-      </DashboardSection>
-
-      <DashboardSection title="Competency profile">
-        {COMPETENCY_LEVELS.some((level) => (model.competencyProfile[level] ?? 0) > 0) ? (
-          <div className="competency-grid">
-            {COMPETENCY_LEVELS.map((level) => (
-              <article className="dashboard-card" key={level}>
-                <h3>{level}</h3>
-                <p>{model.competencyProfile[level] ?? 0} assessed evidence points</p>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <EmptyState message="No competency evidence has been awarded yet." />
-        )}
-      </DashboardSection>
-
-      <DashboardSection title="Recent assessment results">
-        {model.recentAssessmentResults.length > 0 ? (
-          <div className="dashboard-list">
-            {model.recentAssessmentResults.map((result) => (
-              <article className="dashboard-row" key={result.assessmentId}>
-                <div>
-                  <h3>{result.title}</h3>
-                  <p>{result.submittedAt}</p>
-                </div>
-                <Badge tone="info">{assessmentScoreLabel(result)}</Badge>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <EmptyState message="Completed assessment attempts will appear here." />
-        )}
-      </DashboardSection>
-
-      <DashboardSection title="Simulation activity">
-        {model.simulationActivity.length > 0 ? (
-          <div className="dashboard-list">
-            {model.simulationActivity.map((activity) => (
-              <article className="dashboard-row" key={activity.simulationId}>
-                <div>
-                  <h3>{activity.title}</h3>
-                  <p>{activity.resultSummary}</p>
-                </div>
-                <Badge tone="hydraulic">{activity.mode}</Badge>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <EmptyState message="Simulation runs will appear after a student submits activity evidence." />
-        )}
-      </DashboardSection>
-
-      <DashboardSection
-        action={
-          hideRecommendations ? (
-            <Link href="/dashboard">Show recommendations</Link>
+                <Link href={`/lessons/${model.next.slug}`}>
+                  Open lesson activity <ArrowRight size={16} aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
           ) : (
-            <Link href="/dashboard?hideRecommendations=1">Hide recommendations</Link>
-          )
-        }
-        title="Weak-topic recommendations"
-      >
-        {hideRecommendations ? (
-          <EmptyState message="Optional recommendations are hidden for this view." />
-        ) : model.weakTopicRecommendations.length > 0 ? (
-          <div className="dashboard-list">
-            {model.weakTopicRecommendations.map((recommendation) => (
-              <article className="dashboard-row" key={recommendation.id}>
-                <div>
-                  <h3>{recommendation.topic}</h3>
-                  <p>{recommendation.reason}</p>
-                  <p>{recommendation.recommendedActivity}</p>
-                  <p>{recommendation.estimatedRevisionTime}</p>
-                  <Link href={recommendation.href}>Open recommended activity</Link>
-                </div>
-                <form action={dismissRecommendationAction}>
-                  <input
-                    name="recommendationId"
-                    type="hidden"
-                    value={recommendation.id}
+            <p>Relevant simulations will appear when approved learning is available.</p>
+          )}
+          {model.recommendations.length > 0 || hideRecommendations ? (
+            <div className={styles.recommendations}>
+              <div className={styles.sectionHeading}>
+                <h3>Suggested revision</h3>
+                <Link
+                  href={
+                    hideRecommendations
+                      ? "/dashboard"
+                      : "/dashboard?hideRecommendations=1"
+                  }
+                >
+                  {hideRecommendations ? "Show recommendations" : "Hide recommendations"}
+                </Link>
+              </div>
+              {hideRecommendations ? (
+                <p>Optional recommendations are hidden for this view.</p>
+              ) : (
+                model.recommendations.map((item) => (
+                  <article key={item.id} className={styles.resultRow}>
+                    <div>
+                      <h4>{item.topic}</h4>
+                      <p>{item.reason}</p>
+                      <p>{item.recommendedActivity}</p>
+                      <Link href={item.href}>Open recommended activity</Link>
+                    </div>
+                    <form action={dismissRecommendationAction}>
+                      <input type="hidden" name="recommendationId" value={item.id} />
+                      <button className="il-button il-button--secondary" type="submit">
+                        Dismiss
+                      </button>
+                    </form>
+                  </article>
+                ))
+              )}
+            </div>
+          ) : null}
+        </Section>
+        <Section title="Results and progress" id="results">
+          {model.learning.map((lesson) => (
+            <div key={lesson.id}>
+              {lesson.prerequisites.length > 0 && (
+                <details>
+                  <summary>Prerequisite knowledge</summary>
+                  <ul>
+                    {lesson.prerequisites.map((text) => (
+                      <li key={text}>{text}</li>
+                    ))}
+                  </ul>
+                  <p>These knowledge requirements are not verified competency awards.</p>
+                </details>
+              )}
+            </div>
+          ))}
+          {model.moduleCards.map((module) => (
+            <div key={module.moduleSlug} className={styles.moduleRow}>
+              <h3>
+                <Link href={`/modules/${module.moduleSlug}`}>{module.moduleTitle}</Link>
+              </h3>
+              {module.displayProgress && module.progress.percent !== undefined ? (
+                <>
+                  <ProgressIndicator
+                    label={`Module progress: ${module.moduleTitle}`}
+                    value={module.progress.percent}
                   />
-                  <button className="curriculum-action" type="submit">
-                    Dismiss
-                  </button>
-                </form>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <EmptyState message="No weak-topic recommendations are available yet." />
-        )}
-      </DashboardSection>
+                  <p>
+                    {module.progress.completedEvidence} of{" "}
+                    {module.progress.requiredEvidence} assigned activities completed.
+                  </p>
+                </>
+              ) : (
+                <p>
+                  Module progress is unavailable until its complete evidence scope can be
+                  verified.
+                </p>
+              )}
+            </div>
+          ))}
+          {!model.hasEnrolment && !model.unavailable.includes("enrolments") && (
+            <p className={styles.secondary}>
+              You can explore without an enrolment. No programme or semester has been
+              assigned.
+            </p>
+          )}
 
-      <DashboardSection title="Saved lessons">
-        {model.savedLessons.length > 0 ? (
-          <div className="dashboard-list">
-            {model.savedLessons.map((lesson) => (
-              <article className="dashboard-row" key={lesson.slug}>
+          <div className={styles.progressSummary}>
+            <CheckCircle2 size={24} aria-hidden="true" />
+            <p>
+              {model.unavailable.includes("lessons")
+                ? "Lesson progress is temporarily unavailable."
+                : model.completedLessonCount === undefined
+                  ? "No recorded lesson completion yet."
+                  : `${model.completedLessonCount} currently available lesson${model.completedLessonCount === 1 ? "" : "s"} completed in the loaded records.`}
+            </p>
+          </div>
+          <details className={styles.explanation}>
+            <summary>Progress calculation</summary>
+            <p>
+              Completion uses recorded lesson completion, graded status or 100%
+              completion, according to the existing progress model. Opening a lesson does
+              not award progress. Practice and camera changes do not award mastery.
+              Competency requires assessed evidence, not time spent.
+            </p>
+            <p>
+              Module percentages appear only when the complete assigned evidence scope is
+              known. Unavailable progress is not zero.
+            </p>
+          </details>
+          {model.limited.length > 0 && (
+            <p role="status">
+              Only recent records are loaded. Overall progress is unavailable for
+              incomplete histories.
+            </p>
+          )}
+          <div
+            role="region"
+            aria-label="Recent assessment results"
+            className={styles.results}
+          >
+            <h3>Recent assessment results</h3>
+            {model.unavailable.includes("assessments") ? (
+              <p>
+                Assessment results are temporarily unavailable.{" "}
+                <Link href="/dashboard">Try again</Link>
+              </p>
+            ) : model.results.length > 0 ? (
+              model.results.map((result) => (
+                <article key={result.id} className={styles.resultRow}>
+                  <div>
+                    <h4>{result.title}</h4>
+                    <p>
+                      {dashboardDate(result.submittedAt)} · Graded assessment · Version{" "}
+                      {result.contentVersion}
+                    </p>
+                  </div>
+                  <div className={styles.resultAction}>
+                    <strong>
+                      {result.score === undefined || result.maxScore === undefined
+                        ? "Score unavailable"
+                        : `${result.score}/${result.maxScore} points`}
+                    </strong>
+                    <Link
+                      href={`/assessments/${result.assessmentSlug}/attempt/${result.id}/review`}
+                    >
+                      Review result <ArrowRight size={16} aria-hidden="true" />
+                    </Link>
+                  </div>
+                </article>
+              ))
+            ) : (
+              <p>No reviewable completed assessments yet.</p>
+            )}
+            {model.unavailableResults && (
+              <p className={styles.secondary}>
+                Some earlier results cannot currently be reviewed. Their content or
+                version is unavailable; no answers are shown here.
+              </p>
+            )}
+          </div>
+          {hasAwards && (
+            <div role="region" aria-label="Competency profile" className={styles.results}>
+              <h3>Competency profile</h3>
+              <p className={styles.secondary}>
+                Server-awarded evidence from the available records, not a mastery rating.
+              </p>
+              <div className={styles.competencies}>
+                {Object.entries(model.awards)
+                  .filter(([, value]) => value > 0)
+                  .map(([level, value]) => (
+                    <article key={level}>
+                      <h4>{level}</h4>
+                      <p>{value} assessed evidence points</p>
+                    </article>
+                  ))}
+              </div>
+            </div>
+          )}
+          {model.simulationActivity.length > 0 && (
+            <div
+              role="region"
+              aria-label="Simulation activity"
+              className={styles.results}
+            >
+              <h3>Simulation activity</h3>
+              {model.simulationActivity.map((item) => (
+                <article key={item.simulationId} className={styles.resultRow}>
+                  <div>
+                    <h4>{item.title}</h4>
+                    <p>
+                      {dashboardDate(item.lastRunAt)} · {item.mode} · {item.resultSummary}
+                    </p>
+                  </div>
+                  <Link href="/simulations/history">Review activity</Link>
+                </article>
+              ))}
+            </div>
+          )}
+        </Section>
+        <Section title="Saved content" id="saved">
+          {model.savedLessons.length === 0 && (
+            <p>No saved lessons yet. Save available lessons as you learn.</p>
+          )}
+          {model.savedLessons.map((lesson) => (
+            <div className={styles.resultRow} key={lesson.slug}>
+              <div>
                 <h3>{lesson.title}</h3>
-                <Link href={`/lessons/${lesson.slug}`}>Open saved lesson</Link>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <EmptyState message="Saved lessons will appear here." />
-        )}
-      </DashboardSection>
-
-      <DashboardSection title="Active projects">
-        {model.activeProjects.length > 0 ? (
-          <div className="dashboard-list">
-            {model.activeProjects.map((project) => (
-              <article className="dashboard-row" key={project.id}>
-                <div>
-                  <h3>{project.title}</h3>
-                  <p>{project.status}</p>
-                </div>
-                <Badge tone="info">
-                  {project.portfolioEvidenceCount}/{project.requiredEvidenceCount}{" "}
-                  evidence items
-                </Badge>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <EmptyState message="Active projects will appear when a project is assigned or started." />
-        )}
-      </DashboardSection>
-
-      <DashboardSection title="Portfolio progress">
-        {model.activeProjects.length > 0 ? (
-          <article className="dashboard-card">
-            <ProgressBlock
-              label="Portfolio evidence progress"
-              progress={model.portfolioProgress}
-            />
-          </article>
-        ) : (
-          <EmptyState message="Portfolio progress starts when a project requires evidence." />
-        )}
-      </DashboardSection>
-
-      <DashboardSection title="Recent learning activity">
-        {model.recentActivity.length > 0 ? (
-          <div className="dashboard-list">
-            {model.recentActivity.map((activity) => (
-              <article className="dashboard-row" key={activity.id}>
-                <div>
-                  <h3>{activity.title}</h3>
-                  <p>{activity.summary}</p>
-                </div>
-                <p>{activity.occurredAt ?? "Date unavailable"}</p>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <EmptyState message="No recent learning activity has been recorded." />
-        )}
-      </DashboardSection>
+                <p>Saved {dashboardDate(lesson.savedAt)}</p>
+              </div>
+              <Link href={`/lessons/${lesson.slug}`}>
+                Open saved lesson <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            </div>
+          ))}
+        </Section>
+      </div>
     </div>
   );
 }
-
-export function AccessDeniedState() {
-  return (
-    <section className="dashboard-state" aria-labelledby="access-denied-title">
-      <h1 id="access-denied-title">Access denied</h1>
-      <p>Sign in with an authorised student account to view private learning progress.</p>
-    </section>
-  );
-}
-
-export function DashboardErrorState() {
-  return (
-    <section className="dashboard-state" aria-labelledby="dashboard-error-title">
-      <h1 id="dashboard-error-title">Dashboard unavailable</h1>
-      <p>The student dashboard could not be loaded.</p>
-    </section>
-  );
-}
-
-function DashboardSection({
-  action,
+function Section({
+  title,
+  id,
   children,
-  title
+  action,
+  className = ""
 }: {
-  action?: ReactNode;
-  children: ReactNode;
   title: string;
+  id: string;
+  children: ReactNode;
+  action?: ReactNode;
+  className?: string | undefined;
 }) {
   return (
     <section
-      className="dashboard-section"
-      aria-labelledby={`${title.toLowerCase().replaceAll(" ", "-")}-title`}
+      id={id}
+      aria-labelledby={`${id}-title`}
+      className={`${styles.section} ${className}`}
     >
-      <div className="dashboard-section__heading">
-        <h2 id={`${title.toLowerCase().replaceAll(" ", "-")}-title`}>{title}</h2>
-        {action ? <div className="dashboard-section__action">{action}</div> : null}
+      <div className={styles.sectionHeading}>
+        <h2 id={`${id}-title`}>{title}</h2>
+        {action}
       </div>
       {children}
     </section>
   );
 }
-
-function EmptyState({ message }: { message: string }) {
+export function AccessDeniedState() {
   return (
-    <div className="dashboard-empty" aria-live="polite">
-      <p>{message}</p>
-    </div>
+    <section className="dashboard-state">
+      <h1>Access denied</h1>
+      <p>Sign in with an authorised account to view your learning.</p>
+      <Link href="/auth/sign-in?next=%2Fdashboard">Sign in</Link>
+    </section>
   );
-}
-
-function ProgressBlock({
-  label,
-  progress
-}: {
-  label: string;
-  progress: StudentDashboardModel["moduleProgress"];
-}) {
-  return progress.available && progress.percent !== undefined ? (
-    <>
-      <ProgressIndicator label={label} value={progress.percent} />
-      <p>{progress.explanation}</p>
-    </>
-  ) : (
-    <p>{progress.explanation}</p>
-  );
-}
-
-function yearSemesterLabel(model: StudentDashboardModel) {
-  if (model.currentYear && model.currentSemester) {
-    return `Year ${model.currentYear}, Semester ${model.currentSemester}`;
-  }
-
-  return "Unavailable until enrolment is assigned";
-}
-
-function assessmentScoreLabel(
-  result: StudentDashboardModel["recentAssessmentResults"][number]
-) {
-  if (result.earnedPoints === undefined || result.maxPoints === undefined) {
-    return result.competencyLevel;
-  }
-
-  return `${result.earnedPoints}/${result.maxPoints} points`;
 }

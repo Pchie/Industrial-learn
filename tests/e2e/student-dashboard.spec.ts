@@ -11,17 +11,22 @@ test("shows honest empty states for a new authenticated student", async ({ page 
   await signIn(page, "student@example.test");
 
   await expect(
-    page.getByRole("heading", { name: "Industrial Student", level: 1 })
+    page.getByRole("heading", { name: /Industrial Student/, level: 1 })
   ).toBeVisible();
   await expect(page.getByText("No current enrolment")).toBeVisible();
-  await expect(page.getByText("No enrolment or learning evidence")).toBeVisible();
-  await expect(page.getByText("No in-progress lesson yet")).toBeVisible();
+  await expect(page.getByText("Choose a lesson or simulation to begin.")).toBeVisible();
   await expect(
-    page.getByText("No module completion evidence has been recorded yet")
+    page
+      .locator("#continue-learning")
+      .getByRole("link", { name: "Start lesson", exact: true })
   ).toBeVisible();
+  await expect(page.getByText("No recorded lesson completion yet.")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Portfolio progress" })).toHaveCount(0);
   await expect(
-    page.getByText("Portfolio progress starts when a project requires evidence")
-  ).toBeVisible();
+    page
+      .getByRole("navigation", { name: "Primary navigation" })
+      .getByRole("link", { name: "Projects" })
+  ).toHaveAttribute("href", "/projects");
 });
 
 test("shows active private records without linking to unpublished lessons or simulations", async ({
@@ -30,25 +35,22 @@ test("shows active private records without linking to unpublished lessons or sim
   await signIn(page, "active.student@example.test");
 
   await expect(
-    page.getByRole("heading", { name: "Active Industrial Student", level: 1 })
+    page.getByRole("heading", { name: /Active Industrial Student/, level: 1 })
   ).toBeVisible();
   await expect(page.getByText("Mechanical Engineering Foundations")).toBeVisible();
   await expect(page.getByText("Year 1, Semester 1")).toBeVisible();
   await expect(page.getByText("Fluid Mechanics Foundations")).toHaveCount(0);
   await expect(
+    page.getByText(/Some earlier results cannot currently be reviewed/)
+  ).toBeVisible();
+  await expect(
     page
       .getByLabel("Recent assessment results")
       .getByRole("heading", { name: "Fluid pressure knowledge check" })
-  ).toBeVisible();
-  await expect(page.getByLabel("Simulation activity")).toContainText(
-    "Simulation runs will appear after a student submits activity evidence."
-  );
+  ).toHaveCount(0);
+  await expect(page.getByLabel("Simulation activity")).toHaveCount(0);
   await expect(page.getByText("Hydraulic cylinder force simulation")).toHaveCount(0);
-  await expect(
-    page
-      .getByLabel("Active projects")
-      .getByRole("heading", { name: "Fluid pressure observation project" })
-  ).toBeVisible();
+  await expect(page.getByLabel("Active projects")).toHaveCount(0);
   await expect(page.getByText("Pressure from force and area")).toHaveCount(0);
   await expect(page.getByText("SI unit handling")).toHaveCount(0);
 });
@@ -60,10 +62,10 @@ test("dashboard URL query parameter cannot impersonate another student", async (
   await page.goto("/dashboard?studentId=profile-local-student-b-example-test");
 
   await expect(
-    page.getByRole("heading", { name: "Active Industrial Student", level: 1 })
+    page.getByRole("heading", { name: /Active Industrial Student/, level: 1 })
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Second Industrial Student", level: 1 })
+    page.getByRole("heading", { name: /Second Industrial Student/, level: 1 })
   ).not.toBeVisible();
 });
 
@@ -73,7 +75,7 @@ test("lecturer and reviewer student workspaces remain scoped to their own record
   await signIn(page, "lecturer@example.test");
 
   await expect(
-    page.getByRole("heading", { name: "Industrial Lecturer", level: 1 })
+    page.getByRole("heading", { name: /Industrial Lecturer/, level: 1 })
   ).toBeVisible();
   await expect(page.getByText("Active Industrial Student")).toHaveCount(0);
 
@@ -81,7 +83,7 @@ test("lecturer and reviewer student workspaces remain scoped to their own record
   await signIn(page, "reviewer@example.test");
 
   await expect(
-    page.getByRole("heading", { name: "Engineering Reviewer", level: 1 })
+    page.getByRole("heading", { name: /Engineering Reviewer/, level: 1 })
   ).toBeVisible();
   await expect(page.getByText("Active Industrial Student")).toHaveCount(0);
 });
@@ -92,7 +94,7 @@ test("shows no recent activity without leaking another student's data", async ({
   await signIn(page, "quiet.student@example.test");
 
   await expect(
-    page.getByRole("heading", { name: "Quiet Industrial Student", level: 1 })
+    page.getByRole("heading", { name: /Quiet Industrial Student/, level: 1 })
   ).toBeVisible();
   await expect(
     page.getByText("No recent learning activity has been recorded")
@@ -103,9 +105,7 @@ test("shows no recent activity without leaking another student's data", async ({
 test("recommendations targeting unpublished modules are excluded", async ({ page }) => {
   await signIn(page, "recommendation.student@example.test");
 
-  await expect(
-    page.getByText("No weak-topic recommendations are available yet")
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Suggested revision" })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Dismiss" })).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Open recommended activity" })).toHaveCount(
     0
@@ -138,6 +138,9 @@ test("allows optional recommendations to be hidden for the current view", async 
     page.getByText("Optional recommendations are hidden for this view.")
   ).toBeVisible();
   await expect(page.getByRole("link", { name: "Show recommendations" })).toBeVisible();
+  await expect(
+    page.getByRole("region", { name: "Next steps" }).getByText("Recommendations hidden.")
+  ).toBeVisible();
 });
 
 async function signIn(page: Page, email: string, expectedUrl: RegExp = /\/dashboard/) {

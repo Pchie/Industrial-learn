@@ -3,6 +3,16 @@
 import { Alert, Button, NumberInput, Slider } from "@industrial-learn/design-system";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import {
+  AnatomyOverlay,
+  ExplodedAssemblyView
+} from "../simulation-views/hydraulic-inspection";
+import { Interactive360Viewer } from "../simulation-views/interactive-360-viewer";
+import {
+  useSimulationView,
+  ViewModeSwitcher
+} from "../simulation-views/view-mode-switcher";
+import type { ViewNavigation } from "../simulation-views/capabilities";
 
 import {
   ContentDepthSelector,
@@ -101,10 +111,18 @@ const representations: RepresentationDefinition[] = [
 ];
 
 export function HydraulicCylinderVisualLesson({
-  content
+  content,
+  inspectionEnabled = false,
+  viewNavigation
 }: {
   content: HydraulicCylinderExperienceContent;
+  inspectionEnabled?: boolean;
+  viewNavigation?: ViewNavigation;
 }) {
+  const { view, changeView } = useSimulationView(
+    "hydraulic-cylinder-force",
+    viewNavigation
+  );
   const [input, setInput] = useState<HydraulicCylinderLessonInput>({
     pressureMPa: HYDRAULIC_CYLINDER_LESSON_LIMITS.pressureMPa.defaultValue,
     pistonDiameterMm: HYDRAULIC_CYLINDER_LESSON_LIMITS.pistonDiameterMm.defaultValue
@@ -202,6 +220,25 @@ export function HydraulicCylinderVisualLesson({
               </Button>
             </div>
           }
+          equation={
+            inspectionEnabled && model.forceCalculation ? (
+              <details>
+                <summary>Pressure and area: {formatNumber(forceKN, 2)} kN</summary>
+                <LiveEquation
+                  model={{
+                    expression: "F = p × A",
+                    name: "Ideal theoretical extension force",
+                    result: model.forceCalculation,
+                    symbols: [
+                      { symbol: "F", name: "theoretical force", unit: "N" },
+                      { symbol: "p", name: "cap-end pressure", unit: "Pa" },
+                      { symbol: "A", name: "piston area", unit: "m²" }
+                    ]
+                  }}
+                />
+              </details>
+            ) : undefined
+          }
           status={model.validity.status === "valid" ? "ready" : "invalid"}
           title="Pressure acting over piston area produces force."
         >
@@ -215,23 +252,64 @@ export function HydraulicCylinderVisualLesson({
             title="Hydraulic cylinder visual model"
           >
             <div className={styles.sceneRegion}>
-              <RepresentationSwitcher
-                activeMode={representation}
-                onChange={setRepresentation}
-                representations={representations}
-              />
-              <HydraulicCylinderScene
-                forceKN={forceKN}
-                forceVectorLength={forceVectorLength}
-                onSelectComponent={selectComponent}
-                pistonDiameterRatio={
-                  model.visualState?.components["COMP-HYD-CYL-PISTON-001"]?.extension
-                    ?.displayDiameterRatio ?? 0
-                }
-                pressureMPa={pressureMPa}
-                representation={representation}
-                selectedComponentId={selectedComponentId}
-              />
+              {inspectionEnabled ? (
+                <ViewModeSwitcher
+                  slug="hydraulic-cylinder-force"
+                  view={view}
+                  onChange={changeView}
+                  navigation={viewNavigation}
+                />
+              ) : null}
+              {inspectionEnabled && view !== "standard" ? (
+                view === "360view" ? (
+                  <Interactive360Viewer
+                    pressureMPa={pressureMPa}
+                    forceKN={forceKN}
+                    diameterRatio={
+                      model.visualState?.components["COMP-HYD-CYL-PISTON-001"]?.extension
+                        ?.displayDiameterRatio ?? 0
+                    }
+                  />
+                ) : view === "explodedview" ? (
+                  <ExplodedAssemblyView
+                    pressureMPa={pressureMPa}
+                    forceKN={forceKN}
+                    diameterRatio={
+                      model.visualState?.components["COMP-HYD-CYL-PISTON-001"]?.extension
+                        ?.displayDiameterRatio ?? 0
+                    }
+                  />
+                ) : (
+                  <AnatomyOverlay
+                    pressureMPa={pressureMPa}
+                    forceKN={forceKN}
+                    diameterRatio={
+                      model.visualState?.components["COMP-HYD-CYL-PISTON-001"]?.extension
+                        ?.displayDiameterRatio ?? 0
+                    }
+                  />
+                )
+              ) : (
+                <>
+                  <RepresentationSwitcher
+                    activeMode={representation}
+                    onChange={setRepresentation}
+                    representations={representations}
+                  />
+                  <HydraulicCylinderScene
+                    forceKN={forceKN}
+                    forceVectorLength={forceVectorLength}
+                    onSelectComponent={selectComponent}
+                    pistonDiameterRatio={
+                      model.visualState?.components["COMP-HYD-CYL-PISTON-001"]?.extension
+                        ?.displayDiameterRatio ?? 0
+                    }
+                    pressureMPa={pressureMPa}
+                    representation={representation}
+                    selectedComponentId={selectedComponentId}
+                  />
+                </>
+              )}
               <ol className={styles.sceneLegend} aria-label="Hydraulic state path">
                 <li>Pressure source</li>
                 <li>Pressurised line</li>

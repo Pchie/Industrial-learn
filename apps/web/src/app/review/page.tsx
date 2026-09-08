@@ -1,4 +1,6 @@
 import { ProtectedPage } from "@/features/auth/protected-page";
+import Link from "next/link";
+import { hasCapability } from "@/features/auth/session-core";
 import { readSessionTokens, requireCapability } from "@/features/auth/server";
 import { WorkspacePerspectiveBanner } from "@/features/auth/workspace-perspective-banner";
 import { ReviewWorkspace } from "@/features/content-governance/components";
@@ -26,6 +28,11 @@ export default async function ReviewPage({ searchParams }: ReviewPageProps) {
         title="Engineering Review Workspace"
       >
         <WorkspacePerspectiveBanner perspective={perspective} session={session} />
+        {hasCapability(session, "content:preview") ? (
+          <Link className="curriculum-action" href="/internal/visual-simulation-lab">
+            Open protected visual lab
+          </Link>
+        ) : null}
         <ReviewWorkspace model={model} />
       </ProtectedPage>
     </div>
