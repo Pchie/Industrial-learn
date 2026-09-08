@@ -48,6 +48,11 @@ must not be reported as completed merely because automated tests pass.
 
 - Final full unit run: **480 passed**, seven explicitly opt-in live tests skipped.
   The final cookie/provider regression subset also passed all 16 tests.
+- Live authenticated database integration: **7 passed, zero skipped**. Both exact
+  temporary accounts and their profiles were removed; 37/37 public tables retain RLS
+  and the ledger remains 21 applied migrations through `0022`.
+- Local type checking passed. Initial local/CI lint found repeated FormData reads losing
+  type narrowing and an untyped cookie-test mock. Both were corrected without rule changes.
 - Initial secret scan flagged a long **synthetic test token**, not a real credential. The
   fixture was changed to an unmistakably short test value; scanner rules were not weakened.
 - Formatting found one newly edited test file; the existing formatter corrected it.
@@ -58,8 +63,9 @@ must not be reported as completed merely because automated tests pass.
 - Two browser runs timed out at the old two-minute server startup allowance; a third
   exceeded five minutes. A cold build passed with the new local ten-minute allowance.
   CI retains five minutes. No test/assertion timeout was changed. Some broad browser scans
-  subsequently reached their 30-second limit under concurrent laptop load; final reruns
-  and CI evidence remain required before declaring the release verified.
+  subsequently reached their 30-second limit under concurrent laptop load: **59 passed,
+  four timed out**. All 12 auth and five staging smoke cases passed in that run; final
+  accessibility reruns and CI evidence remain required before declaring the release verified.
 - Restore initially caught a timezone-dependent comparison and an enum cast error in the
   read-only harness. Both were corrected; all restored data matched without schema changes.
 - First firewall check observed edge propagation. The second rehearsal verified sustained

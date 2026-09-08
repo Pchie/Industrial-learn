@@ -24,8 +24,8 @@ import { recordOperationalEvent, safeHashIdentifier } from "../monitoring/server
 export async function signUpAction(formData: FormData) {
   const next = safeInternalRedirect(formData.get("next"), "/dashboard");
   const email = normaliseEmail(formData.get("email"));
-  const password =
-    typeof formData.get("password") === "string" ? String(formData.get("password")) : "";
+  const enteredPassword = formData.get("password");
+  const password = typeof enteredPassword === "string" ? enteredPassword : "";
   const displayName = readRequiredString(formData.get("displayName"));
   const result = await (
     await getAuthProvider()
@@ -64,8 +64,8 @@ export async function signUpAction(formData: FormData) {
 export async function signInAction(formData: FormData) {
   const next = safeInternalRedirect(formData.get("next"), "/dashboard");
   const email = normaliseEmail(formData.get("email"));
-  const password =
-    typeof formData.get("password") === "string" ? String(formData.get("password")) : "";
+  const enteredPassword = formData.get("password");
+  const password = typeof enteredPassword === "string" ? enteredPassword : "";
   const result = await (await getAuthProvider()).signIn({ email, password });
 
   if (!result.ok) {

@@ -1,6 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-const jar = vi.hoisted(() => ({ get: vi.fn(), set: vi.fn(), delete: vi.fn() }));
+const jar = vi.hoisted(() => ({
+  get: vi.fn<(name: string) => { value: string } | undefined>(),
+  set: vi.fn(),
+  delete: vi.fn<(name: string) => void>()
+}));
 vi.mock("next/headers", () => ({ cookies: () => Promise.resolve(jar) }));
 vi.mock("next/navigation", () => ({ redirect: vi.fn() }));
 vi.mock("./supabase-provider", () => ({ createSupabaseAuthProvider: vi.fn() }));
