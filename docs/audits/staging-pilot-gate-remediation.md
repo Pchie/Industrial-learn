@@ -23,7 +23,7 @@ must not be reported as completed merely because automated tests pass.
 | G03: Emergency withdrawal       | Staging project firewall containment rehearsed successfully and left inactive; saved attempts unchanged           | Named operator/backup with verified access; content withdrawal/re-review and direct-Supabase incident steps remain distinct from edge containment |
 | G04: Recovery                   | Current encrypted archive retained; isolated PostgreSQL restore, all 69 table digests, 21 migrations and RLS pass | Owner-approved RPO/RTO/retention and off-device/key custody; managed service/configuration recovery                                               |
 | G05: Pilot operations/privacy   | Private owner record prepared; nominated contact recorded privately                                               | Backup, staffed roles/support channel, retention/admission notice approval, non-team participant access verification                              |
-| G06: Accessibility              | Automated regression verification in progress                                                                     | Actual device/screen-reader/keyboard/zoom pass by a human; no fabricated sign-off                                                                 |
+| G06: Accessibility              | All 49 automated accessibility checks pass in CI                                                                  | Actual device/screen-reader/keyboard/zoom pass by a human; no fabricated sign-off                                                                 |
 
 ## Implementation
 
@@ -49,8 +49,8 @@ must not be reported as completed merely because automated tests pass.
 
 ## Verification Log
 
-- Final full unit run: **480 passed**, seven explicitly opt-in live tests skipped.
-  The final cookie/provider regression subset also passed all 16 tests.
+- Final full unit run: **492 passed**, seven explicitly opt-in live tests skipped.
+  The final auth/recovery regression subset also passed all 40 tests.
 - Live authenticated database integration: **7 passed, zero skipped**. Both exact
   temporary accounts and their profiles were removed; 37/37 public tables retain RLS
   and the ledger remains 21 applied migrations through `0022`.
@@ -67,16 +67,28 @@ must not be reported as completed merely because automated tests pass.
   exceeded five minutes. A cold build passed with the new local ten-minute allowance.
   CI retains five minutes. No test/assertion timeout was changed. Some broad browser scans
   subsequently reached their 30-second limit under concurrent laptop load: **59 passed,
-  four timed out**. All 12 auth and five staging smoke cases passed in that run; final
-  accessibility reruns and CI evidence remain required before declaring the release verified.
+  four timed out**. All 12 auth and five staging smoke cases passed in that run. The exact
+  final code subsequently passed all **49 accessibility and five smoke cases in CI**, with
+  no failures or retries reported. Local targeted rerun results belong in the release receipt.
 - Restore initially caught a timezone-dependent comparison and an enum cast error in the
   read-only harness. Both were corrected; all restored data matched without schema changes.
 - First firewall check observed edge propagation. The second rehearsal verified sustained
   403 denial on stable and immutable URLs, readiness 200, restored access and unchanged attempts.
 
-Final local quality, deployment and live generated-link results will be added before this
-release is declared verified. No claim of external mail receipt, full managed-service
-restore, independent engineering approval or human accessibility acceptance is made.
+## Release Evidence
+
+Code commit: `3a6c65895fc58ade27f8f1fdd78cd2f757ddc2a9`.
+[Passing CI run](https://github.com/Pchie/Industrial-learn/actions/runs/34271702840):
+lock-file installation, secret scan, formatting, type checking, linting, 29 content checks,
+28 migration checks, 492 unit checks, production build, 49 accessibility checks and five
+staging smoke checks passed. Both configured dependency audits reported zero vulnerabilities.
+No dependency or lock-file change was needed.
+
+[Staging review and release receipt](https://github.com/Pchie/Industrial-learn/pull/43)
+records the final local build/reruns, merged commit, deployed release verification and
+generated-link results. A premerge CI pass alone does not prove live deployment or mail
+delivery. No claim of external mail receipt, full managed-service restore, independent
+engineering approval or human accessibility acceptance is made.
 
 ## Evidence And Next Actions
 
