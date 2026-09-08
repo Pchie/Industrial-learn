@@ -110,10 +110,11 @@ async function probeSupabaseAuth(url: string | undefined, anonKey: string | unde
     headers: {
       apikey: anonKey
     },
-    cache: "no-store"
+    cache: "no-store",
+    signal: AbortSignal.timeout(5000)
   }).catch(() => null);
 
-  return response && response.status < 500 ? "ok" : "failed";
+  return response && response.status >= 200 && response.status < 300 ? "ok" : "failed";
 }
 
 async function probeSupabaseDatabase(
@@ -129,8 +130,9 @@ async function probeSupabaseDatabase(
       apikey: serviceRoleKey,
       Authorization: `Bearer ${serviceRoleKey}`
     },
-    cache: "no-store"
+    cache: "no-store",
+    signal: AbortSignal.timeout(5000)
   }).catch(() => null);
 
-  return response && response.status < 500 ? "ok" : "failed";
+  return response && response.status >= 200 && response.status < 300 ? "ok" : "failed";
 }

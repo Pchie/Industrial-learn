@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { resolveAuthenticatedSession } from "../../../../features/auth/server";
+import { hasCapability } from "../../../../features/auth/session-core";
 
 import {
   createCorrelationId,
@@ -9,13 +11,18 @@ export const dynamic = "force-dynamic";
 
 const requiredProbeValue = "staging-monitoring-check";
 
-export function GET(request: Request) {
+export async function GET(request: Request) {
   if (process.env.NEXT_PUBLIC_APP_ENV !== "staging") {
     return safeResponse("not_found", 404);
   }
 
   if (new URL(request.url).searchParams.get("probe") !== requiredProbeValue) {
     return safeResponse("not_found", 404);
+  }
+
+  const session = await resolveAuthenticatedSession();
+  if (!session.ok || !hasCapability(session.value, "platform:manage")) {
+    return safeResponse("access_denied", 403);
   }
 
   const correlationId = createCorrelationId();

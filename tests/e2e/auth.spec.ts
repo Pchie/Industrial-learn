@@ -98,6 +98,39 @@ test("student is denied access to reviewer routes", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Access denied" })).toBeVisible();
 });
 
+test("email links require explicit confirmation and invalid links fail without leaking the hash", async ({
+  page
+}) => {
+  await page.goto("/auth/verify?token_hash=invalid-test-hash&type=recovery");
+  const confirm = page.getByRole("button", { name: "Continue password recovery" });
+  await expect(confirm).toBeVisible();
+  await confirm.focus();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/auth\/verify\?error=expired_session$/);
+  await expect(confirm).toHaveCount(0);
+  await expect(page.getByText("invalid-test-hash")).toHaveCount(0);
+});
+
+test("ordinary sessions and URL tokens cannot open a password reset form", async ({
+  page
+}) => {
+  await signInAsStudent(page);
+  await page.goto("/auth/reset-password?token=untrusted");
+  await expect(page.getByLabel("New password", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: /Request/i })).toBeVisible();
+});
+
+test("expired access cookie requires a fresh sign-in", async ({ page, context }) => {
+  await signInAsStudent(page);
+  const access = (await context.cookies()).find((cookie) => cookie.name === "il_session");
+  if (!access) throw new Error("Expected an authenticated access cookie");
+  await context.addCookies([{ ...access, expires: 1 }]);
+  await page.goto("/dashboard");
+  await expect(page).toHaveURL(/\/auth\/sign-in/);
+  await signInAsStudent(page);
+  await expect(page).toHaveURL(/\/dashboard/);
+});
+
 async function signInAsStudent(page: Page) {
   await page.goto("/auth/sign-in");
   await page.getByLabel("Email address").fill("student@example.test");

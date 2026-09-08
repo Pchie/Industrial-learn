@@ -12,6 +12,17 @@ afterEach(() => {
 });
 
 describe("readiness health endpoint", () => {
+  it.each([301, 401, 403, 429, 500])(
+    "does not mistake HTTP %s for healthy credentials",
+    async (status) => {
+      setStagingEnv();
+      globalThis.fetch = vi.fn().mockResolvedValue({ status });
+      const result = await checkReadiness();
+      expect(result.ready).toBe(false);
+      expect(result.checks.authProvider).toBe("failed");
+      expect(result.checks.database).toBe("failed");
+    }
+  );
   it("reports ready without exposing Supabase internals", async () => {
     setStagingEnv();
     globalThis.fetch = vi.fn().mockResolvedValue({ status: 200 });

@@ -41,7 +41,7 @@ export default async function SignUpPage({ searchParams }: SignUpPageProps) {
           <HiddenNext next={next} />
           <DisplayNameInput />
           <EmailInput />
-          <PasswordInput />
+          <PasswordInput autoComplete="new-password" />
           <AuthSubmit>Create account</AuthSubmit>
         </AuthForm>
       </form>

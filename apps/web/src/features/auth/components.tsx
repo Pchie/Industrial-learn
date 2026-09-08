@@ -82,8 +82,14 @@ export function DisplayNameInput() {
   );
 }
 
-export function PasswordInput({ label = "Password" }: { label?: string }) {
-  return <PasswordField label={label} name="password" />;
+export function PasswordInput({
+  label = "Password",
+  autoComplete = "current-password"
+}: {
+  label?: string;
+  autoComplete?: "new-password" | "current-password";
+}) {
+  return <PasswordField label={label} name="password" autoComplete={autoComplete} />;
 }
 
 export function HiddenNext({ next }: { next: string }) {

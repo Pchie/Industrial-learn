@@ -48,8 +48,14 @@ Supported event categories:
 
 `GET /api/monitoring/staging-probe?probe=staging-monitoring-check` is an
 operations-only diagnostic endpoint for staging release-candidate verification.
-It is unavailable outside staging and remains behind Vercel deployment
-protection.
+It is unavailable outside staging, remains behind Vercel deployment protection, and
+requires an authenticated `platform:manage` capability. A deployment-protection bypass
+alone is not sufficient. Students, content authors and engineering reviewers do not
+receive this capability automatically.
+
+Readiness probes require successful 2xx dependency responses and stop after five
+seconds per dependency. A 401, 403 or rate-limit response is not healthy. Readiness
+still does not prove SMTP delivery or a complete assessment transaction.
 
 The probe emits one synthetic redacted operational event and returns only a
 correlation ID. It must not be used as a product feature or production health

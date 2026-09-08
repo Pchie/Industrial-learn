@@ -3,8 +3,10 @@ import { redirect } from "next/navigation";
 import { getServerEnv, validateLocalTestAuthSafety } from "@industrial-learn/env";
 
 import { createSupabaseAuthProvider } from "./supabase-provider";
+import { createRecoveryTicket, verifyRecoveryTicket } from "./recovery-ticket";
 import {
   AUTH_REFRESH_COOKIE,
+  AUTH_RECOVERY_COOKIE,
   AUTH_SESSION_COOKIE,
   fail,
   publicAuthMessage,
@@ -19,12 +21,14 @@ import {
   type SessionTokens
 } from "./session-core";
 
-const secureCookieOptions = {
-  httpOnly: true,
-  sameSite: "lax" as const,
-  secure: process.env.NODE_ENV === "production",
-  path: "/"
-};
+function secureCookieOptions() {
+  return {
+    httpOnly: true,
+    sameSite: "lax" as const,
+    secure: process.env.NODE_ENV === "production",
+    path: "/"
+  };
+}
 
 export async function getAuthProvider(): Promise<AuthProvider> {
   const env = getServerEnv();
@@ -51,13 +55,13 @@ export async function setSessionCookies(tokens: SessionTokens) {
   );
 
   cookieStore.set(AUTH_SESSION_COOKIE, tokens.accessToken, {
-    ...secureCookieOptions,
+    ...secureCookieOptions(),
     maxAge
   });
 
   if (tokens.refreshToken) {
     cookieStore.set(AUTH_REFRESH_COOKIE, tokens.refreshToken, {
-      ...secureCookieOptions,
+      ...secureCookieOptions(),
       maxAge: 60 * 60 * 24 * 30
     });
   }
@@ -67,6 +71,42 @@ export async function clearSessionCookies() {
   const cookieStore = await cookies();
   cookieStore.delete(AUTH_SESSION_COOKIE);
   cookieStore.delete(AUTH_REFRESH_COOKIE);
+  cookieStore.delete(AUTH_RECOVERY_COOKIE);
+}
+
+export async function setRecoveryCookie(tokens: SessionTokens) {
+  const cookieStore = await cookies();
+  cookieStore.set(
+    AUTH_RECOVERY_COOKIE,
+    createRecoveryTicket(tokens, recoverySigningKey()),
+    {
+      ...secureCookieOptions(),
+      maxAge: Math.max(
+        1,
+        Math.min(600, Math.floor((Date.parse(tokens.expiresAt) - Date.now()) / 1000))
+      )
+    }
+  );
+}
+
+export async function readRecoveryToken() {
+  const value = (await cookies()).get(AUTH_RECOVERY_COOKIE)?.value;
+  if (!value) return undefined;
+  return verifyRecoveryTicket(value, recoverySigningKey());
+}
+
+function recoverySigningKey() {
+  const env = getServerEnv();
+  if (env.supabase.serviceRoleKey) return env.supabase.serviceRoleKey;
+  if (env.authMode === "local") {
+    validateLocalTestAuthSafety(env);
+    return "isolated-local-test-recovery";
+  }
+  throw new Error("Recovery signing is unavailable.");
+}
+
+export async function clearRecoveryCookie() {
+  (await cookies()).delete(AUTH_RECOVERY_COOKIE);
 }
 
 export async function resolveAuthenticatedSession(): Promise<

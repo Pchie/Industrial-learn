@@ -150,24 +150,26 @@ export function createTestLocalAuthProvider(): AuthProvider {
     },
 
     updatePassword(input: PasswordUpdateInput) {
-      if (!input.resetToken) {
-        return Promise.resolve(fail("expired_reset_link"));
-      }
-      const email = resetTokens.get(input.resetToken);
-      if (!email) {
-        return Promise.resolve(fail("expired_reset_link"));
-      }
-      const user = localUsers.get(email);
+      const session = input.accessToken
+        ? localSessions.get(input.accessToken)
+        : undefined;
+      const user = session ? findUserByAuthId(session.authUserId) : undefined;
       if (!user) {
         return Promise.resolve(fail("expired_reset_link"));
       }
       user.password = input.password;
-      resetTokens.delete(input.resetToken);
+      for (const [key, value] of localSessions) {
+        if (value.authUserId === user.authUserId) localSessions.delete(key);
+      }
       return Promise.resolve(ok(null));
     },
 
-    verifyEmail() {
-      return Promise.resolve(ok(null));
+    verifyEmail(tokenHash, type) {
+      const email = resetTokens.get(tokenHash);
+      const user = email ? localUsers.get(email) : undefined;
+      if (type !== "recovery" || !user) return Promise.resolve(fail("expired_session"));
+      resetTokens.delete(tokenHash);
+      return Promise.resolve(ok({ tokens: createSession(user.authUserId) }));
     },
 
     resolveSession(tokens: Partial<SessionTokens>) {

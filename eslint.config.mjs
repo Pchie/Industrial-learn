@@ -5,6 +5,7 @@ export default tseslint.config(
   {
     ignores: [
       "**/.next/**",
+      ".private-operations/**",
       "coverage/**",
       "eslint.config.mjs",
       "node_modules/**",

@@ -5,10 +5,13 @@ import { getAuthConfigurationDiagnostics, getServerEnv } from "@industrial-learn
 
 import {
   clearSessionCookies,
+  clearRecoveryCookie,
   getAuthProvider,
   readSessionTokens,
+  readRecoveryToken,
   resolveAuthenticatedSession,
-  setSessionCookies
+  setSessionCookies,
+  setRecoveryCookie
 } from "./server";
 import {
   absoluteAppUrl,
@@ -21,7 +24,8 @@ import { recordOperationalEvent, safeHashIdentifier } from "../monitoring/server
 export async function signUpAction(formData: FormData) {
   const next = safeInternalRedirect(formData.get("next"), "/dashboard");
   const email = normaliseEmail(formData.get("email"));
-  const password = readRequiredString(formData.get("password"));
+  const enteredPassword = formData.get("password");
+  const password = typeof enteredPassword === "string" ? enteredPassword : "";
   const displayName = readRequiredString(formData.get("displayName"));
   const result = await (
     await getAuthProvider()
@@ -60,7 +64,8 @@ export async function signUpAction(formData: FormData) {
 export async function signInAction(formData: FormData) {
   const next = safeInternalRedirect(formData.get("next"), "/dashboard");
   const email = normaliseEmail(formData.get("email"));
-  const password = readRequiredString(formData.get("password"));
+  const enteredPassword = formData.get("password");
+  const password = typeof enteredPassword === "string" ? enteredPassword : "";
   const result = await (await getAuthProvider()).signIn({ email, password });
 
   if (!result.ok) {
@@ -102,26 +107,35 @@ export async function signOutAction() {
 
 export async function forgotPasswordAction(formData: FormData) {
   const email = normaliseEmail(formData.get("email"));
-  await (
+  const result = await (
     await getAuthProvider()
   ).requestPasswordReset({
     email,
-    redirectTo: absoluteAppUrl("/auth/reset-password", getServerEnv().appBaseUrl)
+    redirectTo: absoluteAppUrl("/auth/verify", getServerEnv().appBaseUrl)
   });
+  if (!result.ok)
+    recordOperationalEvent({
+      category: "auth_failure",
+      operation: "request_password_reset",
+      result: "failure",
+      route: "/auth/forgot-password",
+      details: { code: result.code }
+    });
   redirect("/auth/forgot-password?status=reset_requested");
 }
 
 export async function resetPasswordAction(formData: FormData) {
-  const password = readRequiredString(formData.get("password"));
-  const resetToken = readRequiredString(formData.get("token"));
-  const session = await resolveAuthenticatedSession();
-  const tokens = await readSessionTokens();
+  const password = formData.get("password");
+  if (typeof password !== "string" || password.length < 8 || password.length > 256) {
+    redirect("/auth/reset-password?error=invalid_credentials");
+  }
+  const accessToken = await readRecoveryToken();
+  if (!accessToken) redirect("/auth/reset-password?error=expired_reset_link");
   const result = await (
     await getAuthProvider()
   ).updatePassword({
     password,
-    resetToken,
-    ...(session.ok && tokens.accessToken ? { accessToken: tokens.accessToken } : {})
+    accessToken
   });
 
   if (!result.ok) {
@@ -135,5 +149,35 @@ export async function resetPasswordAction(formData: FormData) {
     redirect(`/auth/reset-password?error=${result.code}`);
   }
 
+  await (await getAuthProvider()).signOut({ accessToken });
+  await clearSessionCookies();
   redirect("/auth/sign-in?status=password_updated");
+}
+
+export async function confirmEmailAction(formData: FormData) {
+  const tokenHash = readRequiredString(formData.get("token_hash"));
+  const type = formData.get("type");
+  await clearRecoveryCookie();
+  if (!tokenHash || tokenHash.length > 512 || (type !== "email" && type !== "recovery")) {
+    redirect("/auth/verify?error=expired_session");
+  }
+  const result = await (await getAuthProvider()).verifyEmail(tokenHash, type);
+  if (!result.ok) {
+    recordOperationalEvent({
+      category: "auth_failure",
+      operation: "confirm_email_link",
+      result: "failure",
+      route: "/auth/verify",
+      details: { code: result.code }
+    });
+    redirect("/auth/verify?error=expired_session");
+  }
+  // Recovery is not a normal login; only the password form receives authority.
+  await clearSessionCookies();
+  if (type === "recovery") {
+    await setRecoveryCookie(result.value.tokens);
+    redirect("/auth/reset-password");
+  }
+  await (await getAuthProvider()).signOut(result.value.tokens);
+  redirect("/auth/sign-in?status=email_verified");
 }

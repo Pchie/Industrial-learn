@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Confirm your Industrial Learn email</title>
+  </head>
+  <body>
+    <h1>Confirm your email address</h1>
+    <p>You requested an Industrial Learn staging account.</p>
+    <p>
+      <a href="{{ .SiteURL }}/auth/verify?token_hash={{ .TokenHash }}&amp;type=email"
+        >Continue to email confirmation</a
+      >
+    </p>
+    <p>
+      The next page asks you to confirm before using this one-time link. If you did not
+      request this account, ignore this email.
+    </p>
+    <p>
+      This is a controlled engineering education pilot, not a professional engineering
+      approval service.
+    </p>
+  </body>
+</html>

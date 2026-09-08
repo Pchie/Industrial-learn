@@ -1,8 +1,16 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+const session = vi.hoisted(() => vi.fn());
+vi.mock("../../../../features/auth/server", () => ({
+  resolveAuthenticatedSession: session
+}));
 
 import { GET } from "./route";
 
 const originalEnv = { ...process.env };
+beforeEach(() =>
+  session.mockResolvedValue({ ok: true, value: { capabilities: ["platform:manage"] } })
+);
 
 afterEach(() => {
   process.env = { ...originalEnv };
@@ -10,9 +18,9 @@ afterEach(() => {
 });
 
 describe("staging monitoring probe", () => {
-  it("is unavailable outside staging", () => {
+  it("is unavailable outside staging", async () => {
     process.env.NEXT_PUBLIC_APP_ENV = "development";
-    const response = GET(
+    const response = await GET(
       new Request(
         "https://app.example/api/monitoring/staging-probe?probe=staging-monitoring-check"
       )
@@ -21,11 +29,29 @@ describe("staging monitoring probe", () => {
     expect(response.status).toBe(404);
   });
 
-  it("requires the probe header in staging", () => {
+  it("requires the probe selector in staging", async () => {
     process.env.NEXT_PUBLIC_APP_ENV = "staging";
-    const response = GET(new Request("https://app.example/api/monitoring/staging-probe"));
+    const response = await GET(
+      new Request("https://app.example/api/monitoring/staging-probe")
+    );
 
     expect(response.status).toBe(404);
+  });
+
+  it.each([
+    { ok: false, code: "missing_session" },
+    { ok: true, value: { capabilities: ["workspace:student"] } },
+    { ok: true, value: { capabilities: ["content:review:approve"] } }
+  ])("denies callers without platform management permission", async (value) => {
+    process.env.NEXT_PUBLIC_APP_ENV = "staging";
+    session.mockResolvedValue(value);
+    const response = await GET(
+      new Request(
+        "https://app.example/api/monitoring/staging-probe?probe=staging-monitoring-check"
+      )
+    );
+    expect(response.status).toBe(403);
+    expect(response.headers.get("Cache-Control")).toBe("no-store");
   });
 
   it("emits a redacted staging-only monitoring event", async () => {
@@ -43,7 +69,7 @@ describe("staging monitoring probe", () => {
     };
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
 
-    const response = GET(
+    const response = await GET(
       new Request(
         "https://app.example/api/monitoring/staging-probe?probe=staging-monitoring-check"
       )
