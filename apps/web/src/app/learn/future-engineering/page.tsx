@@ -33,6 +33,7 @@ export default function FutureEngineeringPage() {
         description={school.description}
         eyebrow="School"
         title={school.title}
+        image="future"
       />
       <ProgressNotice />
       {school.disciplines.length === 0 ? (

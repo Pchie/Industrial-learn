@@ -4,7 +4,7 @@ import {
   createSupabaseServerClient,
   createSupabaseServiceRoleClient
 } from "@industrial-learn/database";
-import { getServerEnv } from "@industrial-learn/env";
+import { getBackendMode, getServerEnv } from "@industrial-learn/env";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -70,10 +70,16 @@ export async function manageRoleAction(formData: FormData) {
 export async function setAccountStatusAction(formData: FormData) {
   const session = await requirePlatformManager(ADMIN_USERS_ROUTE);
   const targetProfileId = readText(formData.get("targetProfileId"));
-  const disabled = readText(formData.get("operation")) === "disable";
+  const operation = readText(formData.get("operation"));
+  const disabled = operation === "disable";
   const reason = readText(formData.get("reason"));
 
-  if (!targetProfileId || reason.length < 10 || formData.get("confirmed") !== "on") {
+  if (
+    !targetProfileId ||
+    !["enable", "disable"].includes(operation) ||
+    reason.length < 10 ||
+    formData.get("confirmed") !== "on"
+  ) {
     redirect(resultUrl("invalid_account_change"));
   }
 
@@ -281,8 +287,5 @@ function resultUrl(result: string) {
 }
 
 function isLocalAdministrationMode() {
-  return (
-    process.env.INDUSTRIAL_LEARN_AUTH_MODE === "local" &&
-    process.env.INDUSTRIAL_LEARN_E2E === "true"
-  );
+  return getBackendMode() === "local";
 }

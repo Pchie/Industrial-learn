@@ -1,4 +1,5 @@
 import { unstable_noStore as noStore } from "next/cache";
+import { getBackendMode } from "@industrial-learn/env";
 import { StudentDashboard } from "@/features/student-dashboard/components";
 import { buildDashboardExperience } from "@/features/student-dashboard/experience";
 import { loadStudentDashboardData } from "@/features/student-dashboard/server-data";
@@ -26,6 +27,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       <WorkspacePerspectiveBanner perspective={params.perspective} session={session} />
       <StudentDashboard
         hideRecommendations={params.hideRecommendations === "1"}
+        localPreview={getBackendMode() === "local"}
         model={buildDashboardExperience(dashboardData)}
       />
     </div>

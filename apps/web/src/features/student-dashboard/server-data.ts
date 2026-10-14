@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getServerEnv } from "@industrial-learn/env";
+import { getBackendMode, getServerEnv } from "@industrial-learn/env";
 import type { AuthenticatedSession } from "../auth/session-core";
 import { readSessionTokens } from "../auth/server";
 import { readCompetencyAwards } from "./data";
@@ -19,7 +19,8 @@ import type {
 type SupabaseRow = Record<string, unknown>;
 
 export async function loadStudentDashboardData(
-  session: AuthenticatedSession
+  session: AuthenticatedSession,
+  completeLibrary = false
 ): Promise<StudentDashboardData> {
   if (isLocalDashboardMode()) {
     if (session.email === "database.failure@example.test") {
@@ -30,7 +31,7 @@ export async function loadStudentDashboardData(
     return loadLocalStudentDashboardData(session.profile);
   }
 
-  return loadSupabaseStudentDashboardData(session);
+  return loadSupabaseStudentDashboardData(session, completeLibrary);
 }
 
 export async function dismissDashboardRecommendation(
@@ -54,14 +55,12 @@ export async function dismissDashboardRecommendation(
 }
 
 function isLocalDashboardMode() {
-  return (
-    process.env.INDUSTRIAL_LEARN_AUTH_MODE === "local" &&
-    process.env.INDUSTRIAL_LEARN_E2E === "true"
-  );
+  return getBackendMode() === "local";
 }
 
 async function loadSupabaseStudentDashboardData(
-  session: AuthenticatedSession
+  session: AuthenticatedSession,
+  completeLibrary = false
 ): Promise<StudentDashboardData> {
   const env = getServerEnv();
   const { accessToken } = await readSessionTokens();
@@ -73,7 +72,8 @@ async function loadSupabaseStudentDashboardData(
   const client = createRestClient(env.supabase.url, env.supabase.anonKey, accessToken);
   const { rows, unavailableSections, limitedSections } = await readDashboardSummaries(
     (table, params) => client.get(table, params),
-    session.profile.id
+    session.profile.id,
+    completeLibrary
   );
 
   return {
@@ -256,7 +256,8 @@ function mapProjectSubmissionRow(row: SupabaseRow): ProjectSubmissionRecord {
 function mapSavedLessonRow(row: SupabaseRow): SavedLessonRecord {
   return {
     id: stringValue(row.id) ?? "unknown-saved-lesson",
-    lessonSlug: stringValue(nestedRow(row.lessons)?.slug) ?? "",
+    lessonSlug:
+      stringValue(row.lesson_slug) ?? stringValue(nestedRow(row.lessons)?.slug) ?? "",
     savedAt: stringValue(row.saved_at) ?? stringValue(row.created_at) ?? ""
   };
 }

@@ -25,7 +25,7 @@ export default async function AssessmentReviewPage({
   const model = await loadCompletedAssessmentReview(session, assessmentSlug, attemptId);
 
   if (!model) {
-    return <AssessmentNotFound title="Review unavailable" />;
+    return <AssessmentNotFound title="Review unavailable" historical />;
   }
 
   return <AssessmentReviewView model={model} />;

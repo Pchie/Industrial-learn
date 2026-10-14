@@ -1,0 +1,140 @@
+{
+  "as_of": "2026-10-13",
+  "checks": [
+    {
+      "name": "install",
+      "command": ["npm", "ci", "--offline", "--no-audit", "--no-fund"],
+      "cwd": "/Users/zungu/Documents/Master Industrial Learning/.private-operations/stage-1-2026-10-12/source-copy",
+      "started_at": "2026-10-13T10:34:53.106070+00:00",
+      "environment": "isolated source; credential-free environment; live integration disabled",
+      "status": "PASS",
+      "exit_code": 0,
+      "finished_at": "2026-10-13T10:35:17.012901+00:00"
+    },
+    {
+      "name": "secrets",
+      "command": ["npm", "run", "scan:secrets"],
+      "cwd": "/Users/zungu/Documents/Master Industrial Learning/.private-operations/stage-1-2026-10-12/source-copy",
+      "started_at": "2026-10-13T10:35:17.015138+00:00",
+      "environment": "isolated source; credential-free environment; live integration disabled",
+      "status": "PASS",
+      "exit_code": 0,
+      "finished_at": "2026-10-13T10:35:18.581466+00:00"
+    },
+    {
+      "name": "typecheck",
+      "command": ["npm", "run", "typecheck"],
+      "cwd": "/Users/zungu/Documents/Master Industrial Learning/.private-operations/stage-1-2026-10-12/source-copy",
+      "started_at": "2026-10-13T10:35:18.582308+00:00",
+      "environment": "isolated source; credential-free environment; live integration disabled",
+      "status": "PASS",
+      "exit_code": 0,
+      "finished_at": "2026-10-13T10:36:10.649521+00:00"
+    },
+    {
+      "name": "lint",
+      "command": ["npm", "run", "lint"],
+      "cwd": "/Users/zungu/Documents/Master Industrial Learning/.private-operations/stage-1-2026-10-12/source-copy",
+      "started_at": "2026-10-13T10:36:10.651238+00:00",
+      "environment": "isolated source; credential-free environment; live integration disabled",
+      "status": "PASS",
+      "exit_code": 0,
+      "finished_at": "2026-10-13T10:37:46.097836+00:00"
+    },
+    {
+      "name": "format",
+      "command": ["npm", "run", "format:check"],
+      "cwd": "/Users/zungu/Documents/Master Industrial Learning/.private-operations/stage-1-2026-10-12/source-copy",
+      "started_at": "2026-10-13T10:37:46.106263+00:00",
+      "environment": "isolated source; credential-free environment; live integration disabled",
+      "status": "PASS",
+      "exit_code": 0,
+      "finished_at": "2026-10-13T10:38:16.380312+00:00"
+    },
+    {
+      "name": "content",
+      "command": ["npm", "run", "validate:content"],
+      "cwd": "/Users/zungu/Documents/Master Industrial Learning/.private-operations/stage-1-2026-10-12/source-copy",
+      "started_at": "2026-10-13T10:38:16.384537+00:00",
+      "environment": "isolated source; credential-free environment; live integration disabled",
+      "status": "PASS",
+      "exit_code": 0,
+      "finished_at": "2026-10-13T10:38:23.069189+00:00",
+      "result_summary": "29 passed"
+    },
+    {
+      "name": "migrations",
+      "command": ["npm", "run", "validate:migrations"],
+      "cwd": "/Users/zungu/Documents/Master Industrial Learning/.private-operations/stage-1-2026-10-12/source-copy",
+      "started_at": "2026-10-13T10:38:23.071067+00:00",
+      "environment": "isolated source; credential-free environment; live integration disabled",
+      "status": "PASS",
+      "exit_code": 0,
+      "finished_at": "2026-10-13T10:38:26.024900+00:00",
+      "result_summary": "28 passed"
+    },
+    {
+      "name": "unit",
+      "command": ["npm", "run", "test:unit"],
+      "cwd": "/Users/zungu/Documents/Master Industrial Learning/.private-operations/stage-1-2026-10-12/source-copy",
+      "started_at": "2026-10-13T10:38:26.026019+00:00",
+      "environment": "isolated source; credential-free environment; live integration disabled",
+      "status": "PASS",
+      "exit_code": 0,
+      "finished_at": "2026-10-13T10:38:44.016979+00:00",
+      "result_summary": "550 passed; 7 opt-in live tests skipped"
+    },
+    {
+      "name": "build",
+      "command": ["npm", "run", "build"],
+      "cwd": "/Users/zungu/Documents/Master Industrial Learning/.private-operations/stage-1-2026-10-12/source-copy",
+      "started_at": "2026-10-13T10:38:44.017866+00:00",
+      "environment": "isolated loopback local/test fixture app; no live credentials",
+      "status": "PASS",
+      "exit_code": 0,
+      "finished_at": "2026-10-13T10:40:07.775763+00:00"
+    },
+    {
+      "name": "browser",
+      "command": [
+        "node",
+        "node_modules/@playwright/test/cli.js",
+        "test",
+        "tests/e2e/auth.spec.ts",
+        "tests/e2e/connected-learning.spec.ts",
+        "tests/e2e/account-isolation.spec.ts",
+        "--workers=1",
+        "--retries=0"
+      ],
+      "cwd": "/Users/zungu/Documents/Master Industrial Learning/.private-operations/stage-1-2026-10-12/source-copy",
+      "started_at": "2026-10-13T10:40:07.780813+00:00",
+      "environment": "isolated loopback local/test fixture app; no live credentials",
+      "status": "PASS",
+      "exit_code": 0,
+      "finished_at": "2026-10-13T10:42:15.482202+00:00",
+      "result_summary": "18 passed"
+    }
+  ],
+  "not_run": [
+    {
+      "command": "RUN_STAGING_DB_INTEGRATION=true npm run test:unit",
+      "status": "NOT RUN",
+      "reason": "No approved active synthetic accounts; no live writes authorized in Stage 1"
+    },
+    {
+      "command": "python3 scripts/verify-local-security.py",
+      "status": "NOT RUN",
+      "reason": "Database behavior covered by historical disposable runs; fresh Stage 1 uses read-only staging catalog plus schema/unit tests, not new database fixtures"
+    },
+    {
+      "command": "npm audit",
+      "status": "NOT RUN",
+      "reason": "No fresh registry vulnerability assessment performed"
+    },
+    {
+      "command": "npm run test:e2e (complete suite)",
+      "status": "NOT RUN",
+      "reason": "Focused auth/learning/isolation browser subset selected; historical full-suite results remain separate"
+    }
+  ]
+}

@@ -1,0 +1,429 @@
+{
+  "initial_read": {
+    "at": "2026-10-13T10:36:25.484Z",
+    "mode": "read-only staging metadata; no production queries or mutations",
+    "local_configuration": {
+      "target": "lgjujyaclrpaopdabyzg",
+      "mode": "supabase",
+      "environment": "staging",
+      "e2e": false,
+      "names": [
+        "APP_BASE_URL",
+        "INDUSTRIAL_LEARN_AUTH_MODE",
+        "INDUSTRIAL_LEARN_E2E",
+        "NEXT_PUBLIC_APP_ENV",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NODE_ENV",
+        "SUPABASE_DB_URL",
+        "SUPABASE_PROJECT_REF",
+        "SUPABASE_SERVICE_ROLE_KEY"
+      ]
+    },
+    "vercel": {
+      "status": "BLOCKED",
+      "reason": "The operation was aborted due to timeout"
+    },
+    "database": {
+      "status": "PASS",
+      "target": "lgjujyaclrpaopdabyzg",
+      "ledger": [
+        {
+          "version": "0001",
+          "name": "initial_schema",
+          "statement_count": 162,
+          "sha256": null
+        },
+        {
+          "version": "0002",
+          "name": "dashboard_student_preferences",
+          "statement_count": 9,
+          "sha256": null
+        },
+        {
+          "version": "0003",
+          "name": "attempt_persistence_metadata",
+          "statement_count": 6,
+          "sha256": null
+        },
+        {
+          "version": "0004",
+          "name": "content_governance_persistence",
+          "statement_count": 11,
+          "sha256": null
+        },
+        {
+          "version": "0005",
+          "name": "restrict_unapproved_content_visibility",
+          "statement_count": 21,
+          "sha256": null
+        },
+        {
+          "version": "0006",
+          "name": "restrict_author_self_approval",
+          "statement_count": 4,
+          "sha256": null
+        },
+        {
+          "version": "0007",
+          "name": "atomic_assessment_completion",
+          "statement_count": 5,
+          "sha256": null
+        },
+        {
+          "version": "0008",
+          "name": "atomic_simulation_completion",
+          "statement_count": 5,
+          "sha256": null
+        },
+        {
+          "version": "0009",
+          "name": "staging_hydraulic_simulation_fixture",
+          "statement_count": 1,
+          "sha256": "7c55622a643a1e9d3faabaefa140dfb4c8243281647cd16d34ede4833312e515"
+        },
+        {
+          "version": "0011",
+          "name": "restrict_assessment_question_delivery",
+          "statement_count": 2,
+          "sha256": null
+        },
+        {
+          "version": "0012",
+          "name": "demote_unapproved_simulation_publications",
+          "statement_count": 1,
+          "sha256": "d22f30f4bbe22209730b11c50b57835748b33d67929ebd99eeace58f7be58b42"
+        },
+        {
+          "version": "0013",
+          "name": "atomic_content_review_decision",
+          "statement_count": 5,
+          "sha256": null
+        },
+        {
+          "version": "0014",
+          "name": "add_platform_owner_role",
+          "statement_count": 1,
+          "sha256": "30b50fa386ee1a6600c1b287fb6a18273f233107f278ab26d37f7c9d93f967de"
+        },
+        {
+          "version": "0015",
+          "name": "platform_owner_access_management",
+          "statement_count": 1,
+          "sha256": "8f2fb58aff9d74773d6be52f15859c1e546b3e6cbeccb7d907954b61049e76b7"
+        },
+        {
+          "version": "0016",
+          "name": "secure_review_assignments",
+          "statement_count": 0,
+          "sha256": null
+        },
+        {
+          "version": "0017",
+          "name": "fix_profile_role_conflict_target",
+          "statement_count": 0,
+          "sha256": null
+        },
+        {
+          "version": "0018",
+          "name": "atomic_staging_content_publication",
+          "statement_count": 0,
+          "sha256": null
+        },
+        {
+          "version": "0019",
+          "name": "assessment_version_integrity_and_pilot_progress",
+          "statement_count": 0,
+          "sha256": null
+        },
+        {
+          "version": "0020",
+          "name": "require_reviewed_lesson_simulation_publication",
+          "statement_count": 1,
+          "sha256": "f6ca0598d7ff94abf596e053eb30065e2a0b5cad1e53542fcefc46f587e8b490"
+        },
+        {
+          "version": "0021",
+          "name": "scope_lecturer_publication_evidence_access",
+          "statement_count": 1,
+          "sha256": "18c444ec7e6ce13167eeda8ded36fd7894d955a4952676f0975cc3057ac41aee"
+        },
+        {
+          "version": "0022",
+          "name": "preserve_owner_content_oversight",
+          "statement_count": 1,
+          "sha256": "9dbe60a0a3ad06ace5e998447cb7317a8a85c3809dc2346b97c613c0f46741ac"
+        },
+        {
+          "version": "0023",
+          "name": "enforce_active_account_access",
+          "statement_count": 1,
+          "sha256": "7347782a220213fb8b1f9cae5c693cba7d5e87769cce5c99678dedc189acd10d"
+        },
+        {
+          "version": "0024",
+          "name": "governed_lesson_bookmarks",
+          "statement_count": 1,
+          "sha256": "104c8e0c759af9273e5a41d9415aecd55512e3662f9bcf3ed5e541354cb192cc"
+        },
+        {
+          "version": "0025",
+          "name": "guard_simulation_persistence",
+          "statement_count": 1,
+          "sha256": "f4cdf8cd380b653e9376a67a17a44d3dd56b76e80f307fc4fb814db5e15c577d"
+        }
+      ],
+      "public_tables": 37,
+      "rls_enabled": 37,
+      "public_policies": 129,
+      "repository": [
+        {
+          "version": "0001",
+          "file": "0001_initial_schema.sql",
+          "sha256": "848e7789f6db0bef4010ba2bb6422f66dcc86f8420fe868c0d0a9d87ff26397e"
+        },
+        {
+          "version": "0002",
+          "file": "0002_dashboard_student_preferences.sql",
+          "sha256": "c0e8a062adbb7e37879a55acf078409655f19c39054b37eac7b2bfd4db6c6ba3"
+        },
+        {
+          "version": "0003",
+          "file": "0003_attempt_persistence_metadata.sql",
+          "sha256": "3f3a707ab0eb9a971572c3f31dab0a5a070e99c28d9af36a62a6a28d03c55baf"
+        },
+        {
+          "version": "0004",
+          "file": "0004_content_governance_persistence.sql",
+          "sha256": "c9a34487c4a7ef40f1ea85bdac11e65999f757cad3c940d608464e136137dc91"
+        },
+        {
+          "version": "0005",
+          "file": "0005_restrict_unapproved_content_visibility.sql",
+          "sha256": "957269adf54de0e0d017c4ccf918ec23143865abb46f82a216e37cf06bcc9fe5"
+        },
+        {
+          "version": "0006",
+          "file": "0006_restrict_author_self_approval.sql",
+          "sha256": "bf40a593ac5a2fdefe72655b300121f0032367cf7b7e69b521c0d513d7087136"
+        },
+        {
+          "version": "0007",
+          "file": "0007_atomic_assessment_completion.sql",
+          "sha256": "358484d6223614a3aac3584ca725d71b4df1538f2453fcdfc4320180067b083a"
+        },
+        {
+          "version": "0008",
+          "file": "0008_atomic_simulation_completion.sql",
+          "sha256": "d22cd58d158e4c120c7190db46ab2c0d3c88c38d919e6a585511f2b6271e129c"
+        },
+        {
+          "version": "0009",
+          "file": "0009_staging_hydraulic_simulation_fixture.sql",
+          "sha256": "b3d0b4cbc055ba18e1f1686d51fe4fb91b76213bdd8a90990531ff5f95f092f4"
+        },
+        {
+          "version": "0010",
+          "file": "0010_bernoulli_flow_simulation_registration.sql",
+          "sha256": "c88dfccf522f77782558f3744ede076da79675115031662e0cdf0de87ff5e0af"
+        },
+        {
+          "version": "0011",
+          "file": "0011_restrict_assessment_question_delivery.sql",
+          "sha256": "654c87e1dd8077aa1eec209074b17e034115521ad0fa7e784cd4b2e18a7484ea"
+        },
+        {
+          "version": "0012",
+          "file": "0012_demote_unapproved_simulation_publications.sql",
+          "sha256": "460b1497ab4246f72bf1fe9828863b3bdb085bbc9f03c183a91f62d2ee1e6781"
+        },
+        {
+          "version": "0013",
+          "file": "0013_atomic_content_review_decision.sql",
+          "sha256": "56085cecf4a53948796cb58da99ed3bb1511baa796d8a8d6089d6bb5307562ad"
+        },
+        {
+          "version": "0014",
+          "file": "0014_add_platform_owner_role.sql",
+          "sha256": "54ac92484d28c3d419fa1a09eca2ee1759da887b7f8a35d193d0d5b55c7f3c1a"
+        },
+        {
+          "version": "0015",
+          "file": "0015_platform_owner_access_management.sql",
+          "sha256": "9e28dae9c333835abfbb182f661089ac0af3cbb35f82fbe3b3f0abb6ded895f9"
+        },
+        {
+          "version": "0016",
+          "file": "0016_secure_review_assignments.sql",
+          "sha256": "d3857405cad20ba24cb9f1d59b27f86ce9297e83752a2354b766f2804f8d0b9e"
+        },
+        {
+          "version": "0017",
+          "file": "0017_fix_profile_role_conflict_target.sql",
+          "sha256": "93bb0043ef8f50f959480d3b4987f86996c43501401e7eb84d91a1884ea43eab"
+        },
+        {
+          "version": "0018",
+          "file": "0018_atomic_staging_content_publication.sql",
+          "sha256": "22ce31361aca24c28ce9d17b932d11e3e4cd759e4804a8972237eaaef7e6df66"
+        },
+        {
+          "version": "0019",
+          "file": "0019_assessment_version_integrity_and_pilot_progress.sql",
+          "sha256": "e001097731023d0fa3c05b711d7da8b2971034b98bf86b7ee87e45378008f6f7"
+        },
+        {
+          "version": "0020",
+          "file": "0020_require_reviewed_lesson_simulation_publication.sql",
+          "sha256": "f6ca0598d7ff94abf596e053eb30065e2a0b5cad1e53542fcefc46f587e8b490"
+        },
+        {
+          "version": "0021",
+          "file": "0021_scope_lecturer_publication_evidence_access.sql",
+          "sha256": "18c444ec7e6ce13167eeda8ded36fd7894d955a4952676f0975cc3057ac41aee"
+        },
+        {
+          "version": "0022",
+          "file": "0022_preserve_owner_content_oversight.sql",
+          "sha256": "9dbe60a0a3ad06ace5e998447cb7317a8a85c3809dc2346b97c613c0f46741ac"
+        },
+        {
+          "version": "0023",
+          "file": "0023_enforce_active_account_access.sql",
+          "sha256": "7347782a220213fb8b1f9cae5c693cba7d5e87769cce5c99678dedc189acd10d"
+        },
+        {
+          "version": "0024",
+          "file": "0024_governed_lesson_bookmarks.sql",
+          "sha256": "104c8e0c759af9273e5a41d9415aecd55512e3662f9bcf3ed5e541354cb192cc"
+        },
+        {
+          "version": "0025",
+          "file": "0025_guard_simulation_persistence.sql",
+          "sha256": "f4cdf8cd380b653e9376a67a17a44d3dd56b76e80f307fc4fb814db5e15c577d"
+        }
+      ],
+      "repository_not_in_ledger": ["0010"],
+      "ledger_not_in_repository": [],
+      "single_statement_hash_comparison": [
+        {
+          "version": "0009",
+          "match": false
+        },
+        {
+          "version": "0012",
+          "match": false
+        },
+        {
+          "version": "0014",
+          "match": false
+        },
+        {
+          "version": "0015",
+          "match": false
+        },
+        {
+          "version": "0020",
+          "match": true
+        },
+        {
+          "version": "0021",
+          "match": true
+        },
+        {
+          "version": "0022",
+          "match": true
+        },
+        {
+          "version": "0023",
+          "match": true
+        },
+        {
+          "version": "0024",
+          "match": true
+        },
+        {
+          "version": "0025",
+          "match": true
+        }
+      ]
+    }
+  },
+  "vercel_recheck": {
+    "at": "2026-10-13T10:38:11.170Z",
+    "status": "PASS",
+    "project": "industrial-learn-staging",
+    "protection": {
+      "deploymentType": "prod_deployment_urls_and_all_previews"
+    },
+    "environment_names": [
+      "APP_BASE_URL",
+      "APP_BASE_URL",
+      "INDUSTRIAL_LEARN_AUTH_MODE",
+      "INDUSTRIAL_LEARN_AUTH_MODE",
+      "INDUSTRIAL_LEARN_E2E",
+      "INDUSTRIAL_LEARN_E2E",
+      "NEXT_PUBLIC_APP_ENV",
+      "NEXT_PUBLIC_APP_ENV",
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+      "NEXT_PUBLIC_SUPABASE_URL",
+      "NEXT_PUBLIC_SUPABASE_URL",
+      "NEXT_PUBLIC_SUPABASE_URL",
+      "POSTGRES_DATABASE",
+      "POSTGRES_HOST",
+      "POSTGRES_PASSWORD",
+      "POSTGRES_PRISMA_URL",
+      "POSTGRES_URL",
+      "POSTGRES_URL_NON_POOLING",
+      "POSTGRES_USER",
+      "SUPABASE_ANON_KEY",
+      "SUPABASE_DB_URL",
+      "SUPABASE_DB_URL",
+      "SUPABASE_JWT_SECRET",
+      "SUPABASE_PROJECT_REF",
+      "SUPABASE_PROJECT_REF",
+      "SUPABASE_PUBLISHABLE_KEY",
+      "SUPABASE_SECRET_KEY",
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "SUPABASE_URL"
+    ],
+    "deployment": {
+      "id": "dpl_3MpCfxEivqHUfrheW5geR4G8PYh9",
+      "url": "industrial-learn-staging-l63cwwxzy-kolobe.vercel.app",
+      "readyState": "READY",
+      "source_fingerprint": "6678b3cc80c7e388567311bb7d2caa4316ea26f6604d7ce82fad3be16839ef24",
+      "git_commit": "5fd8fc5253314deb403172d2084dc3d216adcd1f"
+    },
+    "health": [
+      {
+        "path": "/api/health/live",
+        "http": 200,
+        "status": "ok",
+        "environment": "staging"
+      },
+      {
+        "path": "/api/health/ready",
+        "http": 200,
+        "status": "ready",
+        "environment": "staging",
+        "checks": {
+          "configuration": "ok",
+          "authProvider": "ok",
+          "database": "ok"
+        }
+      }
+    ]
+  },
+  "remote_heads_read_2026_10_12": {
+    "development": "5fd8fc5253314deb403172d2084dc3d216adcd1f",
+    "main": "642277f72bdabb107c7a7beee396b07f6528f2fc",
+    "codex/website-design-consistency": null,
+    "codex/stage-1-independent-review": null
+  },
+  "production": "NOT QUERIED; remote main tip is Git metadata, not production-runtime verification"
+}

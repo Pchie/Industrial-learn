@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Breadcrumbs } from "@industrial-learn/design-system";
+import { PageHeading, PageLink, WorkspaceEmptyState } from "../page-layout/components";
 import type { PersistedSimulationAttempt } from "@industrial-learn/database";
 
 import { startSimulationAction } from "./actions";
@@ -297,22 +299,30 @@ export function SimulationHistoryView({
 }) {
   return (
     <div className="simulation-shell">
-      <header className="simulation-hero">
-        <p className="eyebrow">Private learning evidence</p>
-        <h1>Simulation history</h1>
-        <p>
-          Your completed and in-progress simulation attempt summaries are visible only to
-          your authenticated account and authorised education staff.
-        </p>
-      </header>
+      <Breadcrumbs
+        items={[
+          { href: "/simulations", label: "Simulation Lab" },
+          { href: "/simulations/history", label: "History" }
+        ]}
+      />
+      <PageHeading
+        title="Simulation history"
+        eyebrow="Private learning evidence"
+        description="Your completed and in-progress simulation attempts. Visible only to you and authorised education staff."
+      />
 
-      <section className="simulation-card">
-        {attempts.length > 0 ? (
+      {attempts.length > 0 ? (
+        <section className="simulation-card">
           <SimulationAttemptList attempts={attempts} />
-        ) : (
+        </section>
+      ) : (
+        <WorkspaceEmptyState
+          title="Your next experiment starts here"
+          action={<PageLink href="/simulations">Open Simulation Lab</PageLink>}
+        >
           <p>No simulation attempts have been recorded for your account.</p>
-        )}
-      </section>
+        </WorkspaceEmptyState>
+      )}
     </div>
   );
 }
@@ -320,6 +330,12 @@ export function SimulationHistoryView({
 export function SimulationHeader({ summary }: { summary: SimulationSummary }) {
   return (
     <header className="simulation-hero">
+      <Breadcrumbs
+        items={[
+          { href: "/simulations", label: "Simulation Lab" },
+          { href: `/simulations/${summary.slug}`, label: summary.title }
+        ]}
+      />
       <p className="eyebrow">{summary.moduleTitle}</p>
       <h1>{summary.title}</h1>
       <p>{summary.description}</p>

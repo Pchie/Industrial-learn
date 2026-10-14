@@ -42,8 +42,8 @@
   --il-border-width-sm: 1px;
   --il-border-width-md: 2px;
   --il-radius-control: 0.5rem;
-  --il-radius-card: 0.5rem;
-  --il-radius-panel: 0.5rem;
+  --il-radius-card: 0.875rem;
+  --il-radius-panel: 0.875rem;
   --il-radius-pill: 999px;
 
   --il-layout-content-max: 1320px;

@@ -3,12 +3,17 @@ import type { ReactNode } from "react";
 
 import { PRODUCT_NAME } from "@industrial-learn/shared";
 
+import { AccountProvider } from "@/features/auth/account-boundary";
 import { SiteNavigation } from "@/features/auth/site-navigation";
 import { themeInitialiser } from "@/features/theme/theme";
 
 import "@industrial-learn/design-system/styles.css";
 import "./globals.css";
 import "@/features/app-shell/shell.css";
+
+// The per-navigation template binds every rendered payload to request identity.
+// Pre-rendering generateStaticParams routes cannot safely reuse that payload.
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: PRODUCT_NAME,
@@ -22,7 +27,7 @@ type RootLayoutProps = {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <link
           rel="preload"
@@ -38,10 +43,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
           Skip to main content
         </a>
         <div className="app-shell">
-          <SiteNavigation />
-          <main id="main-content" className="main-content" tabIndex={-1}>
-            {children}
-          </main>
+          <AccountProvider>
+            <SiteNavigation />
+            <main id="main-content" className="main-content" tabIndex={-1}>
+              {children}
+            </main>
+          </AccountProvider>
         </div>
       </body>
     </html>

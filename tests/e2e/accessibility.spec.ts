@@ -264,6 +264,7 @@ for (const width of viewportWidths) {
     for (const route of overflowRoutes) {
       await page.goto(route);
       await expect(page.locator("main")).toBeVisible();
+      await expect(page.locator("[data-account-boundary]:visible")).toBeVisible();
       const overflow = await page.evaluate(
         () => document.documentElement.scrollWidth - window.innerWidth
       );
@@ -273,6 +274,8 @@ for (const width of viewportWidths) {
 }
 
 async function expectNoAxeViolations(page: Page) {
+  // Scan the verified page, not the account-transition loading placeholder.
+  await expect(page.locator("[data-account-boundary]:visible")).toBeVisible();
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
     .analyze();

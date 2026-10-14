@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
 import {
   BrowseNav,
@@ -12,6 +11,7 @@ import {
 } from "@/features/curriculum/components";
 import { getCurriculum } from "@/features/curriculum/data";
 import { searchPublicLessons } from "@/features/lesson-engine/data";
+import { ImageBand, PageLink } from "@/features/page-layout/components";
 
 export const metadata: Metadata = {
   title: "Learn | Industrial Learn",
@@ -30,24 +30,23 @@ export default async function LearnPage({ searchParams }: LearnPageProps) {
 
   return (
     <div className="curriculum-page">
-      <BrowseNav pathways={curriculum.pathways} schools={curriculum.schools} />
       <CurriculumHero
-        description="Browse Core Engineering and Future Engineering using the real curriculum seed data."
+        description="Find your next concept, explore a discipline and build on what you know."
         eyebrow="Learning catalogue"
         title="Browse Industrial Learn"
       />
+      <BrowseNav pathways={curriculum.pathways} schools={curriculum.schools} />
       <ProgressNotice />
 
-      <section className="curriculum-section" aria-labelledby="pilot-path-title">
-        <div className="section-heading">
-          <p className="eyebrow">Controlled pilot</p>
-          <h2 id="pilot-path-title">Fluid Engineering Pilot</h2>
-          <p>A short path containing only independently approved, published content.</p>
-        </div>
-        <Link className="curriculum-action" href="/learn/pilot">
-          Open pilot learning path
-        </Link>
-      </section>
+      <ImageBand
+        image="pressureScene"
+        priority
+        title="Fluid Engineering Pilot"
+        eyebrow="Start with the foundations"
+        description="A short path containing only independently approved, published content."
+      >
+        <PageLink href="/learn/pilot">Open pilot learning path</PageLink>
+      </ImageBand>
 
       <PublishedLessonSection lessons={lessons} query={query} searchable />
 
@@ -65,17 +64,19 @@ export default async function LearnPage({ searchParams }: LearnPageProps) {
 
       <DifficultyIndex modules={curriculum.modules} />
 
-      <section className="curriculum-section" aria-labelledby="pathways-title">
-        <div className="section-heading">
-          <p className="eyebrow">Browse by career pathway</p>
-          <h2 id="pathways-title">Professional directions</h2>
-        </div>
-        <div className="curriculum-grid">
-          {curriculum.pathways.map((pathway) => (
-            <PathwayCard key={pathway.id} pathway={pathway} />
-          ))}
-        </div>
-      </section>
+      {curriculum.pathways.length > 0 ? (
+        <section className="curriculum-section" aria-labelledby="pathways-title">
+          <div className="section-heading">
+            <p className="eyebrow">Browse by career pathway</p>
+            <h2 id="pathways-title">Professional directions</h2>
+          </div>
+          <div className="curriculum-grid">
+            {curriculum.pathways.map((pathway) => (
+              <PathwayCard key={pathway.id} pathway={pathway} />
+            ))}
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 }

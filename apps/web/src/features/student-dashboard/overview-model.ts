@@ -137,28 +137,46 @@ export function buildDashboardOverview(
         }
       : null,
     metric: {
-      title: "Recorded progress",
-      value: model.unavailable.includes("lessons")
-        ? "--"
-        : String(model.completedLessonCount ?? "--"),
-      unit: model.completedLessonCount === 1 ? "lesson" : "lessons",
-      note: model.unavailable.includes("lessons")
-        ? "Progress unavailable"
-        : model.completedLessonCount === undefined
-          ? "A fresh start"
-          : "Completed in your loaded records",
-      points: []
+      title: "Learning Streak",
+      value: model.studyActivity ? String(model.studyActivity.streak) : "--",
+      unit: model.studyActivity?.streak === 1 ? "day" : "days",
+      note: model.studyActivity
+        ? model.studyActivity.streak > 0
+          ? "Keep your momentum going."
+          : "A little learning goes a long way."
+        : "Activity data is incomplete",
+      points: model.studyActivity?.points ?? []
     },
     progress: { title: "Visible lesson progress", ...progress },
     awards: ["Introduced", "Understood", "Calculated"].map((label) => ({
       label,
       awarded: (model.awards[label as keyof typeof model.awards] ?? 0) > 0
     })),
-    activity: model.lessonActivity.map((record) => ({
-      title: record.title,
-      description: record.summary,
-      date: dashboardDate(record.occurredAt),
-      kind: "lesson"
-    }))
+    activity: [
+      ...model.lessonActivity.map((record) => ({
+        title: record.title,
+        description: record.summary,
+        date: record.occurredAt,
+        kind: "lesson" as const
+      })),
+      ...model.results.map((record) => ({
+        title: record.title,
+        description:
+          record.score === undefined || record.maxScore === undefined
+            ? "Assessment result available"
+            : `Assessment result: ${record.score} / ${record.maxScore}`,
+        date: record.submittedAt,
+        kind: "assessment" as const
+      })),
+      ...model.simulationActivity.map((record) => ({
+        title: record.title,
+        description: record.resultSummary,
+        date: record.lastRunAt,
+        kind: "simulation" as const
+      }))
+    ]
+      .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))
+      .slice(0, 4)
+      .map((record) => ({ ...record, date: dashboardDate(record.date) }))
   };
 }

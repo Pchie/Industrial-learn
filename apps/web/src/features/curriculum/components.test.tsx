@@ -12,10 +12,14 @@ import { getCurriculum, getInternalCurriculum, getModule } from "./data";
 import { getPublicLessons } from "../lesson-engine/data";
 
 describe("curriculum browsing components", () => {
-  it("does not display fake completion data in signed-out progress messaging", () => {
+  it("links to real progress without assuming the current session or inventing completion", () => {
     const markup = renderToStaticMarkup(createElement(ProgressNotice));
 
-    expect(markup).toContain("Progress appears after sign in");
+    expect(markup).toContain(
+      "Find your saved learning and progress in your student dashboard."
+    );
+    expect(markup).toContain('href="/dashboard"');
+    expect(markup).not.toContain("after sign in");
     expect(markup).not.toContain("100%");
   });
 

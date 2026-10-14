@@ -41,10 +41,10 @@ export const dashboardQueries = [
   },
   {
     key: "saved",
-    table: "saved_lessons",
+    table: "rpc/list_saved_lessons",
     limit: 10,
     order: "saved_at.desc",
-    select: "id,saved_at,lessons(slug)"
+    select: "id,saved_at,lesson_slug"
   },
   {
     key: "dismissals",
@@ -68,18 +68,24 @@ export async function readDashboardSummaries(
     table: string,
     params: Record<string, string>
   ) => Promise<Record<string, unknown>[]>,
-  studentProfileId: string
+  studentProfileId: string,
+  completeLibrary = false
 ) {
   const results = await Promise.allSettled(
-    dashboardQueries.map((query) =>
-      get(query.table, {
+    dashboardQueries.map((query) => {
+      const params = {
         select: query.select,
-        student_profile_id: `eq.${studentProfileId}`,
+        ...(query.key === "saved"
+          ? {}
+          : { student_profile_id: `eq.${studentProfileId}` }),
         order: query.order,
         limit: String(query.limit),
         ...(query.key === "enrolments" ? { withdrawn_at: "is.null" } : {})
-      })
-    )
+      };
+      return completeLibrary && (query.key === "lessons" || query.key === "saved")
+        ? readCompleteLibraryRows(get, query.table, params)
+        : get(query.table, params);
+    })
   );
   if (
     results.some(
@@ -98,11 +104,46 @@ export async function readDashboardSummaries(
     const query = dashboardQueries[index]!;
     if (result.status === "fulfilled") {
       rows[query.key] = result.value;
-      if (result.value.length >= query.limit) limitedSections.push(query.key);
+      if (
+        result.value.length >= query.limit &&
+        !(completeLibrary && (query.key === "lessons" || query.key === "saved"))
+      )
+        limitedSections.push(query.key);
     } else {
       rows[query.key] = [];
       unavailableSections.push(query.key);
     }
   });
   return { rows, unavailableSections, limitedSections };
+}
+
+/** Complete private library state, ordered by stable ID rather than a recent window. */
+async function readCompleteLibraryRows(
+  get: (
+    table: string,
+    params: Record<string, string>
+  ) => Promise<Record<string, unknown>[]>,
+  table: string,
+  params: Record<string, string>
+) {
+  const rows: Record<string, unknown>[] = [];
+  let cursor: string | undefined;
+  for (let page = 0; page < 1000; page++) {
+    const next = await get(table, {
+      ...params,
+      order: "id.asc",
+      limit: "100",
+      ...(cursor ? { id: `gt.${cursor}` } : {})
+    });
+    if (
+      next.some(
+        (row) => typeof row.id !== "string" || (cursor !== undefined && row.id <= cursor)
+      )
+    )
+      throw new Error("Library pagination could not be verified.");
+    rows.push(...next);
+    if (next.length < 100) return rows;
+    cursor = next.at(-1)!.id as string;
+  }
+  throw new Error("Library is too large to load completely.");
 }

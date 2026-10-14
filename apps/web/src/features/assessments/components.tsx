@@ -1,4 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
+import { Breadcrumbs } from "@industrial-learn/design-system";
+import { ImageBand, WorkspaceEmptyState } from "../page-layout/components";
+import { frontendAssets } from "../app-shell/assets";
 import type {
   Assessment,
   Choice,
@@ -33,24 +37,31 @@ type VisibleFaultQuestion = DeliveredQuestion & { faultOptions: Choice[] };
 export function AssessmentList({ assessments }: { assessments: AssessmentSummary[] }) {
   return (
     <div className="assessment-shell">
-      <header className="assessment-hero">
-        <p className="eyebrow">Authenticated assessments</p>
-        <h1>Assessments</h1>
-        <p>
-          Start, resume, submit, and review graded checks. Scores are calculated on the
-          trusted server after submission.
-        </p>
-      </header>
+      <ImageBand
+        image="future"
+        title="Assessments"
+        eyebrow="Put your knowledge to work"
+        description="Check your understanding, revisit your results and build evidence of your engineering skills."
+        headingLevel={1}
+        priority
+      />
 
       {assessments.length === 0 ? (
-        <section className="assessment-card">
-          <h2>No assessments available</h2>
+        <WorkspaceEmptyState title="No assessments available" kind="learning">
           <p>Published and engineering-reviewed assessments will appear here.</p>
-        </section>
+        </WorkspaceEmptyState>
       ) : (
         <section className="assessment-grid" aria-label="Available assessments">
           {assessments.map((assessment) => (
             <article className="assessment-card" key={assessment.slug}>
+              {assessment.slug === "basic-fluid-pressure-check" ? (
+                <Image
+                  {...frontendAssets.pressureWater.image}
+                  className="curriculum-cover"
+                  alt=""
+                  sizes="(max-width: 700px) 100vw, 480px"
+                />
+              ) : null}
               <div className="assessment-card__meta">
                 <span>{assessment.moduleTitle}</span>
                 <span>{assessment.estimatedMinutes} min</span>
@@ -252,6 +263,9 @@ export function AssessmentReviewView({ model }: { model: ReviewPageModel }) {
         <Link className="button button--secondary" href="/dashboard">
           View dashboard
         </Link>
+        <Link className="button button--secondary" href="/my-learning">
+          Back to My Learning
+        </Link>
       </section>
 
       <section className="assessment-review-list" aria-label="Question review">
@@ -271,14 +285,18 @@ export function AssessmentReviewView({ model }: { model: ReviewPageModel }) {
   );
 }
 
-export function AssessmentNotFound({ title = "Assessment unavailable" }) {
+export function AssessmentNotFound({
+  title = "Assessment unavailable",
+  historical = false
+}) {
   return (
     <div className="assessment-shell">
       <section className="assessment-card">
         <h1>{title}</h1>
         <p>
-          The assessment was not found, is unpublished, or is not available to this
-          account.
+          {historical
+            ? "This review is unavailable to this account or its exact historical content cannot be verified. Original responses, scores and competency records have not been changed."
+            : "The assessment was not found, is unpublished, or is not available to this account."}
         </p>
         <Link className="button button--primary" href="/assessments">
           Back to assessments
@@ -291,13 +309,21 @@ export function AssessmentNotFound({ title = "Assessment unavailable" }) {
 function AssessmentHeader({ summary }: { summary: AssessmentSummary }) {
   return (
     <header className="assessment-hero">
+      <Breadcrumbs
+        items={[
+          { href: "/assessments", label: "Assessments" },
+          { href: `/assessments/${summary.slug}`, label: summary.title }
+        ]}
+      />
       <p className="eyebrow">{summary.moduleTitle}</p>
       <h1>{summary.title}</h1>
       <p>{summary.description}</p>
       <dl className="assessment-facts">
         <div>
           <dt>Lesson</dt>
-          <dd>{summary.lessonTitle}</dd>
+          <dd>
+            <Link href={`/lessons/${summary.lessonSlug}`}>{summary.lessonTitle}</Link>
+          </dd>
         </div>
         <div>
           <dt>Duration</dt>

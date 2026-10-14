@@ -1,9 +1,12 @@
 import Link from "next/link";
+import Image from "next/image";
+import { ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 import { Alert, Input } from "@industrial-learn/design-system";
 
 import { AuthSubmitButton } from "./auth-submit-button";
 import { PasswordField } from "./password-field";
+import { frontendAssets } from "../app-shell/assets";
 
 export function AuthPageShell({
   children,
@@ -20,22 +23,29 @@ export function AuthPageShell({
 }) {
   return (
     <section className="auth-shell" aria-labelledby="auth-title">
-      <div className="section-heading">
-        <p className="eyebrow">Secure access</p>
-        <h1 id="auth-title">{title}</h1>
-        <p>{description}</p>
+      <div className="auth-art" aria-hidden="true">
+        <Image {...frontendAssets.future.image} alt="" sizes="540px" />
       </div>
-      {error ? (
-        <Alert title="Authentication error" tone="fault">
-          {error}
-        </Alert>
-      ) : null}
-      {status ? (
-        <Alert title="Authentication status" tone="info">
-          {status}
-        </Alert>
-      ) : null}
-      {children}
+      <div className="auth-content">
+        <div className="section-heading">
+          <p className="eyebrow auth-eyebrow">
+            <ShieldCheck size={18} aria-hidden="true" /> Secure access
+          </p>
+          <h1 id="auth-title">{title}</h1>
+          <p>{description}</p>
+        </div>
+        {error ? (
+          <Alert title="Authentication error" tone="fault">
+            {error}
+          </Alert>
+        ) : null}
+        {status ? (
+          <Alert title="Authentication status" tone="info">
+            {status}
+          </Alert>
+        ) : null}
+        {children}
+      </div>
     </section>
   );
 }

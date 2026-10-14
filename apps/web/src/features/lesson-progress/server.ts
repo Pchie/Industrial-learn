@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getServerEnv } from "@industrial-learn/env";
+import { getBackendMode, getServerEnv } from "@industrial-learn/env";
 
 import type { AuthenticatedSession } from "../auth/session-core";
 import { recordLocalLessonProgress } from "../student-dashboard/local-dashboard-store";
@@ -61,8 +61,5 @@ export async function recordBasicPressureActivityProgress(session: Authenticated
 }
 
 function isLocalProgressMode() {
-  return (
-    process.env.INDUSTRIAL_LEARN_AUTH_MODE === "local" &&
-    process.env.INDUSTRIAL_LEARN_E2E === "true"
-  );
+  return getBackendMode() === "local";
 }

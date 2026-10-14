@@ -1,5 +1,7 @@
 import { Badge, Breadcrumbs } from "@industrial-learn/design-system";
 import { getServerEnv } from "@industrial-learn/env";
+import Link from "next/link";
+import { PageHeading } from "@/features/page-layout/components";
 
 import { requireAuthenticatedUser } from "@/features/auth/server";
 import {
@@ -20,11 +22,11 @@ export default async function AccountAccessPage() {
           { href: "/account/access", label: "Account access" }
         ]}
       />
-      <header className="operational-header">
-        <p className="eyebrow">Profile and permissions</p>
-        <h1>Account access</h1>
-        <p>Review the roles and workspaces resolved by the trusted server session.</p>
-      </header>
+      <PageHeading
+        title="Account access"
+        eyebrow="Profile and permissions"
+        description="Your identity, assigned roles and authorised workspaces."
+      />
       <section className="management-section" aria-labelledby="identity-title">
         <h2 id="identity-title">Identity</h2>
         <dl className="definition-grid">
@@ -66,9 +68,11 @@ export default async function AccountAccessPage() {
       </section>
       <section className="management-section" aria-labelledby="workspaces-title">
         <h2 id="workspaces-title">Authorised workspaces</h2>
-        <ul>
+        <ul className="workspace-link-list">
           {availableWorkspaces(session).map((workspace) => (
-            <li key={`${workspace.key}-${workspace.href}`}>{workspace.label}</li>
+            <li key={`${workspace.key}-${workspace.href}`}>
+              <Link href={workspace.href}>{workspace.label}</Link>
+            </li>
           ))}
         </ul>
       </section>

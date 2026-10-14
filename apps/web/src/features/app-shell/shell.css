@@ -131,12 +131,12 @@
   height: 126px;
   object-fit: cover;
   object-position: center 43%;
-  border-radius: 8px 8px 0 0;
+  border-radius: 14px 14px 0 0;
 }
 .study-support > div {
   border: var(--il-border-subtle);
   border-top: 0;
-  border-radius: 0 0 8px 8px;
+  border-radius: 0 0 14px 14px;
   background: var(--il-color-bg-surface);
   padding: 14px 16px;
 }
@@ -620,4 +620,220 @@
   .app-shell > .main-content {
     padding: 0;
   }
+}
+
+/* Shared support and activity feedback, including small-screen access. */
+.shell-support-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 7px;
+  background: linear-gradient(110deg, #00708a, #007c88);
+  color: white;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.shell-help-button {
+  display: grid;
+  place-items: center;
+  border: var(--il-border-subtle);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background: var(--il-color-bg-surface);
+  color: var(--il-color-action-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.study-dialog {
+  width: min(480px, calc(100vw - 32px));
+  max-height: calc(100dvh - 40px);
+  overflow: auto;
+  padding: 28px;
+  border: var(--il-border-subtle);
+  border-radius: 20px;
+  background: var(--il-color-bg-surface);
+  color: var(--il-color-text-primary);
+  box-shadow: var(--il-shadow-overlay);
+}
+.study-dialog::backdrop {
+  background: rgb(9 23 54 / 38%);
+  backdrop-filter: blur(4px);
+}
+.study-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.study-dialog-header h2 {
+  font-size: 20px;
+  margin: 0;
+}
+.study-dialog-header button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  color: inherit;
+  background: var(--il-color-bg-muted);
+  cursor: pointer;
+}
+.study-dialog p {
+  color: var(--il-color-text-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.study-dialog nav {
+  display: grid;
+  gap: 10px;
+  margin: 20px 0;
+}
+.study-dialog nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  min-height: 48px;
+  border: var(--il-border-subtle);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--il-color-action-primary);
+  background: var(--il-color-bg-page);
+  font-size: 14px;
+}
+.study-dialog nav a:hover {
+  background: var(--il-color-hover);
+}
+.study-dialog form {
+  display: grid;
+  gap: 10px;
+}
+.study-dialog label {
+  font-size: 13px;
+  font-weight: 600;
+}
+.study-dialog input {
+  width: 100%;
+  min-height: 44px;
+  border: var(--il-border-subtle);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font: inherit;
+  background: var(--il-color-bg-surface);
+  color: inherit;
+}
+.dashboard-sync {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  color: var(--il-color-text-secondary);
+  font-size: 12px;
+  min-height: 32px;
+}
+.dashboard-sync button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 10px;
+  border: var(--il-border-subtle);
+  border-radius: 8px;
+  background: var(--il-color-bg-surface);
+  color: var(--il-color-action-primary);
+  font: inherit;
+  cursor: pointer;
+}
+.dashboard-sync button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .study-dialog[open] {
+    animation: support-enter 180ms ease-out;
+  }
+  .shell-support-button,
+  .shell-help-button {
+    transition:
+      transform 160ms ease,
+      box-shadow 160ms ease;
+  }
+  .shell-support-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgb(0 126 152 / 18%);
+  }
+  @keyframes support-enter {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+@media (max-width: 600px) {
+  .shell-account-controls {
+    gap: 8px;
+  }
+  .study-dialog {
+    padding: 20px;
+  }
+}
+.shell-account-pending {
+  color: var(--il-color-text-secondary);
+  font-size: 12px;
+}
+.lesson-workspace-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.save-lesson {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+}
+.save-lesson > span {
+  font-size: 12px;
+  max-width: 32ch;
+}
+.save-lesson > span:empty {
+  display: none;
+}
+
+/* Hide previously verified content synchronously during identity transitions. */
+html[data-account-state="checking"] [data-account-boundary],
+html[data-account-state="unavailable"] [data-account-boundary],
+[data-account-boundary][hidden] {
+  display: none !important;
+}
+.account-transition {
+  padding: 2rem;
+  display: grid;
+  gap: 1rem;
+}
+.local-preview-notice {
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.75rem;
+  border: var(--il-border-subtle);
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+}
+/* The dashboard welcome and design-reference route contain their own notices. */
+.main-content:has([data-reference-demo]) .local-preview-notice,
+.main-content:has([data-dashboard-local-preview]) .local-preview-notice {
+  display: none;
 }

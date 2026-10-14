@@ -14,7 +14,7 @@ const ownerAreas = [
   ["Simulation registry", "/simulations"],
   ["Publication records", "/review"],
   ["Audit log", "/admin/users#access-audit-title"],
-  ["System status", "/api/health"]
+  ["System status", "/api/health/ready"]
 ] as const;
 
 export default async function OwnerPage() {

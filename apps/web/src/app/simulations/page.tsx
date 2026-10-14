@@ -7,5 +7,5 @@ export default async function SimulationsPage() {
   const session = auth.ok && auth.value.roles.includes("student") ? auth.value : null;
   const model = await loadSimulationLabModel(session);
 
-  return <SimulationLab model={model} />;
+  return <SimulationLab model={model} accountSignedIn={auth.ok} />;
 }

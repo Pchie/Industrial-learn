@@ -315,6 +315,13 @@ async function resolveSupabaseProfile(
     return createSupabaseProfile(env, authUser);
   }
 
+  if (
+    profileRow.id !== authUser.authUserId ||
+    !(profileRow.deleted_at === null || typeof profileRow.deleted_at === "string")
+  ) {
+    return fail<AuthProfile>("access_denied");
+  }
+
   if (profileRow.deleted_at) {
     return fail<AuthProfile>("disabled_account");
   }

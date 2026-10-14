@@ -1,0 +1,19 @@
+{
+  "captured_at": "2026-10-13T10:47:50.137132+00:00",
+  "node": "v24.17.0",
+  "npm": "11.13.0",
+  "system": "Darwin",
+  "release": "24.6.0",
+  "architecture": "x86_64",
+  "lockfile_sha256": "b7970d0d3c88b18d75269ba3961e923e198be860c0490185e96c7306b28bfb10",
+  "resolved_versions": {
+    "next": "16.3.3",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "typescript": "6.0.3",
+    "vitest": "4.1.10",
+    "@playwright/test": "1.61.1",
+    "@supabase/supabase-js": "2.110.7",
+    "prettier": "3.9.6"
+  }
+}

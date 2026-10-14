@@ -120,7 +120,7 @@ const signupVariableNames = [
 export function getServerEnv(input: NodeJS.ProcessEnv = process.env): IndustrialLearnEnv {
   const parsed = envSchema.parse(input);
 
-  return {
+  const env: IndustrialLearnEnv = {
     nodeEnv: parsed.NODE_ENV,
     appEnv: parsed.NEXT_PUBLIC_APP_ENV,
     appBaseUrl: parsed.APP_BASE_URL,
@@ -137,6 +137,28 @@ export function getServerEnv(input: NodeJS.ProcessEnv = process.env): Industrial
       dbUrl: parsed.SUPABASE_DB_URL
     }
   };
+  getBackendMode(env);
+  return env;
+}
+
+/** One server-side decision for authentication and every persistence adapter. */
+export function getBackendMode(
+  env: IndustrialLearnEnv = getServerEnv()
+): "local" | "supabase" {
+  if (env.authMode === "local") {
+    validateLocalTestAuthSafety(env);
+    if (
+      Object.entries(env.supabase).some(
+        ([key, value]) => key !== "isConfigured" && Boolean(value)
+      )
+    ) {
+      throw new Error("Local fixtures cannot be combined with Supabase configuration.");
+    }
+    return "local";
+  }
+  if (env.isE2E)
+    throw new Error("Supabase mode cannot be combined with local E2E fixtures.");
+  return "supabase";
 }
 
 export function getPublicEnv(input: NodeJS.ProcessEnv = process.env) {

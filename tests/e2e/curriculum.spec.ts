@@ -10,7 +10,9 @@ test("browses the main curriculum catalogue", async ({ page }) => {
   await expect(
     page.getByRole("link", { name: "Browse FUTURE ENGINEERING" })
   ).toBeVisible();
-  await expect(page.getByText("Progress appears after sign in")).toBeVisible();
+  await expect(
+    page.getByText("Find your saved learning and progress in your student dashboard.")
+  ).toBeVisible();
   const lessonCard = page.getByRole("article").filter({
     has: page.getByRole("heading", { name: "Basic Fluid Pressure" })
   });

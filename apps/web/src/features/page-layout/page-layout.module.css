@@ -1,0 +1,194 @@
+.heading {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.heading h1 {
+  font-size: 26px;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.description {
+  color: var(--il-color-text-secondary);
+  font-size: 14px;
+  line-height: 1.65;
+  margin: 8px 0 0;
+  max-width: 72ch;
+}
+
+.headingActions,
+.bandActions,
+.emptyActions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.imageBand {
+  --il-focus-ring: 3px solid white;
+  background: #123c97;
+  border-radius: 14px;
+  color: #fff;
+  isolation: isolate;
+  min-height: 224px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bandImage {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  object-position: center right;
+  position: absolute;
+  width: 100%;
+  z-index: -2;
+}
+
+.imageBand::before {
+  background: linear-gradient(
+    90deg,
+    #103b9cf5 0%,
+    #103b9ced 30%,
+    #103b9c66 60%,
+    transparent 80%
+  );
+  content: "";
+  inset: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.bandCopy {
+  display: grid;
+  gap: 12px;
+  padding: 28px 32px;
+  width: min(58%, 650px);
+}
+
+.imageBand .bandCopy h1,
+.imageBand .bandCopy h2 {
+  color: #fff;
+  font-size: 26px;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.imageBand .bandCopy p {
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 48ch;
+}
+
+.imageBand .bandCopy .bandEyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.pageLink {
+  align-items: center;
+  background: var(--il-color-brand-accent);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--il-color-brand-on-accent);
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 650;
+  gap: 12px;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: 10px 16px;
+  text-decoration: none;
+}
+
+.pageLink svg {
+  flex: 0 0 auto;
+}
+
+.bandActions .pageLink {
+  background: #fff;
+  color: #1245b5;
+}
+
+.pageLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.emptyState {
+  align-content: start;
+  border-block: var(--il-border-subtle);
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.emptyIcon {
+  align-items: center;
+  background: var(--il-color-nav-active-bg);
+  border-radius: 14px;
+  color: var(--il-color-brand-accent-strong);
+  display: flex;
+  height: 56px;
+  justify-content: center;
+  width: 56px;
+}
+
+.emptyState h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.emptyCopy {
+  color: var(--il-color-text-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 56ch;
+}
+
+.emptyCopy p {
+  margin: 0;
+}
+
+@media (max-width: 700px) {
+  .heading h1,
+  .imageBand .bandCopy h1,
+  .imageBand .bandCopy h2 {
+    font-size: 23px;
+  }
+
+  .imageBand {
+    min-height: 260px;
+  }
+
+  .imageBand::before {
+    background: linear-gradient(90deg, #103b9cf5, #103b9cdc 65%, #103b9c80);
+  }
+
+  .bandCopy {
+    padding: 24px;
+    width: 86%;
+  }
+
+  .emptyState {
+    padding: 28px 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .bandCopy {
+    width: 100%;
+    padding: 20px;
+  }
+}

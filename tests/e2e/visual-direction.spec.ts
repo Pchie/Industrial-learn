@@ -44,9 +44,7 @@ test("reference-led foundation keeps a blue visual anchor and stable interaction
   await expect(action).toHaveCSS("outline-width", "3px");
   await expect(action).toHaveCSS("outline-color", "rgb(255, 255, 255)");
   await expect(
-    page.getByText(
-      /Learning Streak|72% Complete|Centrifugal Pump Fundamentals|Chat with AI Mentor/
-    )
+    page.getByText(/72% Complete|Centrifugal Pump Fundamentals|Chat with AI Mentor/)
   ).toHaveCount(0);
   await page.screenshot({
     path: testInfo.outputPath("foundation-light.png"),

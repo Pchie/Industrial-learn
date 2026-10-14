@@ -1,8 +1,10 @@
+import { PageLoading } from "@/features/page-layout/loading";
+
 export default function LessonLoading() {
   return (
-    <section className="curriculum-state" aria-live="polite">
-      <h1>Loading lesson</h1>
-      <p>Preparing the structured lesson view.</p>
-    </section>
+    <PageLoading
+      title="Loading lesson"
+      description="Preparing your lesson and visual activity."
+    />
   );
 }

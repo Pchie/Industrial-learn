@@ -1,7 +1,7 @@
 "use server";
 
 import { createSupabaseServerClient } from "@industrial-learn/database";
-import { getServerEnv } from "@industrial-learn/env";
+import { getBackendMode, getServerEnv } from "@industrial-learn/env";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -116,8 +116,5 @@ function reviewUrl(slug: string, result: string) {
 }
 
 function isLocalGovernanceMode() {
-  return (
-    process.env.INDUSTRIAL_LEARN_AUTH_MODE === "local" &&
-    process.env.INDUSTRIAL_LEARN_E2E === "true"
-  );
+  return getBackendMode() === "local";
 }

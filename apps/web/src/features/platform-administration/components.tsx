@@ -71,6 +71,12 @@ export function UserRoleManagement({
 
   return (
     <div className="management-stack">
+      <nav className="management-navigation" aria-label="Management sections">
+        <a href="#managed-users-title">Users and roles</a>
+        <a href="#invite-user-title">Invite a role holder</a>
+        <a href="#review-assignment-title">Review assignments</a>
+        <a href="#access-audit-title">Access audit</a>
+      </nav>
       {success ? (
         <Alert title={success.title} tone="normal">
           {success.message}
@@ -94,7 +100,10 @@ export function UserRoleManagement({
           Invitations may create Lecturer, Content Author, or Engineering Reviewer access.
           Owner and administrator access must be assigned separately.
         </p>
-        <form action={inviteRoleHolderAction} className="management-form">
+        <form
+          action={inviteRoleHolderAction}
+          className="management-form management-form--invite"
+        >
           <label>
             Display name
             <input name="displayName" required type="text" />

@@ -70,7 +70,7 @@ test("sidebar collapses persistently and routes share one frame", async ({ page 
   expect((await page.locator(".app-sidebar").boundingBox())!.width).toBe(80);
   const nav = page.getByRole("navigation", { name: "Primary navigation", exact: true });
   await nav.getByRole("link", { name: "My Learning", exact: true }).click();
-  await expect(page).toHaveURL(/\/learn$/);
+  await expect(page).toHaveURL(/\/my-learning$/);
   await expect(
     nav.getByRole("link", { name: "My Learning", exact: true })
   ).toHaveAttribute("aria-current", "page");

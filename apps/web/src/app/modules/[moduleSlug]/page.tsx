@@ -66,7 +66,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
       <section className="curriculum-section" aria-labelledby="module-summary-title">
         <div className="section-heading">
           <p className="eyebrow">Module summary</p>
-          <h2 id="module-summary-title">What students can see now</h2>
+          <h2 id="module-summary-title">At a glance</h2>
         </div>
         <dl className="curriculum-meta curriculum-meta--wide">
           <div>
@@ -93,7 +93,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
         <div className="section-heading">
           <p className="eyebrow">Lessons</p>
           <h2 id="lessons-title">Available and locked lessons</h2>
-          <p>Lesson content and simulations are not built in this task.</p>
+          <p>Start an available lesson or review the prerequisites for your next step.</p>
         </div>
         <LessonList module={record.module} />
       </section>

@@ -14,8 +14,34 @@
   overflow-wrap: anywhere;
 }
 
+.reviewDetail > section {
+  border: 0;
+  border-top: var(--il-border-subtle);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 24px 0;
+}
+
+.reviewDetail > section > dl {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+}
+
+.reviewDetail dt {
+  color: var(--il-color-text-secondary);
+  font-size: 12px;
+}
+.reviewDetail dd {
+  margin: 6px 0 0;
+  font-size: 14px;
+}
+
 .decisionForm fieldset {
   margin: 0;
+  border: var(--il-border-subtle);
+  border-radius: 6px;
+  padding: 16px;
 }
 
 .decisionForm select,
@@ -46,6 +72,13 @@
   border-radius: var(--il-radius-control);
   min-height: var(--il-size-control-min);
   padding: var(--il-space-2) var(--il-space-3);
+  color: var(--il-color-brand-accent-strong);
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+}
+.sectionNavigation a:hover {
+  background: var(--il-color-nav-active-bg);
 }
 
 .evidenceGrid {

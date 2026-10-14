@@ -1,7 +1,11 @@
 import "server-only";
 
 import { unstable_noStore as noStore } from "next/cache";
-import { getServerEnv, type IndustrialLearnEnv } from "@industrial-learn/env";
+import {
+  getBackendMode,
+  getServerEnv,
+  type IndustrialLearnEnv
+} from "@industrial-learn/env";
 import {
   createAttemptPersistenceServices,
   type AssessmentAttemptRepository,
@@ -24,6 +28,7 @@ import type {
 } from "@industrial-learn/assessment-core";
 import { STUDENT_PUBLICATION_REQUIREMENTS } from "@industrial-learn/content-review-workflow/publication-visibility";
 
+import { resolveHistoricalAssessment } from "./historical-version";
 import type { AuthenticatedSession } from "../auth/session-core";
 import { createAssessmentFromCatalog, getAssessmentCatalogBySlug } from "./catalog";
 import {
@@ -40,6 +45,7 @@ export type AssessmentSummary = {
   title: string;
   description: string;
   lessonTitle: string;
+  lessonSlug: string;
   moduleTitle: string;
   estimatedMinutes: number;
   sourceIds: string[];
@@ -167,7 +173,9 @@ export async function startAssessmentForStudent(
   }
 
   const activeAttempt = overview.attempts.find(
-    (attempt) => attempt.status === "in_progress"
+    (attempt) =>
+      attempt.status === "in_progress" &&
+      attempt.contentVersion === overview.contentVersion
   );
   if (activeAttempt) {
     return activeAttempt;
@@ -197,7 +205,11 @@ export async function loadAssessmentAttemptPage(
     attemptId
   });
 
-  if (!attempt || attempt.assessmentId !== overview.assessment.id) {
+  if (
+    !attempt ||
+    attempt.assessmentId !== overview.assessment.id ||
+    attempt.contentVersion !== overview.contentVersion
+  ) {
     return null;
   }
 
@@ -252,11 +264,7 @@ export async function loadCompletedAssessmentReview(
   attemptId: string
 ): Promise<ReviewPageModel | null> {
   noStore();
-  const overview = await loadAssessmentOverview(session, slug);
-  if (!overview) {
-    return null;
-  }
-
+  // Read the owned completion first; reviewing is separate from current launch.
   const { services } = createPersistenceForSession();
   const attempt = await services
     .reviewCompletedAssessmentAttempt(callerContext(session), {
@@ -264,18 +272,52 @@ export async function loadCompletedAssessmentReview(
       attemptId
     })
     .catch(() => null);
-
-  if (
-    !attempt ||
-    attempt.assessmentId !== overview.assessment.id ||
-    !attempt.scoringSummary
-  ) {
-    return null;
+  if (!attempt || attempt.status !== "graded" || !attempt.scoringSummary) return null;
+  const entry = getAssessmentCatalogBySlug(slug);
+  // Only v2 currently has an installed, hash-pinned artifact. Older content is
+  // unavailable until verified original evidence is added; never substitute v2.
+  if (!entry || entry.contentVersion !== attempt.contentVersion) return null;
+  if (isLocalAssessmentMode()) {
+    if (attempt.assessmentId !== entry.localAssessmentId) return null;
+  } else {
+    const client = createServiceRestClient(getServerEnv());
+    const versions = await client.get<{
+      snapshot: Record<string, unknown>;
+      published_at: string | null;
+    }>("content_versions", {
+      entity_table: "eq.assessments",
+      entity_id: `eq.${attempt.assessmentId}`,
+      version: `eq.${attempt.contentVersion}`,
+      select: "snapshot,published_at",
+      limit: "2"
+    });
+    const version = versions[0];
+    if (
+      versions.length !== 1 ||
+      !version?.published_at ||
+      version.snapshot.id !== entry.localAssessmentId ||
+      version.snapshot.slug !== entry.slug ||
+      String(version.snapshot.version) !== String(attempt.contentVersion) ||
+      version.snapshot.artifactSha256 !== entry.artifactSha256
+    )
+      return null;
   }
-
+  const assessment = createAssessmentFromCatalog(entry, { id: attempt.assessmentId });
+  const resolved = resolveHistoricalAssessment(session.profile.id, attempt, [
+    {
+      assessmentId: attempt.assessmentId,
+      contentVersion: entry.contentVersion,
+      artifactSha256: entry.artifactSha256,
+      assessment
+    }
+  ]);
+  if (!resolved) return null;
   return {
-    summary: overview,
-    assessment: overview.assessment,
+    summary: {
+      ...summaryFromAssessment(entry.slug, entry, assessment, attempt),
+      publicationStatus: "Historical review"
+    },
+    assessment: resolved.assessment,
     attempt: { ...attempt, scoringSummary: attempt.scoringSummary }
   };
 }
@@ -318,10 +360,7 @@ function callerFromSession(session: AuthenticatedSession): Caller {
 }
 
 function isLocalAssessmentMode() {
-  return (
-    process.env.INDUSTRIAL_LEARN_AUTH_MODE === "local" &&
-    process.env.INDUSTRIAL_LEARN_E2E === "true"
-  );
+  return getBackendMode() === "local";
 }
 
 function summaryFromAssessment(
@@ -335,6 +374,7 @@ function summaryFromAssessment(
     title: assessment.title,
     description: entry.description,
     lessonTitle: entry.lessonTitle,
+    lessonSlug: entry.lessonSlug,
     moduleTitle: entry.moduleTitle,
     estimatedMinutes: entry.estimatedMinutes,
     sourceIds: assessment.sourceIds,
@@ -356,6 +396,7 @@ function summaryFromRow(
     title: entry.title,
     description: entry.description,
     lessonTitle: entry.lessonTitle,
+    lessonSlug: entry.lessonSlug,
     moduleTitle: entry.moduleTitle,
     estimatedMinutes: entry.estimatedMinutes,
     sourceIds: entry.sourceIds,

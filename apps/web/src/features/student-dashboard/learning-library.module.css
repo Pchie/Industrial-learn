@@ -1,0 +1,222 @@
+.library {
+  display: grid;
+  gap: 28px;
+}
+.shortcuts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.shortcuts a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid var(--il-color-border-subtle);
+  border-radius: 16px;
+  background: var(--il-color-bg-surface);
+  text-decoration: none;
+}
+.shortcuts a > svg:first-child {
+  color: var(--il-color-action-primary);
+}
+.shortcuts a > svg {
+  width: 20px;
+  flex-shrink: 0;
+}
+.shortcuts span {
+  flex: 1;
+  font-weight: 650;
+}
+.shortcuts small,
+.results small {
+  display: block;
+  color: var(--il-color-text-secondary);
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: 5px;
+}
+.section {
+  min-width: 0;
+  display: grid;
+  gap: 18px;
+}
+.sectionHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.sectionHeading h2 {
+  margin: 0;
+  font-size: 22px;
+}
+.sectionHeading a,
+.results a,
+.section > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tabs a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--il-color-border-subtle);
+  border-radius: 10px;
+  text-decoration: none;
+  background: var(--il-color-bg-surface);
+}
+.tabs a[aria-current] {
+  color: var(--il-color-action-primary);
+  border-color: currentColor;
+  font-weight: 650;
+}
+.tabs span {
+  font-size: 12px;
+}
+.search {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--il-color-border-subtle);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--il-color-bg-surface);
+  max-width: 100%;
+}
+.search input {
+  border: 0;
+  padding: 10px 12px;
+  min-width: 0;
+  width: 210px;
+  background: transparent;
+  color: var(--il-color-text-primary);
+}
+.search button {
+  border: 0;
+  background: transparent;
+  color: var(--il-color-text-primary);
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.card {
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid var(--il-color-border-subtle);
+  background: var(--il-color-bg-surface);
+}
+.card > a {
+  display: block;
+}
+.card img {
+  display: block;
+  width: 100%;
+  height: 165px;
+  object-fit: cover;
+}
+.cardBody {
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+}
+.cardMeta {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--il-color-text-secondary);
+}
+.cardMeta span:first-child {
+  color: var(--il-color-action-primary);
+  font-weight: 650;
+}
+.card h3 {
+  font-size: 20px;
+  margin: 0;
+}
+.card h3 a {
+  color: var(--il-color-text-primary);
+  text-decoration: none;
+}
+.card p {
+  margin: 0;
+  color: var(--il-color-text-secondary);
+}
+.cardActions {
+  display: flex;
+  align-items: start;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.results {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+.results li {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  border: 1px solid var(--il-color-border-subtle);
+  padding: 18px;
+  border-radius: 12px;
+  background: var(--il-color-bg-surface);
+}
+.results li > div {
+  flex: 1;
+}
+@media (max-width: 850px) {
+  .shortcuts {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .filters {
+    align-items: stretch;
+  }
+  .search {
+    width: 100%;
+  }
+  .search input {
+    flex: 1;
+  }
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+  .cardBody {
+    padding: 18px;
+  }
+}
