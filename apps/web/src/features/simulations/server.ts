@@ -12,7 +12,11 @@ import {
   type PersistenceAttemptStatus,
   type SimulationAttemptRepository
 } from "@industrial-learn/database";
-import { getServerEnv, type IndustrialLearnEnv } from "@industrial-learn/env";
+import {
+  getBackendMode,
+  getServerEnv,
+  type IndustrialLearnEnv
+} from "@industrial-learn/env";
 import {
   getSimulation,
   type Measurement,
@@ -20,7 +24,6 @@ import {
   type SimulationState
 } from "@industrial-learn/simulation-engine";
 import type { CompetencyLevel } from "@industrial-learn/assessment-core";
-import { STUDENT_PUBLICATION_REQUIREMENTS } from "@industrial-learn/content-review-workflow/publication-visibility";
 
 import type { AuthenticatedSession } from "../auth/session-core";
 import { loadStudentDashboardData } from "../student-dashboard/server-data";
@@ -430,10 +433,7 @@ function callerFromSession(session: AuthenticatedSession): Caller {
 }
 
 function isLocalSimulationMode() {
-  return (
-    process.env.INDUSTRIAL_LEARN_AUTH_MODE === "local" &&
-    process.env.INDUSTRIAL_LEARN_E2E === "true"
-  );
+  return getBackendMode() === "local";
 }
 
 function summaryFromDefinition(
@@ -611,15 +611,12 @@ async function listSupabaseSimulationAttempts(input: {
 }
 
 async function getSupabaseSimulationRowBySlug(slug: string) {
-  const env = getServerEnv();
-  const client = createServiceRestClient(env);
-  const rows = await client.get<SimulationRow>("simulations", {
-    slug: `eq.${slug}`,
-    publication_status: `eq.${STUDENT_PUBLICATION_REQUIREMENTS.publicationStatus}`,
-    technical_review_status: `eq.${STUDENT_PUBLICATION_REQUIREMENTS.reviewStatus}`,
-    limit: "1"
-  });
-  return rows[0] ?? null;
+  const entry = getPublicSimulationCatalogBySlug(slug);
+  if (!entry) return null;
+  return getSupabaseSimulationRowForDefinition(
+    createServiceRestClient(getServerEnv()),
+    entry.definition.simulationId
+  );
 }
 
 async function getSupabaseSimulationRowForDefinition(
@@ -627,16 +624,14 @@ async function getSupabaseSimulationRowForDefinition(
   simulationId: string
 ) {
   const entry = getPublicSimulationCatalogById(simulationId);
-  if (!entry) {
-    return null;
-  }
-  const rows = await client.get<SimulationRow>("simulations", {
-    slug: `eq.${entry.slug}`,
-    publication_status: `eq.${STUDENT_PUBLICATION_REQUIREMENTS.publicationStatus}`,
-    technical_review_status: `eq.${STUDENT_PUBLICATION_REQUIREMENTS.reviewStatus}`,
-    limit: "1"
+  if (!entry) return null;
+  // Current registered engines are version 1. Never bind them to another DB version.
+  const rows = await client.rpc<SimulationRow>("resolve_published_simulation", {
+    p_slug: entry.slug,
+    p_version: 1
   });
-  return rows[0] ?? null;
+  const row = rows[0];
+  return rows.length === 1 && row?.slug === entry.slug && row.version === 1 ? row : null;
 }
 
 async function engineIdForSimulationRow(

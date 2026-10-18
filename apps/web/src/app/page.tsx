@@ -3,6 +3,7 @@ import { ArrowRight, BookOpen, Compass, FlaskConical } from "lucide-react";
 import { getPublicLessons } from "@/features/lesson-engine/data";
 import { getCurriculum } from "@/features/curriculum/data";
 import { PublishedLessonSection, SchoolCard } from "@/features/curriculum/components";
+import { ImageBand, PageHeading, PageLink } from "@/features/page-layout/components";
 import { BasicFluidPressureScene } from "@/features/basic-fluid-pressure-lesson/basic-fluid-pressure-scene";
 import {
   BASIC_PRESSURE_LIMITS,
@@ -18,13 +19,23 @@ export default function HomePage() {
   });
   return (
     <div className="page-stack home-workbench">
-      <header className="home-heading">
-        <p className="eyebrow">Engineering learning workspace</p>
-        <h1>Industrial Learn</h1>
-        <p>
-          Explore a concept. Test your understanding. Build your engineering foundations.
-        </p>
-      </header>
+      <PageHeading
+        title="Industrial Learn"
+        description="Explore a concept. Test your understanding. Build your engineering foundations."
+        eyebrow="Your engineering workspace"
+      />
+      {pressure ? (
+        <ImageBand
+          image="pressureScene"
+          title={pressure.title}
+          description={pressure.description}
+          eyebrow="Start learning"
+          priority
+        >
+          <PageLink href={`/lessons/${pressure.slug}`}>Open lesson</PageLink>
+          <Link href="/learn/pilot">View learning path</Link>
+        </ImageBand>
+      ) : null}
       <nav className="home-destinations" aria-label="Start learning">
         <Link href="/learn/pilot">
           <BookOpen aria-hidden="true" />
@@ -43,14 +54,8 @@ export default function HomePage() {
         </Link>
       </nav>
       {pressure ? (
-        <section className="home-feature" aria-labelledby="featured-lesson-title">
-          <div className="section-heading">
-            <p className="eyebrow">Start with a visual</p>
-            <h2 id="featured-lesson-title">{pressure.title}</h2>
-            <Link className="curriculum-action" href={`/lessons/${pressure.slug}`}>
-              Open lesson <ArrowRight size={18} aria-hidden="true" />
-            </Link>
-          </div>
+        <details className="home-feature home-visual-preview">
+          <summary>Preview the pressure model</summary>
           <BasicFluidPressureScene
             {...model.input}
             contactSideLength={model.contactSideLength}
@@ -58,7 +63,7 @@ export default function HomePage() {
             pressureIntensity={model.pressureIntensity}
             pressureKPa={model.pressureDisplayConversion?.calculatedValue ?? 0}
           />
-        </section>
+        </details>
       ) : null}
       <PublishedLessonSection lessons={lessons} />
       <section className="curriculum-section" aria-labelledby="schools-title">

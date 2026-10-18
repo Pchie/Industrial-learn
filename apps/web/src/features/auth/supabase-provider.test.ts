@@ -325,3 +325,75 @@ describe("supabase auth provider", () => {
     expect(requests.some((request) => request.url.includes("/rest/v1/"))).toBe(false);
   });
 });
+
+describe("53E-F01 authoritative account status", () => {
+  afterEach(() => vi.unstubAllGlobals());
+  const user = {
+    id: "student-a",
+    email: "synthetic@example.test",
+    email_confirmed_at: "2026-01-01",
+    user_metadata: { role: "platform_owner", account_status: "active" }
+  };
+  it("rechecks a previously issued session and ignores stale claims after suspension", async () => {
+    let disabled = false;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((url: string) => {
+        if (url.includes("/auth/v1/user")) return Promise.resolve(Response.json(user));
+        if (url.includes("/profiles?"))
+          return Promise.resolve(
+            Response.json([
+              {
+                id: user.id,
+                email: user.email,
+                display_name: "Synthetic A",
+                deleted_at: disabled ? "2026-09-11" : null
+              }
+            ])
+          );
+        return Promise.resolve(Response.json([{ roles: { role_key: "student" } }]));
+      })
+    );
+    const provider = createSupabaseAuthProvider(configuredEnv);
+    expect(
+      await provider.resolveSession({ accessToken: "synthetic-token" })
+    ).toMatchObject({ ok: true });
+    disabled = true;
+    expect(
+      await provider.resolveSession({ accessToken: "synthetic-token" })
+    ).toMatchObject({ ok: false, code: "disabled_account" });
+  });
+  it("fails closed if the authoritative status column is absent", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((url: string) =>
+        Promise.resolve(
+          Response.json(
+            url.includes("/auth/")
+              ? user
+              : [{ id: user.id, email: user.email, display_name: "Synthetic A" }]
+          )
+        )
+      )
+    );
+    expect(
+      await createSupabaseAuthProvider(configuredEnv).resolveSession({
+        accessToken: "synthetic-session"
+      })
+    ).toMatchObject({ ok: false });
+  });
+  it("fails closed on status transport failure", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((url: string) => {
+        if (url.includes("/auth/")) return Promise.resolve(Response.json(user));
+        return Promise.reject(new Error("offline"));
+      })
+    );
+    expect(
+      await createSupabaseAuthProvider(configuredEnv).resolveSession({
+        accessToken: "synthetic-session"
+      })
+    ).toMatchObject({ ok: false, code: "network_failure" });
+  });
+});

@@ -7,9 +7,15 @@ import type { GovernanceInterfaceItem, GovernanceInterfaceModel } from "./server
 export function AuthorWorkspace({ model }: { model: GovernanceInterfaceModel }) {
   return (
     <div className="dashboard-list" aria-label="Author governance workspace">
+      {model.dataSource === "unavailable" && (
+        <Alert title="Author workspace unavailable" tone="warning">
+          Live draft loading and editing are not connected in this interface. An empty
+          list does not mean that you have no drafts.
+        </Alert>
+      )}
       <Alert title="Structured draft editor" tone="info">
-        Draft editing uses structured content versions. Published versions are not
-        overwritten in place.
+        Draft editing uses structured content versions. Editing and submission controls
+        are deferred in this interface. Published versions are not overwritten in place.
       </Alert>
       <AuthorSection title="My drafts" items={model.items} />
       <AuthorSection
@@ -30,8 +36,8 @@ export function AuthorWorkspace({ model }: { model: GovernanceInterfaceModel }) 
           <li>Inspect version history</li>
         </ul>
         <p>
-          These controls remain version-gated. This workspace does not expose unrelated
-          student-private records.
+          These planned tools remain unavailable here. This workspace does not expose
+          unrelated student-private records.
         </p>
       </section>
       <ReviewHistory model={model} mode="author" />
@@ -73,6 +79,24 @@ export function ReviewWorkspace({ model }: { model: GovernanceInterfaceModel }) 
           Owner or an administrator can assign an exact content version.
         </Alert>
       ) : null}
+      {!model.error ? (
+        <nav className="governance-summary" aria-label="Review queue summary">
+          {[
+            ["Awaiting review", awaiting.length],
+            ["Assigned to me", assigned.length],
+            ["Changes requested", changesRequested.length],
+            ["Approved", approved.length]
+          ].map(([label, count]) => (
+            <a
+              key={label}
+              href={`#review-${String(label).toLowerCase().replaceAll(" ", "-")}`}
+            >
+              <strong>{count}</strong>
+              <span>{label}</span>
+            </a>
+          ))}
+        </nav>
+      ) : null}
       <ReviewQueueSection items={awaiting} title="Awaiting review" />
       <ReviewQueueSection items={assigned} title="Assigned to me" />
       <ReviewQueueSection items={changesRequested} title="Changes requested" />
@@ -91,7 +115,7 @@ function AuthorSection({
 }) {
   const id = `author-${title.toLowerCase().replaceAll(" ", "-")}`;
   return (
-    <section aria-labelledby={id}>
+    <section className="governance-queue" aria-labelledby={id}>
       <h2 id={id}>{title}</h2>
       {items.length === 0 ? (
         <p>No items in this section.</p>
@@ -111,7 +135,7 @@ function ReviewQueueSection({
 }) {
   const id = `review-${title.toLowerCase().replaceAll(" ", "-")}`;
   return (
-    <section aria-labelledby={id}>
+    <section className="governance-queue" aria-labelledby={id}>
       <h2 id={id}>{title}</h2>
       {items.length === 0 ? (
         <p>No review items in this section.</p>

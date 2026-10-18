@@ -5,24 +5,42 @@ import { ProgressIndicator } from "@industrial-learn/design-system";
 import { SimulationPreview } from "../simulations/simulation-preview";
 import { dismissRecommendationAction } from "./actions";
 import { dashboardDate, type DashboardExperience } from "./experience";
+import { DashboardSync } from "./dashboard-sync";
 import { DashboardOverview } from "./dashboard-overview";
 import { buildDashboardOverview } from "./overview-model";
 import styles from "./dashboard.module.css";
 
 export function StudentDashboard({
   hideRecommendations,
+  localPreview = false,
   model
 }: {
   hideRecommendations: boolean;
+  localPreview?: boolean;
   model: DashboardExperience;
 }) {
   const hasAwards = Object.values(model.awards).some((value) => value > 0);
   return (
-    <div className={styles.dashboard}>
+    <div
+      className={styles.dashboard}
+      data-dashboard-local-preview={localPreview || undefined}
+    >
       <div className={styles.content}>
         <DashboardOverview
           data={buildDashboardOverview(model)}
           hideRecommendations={hideRecommendations}
+          localPreview={localPreview}
+          headerActions={
+            <DashboardSync
+              revision={JSON.stringify([
+                model.learning,
+                model.lessonActivity,
+                model.results,
+                model.simulationActivity,
+                model.awards
+              ])}
+            />
+          }
         />
         <Section title="Current programme" id="current-programme">
           <h3>
@@ -292,7 +310,15 @@ export function StudentDashboard({
             </div>
           )}
         </Section>
-        <Section title="Saved content" id="saved">
+        <Section
+          title="Saved content"
+          id="saved"
+          action={
+            <Link href="/my-learning?view=saved">
+              Manage saved lessons <ArrowRight size={16} aria-hidden="true" />
+            </Link>
+          }
+        >
           {model.savedLessons.length === 0 && (
             <p>No saved lessons yet. Save available lessons as you learn.</p>
           )}

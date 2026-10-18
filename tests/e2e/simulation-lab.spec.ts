@@ -62,11 +62,20 @@ test("authenticated activity does not reintroduce hidden simulations", async ({
   await signIn(page, "active.student@example.test");
   await page.goto("/simulations");
 
-  await expect(page.getByText("Reviewed simulations are being prepared.")).toBeVisible();
+  await expect(page.locator("[data-account-boundary]:visible")).toBeVisible();
+  await expect(
+    page
+      .getByRole("status")
+      .getByText("Reviewed simulations are being prepared.", { exact: true })
+  ).toBeVisible();
   await expect(page.getByText("Hydraulic Cylinder Force", { exact: true })).toHaveCount(
     0
   );
-  await expect(page.getByText("No recent simulations")).toBeVisible();
+  await expect(
+    page
+      .getByRole("complementary", { name: "Recent simulations" })
+      .getByText("No recent simulations")
+  ).toBeVisible();
 });
 
 test("keeps the empty laboratory keyboard accessible on mobile", async ({ page }) => {

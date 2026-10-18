@@ -1,6 +1,10 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getServerEnv, validateLocalTestAuthSafety } from "@industrial-learn/env";
+import {
+  getBackendMode,
+  getServerEnv,
+  validateLocalTestAuthSafety
+} from "@industrial-learn/env";
 
 import { createSupabaseAuthProvider } from "./supabase-provider";
 import { createRecoveryTicket, verifyRecoveryTicket } from "./recovery-ticket";
@@ -32,14 +36,7 @@ function secureCookieOptions() {
 
 export async function getAuthProvider(): Promise<AuthProvider> {
   const env = getServerEnv();
-  const explicitLocalMode = env.authMode === "local";
-
-  if (env.supabase.isConfigured) {
-    return createSupabaseAuthProvider(env);
-  }
-
-  if (explicitLocalMode) {
-    validateLocalTestAuthSafety(env);
+  if (getBackendMode(env) === "local") {
     const { createTestLocalAuthProvider } = await import("./test-local-provider");
     return createTestLocalAuthProvider();
   }

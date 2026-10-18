@@ -12,6 +12,24 @@
   grid-column: 1;
   grid-row: 1;
   margin-bottom: -10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.welcome > div:first-child {
+  min-width: 0;
+}
+.welcomeActions {
+  max-width: 100%;
+}
+.welcomeActions :global(.dashboard-sync) {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.welcomeActions :global(.dashboard-sync) > span:empty {
+  display: none;
 }
 .welcome h1 {
   font-size: 1.375rem;
@@ -90,7 +108,7 @@
   min-height: 290px;
   grid-column: 1;
   grid-row: 2;
-  border-radius: 8px;
+  border-radius: 14px;
   box-shadow: 0 5px 12px rgb(24 61 124 / 13%);
   max-width: 100%;
 }
@@ -262,7 +280,7 @@
   overflow: hidden;
   background: var(--il-color-bg-surface);
   border: var(--il-border-subtle);
-  border-radius: 8px;
+  border-radius: 14px;
 }
 .lessonThumbnail {
   position: relative;
@@ -361,7 +379,7 @@
   padding: 13px 16px;
   min-width: 0;
   border: var(--il-border-subtle);
-  border-radius: 8px;
+  border-radius: 14px;
   box-shadow: 0 2px 8px rgb(20 42 84 / 3%);
 }
 .panelHeading {
@@ -491,7 +509,7 @@
 .statCard,
 .activitySection {
   border: var(--il-border-subtle);
-  border-radius: 8px;
+  border-radius: 14px;
   padding: 15px 18px;
   background: var(--il-color-bg-surface);
   box-shadow: 0 2px 7px rgb(20 42 84 / 4%);
@@ -737,7 +755,7 @@
   min-height: 104px;
   background: #174bd5;
   color: white;
-  border-radius: 8px;
+  border-radius: 14px;
   overflow: hidden;
 }
 .futureBanner > img {
@@ -1270,5 +1288,69 @@
   .textLink,
   .lessonBody h3 :is(a, button) {
     min-height: 44px;
+  }
+}
+
+/* Keep the reference's two-column composition on ordinary laptop displays. */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .content {
+    grid-template-columns: minmax(0, 1fr) 270px;
+    gap: 20px;
+  }
+  .welcome {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .continueSection {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .learningSection {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .lowerPanels {
+    grid-column: 1;
+    grid-row: 4;
+    grid-template-columns: 1fr;
+    margin-right: 0;
+  }
+  .insights {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    grid-template-columns: 1fr;
+    align-content: start;
+  }
+  .futureBanner {
+    grid-column: 1 / -1;
+    grid-row: 5;
+  }
+  .sequence {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .heroContent {
+    width: 70%;
+  }
+  .heroArt::after {
+    background: linear-gradient(90deg, #07308edb, #07308e55);
+  }
+  .learningGrid,
+  .learningSection .sectionHeading {
+    padding-right: 0;
+  }
+  .progressBody {
+    gap: 12px;
+  }
+  .progressRing {
+    width: 94px;
+    height: 94px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .progressTrack > span {
+    transition: width 650ms var(--il-motion-ease);
+  }
+  .statValue strong {
+    animation: enter 400ms var(--il-motion-ease);
   }
 }

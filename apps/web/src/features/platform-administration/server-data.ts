@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createSupabaseServerClient } from "@industrial-learn/database";
-import { getServerEnv } from "@industrial-learn/env";
+import { getBackendMode, getServerEnv } from "@industrial-learn/env";
 
 import type { AppRole, AuthenticatedSession } from "../auth/session-core";
 
@@ -192,10 +192,7 @@ function isAppRole(value: string): value is AppRole {
 }
 
 function isLocalAdministrationMode() {
-  return (
-    process.env.INDUSTRIAL_LEARN_AUTH_MODE === "local" &&
-    process.env.INDUSTRIAL_LEARN_E2E === "true"
-  );
+  return getBackendMode() === "local";
 }
 
 function unavailable(error: string): PlatformAdministrationModel {

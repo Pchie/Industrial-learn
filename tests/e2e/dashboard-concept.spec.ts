@@ -56,8 +56,8 @@ test("hero illustration loads without advertising unapproved equipment lessons",
       name: /Centrifugal Pump|Hydraulic Cylinder|AI Mentor|Achievement/
     })
   ).toHaveCount(0);
-  await expect(page.getByRole("region", { name: "Recorded progress" })).toContainText(
-    "Completed in your loaded records"
+  await expect(page.getByRole("region", { name: "Learning Streak" })).toContainText(
+    "A little learning goes a long way."
   );
   await expect(page.getByRole("region", { name: "Current programme" })).toContainText(
     "Year 1, Semester 1"

@@ -12,6 +12,7 @@ const dismissedRecommendations = new Map<string, Set<string>>();
 const completedAssessmentAttempts = new Map<string, AssessmentAttemptRecord[]>();
 const completedSimulationAttempts = new Map<string, SimulationAttemptRecord[]>();
 const lessonProgressRecords = new Map<string, LessonProgressRecord[]>();
+const savedLessonRecords = new Map<string, SavedLessonRecord[]>();
 
 const baseDate = "2026-07-22T10:00:00.000Z";
 
@@ -20,6 +21,7 @@ export function resetLocalDashboardStoreForTests() {
   completedAssessmentAttempts.clear();
   completedSimulationAttempts.clear();
   lessonProgressRecords.clear();
+  savedLessonRecords.clear();
 }
 
 export function dismissLocalDashboardRecommendation(
@@ -50,6 +52,7 @@ export function loadLocalStudentDashboardData(
         }
       : {}),
     lessonProgress: mergeById(dynamicLessonProgress, seed.lessonProgress),
+    savedLessons: savedLessonRecords.get(profile.id) ?? seed.savedLessons,
     assessmentAttempts: [...dynamicAssessmentAttempts, ...seed.assessmentAttempts],
     simulationAttempts: [...dynamicSimulationAttempts, ...seed.simulationAttempts],
     profile: {
@@ -59,6 +62,33 @@ export function loadLocalStudentDashboardData(
     },
     dismissedRecommendationIds: Array.from(dismissedRecommendations.get(profile.id) ?? [])
   };
+}
+
+export function setLocalSavedLesson(
+  profile: AuthProfile,
+  lessonSlug: string,
+  saved: boolean
+) {
+  const existing = loadLocalStudentDashboardData(profile).savedLessons;
+  const remaining = existing.filter((lesson) => lesson.lessonSlug !== lessonSlug);
+  savedLessonRecords.set(
+    profile.id,
+    saved
+      ? [
+          ...existing.filter((lesson) => lesson.lessonSlug === lessonSlug),
+          ...remaining,
+          ...(!existing.some((lesson) => lesson.lessonSlug === lessonSlug)
+            ? [
+                {
+                  id: `saved-${lessonSlug}`,
+                  lessonSlug,
+                  savedAt: new Date().toISOString()
+                }
+              ]
+            : [])
+        ]
+      : remaining
+  );
 }
 
 export function recordLocalLessonProgress(

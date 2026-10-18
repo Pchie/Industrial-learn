@@ -21,7 +21,7 @@ describe("shared reference presentation", () => {
     const view = buildDashboardOverview(buildDashboardExperience(empty));
     expect(view.demo).toBe(false);
     expect(view.progress.percent).toBeNull();
-    expect(view.metric.value).toBe("--");
+    expect(view.metric.value).toBe("0");
     expect(view.cards).toHaveLength(4);
     expect(
       view.cards.every((card) => card.href.startsWith("/lessons/basic-fluid-pressure"))

@@ -78,7 +78,9 @@ test("unassigned reviewer sees guidance and cannot use the direct review URL", a
 
   await page.goto("/review/basic-fluid-pressure");
   await expect(page).toHaveURL(/review_assignment_required/);
-  await expect(page.getByText(/active exact-version assignment/)).toBeVisible();
+  await expect(
+    page.getByRole("alert").getByText(/active exact-version assignment/)
+  ).toBeVisible();
 });
 
 test("Platform Owner assigns reviewer role and exact Basic Fluid Pressure version", async ({
@@ -136,7 +138,9 @@ test("Platform Owner can inspect and preview but cannot record engineering appro
   }
 
   await page.goto("/review/basic-fluid-pressure");
-  await expect(page.getByText("Inspection access only")).toBeVisible();
+  await expect(
+    page.getByRole("status").getByText("Inspection access only", { exact: true })
+  ).toBeVisible();
   await expect(page.getByRole("radio", { name: "Approve" })).toHaveCount(0);
   await page.getByRole("link", { name: "Preview as Student" }).click();
   await expect(page).toHaveURL(/\/preview\/lessons\/basic-fluid-pressure\?version=0.4.0/);

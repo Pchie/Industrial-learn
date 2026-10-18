@@ -14,6 +14,12 @@ describe("shared shell presentation contract", () => {
     expect(navigationIsActive("/dashboard", "/dashboard", "#saved")).toBe(false);
     expect(navigationIsActive("/dashboard#saved", "/dashboard", "#saved")).toBe(true);
     expect(navigationIsActive("/assessments", "/assessments-extra", "")).toBe(false);
+    expect(navigationIsActive("/my-learning", "/lessons/basic-fluid-pressure", "")).toBe(
+      true
+    );
+    expect(navigationIsActive("/learn", "/programmes/mechanical-foundations", "")).toBe(
+      true
+    );
   });
   it("keeps private navigation marked and unsupported capabilities absent", () => {
     expect(

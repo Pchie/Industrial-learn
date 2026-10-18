@@ -134,8 +134,11 @@ test("allows optional recommendations to be hidden for the current view", async 
   await signIn(page, "active.student@example.test");
   await page.goto("/dashboard?hideRecommendations=1");
 
+  await expect(page.locator("[data-account-boundary]:visible")).toBeVisible();
   await expect(
-    page.getByText("Optional recommendations are hidden for this view.")
+    page
+      .getByRole("region", { name: "Practice", exact: true })
+      .getByText("Optional recommendations are hidden for this view.")
   ).toBeVisible();
   await expect(page.getByRole("link", { name: "Show recommendations" })).toBeVisible();
   await expect(

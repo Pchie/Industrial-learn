@@ -18,6 +18,7 @@ import type {
 } from "./lab-types";
 import { SimulationPreview } from "./simulation-preview";
 import styles from "./simulation-lab.module.css";
+import { ImageBand } from "../page-layout/components";
 
 const modeOptions: Array<{ value: "all" | SimulationMode; label: string }> = [
   { value: "all", label: "All modes" },
@@ -30,7 +31,13 @@ const modeOptions: Array<{ value: "all" | SimulationMode; label: string }> = [
 
 const subscribeToHydration = () => () => undefined;
 
-export function SimulationLab({ model }: { model: SimulationLabModel }) {
+export function SimulationLab({
+  model,
+  accountSignedIn = false
+}: {
+  model: SimulationLabModel;
+  accountSignedIn?: boolean;
+}) {
   const isHydrated = useSyncExternalStore(
     subscribeToHydration,
     () => true,
@@ -60,18 +67,17 @@ export function SimulationLab({ model }: { model: SimulationLabModel }) {
   return (
     <div className={styles.labPage} data-testid="simulation-lab">
       <header className={styles.labHeader}>
-        <div>
-          <p className={styles.kicker}>Engineering workspace</p>
-          <h1>Simulation Lab</h1>
-          <p>
-            Operate engineering systems. Change variables. See the physics. Diagnose
-            problems.
-          </p>
-        </div>
+        <ImageBand
+          image="cylinder"
+          eyebrow="Engineering workspace"
+          title="Simulation Lab"
+          description="Operate engineering systems. Change variables. See the physics. Diagnose problems."
+          headingLevel={1}
+          priority
+        />
         <Input
           autoComplete="off"
           disabled={!isHydrated}
-          helperText="Search names, components, concepts, modules or abbreviations."
           label="Search simulations"
           onChange={(event) => setFilter("query", event.target.value)}
           placeholder="Try pressure, pump, PLC or motor"
@@ -80,6 +86,26 @@ export function SimulationLab({ model }: { model: SimulationLabModel }) {
         />
       </header>
 
+      <div className={styles.mobileDiscipline}>
+        <Select
+          label="Discipline"
+          disabled={!isHydrated}
+          value={filters.discipline}
+          onChange={(event) =>
+            setFilter(
+              "discipline",
+              event.target.value as SimulationDiscoveryFilters["discipline"]
+            )
+          }
+          options={[
+            { value: "all", label: "All disciplines" },
+            ...simulationDisciplines.map((discipline) => ({
+              value: discipline,
+              label: discipline
+            }))
+          ]}
+        />
+      </div>
       <nav aria-label="Simulation disciplines" className={styles.disciplineRail}>
         <button
           aria-pressed={filters.discipline === "all"}
@@ -108,7 +134,7 @@ export function SimulationLab({ model }: { model: SimulationLabModel }) {
         })}
       </nav>
 
-      <StudentActivity model={model} />
+      <StudentActivity model={model} accountSignedIn={accountSignedIn} />
 
       <section
         aria-labelledby="lab-catalogue-heading"
@@ -315,8 +341,25 @@ function SimulationCard({ simulation }: { simulation: SimulationLabCard }) {
   );
 }
 
-function StudentActivity({ model }: { model: SimulationLabModel }) {
+function StudentActivity({
+  model,
+  accountSignedIn
+}: {
+  model: SimulationLabModel;
+  accountSignedIn: boolean;
+}) {
   if (!model.authenticated) {
+    if (accountSignedIn) {
+      return (
+        <aside className={styles.studentStrip} aria-label="Student simulation activity">
+          <div>
+            <strong>Student laboratory activity</strong>
+            <span>Personal simulation history is available to student accounts.</span>
+          </div>
+          <Link href="/workspace">My workspace</Link>
+        </aside>
+      );
+    }
     return (
       <aside className={styles.studentStrip} aria-label="Student simulation activity">
         <div>

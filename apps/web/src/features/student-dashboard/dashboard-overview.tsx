@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 import {
-  Activity,
   ArrowRight,
   BadgeCheck,
   BookOpen,
@@ -61,24 +60,39 @@ function ProgressLine({ value, label }: { value: number; label: string }) {
 }
 export function DashboardOverview({
   data,
-  hideRecommendations = false
+  hideRecommendations = false,
+  localPreview = false,
+  headerActions
 }: {
   data: DashboardOverviewModel;
   hideRecommendations?: boolean;
+  localPreview?: boolean;
+  headerActions?: ReactNode;
 }) {
   const { hero } = data;
   return (
     <>
       <header className={styles.welcome}>
-        <h1>
-          {data.returning ? "Welcome back, " : "Welcome, "}
-          {data.name}! {data.demo && <span aria-hidden="true">👋</span>}
-        </h1>
-        <p>
-          {data.returning
-            ? "Let's continue your engineering journey."
-            : "Choose a lesson or simulation to begin."}
-        </p>
+        <div>
+          <h1>
+            {data.returning ? "Welcome back, " : "Welcome, "}
+            {data.name}! {data.demo && <span aria-hidden="true">👋</span>}
+          </h1>
+          <p>
+            <span>
+              {data.returning
+                ? "Let's continue your engineering journey."
+                : "Choose a lesson or simulation to begin."}
+            </span>
+            {localPreview && (
+              <>
+                {" "}
+                <span role="status">Local preview · Temporary test data.</span>
+              </>
+            )}
+          </p>
+        </div>
+        {headerActions && <div className={styles.welcomeActions}>{headerActions}</div>}
       </header>
       {data.warning && (
         <div className={styles.dataNotice}>
@@ -179,7 +193,7 @@ export function DashboardOverview({
       >
         <div className={styles.sectionHeading}>
           <h2>{data.demo ? "Continue Where You Left Off" : "Continue your learning"}</h2>
-          <Link href="/learn" className={styles.viewAll}>
+          <Link href="/my-learning" className={styles.viewAll}>
             View all
           </Link>
         </div>
@@ -294,11 +308,7 @@ export function DashboardOverview({
           aria-label={data.metric.title}
         >
           <h2>
-            {data.demo ? (
-              <Flame size={18} aria-hidden="true" />
-            ) : (
-              <Activity size={18} aria-hidden="true" />
-            )}
+            <Flame size={18} aria-hidden="true" />
             {data.metric.title}
           </h2>
           <div className={styles.metricBody}>
@@ -314,7 +324,11 @@ export function DashboardOverview({
                 <svg
                   viewBox="0 0 160 68"
                   role="img"
-                  aria-label="Fictional seven-day activity example"
+                  aria-label={
+                    data.demo
+                      ? "Fictional seven-day activity example"
+                      : "Learning activity over the last seven UTC days"
+                  }
                 >
                   <path
                     d="M8 59 H154"
@@ -322,19 +336,31 @@ export function DashboardOverview({
                     fill="none"
                   />
                   <polyline
-                    points="8,46 38,44 65,34 93,45 121,17 152,16"
+                    points={
+                      data.demo
+                        ? "8,46 38,44 65,34 93,45 121,17 152,16"
+                        : data.metric.points
+                            .map((value, index) => `${8 + index * 24},${value ? 18 : 50}`)
+                            .join(" ")
+                    }
                     stroke="#0868f8"
                     fill="none"
                     strokeWidth="1.6"
                   />
-                  {[
-                    [8, 46],
-                    [38, 44],
-                    [65, 34],
-                    [93, 45],
-                    [121, 17],
-                    [152, 16]
-                  ].map(([cx, cy], i) => (
+                  {(data.demo
+                    ? [
+                        [8, 46],
+                        [38, 44],
+                        [65, 34],
+                        [93, 45],
+                        [121, 17],
+                        [152, 16]
+                      ]
+                    : data.metric.points.map((value, index) => [
+                        8 + index * 24,
+                        value ? 18 : 50
+                      ])
+                  ).map(([cx, cy], i) => (
                     <circle
                       key={i}
                       cx={cx}
@@ -349,6 +375,12 @@ export function DashboardOverview({
                 <div className={styles.activityMark}>
                   <CheckCircle2 size={54} strokeWidth={1} aria-hidden="true" />
                   <span>Learning records</span>
+                </div>
+              )}
+              {!data.demo && data.metric.points.length > 0 && (
+                <div className={styles.weekLabels}>
+                  <span>6 days ago</span>
+                  <span>Today · UTC</span>
                 </div>
               )}
               {data.demo && (

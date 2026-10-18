@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createSupabaseServerClient } from "@industrial-learn/database";
-import { getServerEnv } from "@industrial-learn/env";
+import { getBackendMode, getServerEnv } from "@industrial-learn/env";
 
 import type { AuthenticatedSession } from "../auth/session-core";
 
@@ -335,10 +335,7 @@ function completedReviews(
 }
 
 function isLocalGovernanceMode() {
-  return (
-    process.env.INDUSTRIAL_LEARN_AUTH_MODE === "local" &&
-    process.env.INDUSTRIAL_LEARN_E2E === "true"
-  );
+  return getBackendMode() === "local";
 }
 
 function localItemsForAuthor(email: string) {

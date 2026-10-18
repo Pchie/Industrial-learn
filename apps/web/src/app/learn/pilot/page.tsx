@@ -11,6 +11,7 @@ import {
 import { getPublicLessonBySlug } from "@/features/lesson-engine/data";
 import { resolveAuthenticatedSession } from "@/features/auth/server";
 import { loadAssessmentOverview } from "@/features/assessments/server";
+import { ImageBand } from "@/features/page-layout/components";
 
 export const metadata: Metadata = {
   title: "Fluid Engineering Pilot | Industrial Learn",
@@ -38,18 +39,18 @@ export default async function PilotLearningPathPage() {
           { href: "/learn/pilot", label: "Fluid Engineering Pilot" }
         ]}
       />
-      <header className="curriculum-hero">
-        <p className="eyebrow">Pilot learning path</p>
-        <h1>Fluid Engineering Pilot</h1>
-        <p>
-          Work through one approved visual lesson, complete its practical challenge, then
-          submit the linked server-scored assessment.
-        </p>
-      </header>
+      <ImageBand
+        image="pressureScene"
+        eyebrow="Pilot learning path"
+        title="Fluid Engineering Pilot"
+        description="Explore the approved visual lesson, try its practical challenge, then check your understanding."
+        headingLevel={1}
+        priority
+      />
 
-      <Alert title="Governed pilot route" tone="info">
-        This path is independent of the unpublished parent module and includes only
-        content that passes the public lesson publication gate.
+      <Alert title="Controlled student pilot" tone="info">
+        Only approved, published content is included. This learning activity is not a
+        substitute for professional engineering advice.
       </Alert>
 
       <section className="curriculum-section" aria-labelledby="pilot-sequence-title">
@@ -58,7 +59,7 @@ export default async function PilotLearningPathPage() {
           <h2 id="pilot-sequence-title">Pressure from force and area</h2>
         </div>
         {lesson ? (
-          <ol className="dashboard-list">
+          <ol className="dashboard-list pilot-sequence">
             <li className="curriculum-card">
               <div className="curriculum-card__topline">
                 <p className="il-card-kicker">1. Visual lesson and challenge</p>

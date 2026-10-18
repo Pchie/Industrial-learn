@@ -35,6 +35,7 @@ export default function CoreEngineeringPage() {
         description={school.description}
         eyebrow="School"
         title={school.title}
+        image="pressureScene"
       />
       <ProgressNotice />
       <PublishedLessonSection lessons={getPublicLessons()} />

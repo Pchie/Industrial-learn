@@ -55,11 +55,13 @@ const sectionOrder: LessonSectionId[] = [
 export function LessonRenderer({
   isAuthenticated = false,
   lesson,
+  learningActions,
   sources,
   visualStageOverrides
 }: {
   isAuthenticated?: boolean;
   lesson: StructuredLesson;
+  learningActions?: ReactNode;
   sources: SourceRecord[];
   visualStageOverrides?: Partial<Record<VisualLessonStageId, ReactNode>>;
 }) {
@@ -139,6 +141,7 @@ export function LessonRenderer({
           ? "Progress saving is available for authenticated sessions."
           : "Progress is not saved in signed-out mode. No completion data is displayed."}
       </Alert>
+      {learningActions}
 
       {!visualStages ? (
         <nav className="lesson-engine__toc" aria-label="Lesson sections">

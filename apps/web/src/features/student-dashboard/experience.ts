@@ -1,3 +1,4 @@
+import { summarizeStudyActivity } from "./activity-summary";
 import { getPublicLessons } from "../lesson-engine/data";
 import { getPublicSimulationCatalog } from "../simulations/catalog";
 import { deriveSimulationAvailability } from "../simulations/discovery";
@@ -120,6 +121,25 @@ export function buildDashboardExperience(data: StudentDashboardData) {
     records.length + data.assessmentAttempts.length + data.simulationAttempts.length > 0;
   return {
     base,
+    studyActivity:
+      unavailable.size || limited.size
+        ? null
+        : summarizeStudyActivity(
+            [
+              ...records
+                .filter((record) => visibleSlugs.has(record.lessonSlug))
+                .map((record) => record.lastActivityAt ?? record.completedAt),
+              ...assessmentResults.map((attempt) => attempt.submittedAt),
+              ...data.simulationAttempts
+                .filter((attempt) =>
+                  simulations.some(
+                    (simulation) => simulation.slug === attempt.simulationSlug
+                  )
+                )
+                .map((attempt) => attempt.completedAt ?? attempt.startedAt)
+            ],
+            new Date().toISOString()
+          ),
     displayName: data.profile.displayName,
     programmeTitle: unavailable.has("enrolments") ? undefined : base.programmeTitle,
     currentYear: enrolment?.currentYear,

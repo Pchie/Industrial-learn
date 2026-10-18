@@ -17,6 +17,7 @@ import {
   Search,
   X
 } from "lucide-react";
+import { StudySupport } from "../app-shell/study-support";
 import { ThemeToggle } from "../theme/theme-toggle";
 import {
   navigationIsActive,
@@ -25,21 +26,14 @@ import {
 } from "../app-shell/navigation";
 import { frontendAssets } from "../app-shell/assets";
 import { DemoAction } from "../student-dashboard/demo-action";
-import type { AppRole } from "./session-core";
-import type { WorkspaceDestination } from "./workspace-access";
+import { useAccount } from "./account-boundary";
 import { workspaceForPath } from "./workspace-access";
-
-type AccountAccessSummary = {
-  authenticated: true;
-  displayName: string;
-  primaryRole: string;
-  roles: AppRole[];
-  workspaces: WorkspaceDestination[];
-};
 
 export function SiteNavigation() {
   const pathname = usePathname();
-  const [account, setAccount] = useState<AccountAccessSummary | null>(null);
+  const { account: verifiedAccount, status } = useAccount();
+  const account = verifiedAccount?.authenticated ? verifiedAccount : null;
+  const checkingAccount = status === "checking";
   const [collapsed, setCollapsed] = useState(false);
   const [hash, setHash] = useState("");
   const drawer = useRef<HTMLDialogElement>(null);
@@ -77,23 +71,6 @@ export function SiteNavigation() {
   const student =
     safeAccount?.workspaces.some((workspace) => workspace.key === "student") ?? false;
 
-  useEffect(() => {
-    const controller = new AbortController();
-    setAccount(null);
-    fetch("/api/account/access", {
-      cache: "no-store",
-      credentials: "same-origin",
-      signal: controller.signal
-    })
-      .then(async (response) =>
-        response.ok ? ((await response.json()) as AccountAccessSummary) : null
-      )
-      .then((result) => {
-        if (!controller.signal.aborted) setAccount(result);
-      })
-      .catch(() => undefined);
-    return () => controller.abort();
-  }, [pathname]);
   useEffect(() => {
     try {
       setCollapsed(localStorage.getItem("industrial-learn-sidebar") === "compact");
@@ -261,9 +238,7 @@ export function SiteNavigation() {
                   Chat with AI Mentor <ArrowRight size={16} aria-hidden="true" />
                 </DemoAction>
               ) : (
-                <Link href="/learn/pilot">
-                  Open study guide <ArrowRight size={16} aria-hidden="true" />
-                </Link>
+                <StudySupport />
               )}
             </div>
           </section>
@@ -315,6 +290,7 @@ export function SiteNavigation() {
               <b aria-hidden="true">3</b>
             </DemoAction>
           )}
+          {!demo && <StudySupport compact />}
           <ThemeToggle />
           {safeAccount ? (
             <details className="shell-profile workspace-menu" key={pathname}>
@@ -351,8 +327,15 @@ export function SiteNavigation() {
                 <Link href="/auth/sign-out">Sign out</Link>
               </div>
             </details>
+          ) : checkingAccount && !pathname.startsWith("/auth/") ? (
+            <span className="shell-account-pending" role="status">
+              Loading account…
+            </span>
           ) : (
-            <Link className="shell-sign-in" href="/auth/sign-in?next=%2Fworkspace">
+            <Link
+              className="shell-sign-in"
+              href={`/auth/sign-in?next=${encodeURIComponent(pathname.startsWith("/auth/") || pathname === "/" ? "/workspace" : pathname)}`}
+            >
               Sign in
             </Link>
           )}

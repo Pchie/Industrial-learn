@@ -1,8 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight, BookOpen, GraduationCap } from "lucide-react";
 import { frontendAssets } from "../app-shell/assets";
+import { ImageBand, PageHeading, WorkspaceEmptyState } from "../page-layout/components";
 import {
-  Alert,
   Badge,
   Breadcrumbs,
   Button,
@@ -23,36 +24,53 @@ import type { StructuredLesson } from "../lesson-engine/types";
 export function CurriculumHero({
   eyebrow,
   title,
-  description
+  description,
+  image
 }: {
   eyebrow: string;
   title: string;
   description: string;
+  image?: keyof typeof frontendAssets;
 }) {
+  if (image) {
+    return (
+      <ImageBand
+        image={image}
+        title={title}
+        description={description}
+        eyebrow={eyebrow}
+        headingLevel={1}
+        priority
+      />
+    );
+  }
   return (
-    <section className="curriculum-hero" aria-labelledby="curriculum-title">
-      <p className="eyebrow">{eyebrow}</p>
-      <h1 id="curriculum-title">{title}</h1>
-      <p>{description}</p>
-    </section>
+    <PageHeading
+      id="curriculum-title"
+      title={title}
+      description={description}
+      eyebrow={eyebrow}
+    />
   );
 }
 
 export function ProgressNotice() {
   return (
-    <Alert title="Progress" tone="info">
-      Progress appears after sign in. This signed-out catalogue does not display
-      completion data.
-    </Alert>
+    <div className="curriculum-progress-note">
+      <GraduationCap size={20} aria-hidden="true" />
+      <span>Find your saved learning and progress in your student dashboard.</span>
+      <Link href="/dashboard">
+        Your progress <ArrowRight size={16} aria-hidden="true" />
+      </Link>
+    </div>
   );
 }
 
 export function EmptyState({ message }: { message: string }) {
   return (
-    <section className="curriculum-state" aria-live="polite">
-      <h2>No items to show</h2>
+    <WorkspaceEmptyState title="No items to show" kind="learning">
       <p>{message}</p>
-    </section>
+    </WorkspaceEmptyState>
   );
 }
 
@@ -70,7 +88,7 @@ export function PublishedLessonSection({
       <div className="section-heading">
         <p className="eyebrow">Approved and published</p>
         <h2 id="published-lessons-title">Student lessons</h2>
-        <p>Only exact versions that passed review and publication checks appear here.</p>
+        <p>Visual lessons, practical challenges and reviewed engineering foundations.</p>
       </div>
 
       {searchable ? (
@@ -95,7 +113,7 @@ export function PublishedLessonSection({
       ) : null}
 
       {lessons.length > 0 ? (
-        <div className="curriculum-grid">
+        <div className="curriculum-grid curriculum-grid--lessons">
           {lessons.map((lesson) => (
             <article className="curriculum-card" key={lesson.id}>
               {lesson.slug === "basic-fluid-pressure" && (
@@ -108,7 +126,9 @@ export function PublishedLessonSection({
                 />
               )}
               <div className="curriculum-card__topline">
-                <p className="il-card-kicker">Lesson</p>
+                <p className="il-card-kicker">
+                  <BookOpen size={14} aria-hidden="true" /> Lesson
+                </p>
                 <Badge tone="normal">Published</Badge>
               </div>
               <h3>{lesson.title}</h3>
@@ -377,6 +397,7 @@ export function PrerequisiteList({ items }: { items: string[] }) {
 }
 
 export function DifficultyIndex({ modules }: { modules: Module[] }) {
+  if (modules.length === 0) return null;
   const difficulties = Array.from(
     new Set(modules.map((module) => module.difficulty))
   ).sort();

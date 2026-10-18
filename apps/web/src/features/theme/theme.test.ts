@@ -8,8 +8,8 @@ describe("appearance preference", () => {
     expect(parseTheme(theme)).toBe(theme)
   );
   it.each([null, undefined, "", "<script>", "LIGHT"])(
-    "defaults invalid values to system",
-    (value) => expect(parseTheme(value)).toBe("system")
+    "defaults invalid values to light",
+    (value) => expect(parseTheme(value)).toBe("light")
   );
   it("does not include account or secret data in the pre-hydration script", () => {
     expect(themeInitialiser).not.toMatch(/fetch|cookie|supabase|token|password/i);
